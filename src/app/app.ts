@@ -1,34 +1,18 @@
-import { Component, DOCUMENT, Inject, signal, OnInit } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { DxDataGridComponent, DxTemplateDirective } from 'devextreme-angular';
-import { DxDataGridModule, DxiDataGridColumnComponent, DxoDataGridSortingComponent } from 'devextreme-angular/ui/data-grid';
-import { licenseKey } from './devextreme-lincense';
-import { config } from 'devextreme/common';
-//import { DxButtonModule } from 'devextreme-angular/ui/button';
 import { DxButtonModule } from 'devextreme-angular';
+import { config } from 'devextreme/common';
+import { licenseKey } from './devextreme-lincense';
 
-config({licenseKey});
+config({ licenseKey });
 
 @Component({
   selector: 'app-root',
-  imports: [
-    DxButtonModule,
-    DxDataGridModule,
-    RouterOutlet
-  ],
-  templateUrl: './app.html',
+  standalone: true,
+  imports: [RouterOutlet, DxButtonModule],
+  template: '<router-outlet></router-outlet>',
   styleUrl: './app.css'
 })
-export class App implements OnInit {
-  
-
+export class App {
   protected readonly title = signal('eTellerClient');
-
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
-
- 
-
-
 }
