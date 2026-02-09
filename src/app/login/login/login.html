@@ -1,0 +1,28 @@
+<p>login works!</p>
+<!-- src/app/login/login.component.html -->
+<div class="login-container">
+  <h2>Login</h2>
+
+  <dx-text-box
+    [(ngModel)]="username"
+    placeholder="Username"
+    [stylingMode]="'outlined'"
+    [showClearButton]="true">
+  </dx-text-box>
+
+  <dx-text-box
+    [(ngModel)]="password"
+    placeholder="Password"
+    [mode]="'password'"
+    [stylingMode]="'outlined'"
+    [showClearButton]="true"
+    style="margin-top: 10px;">
+  </dx-text-box>
+
+  <dx-button
+    text="Login"
+    type="success"
+    style="margin-top: 20px; width: 100%;"
+    (onClick)="onLogin()">
+  </dx-button>
+</div>

@@ -1,0 +1,75 @@
+
+<router-outlet></router-outlet>
+
+
+
+<dx-data-grid
+  [dataSource]="data"
+  [showBorders]="true"
+  [columnAutoWidth]="true"
+  [rowAlternationEnabled]="true"
+  height="500">
+
+  <!-- Barra di ricerca globale -->
+  <dxo-search-panel
+    [visible]="true"
+    [width]="250"
+    placeholder="Cerca...">
+  </dxo-search-panel>
+
+  <!-- Filtro per riga -->
+  <dxo-filter-row
+    [visible]="true"
+    [applyFilter]="'auto'">
+  </dxo-filter-row>
+
+  <!-- Filtro avanzato (menu intestazione) -->
+  <dxo-header-filter
+    [visible]="true">
+  </dxo-header-filter>
+
+  <!-- Ordinamento -->
+  <dxo-sorting mode="multiple"></dxo-sorting>
+
+  <!-- Paginazione -->
+  <dxo-paging [pageSize]="10"></dxo-paging>
+
+  <dxo-pager
+    [visible]="true"
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 20]"
+    [showInfo]="true">
+  </dxo-pager>
+
+  <!-- Colonne -->
+  <dxi-column
+    dataField="id"
+    caption="ID"
+    dataType="number"
+    [width]="80">
+  </dxi-column>
+
+  <dxi-column
+    dataField="nome"
+    caption="Nome">
+  </dxi-column>
+
+  <dxi-column
+    dataField="email"
+    caption="Email">
+  </dxi-column>
+
+  <dxi-column
+    dataField="ruolo"
+    caption="Ruolo">
+  </dxi-column>
+
+</dx-data-grid>
+
+<dx-button
+  text="Salva"
+  type="success"
+  icon="save"
+  (onClick)="onSave()">
+</dx-button>
+
