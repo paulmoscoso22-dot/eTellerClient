@@ -1,0 +1,96 @@
+<!-- HEADER -->
+<header >
+  <dx-toolbar class="app-header">
+    <dxi-item location="before">
+      <app-logo></app-logo>
+    </dxi-item>
+    <dxi-item location="after">
+      <div class="header-content">
+        <div class="header-badges">
+          <div class="badge">526</div>
+          <div class="badge warning">18</div>
+          <div class="badge">52</div>
+          <div class="badge">91</div>
+          <div class="badge">105</div>
+        </div>
+        <div class="header-logout">
+          <button class="logout-icon-btn" (click)="logout()" title="Fare clic per disconnettersi">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </dxi-item>
+  </dx-toolbar>
+</header>
+
+<!-- BODY -->
+<div class="app-body">
+  <!-- SIDEBAR -->
+  <div class="sidebar" [class.closed]="!sidebarOpen">
+    <!-- Search Box -->
+    <div class="sidebar-search">
+      <dx-text-box
+        [value]="searchQuery()"
+        (onValueChanged)="onSearchChange($event.value)"
+        placeholder="Ricerca menu..."
+        icon="search"
+        stylingMode="outlined"
+      ></dx-text-box>
+      @if (searchQuery()) {
+        <dx-button
+          icon="close"
+          stylingMode="text"
+          (onClick)="clearSearch()"
+          class="clear-search-btn"
+        ></dx-button>
+      }
+    </div>
+
+    <div class="menu-container">
+      <dx-tree-list
+        id="menuItem"
+        [dataSource]="filteredMenuItems()"
+        [itemsExpr]="'items'"
+        dataStructure="tree"
+        [showRowLines]="false"
+        [showBorders]="false"
+        [columnAutoWidth]="true"
+        [expandedRowKeys]="expandedRowKeys()"
+        (onRowExpanding)="onRowExpanding($event)"
+        (onRowCollapsing)="onRowCollapsing($event)"
+        (onRowClick)="onMenuItemClick($event)"
+        class="menu-tree"
+      >
+        <dxi-column
+          dataField="Full_Name"
+          caption="Menu"
+          cellTemplate="menuCellTemplate"
+          [width]="'100%'"
+        ></dxi-column>
+
+        <div *dxTemplate="let cell of 'menuCellTemplate'" class="menu-cell">
+          <span class="menu-icon" *ngIf="cell.data?.icon">
+            <i [class]="'dx-icon dx-icon-' + cell.data.icon"></i>
+          </span>
+          <span class="menu-text">{{ cell.data?.Full_Name }}</span>
+        </div>
+      </dx-tree-list>
+    </div>
+  </div>
+
+  <!-- HAMBURGER -->
+  <dx-button
+    class="sidebar-toggle"
+    icon="menu"
+    stylingMode="text"
+    [class]="{'shift-left': !sidebarOpen}"
+    (onClick)="toggleSidebar()">
+  </dx-button>
+
+  <!-- CONTENT -->
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

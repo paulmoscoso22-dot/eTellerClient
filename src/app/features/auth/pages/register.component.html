@@ -1,0 +1,113 @@
+<div class="register-container">
+  <div class="register-card">
+    <h1 class="register-title">Create Account</h1>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <!-- Username Field -->
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <dx-text-box
+          id="username"
+          #usernameInput
+          formControlName="username"
+          placeholder="Enter your username"
+          [stylingMode]="'outlined'"
+          mode="text"
+        >
+        </dx-text-box>
+        <div *ngIf="username?.invalid && username?.touched" class="error-text">
+          <div *ngIf="username?.errors?.['required']">Username is required</div>
+          <div *ngIf="username?.errors?.['minlength']">
+            Username must be at least 3 characters
+          </div>
+          <div *ngIf="username?.errors?.['maxlength']">
+            Username must not exceed 20 characters
+          </div>
+        </div>
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <dx-text-box
+          id="email"
+          #emailInput
+          formControlName="email"
+          placeholder="Enter your email"
+          [stylingMode]="'outlined'"
+          mode="email"
+        >
+        </dx-text-box>
+        <div *ngIf="email?.invalid && email?.touched" class="error-text">
+          <div *ngIf="email?.errors?.['required']">Email is required</div>
+          <div *ngIf="email?.errors?.['email']">
+            Please enter a valid email address
+          </div>
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <dx-text-box
+          id="password"
+          #passwordInput
+          formControlName="password"
+          placeholder="Enter your password"
+          [stylingMode]="'outlined'"
+          mode="password"
+        >
+        </dx-text-box>
+        <div *ngIf="password?.invalid && password?.touched" class="error-text">
+          <div *ngIf="password?.errors?.['required']">Password is required</div>
+          <div *ngIf="password?.errors?.['minlength']">
+            Password must be at least 6 characters
+          </div>
+        </div>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <dx-text-box
+          id="confirmPassword"
+          #confirmPasswordInput
+          formControlName="confirmPassword"
+          placeholder="Confirm your password"
+          [stylingMode]="'outlined'"
+          mode="password"
+        >
+        </dx-text-box>
+        <div *ngIf="confirmPassword?.invalid && confirmPassword?.touched" class="error-text">
+          <div *ngIf="confirmPassword?.errors?.['required']">Please confirm your password</div>
+          <div *ngIf="confirmPassword?.errors?.['passwordMismatch']">
+            Passwords do not match
+          </div>
+        </div>
+      </div>
+
+      <!-- Register Button -->
+      <dx-button
+        text="Register"
+        [type]="'success'"
+        [width]="'100%'"
+        (onClick)="onRegister()"
+        [disabled]="registerForm.invalid || isLoading"
+      >
+      </dx-button>
+    </form>
+
+    <div class="register-footer">
+      Already have an account?
+      <a href="javascript:void(0)" (click)="navigateToLogin()">Login here</a>
+    </div>
+  </div>
+</div>

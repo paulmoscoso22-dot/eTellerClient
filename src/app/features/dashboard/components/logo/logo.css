@@ -1,0 +1,10 @@
+/* Contenitore del logo */
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+}

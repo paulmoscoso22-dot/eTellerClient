@@ -9,8 +9,9 @@
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
       <!-- Username Field -->
       <div class="form-group">
-        <label for="username" class="form-label">Username</label>
+        <label class="form-label">Username</label>
         <dx-text-box
+          id="username"
           #usernameInput
           formControlName="username"
           placeholder="Enter your username"
@@ -28,8 +29,9 @@
 
       <!-- Password Field -->
       <div class="form-group">
-        <label for="password" class="form-label">Password</label>
+        <label class="form-label">Password</label>
         <dx-text-box
+          id="password"
           #passwordInput
           formControlName="password"
           placeholder="Enter your password"

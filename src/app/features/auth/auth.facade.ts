@@ -1,7 +1,7 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface LoginRequest {
@@ -11,6 +11,21 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string;
+  user: {
+    id: string;
+    username: string;
+    email: string;
+  };
+}
+
+export interface RegisterRequest {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export interface RegisterResponse {
+  message: string;
   user: {
     id: string;
     username: string;
@@ -30,6 +45,7 @@ export class AuthFacade {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   private isBrowser: boolean;
+  private registeredCredentials: LoginRequest | null = null;
 
   constructor(
     private http: HttpClient,
@@ -50,7 +66,36 @@ export class AuthFacade {
    * Login with username and password
    */
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
+    // TODO: Uncomment when server is available
+    // return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
+    
+    // Mock response for development
+    return of({
+      token: 'mock-jwt-token-' + Date.now(),
+      user: {
+        id: '1',
+        username: credentials.username,
+        email: credentials.username + '@example.com',
+      },
+    });
+  }
+
+  /**
+   * Register new user
+   */
+  register(data: RegisterRequest): Observable<RegisterResponse> {
+    // TODO: Uncomment when server is available
+    // return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, data);
+    
+    // Mock response for development
+    return of({
+      message: 'User registered successfully',
+      user: {
+        id: '1',
+        username: data.username,
+        email: data.email,
+      },
+    });
   }
 
   /**
@@ -65,7 +110,12 @@ export class AuthFacade {
       }
     }
     this.isAuthenticatedSubject.next(false);
-    return this.http.post<void>(`${this.apiUrl}/logout`, {});
+    
+    // TODO: Uncomment when server is available
+    // return this.http.post<void>(`${this.apiUrl}/logout`, {});
+    
+    // Mock response for development
+    return of(void 0);
   }
 
   /**
@@ -109,5 +159,26 @@ export class AuthFacade {
       }
     }
     this.isAuthenticatedSubject.next(true);
+  }
+
+  /**
+   * Save registered credentials for automatic login
+   */
+  saveRegisteredCredentials(credentials: LoginRequest): void {
+    this.registeredCredentials = { ...credentials };
+  }
+
+  /**
+   * Get registered credentials
+   */
+  getRegisteredCredentials(): LoginRequest | null {
+    return this.registeredCredentials ? { ...this.registeredCredentials } : null;
+  }
+
+  /**
+   * Clear registered credentials
+   */
+  clearRegisteredCredentials(): void {
+    this.registeredCredentials = null;
   }
 }

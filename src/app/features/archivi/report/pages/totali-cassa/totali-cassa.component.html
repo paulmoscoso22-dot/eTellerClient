@@ -1,0 +1,100 @@
+<div class="container">
+  <h1>Totali di Cassa</h1>
+
+  <!-- Search Form -->
+  <div class="search-form" [formGroup]="searchForm">
+    <div class="form-row">
+      <div class="form-group">
+        <dx-text-box
+          id="tocCliId"
+          formControlName="tocCliId"
+          placeholder="Codice Cassa"
+          label="Cassa"
+        ></dx-text-box>
+      </div>
+
+      <div class="form-group">
+        <dx-date-box
+          id="tocData"
+          formControlName="tocData"
+          type="date"
+          label="Data"
+          format="dd/MM/yyyy"
+          displayFormat="dd/MM/yyyy"
+        ></dx-date-box>
+      </div>
+
+      <div class="form-group">
+        <dx-text-box
+          id="tocCutId"
+          formControlName="tocCutId"
+          placeholder="Currency Type ID"
+          label="Currency Type"
+        ></dx-text-box>
+      </div>
+
+      <div class="form-group">
+        <dx-text-box
+          id="tocBraId"
+          formControlName="tocBraId"
+          placeholder="Branch ID"
+          label="Branch"
+        ></dx-text-box>
+      </div>
+    </div>
+
+    <div class="form-group button-group">
+      <dx-button
+        text="Ricerca"
+        type="success"
+        (onClick)="search()"
+        [disabled]="isLoading()"
+      ></dx-button>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  @if (error()) {
+    <div class="error-message">
+      {{ error() }}
+    </div>
+  }
+
+  <!-- Loading Indicator -->
+  @if (isLoading()) {
+    <div class="loading-message">
+      Caricamento...
+    </div>
+  }
+
+  <!-- Data Grid -->
+  @if (!isLoading() && totaliCassa().length > 0) {
+    <div class="data-grid-container">
+      <dx-data-grid
+        [dataSource]="totaliCassa()"
+        keyExpr="tocCurId"
+        [showBorders]="true"
+        [columnAutoWidth]="true"
+        [allowColumnReordering]="true"
+        [allowColumnResizing]="true"
+      >
+        <dxo-paging [pageSize]="10" [enabled]="true"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]" [showInfo]="true"></dxo-pager>
+        
+        <dxi-column dataField="tocCurId" caption="Unità" width="100"></dxi-column>
+        <dxi-column dataField="tocSaldoIni" caption="Saldo iniziale" width="130" dataType="number" format="#,##0.00"></dxi-column>
+        <dxi-column dataField="tocTotdare" caption="Dare" width="120" dataType="number" format="#,##0.00"></dxi-column>
+        <dxi-column dataField="tocTotdareCtv" caption="Dare CTV" width="130" dataType="number" format="#,##0.00"></dxi-column>
+        <dxi-column dataField="tocTotavere" caption="Avere" width="120" dataType="number" format="#,##0.00"></dxi-column>
+        <dxi-column dataField="tocSaldoFin" caption="Saldo finale" width="130" dataType="number" format="#,##0.00"></dxi-column>
+      </dx-data-grid>
+    </div>
+  }
+
+  <!-- No Data Message -->
+  @if (!isLoading() && totaliCassa().length === 0 && !error()) {
+    <div class="no-data-message">
+      Nessun dato trovato. Effettuare una ricerca.
+    </div>
+  }
+</div>
