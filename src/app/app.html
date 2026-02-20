@@ -1,1 +1,43 @@
-<router-outlet></router-outlet>
+<!-- <router-outlet></router-outlet> -->
+Ciao
+
+<div class="page-layout">
+  <!-- Header -->
+  <div class="header-row">
+    <app-header 
+      (menuIconClicked)="onMenuIconClicked()"
+      (userIconClicked)="onUserIconClicked()">
+    </app-header>
+  </div>
+
+  <!-- Menu + Body -->
+  <div class="content-row">
+    <!-- @if (isSidebarVisible()) { -->
+      <div class="sidebar">
+        <app-sidebar 
+          [items]="rawMenuItems"
+          [showSearch]="true"
+          searchPlaceholder="Cerca nel menu..."
+          (itemClick)="onMenuItemClick($event)"
+          (breadcrumbChanged)="onBreadcrumbChanged($event)">
+        </app-sidebar>
+      </div>
+   <!-- } -->
+
+    <main class="main-content">
+      <!-- Breadcrumb -->
+      <div class="breadcrumb-row">
+        <app-breadcrumb 
+          [items]="breadcrumbItems()"
+          [isDarkTheme]="isDarkTheme"
+          (itemClick)="onBreadcrumbItemClick($event)">
+        </app-breadcrumb>
+      </div>
+      
+      <!-- Content -->
+      <router-outlet></router-outlet>
+
+      ciao
+    </main>
+  </div>
+</div>

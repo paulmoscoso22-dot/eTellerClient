@@ -10,7 +10,7 @@ interface MenuItem {
 @Injectable({
   providedIn: 'root'
 })
-export class MenuService {
+export class _MenuService {
 private menuItems: MenuItem[] = [
 {
   Full_Name: 'Operations',

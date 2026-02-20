@@ -42,7 +42,7 @@ export class ReportFacade {
     };
 
     return this.http.post<GetTransactionWaitingForBefResponse[]>(
-      `${environment.transactionApiUrl}/WaitingForBEF`,
+      `${environment.apiUrl}/Transaction/WaitingForBEF`,
       payload
     );
   }
@@ -73,7 +73,7 @@ export class ReportFacade {
     };
 
     return this.http.post<GetTransactionWithFiltersForGiornaleResponse[]>(
-      `${environment.transactionApiUrl}/WithFiltersForGiornale`,
+      `${environment.apiUrl}/Transaction/WithFiltersForGiornale`,
       payload
     );
   }
@@ -104,7 +104,7 @@ export class ReportFacade {
     };
 
     return this.http.post<GetTransactionWithFiltersResponse[]>(
-      `${environment.transactionApiUrl}/WithFilters`,
+      `${environment.apiUrl}/Transaction/WithFilters`,
       payload
     );
   }
@@ -143,7 +143,7 @@ export class ReportFacade {
     };
 
     return this.http.post<GetTotaleCassaResponse[]>(
-      `${environment.totaleCassaApiUrl}/GetTotaliCassa`,
+      `${environment.apiUrl}/TotaleCassa/GetTotaliCassa`,
       payload
     );
   }

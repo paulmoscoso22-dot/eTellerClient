@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         this.authFacade.setAuthToken(response.token);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/app']);
       },
       error: (error) => {
         this.isLoading = false;

@@ -1,0 +1,87 @@
+<div class="sidebar-container">
+  <!-- Search Box -->
+  @if (showSearch) {
+    <div class="search-box">
+      <input
+        type="text"
+        [placeholder]="searchPlaceholder"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event); onSearch()"
+        class="search-input"
+      />
+      @if (searchQuery()) {
+        <button class="clear-search" (click)="searchQuery.set(''); onSearch()">
+          ×
+        </button>
+      }
+    </div>
+  }
+
+  <!-- Menu Items -->
+  <nav class="menu-container">
+    @for (item of filteredItems(); track item.label) {
+      <div [class]="getItemClass(item)">
+        <div class="menu-item-content" (click)="onItemClick(item, [item])">
+          @if (item.icon) {
+            <i class="menu-icon dx-icon-{{ item.icon }}"></i>
+          }
+          <span class="menu-label">{{ item.label }}</span>
+          @if (item.children && item.children.length > 0) {
+            <i class="expand-icon dx-icon-{{ item.isExpanded ? 'chevrondown' : 'chevronright' }}"></i>
+          }
+        </div>
+
+        @if (item.children && item.children.length > 0 && item.isExpanded) {
+          <div class="menu-children level-1">
+            @for (child1 of item.children; track child1.label) {
+              <div [class]="getItemClass(child1)">
+                <div class="menu-item-content" (click)="onItemClick(child1, [item, child1])">
+                  @if (child1.icon) {
+                    <i class="menu-icon dx-icon-{{ child1.icon }}"></i>
+                  }
+                  <span class="menu-label">{{ child1.label }}</span>
+                  @if (child1.children && child1.children.length > 0) {
+                    <i class="expand-icon dx-icon-{{ child1.isExpanded ? 'chevrondown' : 'chevronright' }}"></i>
+                  }
+                </div>
+
+                @if (child1.children && child1.children.length > 0 && child1.isExpanded) {
+                  <div class="menu-children level-2">
+                    @for (child2 of child1.children; track child2.label) {
+                      <div [class]="getItemClass(child2)">
+                        <div class="menu-item-content" (click)="onItemClick(child2, [item, child1, child2])">
+                          @if (child2.icon) {
+                            <i class="menu-icon dx-icon-{{ child2.icon }}"></i>
+                          }
+                          <span class="menu-label">{{ child2.label }}</span>
+                          @if (child2.children && child2.children.length > 0) {
+                            <i class="expand-icon dx-icon-{{ child2.isExpanded ? 'chevrondown' : 'chevronright' }}"></i>
+                          }
+                        </div>
+
+                        @if (child2.children && child2.children.length > 0 && child2.isExpanded) {
+                          <div class="menu-children level-3">
+                            @for (child3 of child2.children; track child3.label) {
+                              <div [class]="getItemClass(child3)">
+                                <div class="menu-item-content" (click)="onItemClick(child3, [item, child1, child2, child3])">
+                                  @if (child3.icon) {
+                                    <i class="menu-icon dx-icon-{{ child3.icon }}"></i>
+                                  }
+                                  <span class="menu-label">{{ child3.label }}</span>
+                                </div>
+                              </div>
+                            }
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </nav>
+</div>

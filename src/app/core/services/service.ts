@@ -40,18 +40,18 @@ export class Service {
   }
 
   getAllCurrency(): Observable<Currency[]> {
-    return this.http.post<Currency[]>(environment.currencyApiUrl, {});
+    return this.http.post<Currency[]>(`${environment.apiUrl}/Currency`, {});
   }
 
   getBranches(): Observable<Branch[]> {
-    return this.http.post<Branch[]>(environment.branchApiUrl, {});
+    return this.http.post<Branch[]>(`${environment.apiUrl}/Branch`, {});
   }
 
   getCurrencyTypes(): Observable<CurrencyType[]> {
-    return this.http.post<CurrencyType[]>(environment.currencyTypeApiUrl, {});
+    return this.http.post<CurrencyType[]>(`${environment.apiUrl}/CurrencyType`, {});
   }
 
   getStOperationsType(): Observable<StOperationType[]> {
-    return this.http.post<StOperationType[]>(environment.stOperationTypeApiUrl, {});
+    return this.http.post<StOperationType[]>(`${environment.apiUrl}/StOperationType`, {});
   }
 }

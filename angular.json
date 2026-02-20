@@ -23,10 +23,14 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*.css",
+                "input": "node_modules/devextreme/dist/css",
+                "output": "/assets"
               }
             ],
             "styles": [
-              "node_modules/devextreme/dist/css/dx.light.css",
               "src/styles.css"
             ]
           },

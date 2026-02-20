@@ -1,0 +1,64 @@
+:host {
+  display: block;
+  height: var(--breadcrumb-height);
+}
+
+.breadcrumb {
+  background-color: var(--dx-color-main-bg, #ffffff);
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  align-items: center;
+  height: 100%;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: "›";
+  padding: 0 0.5rem;
+  color: var(--dx-color-primary, #3b82f6);
+  font-weight: 400;
+  font-size: 1.1rem;
+  opacity: 0.5;
+}
+
+.breadcrumb-item a {
+  color: var(--dx-color-text, #64748b);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--dx-border-radius, 4px);
+  font-weight: 500;
+}
+
+.breadcrumb-item a:hover {
+  color: var(--dx-color-primary, #3b82f6);
+  background-color: var(--dx-component-color-bg, rgba(0, 0, 0, 0.05));
+}
+
+.breadcrumb-item a:focus {
+  outline: 2px solid var(--dx-color-primary, #3b82f6);
+  outline-offset: 2px;
+  border-radius: var(--dx-border-radius, 4px);
+}
+
+.breadcrumb-item.active {
+  color: var(--dx-color-text, #0f172a);
+  font-weight: 600;
+}
+
+.breadcrumb-item.active span {
+  color: inherit;
+  padding: 0.25rem 0.5rem;
+  border-bottom: 2px solid var(--dx-color-primary, #3b82f6);
+}

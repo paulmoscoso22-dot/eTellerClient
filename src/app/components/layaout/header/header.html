@@ -1,0 +1,23 @@
+<div class="header">
+  <i class="bi bi-list list-icon" (click)="onMenuIconClicked()"></i>
+  <div class="logo-sep"></div>
+  <app-logo></app-logo>
+  <!-- App Name -->
+  <app-application-name></app-application-name>
+
+
+  <!-- Spacer per spingere elementi a destra -->
+  <div class="header-spacer"></div>
+
+  <!-- Version Badge -->
+  <app-version-display></app-version-display>
+
+  <!-- Environment Badge -->
+  <app-environment-badge></app-environment-badge>
+
+  <!-- Separator -->
+  <!-- <div class="header-separator"></div> -->
+  <div class="logo-sep"></div>
+  <!-- User Badge -->
+  <app-user-badge (clicked)="onUserBadgeClick()"></app-user-badge>
+</div>

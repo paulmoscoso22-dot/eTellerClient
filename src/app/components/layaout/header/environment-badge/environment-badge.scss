@@ -1,0 +1,43 @@
+// =============================================================================
+// ENVIRONMENT BADGE - Indicatore ambiente enterprise
+// =============================================================================
+
+.environment-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 2rem;
+  padding: 0 0.75rem;
+  border-radius: 0.25rem;
+  user-select: none;
+  
+  // Sfondo leggero con colore accent
+  background-color: color-mix(in srgb, var(--dx-color-accent, #0078d4) 8%, transparent);
+  
+  // Bordo sottile con colore accent
+  border: 1px solid color-mix(in srgb, var(--dx-color-accent, #0078d4) 30%, transparent);
+}
+
+.env-indicator {
+  font-size: 0.5rem;
+  color: var(--dx-color-accent, #0078d4);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.env-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--dx-color-accent, #0078d4);
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

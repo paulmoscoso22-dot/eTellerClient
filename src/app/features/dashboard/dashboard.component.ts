@@ -3,7 +3,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { DxListModule, DxButtonModule, DxToolbarModule, DxDataGridModule, DxTreeListModule, DxTextBoxModule } from 'devextreme-angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MenuService } from './services/menu.service';
+import { MenuService } from '../../services/menu.service';
 import { Logo } from './components/logo/logo';
 
 interface MenuItem {
@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const items = this.menuService.getMenuItems();
+    const items = this.menuService.getCurrentMenuItems();
     this.menuItems.set(items);
     this.filteredMenuItems.set(items);
   }
@@ -80,11 +80,13 @@ export class DashboardComponent implements OnInit {
   onSearchChange(query: string): void {
     this.searchQuery.set(query);
     if (query.trim()) {
-      const filtered = this.menuService.searchMenuItems(query);
+      this.menuService.search(query);
+      const filtered = this.menuService.filteredMenuItems();
       this.filteredMenuItems.set(filtered);
       // Auto expand all items when searching
       this.expandedRowKeys.set(this.getAllKeys(filtered));
     } else {
+      this.menuService.clearSearch();
       this.filteredMenuItems.set(this.menuItems());
       this.expandedRowKeys.set([]);
     }

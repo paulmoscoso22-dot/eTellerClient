@@ -1,5 +1,6 @@
+const API_BASE_URL = 'https://api.example.com';
+
 export const environment = {
   production: true,
-  apiUrl: 'https://api.example.com',
-  transactionApiUrl: 'https://localhost:7094/api/Transaction',
+  apiUrl: API_BASE_URL,
 };

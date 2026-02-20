@@ -1,0 +1,18 @@
+<p>breadcrumb works!</p>
+<nav aria-label="breadcrumb" [class.breadcrumb-dark]="isDarkTheme" [class.breadcrumb-light]="!isDarkTheme">
+  @if (items && items.length > 0) {
+    <ol class="breadcrumb mb-0">
+      @for (item of items; track item.label) {
+        <li class="breadcrumb-item" [class.active]="item.isActive" [attr.aria-current]="item.isActive ? 'page' : null">
+          @if (!item.isActive && item.link) {
+            <a [href]="item.link" (click)="onBreadcrumbClick(item); $event.preventDefault()">
+              {{ item.label }}
+            </a>
+          } @else {
+            <span>{{ item.label }}</span>
+          }
+        </li>
+      }
+    </ol>
+  }
+</nav>
