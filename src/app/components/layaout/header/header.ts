@@ -1,15 +1,14 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Logo } from './logo/logo';
 import { ApplicationName } from './application-name/application-name';
-import { VersionDisplay } from './version-display/version-display';
-import { EnvironmentBadge } from './environment-badge/environment-badge';
 import { UserBadge } from './user-badge/user-badge';
+import { EnvironmentBadge } from './environment-badge/environment-badge';
 
 @Component({
   selector: 'app-header',
-  imports: [Logo, ApplicationName, VersionDisplay, EnvironmentBadge, UserBadge],
+  imports: [Logo, ApplicationName, UserBadge],
   templateUrl: './header.html',
-  styleUrl: './header.css',
+  styleUrl: './header.scss',
 })
 export class HeaderComponent {
   @Output() menuIconClicked = new EventEmitter<void>();

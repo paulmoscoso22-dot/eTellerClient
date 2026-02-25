@@ -1,0 +1,10 @@
+{
+  "production": false,
+  "envName": "developing",
+  "apiUrl": "https://localhost:5200",
+  "auth": {
+    "authServerUrl": "https://authserver.acceptance.bancasempione.ch",
+    "clientId": "FidoAngular",
+    "audience": "FidoWebAPI"
+  }
+}

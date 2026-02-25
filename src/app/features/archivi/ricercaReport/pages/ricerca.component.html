@@ -176,19 +176,12 @@
     >
       <dxo-paging [pageSize]="10" [enabled]="true"></dxo-paging>
       <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]" [showInfo]="true"></dxo-pager>
-      <dxi-column dataField="trxId" caption="ID" width="60"></dxi-column>
-      <dxi-column dataField="trxCassa" caption="Cassa" width="80"></dxi-column>
-      <dxi-column dataField="trxCutId" caption="ID Cliente" width="100"></dxi-column>
-      <dxi-column dataField="trxOptId" caption="ID Operatore" width="100"></dxi-column>
-      <dxi-column dataField="trxDivope" caption="Divisione" width="100"></dxi-column>
-      <dxi-column dataField="trxCtoope" caption="Conto Operante" width="120"></dxi-column>
-      <dxi-column dataField="trxLocalita" caption="Località" width="100"></dxi-column>
-      <dxi-column dataField="trxImpope" caption="Importo" width="100" dataType="number"></dxi-column>
       <dxi-column dataField="trxDatope" caption="Data Operazione" width="130" dataType="datetime" format="dd/MM/yyyy"></dxi-column>
-      <dxi-column dataField="trxReverse" caption="Inversa" width="70" dataType="boolean"></dxi-column>
-      <dxi-column dataField="arcAppName" caption="Applicazione" width="120"></dxi-column>
-      <dxi-column dataField="arcForced" caption="Forzato" width="70" dataType="boolean"></dxi-column>
+      <dxi-column dataField="trxImpope" caption="Importo" width="100" dataType="number"></dxi-column>
       <dxi-column dataField="trxStatus" caption="Status" width="70"></dxi-column>
+      <dxi-column dataField="trxDivope" caption="Divisione" width="100"></dxi-column>
+      <dxi-column dataField="trxId" caption="ID" width="60"></dxi-column>
+      
     </dx-data-grid>
     </div>
   }

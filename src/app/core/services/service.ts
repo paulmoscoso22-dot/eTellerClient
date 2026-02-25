@@ -44,14 +44,14 @@ export class Service {
   }
 
   getBranches(): Observable<Branch[]> {
-    return this.http.post<Branch[]>(`${environment.apiUrl}/Branch`, {});
+    return this.http.post<Branch[]>(`${environment.apiUrl}/Branch/GetBranches`, {});
   }
 
   getCurrencyTypes(): Observable<CurrencyType[]> {
-    return this.http.post<CurrencyType[]>(`${environment.apiUrl}/CurrencyType`, {});
+    return this.http.post<CurrencyType[]>(`${environment.apiUrl}/CurrencyType/GetCurrencyTypes`, {});
   }
 
   getStOperationsType(): Observable<StOperationType[]> {
-    return this.http.post<StOperationType[]>(`${environment.apiUrl}/StOperationType`, {});
+    return this.http.post<StOperationType[]>(`${environment.apiUrl}/StOperation/GetStOperations`, {});
   }
 }

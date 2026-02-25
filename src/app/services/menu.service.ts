@@ -69,43 +69,41 @@ export class MenuService  {
           children: [
             {
               label: 'menu.bigliettiBanca',
-              url: 'biglietti-banca',
               icon: 'money',
               isVisible: true,
               children: [
-                { label: 'menu.acquisto', icon: 'purchase', isVisible: true },
-                { label: 'menu.vendita', icon: 'sale', isVisible: true }
+                { label: 'menu.acquisto', icon: 'purchase', isVisible: true, url: 'biglietti-banca-acquisto' },
+                { label: 'menu.vendita', icon: 'sale', isVisible: true ,url: 'biglietti-banca-vendita'}
               ]
             },
             {
               label: 'menu.moneteMetalli',
-              url: 'monete-metalli',
               icon: 'gold',
               isVisible: true,
               children: [
-                { label: 'menu.acquisto', icon: 'purchase', isVisible: true },
-                { label: 'menu.vendita', icon: 'sale', isVisible: true }
+                { label: 'menu.acquisto', icon: 'purchase', isVisible: true, url: 'monete-metalli-acquisto' },
+                { label: 'menu.vendita', icon: 'sale', isVisible: true, url: 'monete-metalli-vendita' }
               ]
-            }
-          ]
-        },
-        {
-          label: 'menu.travelersCheques',
-          icon: 'traveler',
-          isVisible: true,
-          children: [
-            {
-              label: 'menu.acquisto',
-              url: 'travelers-acquisto',
-              icon: 'purchase',
-              isVisible: true
             },
             {
-              label: 'menu.vendita',
-              url: 'travelers-vendita',
-              icon: 'sale',
-              isVisible: true
-            }
+              label: 'menu.travelersCheques',
+              icon: 'traveler',
+              isVisible: true,
+              children: [
+                {
+                  label: 'menu.acquisto',
+                  url: 'travelers-cheques-acquisto',
+                  icon: 'purchase',
+                  isVisible: true
+                },
+                {
+                  label: 'menu.vendita',
+                  url: 'travelers-cheques-vendita',
+                  icon: 'sale',
+                  isVisible: true
+                }
+              ]
+            },
           ]
         },
         {
@@ -302,7 +300,9 @@ export class MenuService  {
    * Aggiorna il menu traducendo tutte le label
    */
   private updateTranslatedMenu(): void {
-    const translated = this.translateMenuItems(this.menuItems);
+    //const translated = this.translateMenuItems(this.menuItems);
+
+    const translated = this.menuItems;
 
     this.menuItemsSignal.set(translated);
     // Aggiorna anche i filtrati se non c'è ricerca attiva

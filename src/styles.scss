@@ -1,0 +1,64 @@
+/* DevExtreme default theme - will be replaced dynamically by ThemeService */
+@import 'devextreme/dist/css/dx.fluent.blue.light.compact.css';
+
+/* You can add global styles to this file, and also import other style files */
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+/* =============================================================================
+   CSS Custom Properties - Layout dimensions
+   ============================================================================= */
+:root {
+    --header-height: 3rem;
+    --breadcrumb-height: 2.5rem;
+    --page-content-height: calc(100vh - var(--header-height) - var(--breadcrumb-height) - 4rem);
+}
+
+/* Reset user agent stylesheet defaults */
+// *, *::before, *::after {
+//     box-sizing: border-box;
+// }
+
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+/* System font stack - Apple San Francisco su macOS/iOS */
+html, body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+/* =============================================================================
+   Common page styles - Usare .page-content per tutte le pagine
+   ============================================================================= */
+.page-content {
+    padding: 0.75rem;
+    min-height: var(--page-content-height);
+}
+
+/* =============================================================================
+   Custom scrollbar - Adatta al tema
+   ============================================================================= */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dx-color-main-bg, #ffffff);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dx-color-border, #cbd5e1);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--dx-color-icon, #94a3b8);
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--dx-color-border, #cbd5e1) var(--dx-color-main-bg, #ffffff);
+}

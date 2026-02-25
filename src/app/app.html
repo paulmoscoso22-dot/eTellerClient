@@ -1,6 +1,4 @@
 <!-- <router-outlet></router-outlet> -->
-Ciao
-
 <div class="page-layout">
   <!-- Header -->
   <div class="header-row">
@@ -12,7 +10,7 @@ Ciao
 
   <!-- Menu + Body -->
   <div class="content-row">
-    <!-- @if (isSidebarVisible()) { -->
+    @if (isSidebarVisible()) {
       <div class="sidebar">
         <app-sidebar 
           [items]="rawMenuItems"
@@ -22,7 +20,7 @@ Ciao
           (breadcrumbChanged)="onBreadcrumbChanged($event)">
         </app-sidebar>
       </div>
-   <!-- } -->
+   }
 
     <main class="main-content">
       <!-- Breadcrumb -->
@@ -37,7 +35,6 @@ Ciao
       <!-- Content -->
       <router-outlet></router-outlet>
 
-      ciao
     </main>
   </div>
 </div>

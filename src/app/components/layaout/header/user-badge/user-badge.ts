@@ -38,7 +38,7 @@ export class UserBadge {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.loadUserInfo();
+    //this.loadUserInfo();
   }
 
   private loadUserInfo(): void {

@@ -21,13 +21,13 @@ export interface UserInfoResponse {
   providedIn: 'root',
 })
 export class UserService {
-  private readonly apiUrl: string;
+  private readonly apiUrl: string = "";
 
   constructor(
     private http: HttpClient,
     private env: EnvironmentService
   ) {
-    this.apiUrl = this.env.buildApiUrl('/user');
+    //this.apiUrl = this.env.buildApiUrl('/user');
   }
 
   /**

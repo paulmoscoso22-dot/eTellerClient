@@ -1,0 +1,88 @@
+
+// =============================================================================
+// HEADER COMPONENT - DevExpress Fluent Theme
+// Utilizza le variabili CSS disponibili in DevExtreme 25.x
+// Docs: https://docs.devexpress.com/DesignSystem/405685/colors/color-roles
+// =============================================================================
+
+.header {
+  display: flex;
+  flex-direction: row;
+  // width: 100%;
+  height: var(--header-height);
+  position: relative;
+  align-items: center;
+  padding: 0.375rem; // 6px
+  gap: 0.5rem;
+  
+  // Sfondo componente (si adatta al tema light/dark)
+  background-color: var(--dx-component-color-bg);
+  
+  // Bordo inferiore
+  border-bottom: 1px solid var(--dx-color-border);
+  
+  // Testo
+  color: var(--dx-color-text);
+  
+  // Transizioni smooth per cambio tema
+  transition: 
+    background-color 0.2s ease-in-out, 
+    border-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
+}
+
+// =============================================================================
+// MENU ICON - Icona hamburger/lista
+// =============================================================================
+.list-icon {
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: var(--dx-border-radius);
+  
+  // Colore icona
+  color: var(--dx-color-icon);
+  
+  // Transizione per hover
+  transition: 
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out;
+  
+  &:hover {
+    // Colore testo al hover
+    color: var(--dx-color-text);
+    // Sfondo sottile al hover - funziona sia light che dark
+    background-color: color-mix(in srgb, var(--dx-color-text) 8%, transparent);
+  }
+  
+  &:active {
+    background-color: color-mix(in srgb, var(--dx-color-text) 12%, transparent);
+  }
+}
+
+// =============================================================================
+// LOGO SEPARATOR - Divisore verticale
+// =============================================================================
+.logo-sep {
+  width: 1px;
+  height: 2.5rem;
+  flex-shrink: 0;
+  background-color: var(--dx-color-text);
+}
+
+// =============================================================================
+// HEADER SPACER - Spinge elementi a destra
+// =============================================================================
+.header-spacer {
+  flex: 1;
+}
+
+// =============================================================================
+// HEADER SEPARATOR - Divisore tra elementi
+// =============================================================================
+.header-separator {
+  width: 1px;
+  height: 1.5rem;
+  background-color: var(--dx-color-border);
+  margin: 0 0.75rem;
+}

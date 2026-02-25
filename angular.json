@@ -28,10 +28,15 @@
                 "glob": "**/*.css",
                 "input": "node_modules/devextreme/dist/css",
                 "output": "/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/devextreme/dist/css/icons",
+                "output": "/assets/icons"
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ]
           },
           "configurations": {

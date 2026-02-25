@@ -1,3 +1,196 @@
 <div class="container">
   <h1>Ricerca Operazioni</h1>
+
+  <!-- Search Form -->
+  <div class="search-form" [formGroup]="searchForm">
+    <div class="form-row">
+      <div class="form-group">
+        <dx-date-box
+          id="trxDataDal"
+          formControlName="trxDataDal"
+          type="date"
+          label="Data da"
+          format="dd/MM/yyyy"
+          displayFormat="dd/MM/yyyy"
+        ></dx-date-box>
+      </div>
+
+      <div class="form-group">
+        <dx-date-box
+          id="trxDataAl"
+          formControlName="trxDataAl"
+          type="date"
+          label="Data a"
+          format="dd/MM/yyyy"
+          displayFormat="dd/MM/yyyy"
+        ></dx-date-box>
+      </div>
+
+      <div class="form-group">
+        <dx-text-box
+          id="trxCassa"
+          formControlName="trxCassa"
+          placeholder="Codice Cassa"
+          label="Cassa"
+        ></dx-text-box>
+      </div>
+
+      <div class="form-group">
+        <dx-autocomplete
+          id="trxLocalita"
+          formControlName="trxLocalita"
+          placeholder="Filiale"
+          label="Filiale"
+          [items]="branches()"
+          displayExpr="braDes"
+          valueExpr="braId"
+        ></dx-autocomplete>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <dx-autocomplete
+          id="trxDivope"
+          formControlName="trxDivope"
+          placeholder="Valuta"
+          label="Valuta"
+          [items]="currencies()"
+          displayExpr="curLondes"
+          valueExpr="curId"
+        ></dx-autocomplete>
+      </div>
+
+      <div class="form-group">
+        <dx-number-box
+          id="trxImpopeDA"
+          formControlName="trxImpopeDA"
+          placeholder="Importo minimo"
+          label="Importo minimo"
+          format="#,##0.00"
+        ></dx-number-box>
+      </div>
+
+      <div class="form-group">
+        <dx-number-box
+          id="trxImpopeA"
+          formControlName="trxImpopeA"
+          placeholder="Importo massimo"
+          label="Importo massimo"
+          format="#,##0.00"
+        ></dx-number-box>
+      </div>
+
+      <div class="form-group">
+        <dx-autocomplete
+          id="trxCutId"
+          formControlName="trxCutId"
+          placeholder="Genere operazione"
+          label="Genere operazione"
+          [items]="currencyTypes()"
+          displayExpr="cutDes"
+          valueExpr="cutId"
+        ></dx-autocomplete>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <dx-autocomplete
+          id="trxOptId"
+          formControlName="trxOptId"
+          placeholder="Tipo operazione"
+          label="Tipo operazione"
+          [items]="stOperationsTypes()"
+          displayExpr="optDes"
+          valueExpr="optId"
+        ></dx-autocomplete>
+      </div>
+
+      <div class="form-group">
+        <dx-text-box
+          id="arcAppName"
+          formControlName="arcAppName"
+          placeholder="Nome comparente"
+          label="Nome comparente"
+        ></dx-text-box>
+      </div>
+
+      <div class="form-group">
+        <dx-check-box
+          id="trxReverse"
+          formControlName="trxReverse"
+          text="Solo stornate"
+        ></dx-check-box>
+      </div>
+
+      <div class="form-group">
+        <dx-check-box
+          id="arcForced"
+          formControlName="arcForced"
+          text="Solo forzate vigilanza"
+        ></dx-check-box>
+      </div>
+    </div>
+
+    <div class="form-group button-group" style="justify-content: flex-end;">
+      <dx-button
+        text="Ricerca"
+        type="success"
+        (onClick)="search()"
+        [disabled]="isLoading()"
+      ></dx-button>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  @if (error()) {
+    <div class="error-message">
+      {{ error() }}
+    </div>
+  }
+
+  <!-- Loading Indicator -->
+  @if (isLoading()) {
+    <div class="loading-message">
+      Caricamento...
+    </div>
+  }
+
+  <!-- Data Grid -->
+  @if (!isLoading() && operations().length > 0) {
+    <div class="data-grid-container">
+    <dx-data-grid
+      [dataSource]="operations()"
+      keyExpr="trxId"
+      [showBorders]="true"
+      [columnAutoWidth]="true"
+      [allowColumnReordering]="true"
+      [allowColumnResizing]="true"
+    >
+      <dxo-paging [pageSize]="10" [enabled]="true"></dxo-paging>
+      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]" [showInfo]="true"></dxo-pager>
+      
+      <dxi-column dataField="trxId" caption="TRX_ID" width="80"></dxi-column>
+      <dxi-column dataField="trxDate" caption="Data" width="120" dataType="datetime" format="dd/MM/yyyy"></dxi-column>
+      <dxi-column dataField="cutDes" caption="Genere" width="150"></dxi-column>
+      <dxi-column dataField="optDes" caption="Tipo" width="150"></dxi-column>
+      <dxi-column dataField="trxReport" caption="Report" width="100"></dxi-column>
+      <dxi-column dataField="trxCurId" caption="Div" width="80"></dxi-column>
+      <dxi-column dataField="trxAmount" caption="Importo" width="120" dataType="number" format="#,##0.00"></dxi-column>
+      <dxi-column dataField="trxRate" caption="Cambio" width="100" dataType="number" format="#,##0.0000"></dxi-column>
+      <dxi-column dataField="appearerName" caption="Nome Comparente" width="180"></dxi-column>
+      <dxi-column dataField="beneficiaryName" caption="Nome Beneficiario" width="180"></dxi-column>
+      <dxi-column dataField="staDes" caption="Stato" width="100"></dxi-column>
+    </dx-data-grid>
+    </div>
+  }
+
+  <!-- No Data Message -->
+  @if (!isLoading() && operations().length === 0 && !error()) {
+    <div class="no-data-message">
+      Nessuna operazione trovata
+    </div>
+  }
 </div>
+

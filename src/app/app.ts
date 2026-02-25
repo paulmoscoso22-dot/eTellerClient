@@ -23,7 +23,7 @@ config({ licenseKey });
 })
 export class App implements OnInit, OnDestroy {
 
-  protected readonly title = signal('Fido.Angular');
+  protected readonly title = signal('eTeller.Angular');
 
   isDarkTheme = false;
   isSidebarVisible = signal(true);
@@ -52,34 +52,12 @@ export class App implements OnInit, OnDestroy {
     effect(() => {
       this.isDarkTheme = this.themeService.currentTheme().includes('dark');
     });
-
-    // Aggiorna il breadcrumb dopo il rendering iniziale
-    // afterNextRender(() => {
-    //   this.updateBreadcrumbFromCurrentUrl();
-    // });
   }
 
   async ngOnInit(): Promise<void> {
     // Inizializza il tema
     await this.initializeTheme();
-    
-    // Carica il menu dal backend
-    await this.menuService.loadMenu();
-    
-    // Sottoscrivi agli eventi di navigazione
-    // this.navigationSubscription = this.router.events
-    //   .pipe(filter(event => event instanceof NavigationEnd))
-    //   .subscribe(() => {
-    //     // Usa setTimeout per evitare l'errore ExpressionChangedAfterItHasBeenCheckedError
-    //     setTimeout(() => this.updateBreadcrumbFromCurrentUrl(), 0);
-    //   });
-
-    // Pre-carica i dati di lookup in background dopo l'inizializzazione
-    // Delay di 2 secondi per dare priorità al caricamento iniziale
-    setTimeout(() => {
-      console.log('Starting background preload of lookup data...');
-      //this.lookupDataService.preloadAll();
-    }, 2000);
+   
   }
 
   private async initializeTheme(): Promise<void> {
@@ -131,88 +109,12 @@ export class App implements OnInit, OnDestroy {
       const menuItem = this.menuService.findMenuItemByUrl(item.link);
       if (menuItem) {
         // Deseleziona tutti e seleziona quello cliccato
-        this.deselectAllMenuItems(this.menuService.getCurrentMenuItems());
+       this.deselectAllMenuItems(this.menuService.getCurrentMenuItems());
         menuItem.isSelected = true;
       }
       
       this.router.navigateByUrl(item.link);
     }
-  }
-
-  private updateBreadcrumbFromCurrentUrl(): void {
-    const currentUrl = this.location.path() || '/';
-    const menuItem = this.menuService.findMenuItemByUrl(currentUrl);
-    
-    if (menuItem) {
-      // Deseleziona tutti e seleziona quello corrente
-      this.deselectAllMenuItems(this.menuService.getCurrentMenuItems());
-      menuItem.isSelected = true;
-      
-      // Calcola e aggiorna il breadcrumb
-      const trail = this.buildMenuTrail(this.menuService.getCurrentMenuItems(), menuItem);
-      const items: BreadcrumbItem[] = [];
-      
-      trail.forEach((item, index) => {
-        items.push({
-          label: item.label,
-          link: item.url || '',
-          isActive: index === trail.length - 1
-        });
-      });
-      
-      this.breadcrumbItems.set(items);
-    } else if (currentUrl === '/') {
-      // Landing page - mostra 'Home'
-      this.deselectAllMenuItems(this.menuService.getCurrentMenuItems());
-      const homeItem = this.menuService.findMenuItemByUrl('/');
-      if (homeItem) {
-        homeItem.isSelected = true;
-        this.breadcrumbItems.set([
-          { label: 'Home', link: '/', isActive: true }
-        ]);
-      } else {
-        this.breadcrumbItems.set([]);
-      }
-    }
-  }
-
-  private findMenuItemByUrl(items: MenuItem[], url: string): MenuItem | null {
-    for (const item of items) {
-      if (item.url === url) {
-        return item;
-      }
-      
-      if (item.children && item.children.length > 0) {
-        const found = this.findMenuItemByUrl(item.children, url);
-        if (found) {
-          return found;
-        }
-      }
-    }
-    return null;
-  }
-
-  private buildMenuTrail(items: MenuItem[], target: MenuItem): MenuItem[] {
-    const trail: MenuItem[] = [];
-    this.findMenuPath(items, target, trail);
-    return trail;
-  }
-
-  private findMenuPath(items: MenuItem[], target: MenuItem, path: MenuItem[]): boolean {
-    for (const item of items) {
-      path.push(item);
-      
-      if (item === target) {
-        return true;
-      }
-      
-      if (item.children && item.children.length > 0 && this.findMenuPath(item.children, target, path)) {
-        return true;
-      }
-      
-      path.pop();
-    }
-    return false;
   }
 
   private deselectAllMenuItems(items: MenuItem[]): void {
