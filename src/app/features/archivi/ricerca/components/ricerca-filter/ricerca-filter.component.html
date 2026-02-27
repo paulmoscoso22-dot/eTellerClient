@@ -1,8 +1,4 @@
-<div class="container">
-  <h1>Ricerca Transazioni - Antiriciclaggio</h1>
-
-  <!-- Search Form -->
-  <div class="search-form" [formGroup]="searchForm">
+<div class="search-form" [formGroup]="searchForm">
     <div class="form-row">
       <div class="form-group">
         <dx-date-box
@@ -12,6 +8,7 @@
           label="Data Dal"
           format="dd/MM/yyyy"
           displayFormat="dd/MM/yyyy"
+          (onValueChanged)="onDateDalChanged($event)"
         ></dx-date-box>
       </div>
 
@@ -23,6 +20,7 @@
           label="Data Al"
           format="dd/MM/yyyy"
           displayFormat="dd/MM/yyyy"
+          (onValueChanged)="onDateAlChanged($event)"
         ></dx-date-box>
       </div>
     </div>
@@ -148,48 +146,3 @@
         ></dx-button>
       </div>
   </div>
-
-  <!-- Error Message -->
-  @if (error()) {
-    <div class="error-message">
-      {{ error() }}
-    </div>
-  }
-
-  <!-- Loading Indicator -->
-  @if (isLoading()) {
-    <div class="loading-message">
-      Caricamento...
-    </div>
-  }
-
-  <!-- Data Grid -->
-  @if (!isLoading() && transactions().length > 0) {
-    <div class="data-grid-container">
-    <dx-data-grid
-      [dataSource]="transactions()"
-      keyExpr="trxId"
-      [showBorders]="true"
-      [columnAutoWidth]="true"
-      [allowColumnReordering]="true"
-      [allowColumnResizing]="true"
-    >
-      <dxo-paging [pageSize]="10" [enabled]="true"></dxo-paging>
-      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]" [showInfo]="true"></dxo-pager>
-      <dxi-column dataField="trxDatope" caption="Data Operazione" width="130" dataType="datetime" format="dd/MM/yyyy"></dxi-column>
-      <dxi-column dataField="trxImpope" caption="Importo" width="100" dataType="number"></dxi-column>
-      <dxi-column dataField="trxStatus" caption="Status" width="70"></dxi-column>
-      <dxi-column dataField="trxDivope" caption="Divisione" width="100"></dxi-column>
-      <dxi-column dataField="trxId" caption="ID" width="60"></dxi-column>
-      
-    </dx-data-grid>
-    </div>
-  }
-
-  <!-- No Data Message -->
-  @if (!isLoading() && transactions().length === 0 && !error()) {
-    <div class="no-data-message">
-      Nessuna transazione trovata
-    </div>
-  }
-</div>

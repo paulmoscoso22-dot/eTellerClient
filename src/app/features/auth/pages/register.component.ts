@@ -81,9 +81,6 @@ export class RegisterComponent implements OnInit {
     // Call auth facade to perform registration
     this.authFacade.register({ username, email, password }).subscribe({
       next: (response) => {
-        // Save credentials in facade
-        this.authFacade.saveRegisteredCredentials({ username, password });
-        
         this.isLoading = false;
         this.successMessage = 'Registration successful! Redirecting to login...';
         setTimeout(() => {

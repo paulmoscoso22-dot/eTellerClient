@@ -1,23 +1,20 @@
 import { Component, OnInit, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DxDataGridModule, DxTextBoxModule, DxDateBoxModule, DxNumberBoxModule, DxButtonModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
-import { GetTransactionWithFiltersResponse } from '../../domain/transaction.models';
+import { GetTransactionOperazioniAnnulateResponse } from '../../domain/transaction.models';
+import { TransactionStatus } from '../../domain/transaction-status.enum';
+import { ReportFilterComponent } from '../../components/report-filter/report-filter.component';
+import { OperazioniAnnullateGridComponent } from '../../components/operazioni-annullate-grid/operazioni-annullate-grid.component';
 
 @Component({
   selector: 'app-operazioni-annullate',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    DxDataGridModule,
-    DxTextBoxModule,
-    DxDateBoxModule,
-    DxNumberBoxModule,
-    DxButtonModule
+    ReportFilterComponent,
+    OperazioniAnnullateGridComponent
   ],
   templateUrl: './operazioni-annullate.component.html',
   styleUrls: ['./operazioni-annullate.component.css'],
@@ -26,29 +23,18 @@ export class OperazioniAnnullateComponent implements OnInit, OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
   private subscription: Subscription | null = null;
   
-  transactions = signal<GetTransactionWithFiltersResponse[]>([]);
+  transactions = signal<GetTransactionOperazioniAnnulateResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
-  searchForm: FormGroup;
+  statusDefaultValue = TransactionStatus.Annullato;
 
-  constructor(
-    private reportFacade: ReportFacade,
-    private formBuilder: FormBuilder
-  ) {
-    this.searchForm = this.formBuilder.group({
-      trxCassa: ['', Validators.required],
-      trxDataDal: [null, Validators.required],
-      trxDataAl: [null, Validators.required],
-      trxStatus: [null, [Validators.required, Validators.min(0)]],
-      trxBraId: ['', Validators.required]
-    });
-  }
+  constructor(private reportFacade: ReportFacade) {}
 
   /**
    * Angular lifecycle hook - Initialize component
    */
   ngOnInit(): void {
-    this.search();
+    // Component initialized - filter will trigger search when ready
   }
 
   /**
@@ -68,13 +54,17 @@ export class OperazioniAnnullateComponent implements OnInit, OnDestroy {
     }
   }
 
-  search(): void {
-    if (this.searchForm.invalid) {
+  /**
+   * Handle search event from filter component
+   */
+  onSearch(filterData: any): void {
+    const { trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId } = filterData;
+    
+    if (!trxDataDal || !trxDataAl) {
       this.error.set('Please fill in all required fields correctly');
       return;
     }
-
-    const { trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId } = this.searchForm.value;
+    
     this.getTransactionWithFilters(trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId);
   }
 
@@ -98,7 +88,7 @@ export class OperazioniAnnullateComponent implements OnInit, OnDestroy {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.subscription = this.reportFacade.getTransactionWithFilters(
+    this.subscription = this.reportFacade.getTransactionOperazioniAnnullate(
       trxCassa,
       trxDataDal,
       trxDataAl,
@@ -108,7 +98,7 @@ export class OperazioniAnnullateComponent implements OnInit, OnDestroy {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (data) => {
-        this.transactions.set(data as GetTransactionWithFiltersResponse[]);
+        this.transactions.set(data as GetTransactionOperazioniAnnulateResponse[]);
         this.isLoading.set(false);
         console.log('Transazioni Operazioni Annullate:', data, this.isLoading());
       },

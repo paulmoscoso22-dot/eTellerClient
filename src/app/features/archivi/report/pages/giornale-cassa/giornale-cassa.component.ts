@@ -1,23 +1,20 @@
 import { Component, OnInit, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DxDataGridModule, DxTextBoxModule, DxDateBoxModule, DxNumberBoxModule, DxButtonModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
-import { GetTransactionWithFiltersResponse } from '../../domain/transaction.models';
+import { GetTransactionGiornaleCassaResponse } from '../../domain/transaction.models';
+import { TransactionStatus } from '../../domain/transaction-status.enum';
+import { ReportFilterComponent } from '../../components/report-filter/report-filter.component';
+import { GiornaleCassaGridComponent } from '../../components/giornale-cassa-grid/giornale-cassa-grid.component';
 
 @Component({
   selector: 'app-giornale-cassa',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    DxDataGridModule,
-    DxTextBoxModule,
-    DxDateBoxModule,
-    DxNumberBoxModule,
-    DxButtonModule
+    ReportFilterComponent,
+    GiornaleCassaGridComponent
   ],
   templateUrl: './giornale-cassa.component.html',
   styleUrls: ['./giornale-cassa.component.css'],
@@ -26,29 +23,18 @@ export class GiornaleCassaComponent implements OnInit, OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
   private subscription: Subscription | null = null;
   
-  transactions = signal<GetTransactionWithFiltersResponse[]>([]);
+  transactions = signal<GetTransactionGiornaleCassaResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
-  searchForm: FormGroup;
+  statusDefaultValue = TransactionStatus.Eseguito;
 
-  constructor(
-    private reportFacade: ReportFacade,
-    private formBuilder: FormBuilder
-  ) {
-    this.searchForm = this.formBuilder.group({
-      trxCassa: ['', Validators.required],
-      trxDataDal: [null, Validators.required],
-      trxDataAl: [null, Validators.required],
-      trxStatus: [null, [Validators.required, Validators.min(0)]],
-      trxBraId: ['', Validators.required]
-    });
-  }
+  constructor(private reportFacade: ReportFacade) {}
 
   /**
    * Angular lifecycle hook - Initialize component
    */
   ngOnInit(): void {
-    this.search();
+    // Component initialized - filter will trigger search when ready
   }
 
   /**
@@ -68,13 +54,17 @@ export class GiornaleCassaComponent implements OnInit, OnDestroy {
     }
   }
 
-  search(): void {
-    if (this.searchForm.invalid) {
+  /**
+   * Handle search event from filter component
+   */
+  onSearch(filterData: any): void {
+    const { trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId } = filterData;
+    
+    if (!trxDataDal || !trxDataAl) {
       this.error.set('Please fill in all required fields correctly');
       return;
     }
-
-    const { trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId } = this.searchForm.value;
+    
     this.getTransactionWithFilters(trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId);
   }
 
@@ -98,7 +88,7 @@ export class GiornaleCassaComponent implements OnInit, OnDestroy {
     this.isLoading.set(true);
     this.error.set(null);
 
-    const data$: Observable<GetTransactionWithFiltersResponse[]> = this.reportFacade.getTransactionWithFilters(
+    const data$: Observable<GetTransactionGiornaleCassaResponse[]> = this.reportFacade.getTransactionGiornaleCassa(
       trxCassa,
       trxDataDal,
       trxDataAl,
@@ -110,7 +100,7 @@ export class GiornaleCassaComponent implements OnInit, OnDestroy {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (data) => {
-        this.transactions.set(data as GetTransactionWithFiltersResponse[]);
+        this.transactions.set(data as GetTransactionGiornaleCassaResponse[]);
         this.isLoading.set(false);
         console.log('Transazioni con filtri:', data, this.isLoading());
       },

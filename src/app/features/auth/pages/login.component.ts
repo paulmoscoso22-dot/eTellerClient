@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { DxTextBoxModule, DxButtonModule, DxFormModule } from 'devextreme-angular';
 import { AuthFacade } from '../auth.facade';
 import { Router } from '@angular/router';
+import { LoginCommand } from '../domain/auth.models';
 
 @Component({
   selector: 'app-login',
@@ -45,18 +46,37 @@ export class LoginComponent implements OnInit {
 
     const { username, password } = this.loginForm.value;
 
+    // Build LoginCommand with form values and defaults
+    const loginCommand: LoginCommand = {
+      userId: username,
+      password: password,
+      ipAddress: this.getClientIpAddress(),
+      isCashDesk: false,
+      cashDeskId: null,
+      branchId: null,
+      macAddress: null,
+      forceLogin: false,
+      isNewSession: true
+    };
+
     // Call auth facade to perform login
-    this.authFacade.login({ username, password }).subscribe({
+    this.authFacade.login(loginCommand).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.authFacade.setAuthToken(response.token);
-        this.router.navigate(['/app']);
+        // Token is already stored by the facade
+        this.router.navigate(['/']);
       },
       error: (error) => {
         this.isLoading = false;
         this.errorMessage = error.error?.message || 'Login failed. Please try again.';
       },
     });
+  }
+
+  private getClientIpAddress(): string {
+    // In a browser environment, the actual IP address is typically obtained from the server
+    // For now, return a placeholder. The backend should extract the real IP from the request.
+    return 'client-ip';
   }
 
   get username() {

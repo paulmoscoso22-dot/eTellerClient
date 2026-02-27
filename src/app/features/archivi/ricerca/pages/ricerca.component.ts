@@ -1,15 +1,5 @@
 import { Component, OnInit, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { 
-  DxDataGridModule, 
-  DxTextBoxModule, 
-  DxDateBoxModule, 
-  DxNumberBoxModule, 
-  DxButtonModule,
-  DxCheckBoxModule,
-  DxAutocompleteModule
-} from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
 import { RicercaFacade } from '../services/ricerca.facade';
@@ -22,20 +12,16 @@ import {
   GiornaleAntiriciclaggioTransaction,
   GetTransactionWithFiltersForGiornaleAntiriciclaggioResponse
 } from '../../report/domain/transaction.models';
+import { RicercaFilterComponent } from '../components/ricerca-filter/ricerca-filter.component';
+import { RicercaGridComponent } from '../components/ricerca-grid/ricerca-grid.component';
 
 @Component({
   selector: 'app-ricerca',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    DxDataGridModule,
-    DxTextBoxModule,
-    DxDateBoxModule,
-    DxNumberBoxModule,
-    DxButtonModule,
-    DxCheckBoxModule,
-    DxAutocompleteModule
+    RicercaFilterComponent,
+    RicercaGridComponent
   ],
   templateUrl: './ricerca.component.html',
   styleUrls: ['./ricerca.component.css'],
@@ -51,28 +37,11 @@ export class RicercaComponent implements OnInit, OnDestroy {
   branches = signal<Branch[]>([]);
   currencyTypes = signal<CurrencyType[]>([]);
   stOperationsTypes = signal<StOperationType[]>([]);
-  searchForm: FormGroup;
 
   constructor(
     private ricercaFacade: RicercaFacade,
-    private formBuilder: FormBuilder,
     private service: Service
-  ) {
-    this.searchForm = this.formBuilder.group({
-      trxCassa: [''],
-      trxLocalita: [''],
-      trxDataDal: [null],
-      trxDataAl: [null],
-      trxReverse: [false],
-      trxCutId: [''],
-      trxOptId: [''],
-      trxDivope: [''],
-      trxImpopeDA: [null],
-      trxImpopeA: [null],
-      arcAppName: [''],
-      arcForced: [false]
-    });
-  }
+  ) {}
 
   /**
    * Angular lifecycle hook - Initialize component
@@ -116,22 +85,20 @@ export class RicercaComponent implements OnInit, OnDestroy {
     }
   }
 
-  search(): void {
-    const formValue = this.searchForm.value;
-    
+  onSearch(params: any): void {
     this.getTransactionWithFiltersForGiornaleAntiriciclaggio(
-      formValue.trxCassa,
-      formValue.trxLocalita,
-      formValue.trxDataDal,
-      formValue.trxDataAl,
-      formValue.trxReverse,
-      formValue.trxCutId,
-      formValue.trxOptId,
-      formValue.trxDivope,
-      formValue.trxImpopeDA,
-      formValue.trxImpopeA,
-      formValue.arcAppName,
-      formValue.arcForced
+      params.trxCassa,
+      params.trxLocalita,
+      params.trxDataDal,
+      params.trxDataAl,
+      params.trxReverse,
+      params.trxCutId,
+      params.trxOptId,
+      params.trxDivope,
+      params.trxImpopeDA,
+      params.trxImpopeA,
+      params.arcAppName,
+      params.arcForced
     );
   }
 

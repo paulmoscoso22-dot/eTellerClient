@@ -1,22 +1,20 @@
 import { Component, OnInit, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DxDataGridModule, DxTextBoxModule, DxDateBoxModule, DxButtonModule } from 'devextreme-angular';
+import { DxDataGridModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
 import { GetTotaleCassaResponse } from '../../domain/totale-cassa.models';
+import { TotaleCassaFilterComponent } from '../../components/totale-cassa-filter/totale-cassa-filter.component';
+import { ApplyFilterMode } from 'devextreme/common/grids';
 
 @Component({
   selector: 'app-totali-cassa',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     DxDataGridModule,
-    DxTextBoxModule,
-    DxDateBoxModule,
-    DxButtonModule
+    TotaleCassaFilterComponent
   ],
   templateUrl: './totali-cassa.component.html',
   styleUrls: ['./totali-cassa.component.css'],
@@ -28,19 +26,11 @@ export class TotaliCassaComponent implements OnInit, OnDestroy {
   totaliCassa = signal<GetTotaleCassaResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
-  searchForm: FormGroup;
+  showFilterRow = true;
+  showHeaderFilter = true;
+  currentFilter: ApplyFilterMode = 'auto';
 
-  constructor(
-    private reportFacade: ReportFacade,
-    private formBuilder: FormBuilder
-  ) {
-    this.searchForm = this.formBuilder.group({
-      tocCliId: ['', Validators.required],
-      tocData: [null, Validators.required],
-      tocCutId: ['', Validators.required],
-      tocBraId: ['', Validators.required]
-    });
-  }
+  constructor(private reportFacade: ReportFacade) {}
 
   /**
    * Angular lifecycle hook - Initialize component
@@ -66,13 +56,17 @@ export class TotaliCassaComponent implements OnInit, OnDestroy {
     }
   }
 
-  search(): void {
-    if (this.searchForm.invalid) {
+  /**
+   * Handle search event from filter component
+   */
+  onSearch(filterData: any): void {
+    const { tocCliId, tocData, tocCutId, tocBraId } = filterData;
+
+    if (!tocCliId || !tocData || !tocCutId || !tocBraId) {
       this.error.set('Per favore, compila tutti i campi obbligatori');
       return;
     }
 
-    const { tocCliId, tocData, tocCutId, tocBraId } = this.searchForm.value;
     this.getTotaliCassa(tocCliId, tocData, tocCutId, tocBraId);
   }
 

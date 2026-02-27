@@ -2,11 +2,14 @@
   <div class="login-card">
     <h1 class="login-title">Login</h1>
 
-    <div *ngIf="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </div>
+    @if (errorMessage) {
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+    }
 
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+
       <!-- Username Field -->
       <div class="form-group">
         <label class="form-label">Username</label>
@@ -19,15 +22,22 @@
           mode="text"
         >
         </dx-text-box>
-        <div *ngIf="username?.invalid && username?.touched" class="error-text">
-          <div *ngIf="username?.errors?.['required']">Username is required</div>
-          <div *ngIf="username?.errors?.['minlength']">
-            Username must be at least 3 characters
+        @if (username?.invalid && username?.touched) {
+          <div class="error-text">
+            @if (username?.errors?.['required']) {
+              <div>Username is required</div>
+            }
+            @if (username?.errors?.['minlength']) {
+              <div>
+                Username must be at least 3 characters
+              </div>
+            }
           </div>
-        </div>
+        }
       </div>
 
       <!-- Password Field -->
+
       <div class="form-group">
         <label class="form-label">Password</label>
         <dx-text-box
@@ -39,15 +49,22 @@
           mode="password"
         >
         </dx-text-box>
-        <div *ngIf="password?.invalid && password?.touched" class="error-text">
-          <div *ngIf="password?.errors?.['required']">Password is required</div>
-          <div *ngIf="password?.errors?.['minlength']">
-            Password must be at least 6 characters
+        @if (password?.invalid && password?.touched) {
+          <div class="error-text">
+            @if (password?.errors?.['required']) {
+              <div>Password is required</div>
+            }
+            @if (password?.errors?.['minlength']) {
+              <div>
+                Password must be at least 6 characters
+              </div>
+            }
           </div>
-        </div>
+        }
       </div>
 
       <!-- Login Button -->
+
       <dx-button
         text="Login"
         type="success"

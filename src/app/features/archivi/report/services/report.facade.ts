@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { GetTransactionWaitingForBefRequest, GetTransactionWaitingForBefResponse, GetTransactionWithFiltersForGiornaleRequest, GetTransactionWithFiltersForGiornaleResponse, GetTransactionWithFiltersRequest, GetTransactionWithFiltersResponse } from '../domain/transaction.models';
+import { GetTransactionGiornaleCassaResponse, GetTransactionOperazioniAnnulateResponse, GetTransactionWaitingForBefRequest, GetTransactionWaitingForBefResponse, GetTransactionWithFiltersForGiornaleRequest, GetTransactionWithFiltersForGiornaleResponse, GetTransactionWithFiltersRequest, GetTransactionWithFiltersResponse } from '../domain/transaction.models';
 import { GetTotaleCassaRequest, GetTotaleCassaResponse } from '../domain/totale-cassa.models';
 
 /**
@@ -42,7 +42,7 @@ export class ReportFacade {
     };
 
     return this.http.post<GetTransactionWaitingForBefResponse[]>(
-      `${environment.apiUrl}/Transaction/WaitingForBEF`,
+      `${environment.apiUrl}/Report/WaitingForBEF`,
       payload
     );
   }
@@ -73,7 +73,69 @@ export class ReportFacade {
     };
 
     return this.http.post<GetTransactionWithFiltersForGiornaleResponse[]>(
-      `${environment.apiUrl}/Transaction/WithFiltersForGiornale`,
+      `${environment.apiUrl}/Report/WithFiltersForGiornale`,
+      payload
+    );
+  }
+
+  /**
+   * Get transactions for Giornale di Cassa
+   * 
+   * @param trxCassa - Transaction cash register identifier
+   * @param trxDataDal - Start date for transaction range
+   * @param trxDataAl - End date for transaction range
+   * @param trxStatus - Status filter for transactions
+   * @param trxBraId - Branch identifier
+   * @returns Observable of giornale cassa transactions
+   */
+  getTransactionGiornaleCassa(
+    trxCassa: string,
+    trxDataDal: Date,
+    trxDataAl: Date,
+    trxStatus: number,
+    trxBraId: string
+  ): Observable<GetTransactionGiornaleCassaResponse[]> {
+    const payload: GetTransactionWithFiltersRequest = {
+      trxCassa,
+      trxDataDal,
+      trxDataAl,
+      trxStatus,
+      trxBraId
+    };
+
+    return this.http.post<GetTransactionGiornaleCassaResponse[]>(
+      `${environment.apiUrl}/Report/GetSpGiornaleCassa`,
+      payload
+    );
+  }
+
+  /**
+   * Get operazioni annullate transactions
+   * 
+   * @param trxCassa - Transaction cash register identifier
+   * @param trxDataDal - Start date for transaction range
+   * @param trxDataAl - End date for transaction range
+   * @param trxStatus - Status filter for transactions
+   * @param trxBraId - Branch identifier
+   * @returns Observable of operazioni annullate transactions
+   */
+  getTransactionOperazioniAnnullate(
+    trxCassa: string,
+    trxDataDal: Date,
+    trxDataAl: Date,
+    trxStatus: number,
+    trxBraId: string
+  ): Observable<GetTransactionOperazioniAnnulateResponse[]> {
+    const payload: GetTransactionWithFiltersRequest = {
+      trxCassa,
+      trxDataDal,
+      trxDataAl,
+      trxStatus,
+      trxBraId
+    };
+
+    return this.http.post<GetTransactionOperazioniAnnulateResponse[]>(
+      `${environment.apiUrl}/Report/GetSpOperazioniAnnullate`,
       payload
     );
   }
@@ -104,7 +166,7 @@ export class ReportFacade {
     };
 
     return this.http.post<GetTransactionWithFiltersResponse[]>(
-      `${environment.apiUrl}/Transaction/WithFilters`,
+      `${environment.apiUrl}/Report/WithFilters`,
       payload
     );
   }
@@ -137,13 +199,13 @@ export class ReportFacade {
 
     const payload: GetTotaleCassaRequest = {
       tocCliId,
-      tocData: formattedDate as any, // Send as formatted string, not Date
+      tocData: formattedDate as any, // Send as formatted strinEg, not Date
       tocCutId,
       tocBraId
     };
 
     return this.http.post<GetTotaleCassaResponse[]>(
-      `${environment.apiUrl}/TotaleCassa/GetTotaliCassa`,
+      `${environment.apiUrl}/Report/GetTotaliCassa`,
       payload
     );
   }

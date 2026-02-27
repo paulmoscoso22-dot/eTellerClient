@@ -2,56 +2,14 @@
   <h1>Totali di Cassa</h1>
 
   <!-- Search Form -->
-  <div class="search-form" [formGroup]="searchForm">
-    <div class="form-row">
-      <div class="form-group">
-        <dx-text-box
-          id="tocCliId"
-          formControlName="tocCliId"
-          placeholder="Codice Cassa"
-          label="Cassa"
-        ></dx-text-box>
-      </div>
-
-      <div class="form-group">
-        <dx-date-box
-          id="tocData"
-          formControlName="tocData"
-          type="date"
-          label="Data"
-          format="dd/MM/yyyy"
-          displayFormat="dd/MM/yyyy"
-        ></dx-date-box>
-      </div>
-
-      <div class="form-group">
-        <dx-text-box
-          id="tocCutId"
-          formControlName="tocCutId"
-          placeholder="Tipo conto"
-          label="Tipo conto"
-        ></dx-text-box>
-      </div>
-
-      <div class="form-group">
-        <dx-text-box
-          id="tocBraId"
-          formControlName="tocBraId"
-          placeholder="Località"
-          label="Località"
-        ></dx-text-box>
-      </div>
-    </div>
-
-    <div class="form-group button-group">
-      <dx-button
-        text="Ricerca"
-        type="success"
-        (onClick)="search()"
-        [disabled]="isLoading()"
-      ></dx-button>
-    </div>
-  </div>
+  <app-totale-cassa-filter
+    [isLoading]="isLoading"
+    [cassaRequired]="true"
+    [dataRequired]="true"
+    [tipContoRequired]="true"
+    [localitaRequired]="true"
+    (searchClick)="onSearch($event)"
+  ></app-totale-cassa-filter>
 
   <!-- Error Message -->
   @if (error()) {
@@ -71,6 +29,7 @@
   @if (!isLoading() && totaliCassa().length > 0) {
     <div class="data-grid-container">
       <dx-data-grid
+        id="gridContainer"
         [dataSource]="totaliCassa()"
         keyExpr="tocCurId"
         [showBorders]="true"
@@ -78,15 +37,32 @@
         [allowColumnReordering]="true"
         [allowColumnResizing]="true"
       >
-        <dxo-paging [pageSize]="10" [enabled]="true"></dxo-paging>
-        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]" [showInfo]="true"></dxo-pager>
+        <dxo-data-grid-filter-row
+          [visible]="showFilterRow"
+          [applyFilter]="currentFilter"
+        ></dxo-data-grid-filter-row>
+        <dxo-data-grid-header-filter
+          [visible]="showHeaderFilter"
+        ></dxo-data-grid-header-filter>
+        <dxo-data-grid-search-panel
+          [visible]="true"
+          [width]="240"
+          placeholder="Cerca..."
+        ></dxo-data-grid-search-panel>
+        <dxo-data-grid-paging [pageSize]="10" [enabled]="true"></dxo-data-grid-paging>
+        <dxo-data-grid-pager
+          [visible]="true"
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[10, 25, 50, 100]"
+          [showInfo]="true"
+        ></dxo-data-grid-pager>
         
-        <dxi-column dataField="tocCurId" caption="Unità" width="100"></dxi-column>
-        <dxi-column dataField="tocSaldoIni" caption="Saldo iniziale" width="130" dataType="number" format="#,##0.00"></dxi-column>
-        <dxi-column dataField="tocTotdare" caption="Dare" width="120" dataType="number" format="#,##0.00"></dxi-column>
-        <dxi-column dataField="tocTotdareCtv" caption="Dare CTV" width="130" dataType="number" format="#,##0.00"></dxi-column>
-        <dxi-column dataField="tocTotavere" caption="Avere" width="120" dataType="number" format="#,##0.00"></dxi-column>
-        <dxi-column dataField="tocSaldoFin" caption="Saldo finale" width="130" dataType="number" format="#,##0.00"></dxi-column>
+        <dxi-data-grid-column dataField="tocCurId" caption="Unità"></dxi-data-grid-column>
+        <dxi-data-grid-column dataField="tocSaldoIni" caption="Saldo iniziale" dataType="number" format="#,##0.00" alignment="left"></dxi-data-grid-column>
+        <dxi-data-grid-column dataField="tocTotdare" caption="Dare" dataType="number" format="#,##0.00" alignment="left"></dxi-data-grid-column>
+        <dxi-data-grid-column dataField="tocTotdareCtv" caption="Dare CTV" dataType="number" format="#,##0.00" alignment="left"></dxi-data-grid-column>
+        <dxi-data-grid-column dataField="tocTotavere" caption="Avere" dataType="number" format="#,##0.00" alignment="left"></dxi-data-grid-column>
+        <dxi-data-grid-column dataField="tocSaldoFin" caption="Saldo finale" dataType="number" format="#,##0.00" alignment="left"></dxi-data-grid-column>
       </dx-data-grid>
     </div>
   }

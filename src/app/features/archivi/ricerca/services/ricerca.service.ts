@@ -26,7 +26,7 @@ export class RicercaService {
     request: GetTransactionWithFiltersForGiornaleAntiriciclaggioRequest
   ): Observable<GetTransactionWithFiltersForGiornaleAntiriciclaggioResponse[]> {
     return this.http.post<GetTransactionWithFiltersForGiornaleAntiriciclaggioResponse[]>(
-      `${environment.apiUrl}/Transaction/WithFiltersForGiornaleAntiriciclaggio`,
+      `${environment.apiUrl}/Ricerca/WithFiltersForGiornaleAntiriciclaggio`,
       request
     );
   }

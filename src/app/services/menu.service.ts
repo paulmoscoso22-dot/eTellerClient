@@ -69,6 +69,7 @@ export class MenuService  {
           children: [
             {
               label: 'menu.bigliettiBanca',
+              url: 'biglietti-banca',
               icon: 'money',
               isVisible: true,
               children: [
@@ -78,6 +79,7 @@ export class MenuService  {
             },
             {
               label: 'menu.moneteMetalli',
+              url: 'monete-metalli',
               icon: 'gold',
               isVisible: true,
               children: [

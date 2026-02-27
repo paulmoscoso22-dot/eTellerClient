@@ -1,0 +1,68 @@
+<!-- Data Grid -->
+@if (!isLoading() && transactions().length > 0) {
+  <div class="data-grid-container">
+    <dx-data-grid
+      id="gridContainer"
+      [dataSource]="transactions()"
+      keyExpr="trxId"
+      [showBorders]="true"
+      [columnAutoWidth]="true"
+      [allowColumnReordering]="true"
+      [allowColumnResizing]="true"
+    >
+      <dxo-data-grid-filter-row
+        [visible]="showFilterRow"
+        [applyFilter]="currentFilter"
+      ></dxo-data-grid-filter-row>
+      <dxo-data-grid-header-filter
+        [visible]="showHeaderFilter"
+      ></dxo-data-grid-header-filter>
+      <dxo-data-grid-search-panel
+        [visible]="true"
+        [width]="240"
+        placeholder="Cerca..."
+      ></dxo-data-grid-search-panel>
+      <dxo-data-grid-paging [pageSize]="10" [enabled]="true"></dxo-data-grid-paging>
+      <dxo-data-grid-pager
+        [visible]="true"
+        [showPageSizeSelector]="true"
+        [allowedPageSizes]="[10, 25, 50, 100]"
+        [showInfo]="true"
+      ></dxo-data-grid-pager>
+      <dxi-data-grid-column dataField="trxId" caption="ID" alignment="left"></dxi-data-grid-column>
+      <dxi-data-grid-column dataField="genere" caption="Genere"></dxi-data-grid-column>
+      <dxi-data-grid-column dataField="tipo" caption="Tipo"></dxi-data-grid-column>
+      <dxi-data-grid-column dataField="report" caption="Report"></dxi-data-grid-column>
+      <dxi-data-grid-column dataField="nop" caption="Nop"></dxi-data-grid-column>
+      <dxi-data-grid-column dataField="trxDivope" caption="Div. Ope."></dxi-data-grid-column>
+      <dxi-data-grid-column dataField="trxDivctp" caption="Div. Ctp."></dxi-data-grid-column>
+      <dxi-data-grid-column dataField="trxImpope" caption="Imp. Ope." alignment="left"></dxi-data-grid-column>
+      <dxi-data-grid-column dataField="bigliettiBanca" caption="Biglietti Banca"></dxi-data-grid-column>
+      <dxi-data-grid-column dataField="nonContanti" caption="Non Contanti"></dxi-data-grid-column>
+      <dxi-data-grid-column dataField="contanti" caption="Contanti"></dxi-data-grid-column>
+      <dxi-data-grid-column dataField="impCHF" caption="Imp. CHF"></dxi-data-grid-column>
+      <dxi-data-grid-column dataField="stato" caption="Stato"></dxi-data-grid-column>
+    </dx-data-grid>
+  </div>
+}
+
+<!-- Error Message -->
+@if (error()) {
+  <div class="error-message">
+    {{ error() }}
+  </div>
+}
+
+<!-- Loading Indicator -->
+@if (isLoading()) {
+  <div class="loading-message">
+    Caricamento...
+  </div>
+}
+
+<!-- No Data Message -->
+@if (!isLoading() && transactions().length === 0 && !error()) {
+  <div class="no-data-message">
+    Nessuna transazione trovata
+  </div>
+}

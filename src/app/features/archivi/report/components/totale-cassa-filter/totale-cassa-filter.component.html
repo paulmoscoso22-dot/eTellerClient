@@ -1,0 +1,50 @@
+<div class="search-form" [formGroup]="searchForm">
+  <div class="form-row">
+    <div class="form-group">
+      <dx-text-box
+        id="tocCliId"
+        formControlName="tocCliId"
+        placeholder="Codice Cassa"
+        label="Cassa"
+      ></dx-text-box>
+    </div>
+
+    <div class="form-group">
+      <dx-date-box
+        id="tocData"
+        formControlName="tocData"
+        type="date"
+        label="Data"
+        format="dd/MM/yyyy"
+        displayFormat="dd/MM/yyyy"
+      ></dx-date-box>
+    </div>
+
+    <div class="form-group">
+      <dx-text-box
+        id="tocCutId"
+        formControlName="tocCutId"
+        placeholder="Tipo conto"
+        label="Tipo conto"
+      ></dx-text-box>
+    </div>
+
+    <div class="form-group">
+      <dx-text-box
+        id="tocBraId"
+        formControlName="tocBraId"
+        placeholder="Località"
+        label="Località"
+      ></dx-text-box>
+    </div>
+  </div>
+
+  <div class="form-group button-group">
+    <dx-button
+      text="Ricerca"
+      type="success"
+      (onClick)="search()"
+      [disabled]="isLoading()"
+    ></dx-button>
+  </div>
+</div>

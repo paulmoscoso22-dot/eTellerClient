@@ -1,8 +1,14 @@
 import { Routes } from '@angular/router';
+import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 
 export const routes: Routes = [
   {
+    path: 'login',
+    loadComponent: () => import('./features/auth/pages/login.component').then(m => m.LoginComponent)
+  },
+  {
     path: '',
+    component: MainLayoutComponent,
     children: [
       //Operazioni
       {
@@ -19,7 +25,7 @@ export const routes: Routes = [
       },
       {
         path: 'ricerca',
-        loadComponent: () => import('./features/archivi/ricercaReport/pages/ricerca.component').then(m => m.RicercaComponent)
+        loadComponent: () => import('./features/archivi/ricerca/pages/ricerca.component').then(m => m.RicercaComponent)
       },
       {
         path: 'attesa-benefondo',

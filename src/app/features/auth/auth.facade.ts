@@ -1,22 +1,9 @@
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
-import { environment } from '../../../environments/environment';
-
-export interface LoginRequest {
-  username: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  token: string;
-  user: {
-    id: string;
-    username: string;
-    email: string;
-  };
-}
+import { tap } from 'rxjs/operators';
+import { LoginCommand, LoginResponse } from './domain/auth.models';
+import { AuthService } from './services/auth.service';
 
 export interface RegisterRequest {
   username: string;
@@ -41,14 +28,12 @@ export interface RegisterResponse {
   providedIn: 'root',
 })
 export class AuthFacade {
-  private readonly apiUrl = `${environment.apiUrl}/auth`;
+  private readonly authService = inject(AuthService);
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   private isBrowser: boolean;
-  private registeredCredentials: LoginRequest | null = null;
 
   constructor(
-    private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -63,21 +48,17 @@ export class AuthFacade {
   }
 
   /**
-   * Login with username and password
+   * Login with user credentials
+   * @param command - Login command with credentials and session info
+   * @returns Observable of LoginResponse
    */
-  login(credentials: LoginRequest): Observable<LoginResponse> {
-    // TODO: Uncomment when server is available
-    // return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
-    
-    // Mock response for development
-    return of({
-      token: 'mock-jwt-token-' + Date.now(),
-      user: {
-        id: '1',
-        username: credentials.username,
-        email: credentials.username + '@example.com',
-      },
-    });
+  login(command: LoginCommand): Observable<LoginResponse> {
+    return this.authService.login(command).pipe(
+      tap((response) => {
+        // Store token and update auth status
+        this.setAuthToken(response.token);
+      })
+    );
   }
 
   /**
@@ -159,26 +140,5 @@ export class AuthFacade {
       }
     }
     this.isAuthenticatedSubject.next(true);
-  }
-
-  /**
-   * Save registered credentials for automatic login
-   */
-  saveRegisteredCredentials(credentials: LoginRequest): void {
-    this.registeredCredentials = { ...credentials };
-  }
-
-  /**
-   * Get registered credentials
-   */
-  getRegisteredCredentials(): LoginRequest | null {
-    return this.registeredCredentials ? { ...this.registeredCredentials } : null;
-  }
-
-  /**
-   * Clear registered credentials
-   */
-  clearRegisteredCredentials(): void {
-    this.registeredCredentials = null;
   }
 }
