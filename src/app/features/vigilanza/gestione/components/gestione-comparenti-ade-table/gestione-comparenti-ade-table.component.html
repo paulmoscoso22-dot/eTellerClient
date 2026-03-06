@@ -1,0 +1,68 @@
+<!-- Error Message -->
+@if (error) {
+  <div class="error-message">
+    {{ error }}
+  </div>
+}
+
+<!-- Loading Indicator -->
+@if (isLoading) {
+  <div class="loading-message">
+    Caricamento...
+  </div>
+}
+
+<!-- Data Grid -->
+@if (!isLoading && appearers.length > 0) {
+  <div class="data-grid-container">
+  <dx-data-grid
+    id="gridContainer"
+    [dataSource]="appearers"
+    keyExpr="araId"
+    [showBorders]="true"
+    [columnAutoWidth]="true"
+    [allowColumnReordering]="true"
+    [allowColumnResizing]="true"
+  >
+    <dxo-data-grid-filter-row
+      [visible]="showFilterRow"
+      [applyFilter]="currentFilter"
+    ></dxo-data-grid-filter-row>
+    <dxo-data-grid-header-filter
+      [visible]="showHeaderFilter"
+    ></dxo-data-grid-header-filter>
+    <dxo-data-grid-search-panel
+      [visible]="true"
+      [width]="240"
+      placeholder="Cerca..."
+    ></dxo-data-grid-search-panel>
+    <dxo-data-grid-paging [pageSize]="10" [enabled]="true"></dxo-data-grid-paging>
+    <dxo-data-grid-pager 
+      [visible]="true" 
+      [showPageSizeSelector]="true" 
+      [allowedPageSizes]="[10, 25, 50, 100]" 
+      [showInfo]="true"
+    ></dxo-data-grid-pager>
+    
+    <dxi-data-grid-column dataField="araId" caption="ID Ara" alignment="left"></dxi-data-grid-column>
+    <dxi-data-grid-column dataField="araBirthplace" caption="Luogo Nascita"></dxi-data-grid-column>
+    <dxi-data-grid-column dataField="araIddocnum" caption="N. Documento"></dxi-data-grid-column>
+    <dxi-data-grid-column dataField="araDocexpdate" caption="Scadenza Doc." dataType="date" format="dd/MM/yyyy"></dxi-data-grid-column>
+    <dxi-data-grid-column dataField="araIsupdated" caption="Aggiornato" dataType="boolean"></dxi-data-grid-column>
+    <dxi-data-grid-column dataField="araIscanceled" caption="Cancellato" dataType="boolean"></dxi-data-grid-column>
+    <dxi-data-grid-column type="buttons" caption="Azione">
+      <dxi-button icon="edit" hint="Update" [onClick]="onUpdateClick"></dxi-button>
+      <dxi-button icon="close" hint="Cancel"></dxi-button>
+    </dxi-data-grid-column>
+
+    <dxo-selection mode="single"></dxo-selection>
+  </dx-data-grid>
+  </div>
+}
+
+<!-- No Data Message -->
+@if (!isLoading && appearers.length === 0 && !error) {
+  <div class="no-data-message">
+    Nessun comparente trovato
+  </div>
+}

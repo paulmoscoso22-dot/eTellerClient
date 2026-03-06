@@ -1,0 +1,99 @@
+<div class="search-form" [formGroup]="searchForm">
+  <div class="form-row">
+    <div class="form-group">
+      <dx-text-box
+        id="Nome1"
+        formControlName="Nome1"
+        placeholder="Nome 1"
+        label="Nome 1"
+      ></dx-text-box>
+    </div>
+
+    <div class="form-group" [hidden]="true">
+      <dx-text-box
+        id="Nome2"
+        formControlName="Nome2"
+        placeholder="Nome 2"
+        label="Nome 2"
+      ></dx-text-box>
+    </div>
+
+    <div class="form-group" [hidden]="true">
+      <dx-text-box
+        id="Nome3"
+        formControlName="Nome3"
+        placeholder="Nome 3"
+        label="Nome 3"
+      ></dx-text-box>
+    </div>
+
+    <div class="form-group" [hidden]="true">
+      <dx-text-box
+        id="Nome4"
+        formControlName="Nome4"
+        placeholder="Nome 4"
+        label="Nome 4"
+      ></dx-text-box>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group" [hidden]="true">
+      <dx-date-box
+        id="AraBirthdate"
+        formControlName="AraBirthdate"
+        type="date"
+        label="Data Nascita"
+        format="date"
+        displayFormat="dd/MM/yyyy"
+        dateSerializationFormat="yyyy-MM-dd"
+      ></dx-date-box>
+    </div>
+
+    <div class="form-group" [hidden]="true">
+      <dx-date-box
+        id="MinRecdate"
+        formControlName="MinRecdate"
+        type="date"
+        label="Data Minima Rec."
+        format="date"
+        displayFormat="dd/MM/yyyy"
+        dateSerializationFormat="yyyy-MM-dd"
+      ></dx-date-box>
+    </div>
+
+    <div class="form-group">
+      <dx-check-box
+        id="AraRecComplete"
+        formControlName="AraRecComplete"
+        text="Record Completo"
+      ></dx-check-box>
+    </div>
+
+    <div class="form-group">
+      <dx-check-box
+        id="ShowExpiredRecords"
+        formControlName="ShowExpiredRecords"
+        text="Mostra Scaduti"
+      ></dx-check-box>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <dx-button
+      text="Ricerca"
+      type="default"
+      stylingMode="contained"
+      icon="search"
+      [disabled]="isLoading"
+      (onClick)="onSearch()"
+    ></dx-button>
+    <dx-button
+      text="Azzera"
+      type="normal"
+      stylingMode="outlined"
+      icon="revert"
+      (onClick)="onReset()"
+    ></dx-button>
+  </div>
+</div>

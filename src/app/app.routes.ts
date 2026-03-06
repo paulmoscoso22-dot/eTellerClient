@@ -51,11 +51,11 @@ export const routes: Routes = [
       },
       {
         path: 'gestione-regole',
-        loadComponent: () => import('./features/vigilanza/gestione/pages/gestione-regole.component').then(m => m.GestioneRegoleComponent)
+        loadComponent: () => import('./features/vigilanza/gestione/pages/gestione-regole/gestione-regole.component').then(m => m.GestioneRegoleComponent)
       },
       {
         path: 'gestione-comparenti-ade',
-        loadComponent: () => import('./features/vigilanza/gestione/pages/gestione-comparenti-ade.component').then(m => m.GestioneComparentiAdeComponent)
+        loadComponent: () => import('./features/vigilanza/gestione/pages/gestione-comparenti-ade/gestione-comparenti-ade.component').then(m => m.GestioneComparentiAdeComponent)
       },
       {
         path: 'help',

@@ -1,0 +1,130 @@
+<div class="update-container">
+  <form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-columns">
+      <!-- Primo Cologn -->
+      <div class="dx-fieldset">
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Id *</div>
+          <div class="dx-field-value">
+            <dx-number-box formControlName="AraId" [readOnly]="true">
+              <dx-validator>
+                <dxi-validation-rule type="required" message="Ara Id is required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-number-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Recdate *</div>
+          <div class="dx-field-value">
+            <dx-date-box formControlName="AraRecdate" type="date" displayFormat="dd/MM/yyyy">
+              <dx-validator>
+                <dxi-validation-rule type="required" message="Ara Recdate is required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-date-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Name *</div>
+          <div class="dx-field-value">
+            <dx-text-box formControlName="AraName">
+              <dx-validator>
+                <dxi-validation-rule type="required" message="Ara Name is required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Birthdate</div>
+          <div class="dx-field-value">
+            <dx-date-box formControlName="AraBirthdate" type="date" displayFormat="dd/MM/yyyy"></dx-date-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Birthplace</div>
+          <div class="dx-field-value">
+            <dx-text-box formControlName="AraBirthplace"></dx-text-box>
+          </div>
+        </div>
+        
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Is Updated *</div>
+          <div class="dx-field-value">
+            <dx-check-box formControlName="AraIsupdated"></dx-check-box>
+          </div>
+        </div>
+      </div>
+
+      <!-- Secondo Cologn -->
+      <div class="dx-fieldset">
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Nationality</div>
+          <div class="dx-field-value">
+            <dx-select-box
+              formControlName="AraNationality"
+              [dataSource]="countries()"
+              displayExpr="ctyShonamIta"
+              valueExpr="ctyIntcod"
+              [searchEnabled]="true"
+              placeholder="Seleziona Nazionalità...">
+            </dx-select-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Id Doc Num</div>
+          <div class="dx-field-value">
+            <dx-text-box formControlName="AraIddocnum"></dx-text-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Doc Exp Date</div>
+          <div class="dx-field-value">
+            <dx-date-box formControlName="AraDocexpdate" type="date" displayFormat="dd/MM/yyyy"></dx-date-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Rec Complete *</div>
+          <div class="dx-field-value">
+            <dx-check-box formControlName="AraRecComplete"></dx-check-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Represents</div>
+          <div class="dx-field-value">
+            <dx-text-box formControlName="AraRepresents"></dx-text-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Address</div>
+          <div class="dx-field-value">
+            <dx-text-box formControlName="AraAddress"></dx-text-box>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-button-container" style="text-align: right; padding-top: 20px; border-top: 1px solid #ddd; margin-top: 10px; display: flex; justify-content: flex-end; gap: 10px;">
+      <dx-button 
+        text="Ripristina" 
+        type="normal"
+        (onClick)="onReset()">
+      </dx-button>
+      <dx-button 
+        text="Aggiorna" 
+        type="default" 
+        [useSubmitBehavior]="true" 
+        [disabled]="updateForm.invalid">
+      </dx-button>
+    </div>
+
+  </form>
+</div>

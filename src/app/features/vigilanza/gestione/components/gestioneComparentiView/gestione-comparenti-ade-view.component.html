@@ -1,0 +1,66 @@
+<div class="container">
+  <h1>Gestione Comparenti ADE</h1>
+
+  <div class="actions-container">
+    <dx-button
+      text="Aggiungi"
+      type="default"
+      icon="plus"
+      (onClick)="openInsertPopup()"
+    ></dx-button>
+  </div>
+
+  <app-gestione-comparenti-ade-filter
+    [isLoading]="isLoading()"
+    (searchEvent)="onSearch($event)"
+    (resetEvent)="onReset()"
+  ></app-gestione-comparenti-ade-filter>
+
+  <app-gestione-comparenti-ade-table
+    [appearers]="appearers()"
+    [isLoading]="isLoading()"
+    [error]="error()"
+    [searched]="hasSearched()"
+    (updateEvent)="openUpdatePopup($event)"
+  ></app-gestione-comparenti-ade-table>
+
+</div>
+
+<dx-popup
+  [width]="900"
+  height="auto"
+  [showTitle]="true"
+  title="Aggiungi Comparente"
+  [dragEnabled]="false"
+  [hideOnOutsideClick]="true"
+  [visible]="insertPopupVisible()"
+  (visibleChange)="insertPopupVisible.set($event)"
+>
+  <div *dxTemplate="let data of 'content'">
+    @if (insertPopupVisible()) {
+      <app-gestione-comparenti-insert 
+        (saveSuccess)="onSaveSuccess($event)"
+      ></app-gestione-comparenti-insert>
+    }
+  </div>
+</dx-popup>
+
+<dx-popup
+  [width]="900"
+  height="auto"
+  [showTitle]="true"
+  title="Modifica Comparente"
+  [dragEnabled]="false"
+  [hideOnOutsideClick]="true"
+  [visible]="updatePopupVisible()"
+  (visibleChange)="updatePopupVisible.set($event)"
+>
+  <div *dxTemplate="let data of 'content'">
+    @if (updatePopupVisible()) {
+      <app-gestione-comparenti-update 
+        [araId]="selectedAraId()"
+        (updateSuccess)="onUpdateSuccess($event)"
+      ></app-gestione-comparenti-update>
+    }
+  </div>
+</dx-popup>

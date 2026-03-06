@@ -1,0 +1,19 @@
+.update-container {
+  padding: 10px;
+}
+
+.form-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.dx-fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+.dx-field {
+  margin-bottom: 15px;
+}
+

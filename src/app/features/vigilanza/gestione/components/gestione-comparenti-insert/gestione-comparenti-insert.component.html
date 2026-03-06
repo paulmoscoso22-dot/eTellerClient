@@ -1,0 +1,118 @@
+<div class="insert-container">
+  <form [formGroup]="insertForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-columns">
+      <!-- Primo Cologn -->
+      <div class="dx-fieldset">
+        <div class="dx-field">
+          <div class="dx-field-label">Data Registrazione *</div>
+          <div class="dx-field-value">
+            <dx-date-box formControlName="hisDate" type="date" displayFormat="dd/MM/yyyy">
+              <dx-validator>
+                <dxi-validation-rule type="required" message="Data Registrazione is required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-date-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Recdate *</div>
+          <div class="dx-field-value">
+            <dx-date-box formControlName="araRecdate" type="date" displayFormat="dd/MM/yyyy">
+              <dx-validator>
+                <dxi-validation-rule type="required" message="Ara Recdate is required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-date-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Name *</div>
+          <div class="dx-field-value">
+            <dx-text-box formControlName="araName">
+              <dx-validator>
+                <dxi-validation-rule type="required" message="Ara Name is required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Birthdate</div>
+          <div class="dx-field-value">
+            <dx-date-box formControlName="araBirthdate" type="date" displayFormat="dd/MM/yyyy"></dx-date-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Birthplace</div>
+          <div class="dx-field-value">
+            <dx-text-box formControlName="araBirthplace"></dx-text-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Nationality</div>
+          <div class="dx-field-value">
+            <dx-select-box
+              formControlName="araNationality"
+              [dataSource]="countries()"
+              displayExpr="ctyShonamIta"
+              valueExpr="ctyIntcod"
+              [searchEnabled]="true"
+              placeholder="Seleziona Nazionalità...">
+            </dx-select-box>
+          </div>
+        </div>
+      </div>
+
+      <!-- Secondo Cologn -->
+      <div class="dx-fieldset">
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Id Doc Num</div>
+          <div class="dx-field-value">
+            <dx-text-box formControlName="araIddocnum"></dx-text-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Doc Exp Date</div>
+          <div class="dx-field-value">
+            <dx-date-box formControlName="araDocexpdate" type="date" displayFormat="dd/MM/yyyy"></dx-date-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Rec Complete *</div>
+          <div class="dx-field-value">
+            <dx-check-box formControlName="araRecComplete"></dx-check-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Represents</div>
+          <div class="dx-field-value">
+            <dx-text-box formControlName="araRepresents"></dx-text-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Ara Address</div>
+          <div class="dx-field-value">
+            <dx-text-box formControlName="araAddress"></dx-text-box>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-button-container" style="text-align: right; padding-top: 20px; border-top: 1px solid #ddd; margin-top: 10px;">
+      <dx-button 
+        text="Salva" 
+        type="success" 
+        [useSubmitBehavior]="true" 
+        [disabled]="insertForm.invalid">
+      </dx-button>
+    </div>
+
+  </form>
+</div>

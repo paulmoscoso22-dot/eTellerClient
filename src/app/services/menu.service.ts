@@ -164,10 +164,10 @@ export class MenuService  {
         },
         {
           label: 'menu.gestione',
-          icon: 'config',
+          icon: 'toolbox',
           isVisible: true,
           children: [
-            { label: 'menu.gestioneRegole', url: 'gestione-regole', icon: 'ruler', isVisible: true },
+            { label: 'menu.gestioneRegole', url: 'gestione-regole', icon: 'preferences', isVisible: true },
             { label: 'menu.gestioneComparentiAde', url: 'gestione-comparenti-ade', icon: 'group', isVisible: true }
           ]
         }

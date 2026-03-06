@@ -1,0 +1,83 @@
+<div class="container">
+  <h1>Gestione Regole</h1>
+
+  <!-- Search Form -->
+  <div class="search-form">
+    <dx-form [formData]="filter">
+      <dxi-item itemType="group" [colCount]="4">
+        <dxi-item dataField="arlOpTypeId" editorType="dxTextBox">
+          <dxo-label text="Tipo oper."></dxo-label>
+        </dxi-item>
+        <dxi-item dataField="arlCurTypeId" editorType="dxTextBox">
+          <dxo-label text="Tipo div."></dxo-label>
+        </dxi-item>
+        <dxi-item dataField="arlAcctId" editorType="dxTextBox">
+          <dxo-label text="Conto"></dxo-label>
+        </dxi-item>
+        <dxi-item dataField="arlAcctType" editorType="dxTextBox">
+          <dxo-label text="Cat. conto"></dxo-label>
+        </dxi-item>
+      </dxi-item>
+    </dx-form>
+    <div class="button-group" style="margin-top: 20px; display: flex; justify-content: flex-end;">
+      <dx-button
+        text="Ricerca"
+        type="success"
+        stylingMode="contained"
+        (onClick)="onSearch()"
+        [disabled]="isLoading()"
+      ></dx-button>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  @if (error()) {
+    <div class="error-message">
+      {{ error() }}
+    </div>
+  }
+
+  <!-- Loading Indicator -->
+  @if (isLoading()) {
+    <div class="loading-message">
+      Caricamento...
+    </div>
+  }
+
+  <!-- Data Grid -->
+  @if (!isLoading() && rules().length > 0) {
+    <div class="data-grid-container">
+      <dx-data-grid
+        [dataSource]="rules()"
+        keyExpr="arlId"
+        [showBorders]="true"
+        [columnAutoWidth]="true"
+        [allowColumnReordering]="true"
+        [allowColumnResizing]="true"
+      >
+        <dxo-paging [pageSize]="10" [enabled]="true"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]" [showInfo]="true"></dxo-pager>
+        
+        <dxi-column dataField="arlId" caption="ID" [visible]="false"></dxi-column>
+        <dxi-column dataField="optDes" caption="Tipo oper." width="150"></dxi-column>
+        <dxi-column dataField="cutDes" caption="Tipo div." width="150"></dxi-column>
+        <dxi-column dataField="arlAcctId" caption="Conto" width="120"></dxi-column>
+        <dxi-column dataField="arlAcctType" caption="Cat. conto" width="120"></dxi-column>
+        <dxi-column dataField="arlLimit" caption="Limite" width="120" dataType="number" format="#,##0.00"></dxi-column>
+        <dxi-column dataField="arlValStart" caption="Inizio validità" width="130" dataType="date" format="dd.MM.yyyy"></dxi-column>
+        <dxi-column dataField="arlValEnd" caption="Fine validità" width="130" dataType="date" format="dd.MM.yyyy"></dxi-column>
+        <dxi-column dataField="arlRecDate" caption="Data rec." width="120" dataType="date" format="dd.MM.yyyy"></dxi-column>
+        <dxi-column dataField="arlIsinternal" caption="Reg. interna" width="110" dataType="boolean"></dxi-column>
+        <dxi-column dataField="arlExclude" caption="Reg. esclusa" width="110" dataType="boolean"></dxi-column>
+      </dx-data-grid>
+    </div>
+  }
+
+  <!-- No Data Message -->
+  @if (!isLoading() && rules().length === 0 && !error()) {
+    <div class="no-data-message">
+      Nessuna regola trovata
+    </div>
+  }
+</div>
+
