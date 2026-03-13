@@ -52,7 +52,7 @@
     <dxi-data-grid-column dataField="araIscanceled" caption="Cancellato" dataType="boolean"></dxi-data-grid-column>
     <dxi-data-grid-column type="buttons" caption="Azione">
       <dxi-button icon="edit" hint="Update" [onClick]="onUpdateClick"></dxi-button>
-      <dxi-button icon="close" hint="Cancel"></dxi-button>
+      <dxi-button icon="trash" hint="Elimina" [onClick]="onDeleteClick"></dxi-button>
     </dxi-data-grid-column>
 
     <dxo-selection mode="single"></dxo-selection>

@@ -13,15 +13,15 @@ export const routes: Routes = [
       //Operazioni
       {
         path: 'versamento',
-        loadComponent: () => import('./features/operations/contiCorrenti/pages/versamento.component').then(m => m.VersamentoComponent)
+        loadComponent: () => import('./features/operations/contiCorrenti/pages/versamento/versamento.component').then(m => m.VersamentoComponent)
       },
       {
         path: 'prelievo',
-        loadComponent: () => import('./features/operations/contiCorrenti/pages/prelievo.component').then(m => m.PrelievoComponent)
+        loadComponent: () => import('./features/operations/contiCorrenti/pages/prelevamento/prelievo.component').then(m => m.PrelievoComponent)
       },
       {
         path: 'estratto-conto',
-        loadComponent: () => import('./features/operations/contiCorrenti/pages/estratto-conto.component').then(m => m.EstratoContoComponent)
+        loadComponent: () => import('./features/operations/contiCorrenti/pages/estrattoConto/estratto-conto.component').then(m => m.EstratoContoComponent)
       },
       {
         path: 'ricerca',

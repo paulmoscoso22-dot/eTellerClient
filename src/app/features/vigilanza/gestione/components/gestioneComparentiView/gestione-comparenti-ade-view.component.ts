@@ -2,7 +2,8 @@ import { Component, OnInit, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GestioneComparentiAdeService } from '../../services/gestione-comparenti-ade.service';
-import { AppearerAllResponse, GetAppearerByParametersRequest } from '../../domain/gestione-comparenti-ade.models';
+import { AppearerAllResponse, DeleteAraRequest, GetAppearerByParametersRequest } from '../../domain/gestione-comparenti-ade.models';
+import notify from 'devextreme/ui/notify';
 import { GestioneComparentiAdeFilterComponent } from '../gestione-comparenti-ade-filter/gestione-comparenti-ade-filter.component';
 import { GestioneComparentiAdeTableComponent } from '../gestione-comparenti-ade-table/gestione-comparenti-ade-table.component';
 import { DxButtonModule, DxPopupModule } from 'devextreme-angular';
@@ -123,5 +124,26 @@ export class GestioneComparentiAdeViewComponent implements OnInit {
     this.appearers.set([]);
     this.error.set(null);
     this.hasSearched.set(false);
+  }
+
+  onDeleteAra(araId: number): void {
+    const request: DeleteAraRequest = {
+      TraUser: '', // Default or fetch from a user service
+      TraStation: '', // Default or fetch from a config service
+      AraId: araId
+    };
+
+    this.gestioneComparentiAdeService.deleteAra(request)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.appearers.update(curr => curr.filter(a => a.araId !== araId));
+          notify('Comparente eliminato con successo.', 'success', 3000);
+        },
+        error: (err) => {
+          console.error('Error deleting ARA:', err);
+          notify('Si è verificato un errore durante l\'eliminazione.', 'error', 4000);
+        }
+      });
   }
 }

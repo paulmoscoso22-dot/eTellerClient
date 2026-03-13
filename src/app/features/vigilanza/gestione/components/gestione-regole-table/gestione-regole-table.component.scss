@@ -1,0 +1,15 @@
+.data-grid-container {
+  margin-top: 16px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 8px;
+}
+
+.loading-message,
+.no-data-message {
+  margin-top: 16px;
+  font-style: italic;
+  color: #666;
+}

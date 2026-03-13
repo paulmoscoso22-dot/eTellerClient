@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-prelievo',
+  selector: 'app-versamento',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './prelievo.component.html',
-  styleUrls: ['./prelievo.component.css'],
+  templateUrl: './versamento.component.html',
+  styleUrl: './versamento.component.css',
 })
-export class PrelievoComponent {
+export class VersamentoComponent {
   constructor() {}
 }

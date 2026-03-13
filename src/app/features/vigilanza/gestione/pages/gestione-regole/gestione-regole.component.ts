@@ -1,13 +1,15 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DxDataGridModule, DxTextBoxModule, DxButtonModule, DxFormModule } from 'devextreme-angular';
-import { GestioneRegoleService, AntiRecRule } from '../../services/gestione-regole.service';
+import { DxButtonModule } from 'devextreme-angular';
+import { GestioneRegoleService, AntiRecRule, AntiRecRuleSearchParams } from '../../services/gestione-regole.service';
+import { GestioneRegoleTableComponent } from '../../components/gestione-regole-table/gestione-regole-table.component';
+import { GestioneRegoleFilterComponent } from '../../components/gestione-regole-filter/gestione-regole-filter.component';
 
 @Component({
   selector: 'app-gestione-regole',
   standalone: true,
-  imports: [CommonModule, FormsModule, DxDataGridModule, DxTextBoxModule, DxButtonModule, DxFormModule],
+  imports: [CommonModule, FormsModule, DxButtonModule, GestioneRegoleTableComponent, GestioneRegoleFilterComponent],
   templateUrl: './gestione-regole.component.html',
   styleUrls: ['./gestione-regole.component.scss']
 })
@@ -16,13 +18,6 @@ export class GestioneRegoleComponent implements OnInit {
   rules = signal<AntiRecRule[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
-  
-  filter = {
-    arlOpTypeId: '',
-    arlCurTypeId: '',
-    arlAcctId: '',
-    arlAcctType: ''
-  };
 
   constructor(private gestioneRegoleService: GestioneRegoleService) { }
 
@@ -30,11 +25,11 @@ export class GestioneRegoleComponent implements OnInit {
     //this.loadData();
   }
 
-  loadData(): void {
+  loadData(filter: AntiRecRuleSearchParams): void {
     this.isLoading.set(true);
     this.error.set(null);
     
-    this.gestioneRegoleService.GetSpAntirecRulesParameters(this.filter).subscribe({
+    this.gestioneRegoleService.GetSpAntirecRulesParameters(filter).subscribe({
       next: (data: AntiRecRule[]) => {
         this.rules.set(data);
         this.isLoading.set(false);
@@ -47,8 +42,19 @@ export class GestioneRegoleComponent implements OnInit {
     });
   }
 
-  onSearch(): void {
-    this.loadData();
+  onSearch(filterValues: any): void {
+    const filter: AntiRecRuleSearchParams = {
+      arlOpTypeId: filterValues.arlOpTypeId || '',
+      arlCurTypeId: filterValues.arlCurTypeId || '',
+      arlAcctId: filterValues.arlAcctId || '',
+      arlAcctType: filterValues.arlAcctType || ''
+    };
+    this.loadData(filter);
+  }
+
+  onReset(): void {
+    this.rules.set([]);
+    this.error.set(null);
   }
 }
 

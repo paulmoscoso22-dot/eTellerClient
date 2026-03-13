@@ -1,0 +1,57 @@
+<div class="search-form" [formGroup]="filterForm">
+  <div class="form-row">
+    <div class="form-group">
+      <dx-text-box
+        id="arlOpTypeId"
+        formControlName="arlOpTypeId"
+        placeholder="Tipo oper."
+        label="Tipo oper."
+      ></dx-text-box>
+    </div>
+
+    <div class="form-group">
+      <dx-text-box
+        id="arlCurTypeId"
+        formControlName="arlCurTypeId"
+        placeholder="Tipo div."
+        label="Tipo div."
+      ></dx-text-box>
+    </div>
+
+    <div class="form-group">
+      <dx-text-box
+        id="arlAcctId"
+        formControlName="arlAcctId"
+        placeholder="Conto"
+        label="Conto"
+      ></dx-text-box>
+    </div>
+
+    <div class="form-group">
+      <dx-text-box
+        id="arlAcctType"
+        formControlName="arlAcctType"
+        placeholder="Cat. conto"
+        label="Cat. conto"
+      ></dx-text-box>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <dx-button
+      text="Ricerca"
+      type="default"
+      stylingMode="contained"
+      icon="search"
+      [disabled]="isLoading"
+      (onClick)="onSearch()"
+    ></dx-button>
+    <dx-button
+      text="Azzera"
+      type="normal"
+      stylingMode="outlined"
+      icon="revert"
+      (onClick)="onReset()"
+    ></dx-button>
+  </div>
+</div>

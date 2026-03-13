@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './estratto-conto.component.html',
-  styleUrls: ['./estratto-conto.component.css'],
+  styleUrl: './estratto-conto.component.css',
 })
 export class EstratoContoComponent {
   constructor() {}
