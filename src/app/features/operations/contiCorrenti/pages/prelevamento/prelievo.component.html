@@ -15,9 +15,14 @@
     <!-- CONTI CORRENTI Section -->
     <dxi-item itemType="group" cssClass="panel-group">
       <dxi-item itemType="group" [colCount]="2">
-        <dxi-item dataField="nrConto" editorType="dxTextBox">
-          <dxo-label text="Nr conto"></dxo-label>
-          <dxo-button-options icon="search" (onClick)="showRicercaConto()"></dxo-button-options>
+        <dxi-item itemType="simple" [colSpan]="1">
+          <div style="display: flex; gap: 8px; align-items: flex-end;">
+            <div style="flex: 1;">
+              <label style="display: block; margin-bottom: 4px; font-weight: 500;">Nr conto</label>
+              <dx-text-box [(value)]="formData.nrConto"></dx-text-box>
+            </div>
+            <dx-button icon="search" (onClick)="showRicercaConto(formData.nrConto)" style="width: 40px; height: 40px;"></dx-button>
+          </div>
         </dxi-item>
         <dxi-item dataField="titolare" editorType="dxTextBox">
           <dxo-label text="Titolare"></dxo-label>
@@ -159,18 +164,16 @@
 <!-- ============================ RICERCA CONTO POPUP ==================================== -->
 <dx-popup
   [width]="600"
-  [height]="400"
+  [height]="600"
   [showTitle]="true"
   title="RICERCA CONTO CLIENTE"
   [dragEnabled]="false"
   [hideOnOutsideClick]="true"
-  [(visible)]="ricercaContoVisible"
+  [visible]="ricercaContoVisible()"
+  (visibleChange)="ricercaContoVisible.set($event)"
 >
   <div *dxTemplate="let data of 'content'">
-    <p>[ Campi ricerca conto ]</p>
-    <div class="text-center mt-3">
-      <dx-button text="Ritorna all'operazione" (onClick)="ricercaContoVisible = false"></dx-button>
-    </div>
+    <app-ricerca-conto-table></app-ricerca-conto-table>
   </div>
 </dx-popup>
 
@@ -182,7 +185,8 @@
   title="PANNELLO CALCOLO CAMBIO VALUTA"
   [dragEnabled]="false"
   [hideOnOutsideClick]="true"
-  [(visible)]="cambioVisible"
+  [visible]="cambioVisible()"
+  (visibleChange)="cambioVisible.set($event)"
 >
   <div *dxTemplate="let data of 'content'">
     <p>[ Tassi - Spread - Calcolo cambio ]</p>
@@ -197,7 +201,8 @@
   title="PANNELLO INFORMATIVO SISTEMA"
   [dragEnabled]="false"
   [hideOnOutsideClick]="true"
-  [(visible)]="appearerVisible"
+  [visible]="appearerVisible()"
+  (visibleChange)="appearerVisible.set($event)"
 >
   <div *dxTemplate="let data of 'content'">
     <p>[ Messaggi / warning operazione / AML ]</p>

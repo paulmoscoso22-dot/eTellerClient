@@ -7,6 +7,7 @@ import {
   DxButtonModule,
   DxCheckBoxModule
 } from 'devextreme-angular';
+import { ButtonRicercaComponent } from '../../../../../components/buttons/search/button-ricerca.component';
 
 @Component({
   selector: 'app-gestione-comparenti-ade-filter',
@@ -17,7 +18,8 @@ import {
     DxTextBoxModule,
     DxDateBoxModule,
     DxButtonModule,
-    DxCheckBoxModule
+    DxCheckBoxModule,
+    ButtonRicercaComponent
   ],
   templateUrl: './gestione-comparenti-ade-filter.component.html',
   styleUrls: ['./gestione-comparenti-ade-filter.component.scss'],

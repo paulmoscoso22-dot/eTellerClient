@@ -80,14 +80,7 @@
   </div>
 
   <div class="form-actions">
-    <dx-button
-      text="Ricerca"
-      type="default"
-      stylingMode="contained"
-      icon="search"
-      [disabled]="isLoading"
-      (onClick)="onSearch()"
-    ></dx-button>
+    <app-button-ricerca [isLoading]="isLoading" (onClick)="onSearch()"></app-button-ricerca>
     <dx-button
       text="Azzera"
       type="normal"

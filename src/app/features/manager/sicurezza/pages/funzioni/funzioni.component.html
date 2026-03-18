@@ -1,0 +1,48 @@
+<div class="container">
+  <h1>Funzioni</h1>
+
+  <dx-data-grid
+    [dataSource]="sysFunctions()"
+    [showBorders]="true"
+    [columnAutoWidth]="true"
+    [allowColumnReordering]="true"
+    [allowColumnResizing]="true"
+    columnResizingMode="nextColumn"
+    [selection]="{ mode: 'single' }"
+    (onSelectionChanged)="onFunctionSelect($event)">
+    <dxi-column dataField="funId" caption="Function ID" width="100" dataType="number"></dxi-column>
+    <dxi-column dataField="funName" caption="Function Name"></dxi-column>
+    <dxi-column dataField="funDescription" caption="Description"></dxi-column>
+    <dxi-column dataField="funHostcode" caption="Host Code" width="100" dataType="number"></dxi-column>
+    <dxi-column dataField="offline" caption="Offline" width="100" dataType="boolean"></dxi-column>
+  </dx-data-grid>
+
+  <hr class="my-4">
+
+  <h2>Roles for selected function</h2>
+  <dx-data-grid
+    [dataSource]="sysRoles()"
+    [showBorders]="true"
+    [columnAutoWidth]="true"
+    [allowColumnReordering]="true"
+    [allowColumnResizing]="true"
+    columnResizingMode="nextColumn">
+    <dxi-column dataField="roleId" caption="Role ID" width="100" dataType="number"></dxi-column>
+    <dxi-column dataField="roleName" caption="Role Name"></dxi-column>
+    <dxi-column dataField="roleDes" caption="Description"></dxi-column>
+  </dx-data-grid>
+
+  <hr class="my-4">
+
+  <h2>Users for selected function</h2>
+  <dx-data-grid
+    [dataSource]="usersRoleFunctions()"
+    [showBorders]="true"
+    [columnAutoWidth]="true"
+    [allowColumnReordering]="true"
+    [allowColumnResizing]="true"
+    columnResizingMode="nextColumn">
+    <dxi-column dataField="funName" caption="Function Name"></dxi-column>
+    <dxi-column dataField="usrId" caption="User ID"></dxi-column>
+  </dx-data-grid>
+</div>

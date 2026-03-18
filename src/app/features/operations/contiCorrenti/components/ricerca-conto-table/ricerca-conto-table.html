@@ -1,0 +1,30 @@
+<dx-data-grid
+  [dataSource]="customers()"
+  [showBorders]="true"
+  [columnAutoWidth]="true"
+  [allowColumnReordering]="true"
+  [allowColumnResizing]="true"
+  columnResizingMode="nextColumn">
+  <dxi-column dataField="cusCliId" caption="Client ID" width="100"></dxi-column>
+  <dxi-column dataField="cusName" caption="Name"></dxi-column>
+  <dxi-column dataField="cusDomicilio" caption="Address"></dxi-column>
+  <dxi-column dataField="cusNatura" caption="Nature"></dxi-column>
+</dx-data-grid>
+
+<hr class="my-4">
+
+<h5>Customer Accounts</h5>
+<dx-data-grid
+  [dataSource]="customerAccounts()"
+  [showBorders]="true"
+  [columnAutoWidth]="true"
+  [allowColumnReordering]="true"
+  [allowColumnResizing]="true"
+  columnResizingMode="nextColumn">
+  <dxi-column dataField="accId" caption="Account ID" width="100"></dxi-column>
+  <dxi-column dataField="accDivisa" caption="Currency"></dxi-column>
+  <dxi-column dataField="accNea" caption="NEA"></dxi-column>
+  <dxi-column dataField="accCategoria" caption="Category"></dxi-column>
+  <dxi-column dataField="accRubrica" caption="Description"></dxi-column>
+  <dxi-column dataField="accSaldo" caption="Balance" dataType="number"></dxi-column>
+</dx-data-grid>

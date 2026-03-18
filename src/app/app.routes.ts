@@ -63,27 +63,27 @@ export const routes: Routes = [
       },
       {
         path: 'info-autorizzazioni',
-        loadComponent: () => import('./features/manager/sicurezza/pages/info-autorizzazioni.component').then(m => m.InfoAutorizzazioniComponent)
+        loadComponent: () => import('./features/manager/sicurezza/pages/info-autorizzazioni/info-autorizzazioni.component').then(m => m.InfoAutorizzazioniComponent)
       },
       {
         path: 'funzioni',
-        loadComponent: () => import('./features/manager/sicurezza/pages/funzioni.component').then(m => m.FunzioniComponent)
+        loadComponent: () => import('./features/manager/sicurezza/pages/funzioni/funzioni.component').then(m => m.FunzioniComponent)
       },
       {
         path: 'personalizzazioni',
-        loadComponent: () => import('./features/manager/sicurezza/pages/personalizzazioni.component').then(m => m.PersonalizzazioniComponent)
+        loadComponent: () => import('./features/manager/sicurezza/pages/personalizzazioni/personalizzazioni.component').then(m => m.PersonalizzazioniComponent)
       },
       {
         path: 'ruoli',
-        loadComponent: () => import('./features/manager/sicurezza/pages/ruoli.component').then(m => m.RuoliComponent)
+        loadComponent: () => import('./features/manager/sicurezza/pages/ruoli/ruoli.component').then(m => m.RuoliComponent)
       },
       {
         path: 'utenti',
-        loadComponent: () => import('./features/manager/sicurezza/pages/utenti.component').then(m => m.UtentiComponent)
+        loadComponent: () => import('./features/manager/sicurezza/pages/utenti/utenti.component').then(m => m.UtentiComponent)
       },
       {
         path: 'utenti-collegati',
-        loadComponent: () => import('./features/manager/sicurezza/pages/utenti-collegati.component').then(m => m.UtentiCollegatiComponent)
+        loadComponent: () => import('./features/manager/sicurezza/pages/utenti-collegati/utenti-collegati.component').then(m => m.UtentiCollegatiComponent)
       },
       {
         path: 'casse',
