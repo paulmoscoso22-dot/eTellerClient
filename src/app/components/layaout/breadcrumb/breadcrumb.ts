@@ -3,6 +3,7 @@ import { BreadcrumbItem } from '../../../domain/breadcrumb-item';
 
 @Component({
   selector: 'app-breadcrumb',
+  standalone: true,
   imports: [],
   templateUrl: './breadcrumb.html',
   styleUrl: './breadcrumb.scss',

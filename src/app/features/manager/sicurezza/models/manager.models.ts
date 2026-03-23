@@ -16,6 +16,9 @@ export class InfoAutorizzazioneUtenteResponse {
 }
 
 //funzioni
+export class GetSysFunctionByFunIdRequest {
+  funId: number = 0;
+}
 
 export class SysFunctionsResponse {
   funId: number = 0;
@@ -38,14 +41,13 @@ export class SysRoleResponse {
 }
 
 //user role function
-
 export class GetUsersRoleFunIdRequest {
   funId: number = 0;
 }
 
 export class UsersRoleFunctionResponse {
-  funName: string = '';
   usrId: string = '';
+  usrExtref: string = '';
 }
 
 

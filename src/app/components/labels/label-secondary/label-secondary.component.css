@@ -1,0 +1,8 @@
+  /* keep existing spacing; override as needed */
+  .separator {
+  text-transform: uppercase;
+  color: #0056b3;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 5px;
+}
+

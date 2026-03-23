@@ -4,6 +4,7 @@ import { UserService } from '../../../../services/user.service';
 
 @Component({
   selector: 'app-user-badge',
+  standalone: true,
   imports: [],
   templateUrl: './user-badge.html',
   styleUrl: './user-badge.scss',

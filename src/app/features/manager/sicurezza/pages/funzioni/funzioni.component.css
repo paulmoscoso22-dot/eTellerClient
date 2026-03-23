@@ -1,5 +1,5 @@
 .container {
-  max-width: 600px;
+  max-width: 98%;
   margin: 20px auto;
   padding: 20px;
   background: white;
@@ -9,4 +9,31 @@ h1 {
   color: #333;
   margin-bottom: 20px;
   font-size: 24px;
+}
+
+.grids-row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.grid-column {
+  background: transparent;
+}
+
+.functions-col {
+  flex: 1 1 50%;
+}
+
+.roles-col {
+  flex: 0 0 48%;
+}
+
+@media (max-width: 900px) {
+  .grids-row {
+    flex-direction: column;
+  }
+  .roles-col, .functions-col {
+    flex: 1 1 100%;
+  }
 }

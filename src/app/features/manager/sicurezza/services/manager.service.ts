@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiService } from '../../../../services/api.service';
-import { GetAllUsersByUsrIdRequest, InfoAutorizzazioneUtenteResponse, SysFunctionsResponse, GetSysRoleByFunIdRequest, SysRoleResponse, GetUsersRoleFunIdRequest, UsersRoleFunctionResponse } from '../models/manager.models';
+import { GetAllUsersByUsrIdRequest, InfoAutorizzazioneUtenteResponse, SysFunctionsResponse, GetSysFunctionByFunIdRequest, GetSysRoleByFunIdRequest, SysRoleResponse, GetUsersRoleFunIdRequest, UsersRoleFunctionResponse } from '../models/manager.models';
 import { environment } from '../../../../../environments/environment';
 
 @Injectable({
@@ -16,6 +16,9 @@ export class ManagerService {
 
   private sysFunctionsSubject = new BehaviorSubject<SysFunctionsResponse[]>([]);
   public sysFunctions$ = this.sysFunctionsSubject.asObservable();
+
+  private sysFunctionSubject = new BehaviorSubject<SysFunctionsResponse | null>(null);
+  public sysFunction$ = this.sysFunctionSubject.asObservable();
 
   private sysRoleSubject = new BehaviorSubject<SysRoleResponse[]>([]);
   public sysRole$ = this.sysRoleSubject.asObservable();
@@ -38,6 +41,15 @@ export class ManagerService {
       {}
     ).pipe(
       tap(data => this.sysFunctionsSubject.next(data))
+    );
+  }
+
+  getSysFunctionByFunId(request: GetSysFunctionByFunIdRequest): Observable<SysFunctionsResponse> {
+    return this.apiService.post<SysFunctionsResponse>(
+      `/Manager/GetSysFunctionByFunId`,
+      request
+    ).pipe(
+      tap(data => this.sysFunctionSubject.next(data))
     );
   }
 

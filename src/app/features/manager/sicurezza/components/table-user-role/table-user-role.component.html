@@ -1,0 +1,15 @@
+<dx-data-grid
+  [dataSource]="dataSource"
+  [showBorders]="true"
+  [columnAutoWidth]="true"
+  [allowColumnReordering]="true"
+  [allowColumnResizing]="true"
+  columnResizingMode="nextColumn"
+  [paging]="{ pageSize: pageSize }"
+  [selection]="{ mode: 'single' }"
+  (onSelectionChanged)="selectionChanged.emit($event)">
+
+  <dxi-column dataField="usrExtref" caption="User"></dxi-column>
+  <dxi-column dataField="usrId" caption="User ID"></dxi-column>
+
+</dx-data-grid>

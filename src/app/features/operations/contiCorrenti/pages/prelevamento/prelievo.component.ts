@@ -14,6 +14,7 @@ import {
 import { ContiCorrenti } from '../../services/conti-correnti';
 import { CustomerCriteriaRequest, GetCustomerAccountsRequest } from '../../domain/conti-correnti-domain';
 import { RicercaContoTable } from '../../components/ricerca-conto-table/ricerca-conto-table';
+import { LabelSecondaryComponent } from '../../../../../components/labels/label-secondary/label-secondary.component';
 
 @Component({
   selector: 'app-prelievo',
@@ -29,7 +30,8 @@ import { RicercaContoTable } from '../../components/ricerca-conto-table/ricerca-
     DxDateBoxModule,
     DxTextAreaModule,
     DxPopupModule,
-    RicercaContoTable
+    RicercaContoTable,
+    LabelSecondaryComponent
   ],
   templateUrl: './prelievo.component.html',
   styleUrl: './prelievo.component.css',

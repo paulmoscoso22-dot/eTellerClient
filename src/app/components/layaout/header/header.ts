@@ -3,10 +3,10 @@ import { RouterLink } from '@angular/router';
 import { Logo } from './logo/logo';
 import { ApplicationName } from './application-name/application-name';
 import { UserBadge } from './user-badge/user-badge';
-import { EnvironmentBadge } from './environment-badge/environment-badge';
 
 @Component({
   selector: 'app-header',
+  standalone: true,
   imports: [Logo, ApplicationName, UserBadge, RouterLink],
   templateUrl: './header.html',
   styleUrl: './header.scss',

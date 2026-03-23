@@ -1,0 +1,16 @@
+<dx-data-grid
+  [dataSource]="dataSource"
+  [showBorders]="true"
+  [columnAutoWidth]="true"
+  [allowColumnReordering]="true"
+  [allowColumnResizing]="true"
+  columnResizingMode="nextColumn"
+  [selection]="{ mode: 'single' }"
+  (onSelectionChanged)="selectionChanged.emit($event)">
+
+  <dxo-paging [pageSize]="pageSize"></dxo-paging>
+
+  <dxi-column dataField="roleId" caption="Role ID" width="100" dataType="number"></dxi-column>
+  <dxi-column dataField="roleName" caption="Role Name"></dxi-column>
+
+</dx-data-grid>
