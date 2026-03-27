@@ -1,0 +1,130 @@
+<div class="container">
+  <h1>Trace</h1>
+
+  <form [formGroup]="filterForm" class="filter-grid">
+    <div class="filter-item">
+      <app-label-secondary [label]="'Funzione'"></app-label-secondary>
+      <dx-select-box
+        [items]="funzioni()"
+        displayExpr="tfcDes"
+        valueExpr="tfcId"
+        editorType="dxSelectBox"
+        [inputAttr]="{ 'aria-label': 'Funzione' }"
+        [searchEnabled]="true"
+        placeholder="Funzione"
+        [value]="filterForm.get('traFunCode')?.value"
+        (valueChange)="filterForm.get('traFunCode')?.setValue($event)">
+      </dx-select-box>
+    </div>
+
+    <div class="filter-item">
+      <app-label-secondary [label]="'Utente'"></app-label-secondary>
+      <dx-select-box
+        [items]="utenti()"
+        displayExpr="usrId"
+        valueExpr="usrId"
+        editorType="dxSelectBox"
+        [inputAttr]="{ 'aria-label': 'Utente' }"
+        [searchEnabled]="true"
+        placeholder="Utente"
+        [value]="filterForm.get('traUser')?.value"
+        (valueChange)="filterForm.get('traUser')?.setValue($event)">
+      </dx-select-box>
+    </div>
+
+    <div class="filter-item">
+      <app-label-secondary [label]="'Cassa'"></app-label-secondary>
+      <dx-select-box
+        [items]="clients()"
+        displayExpr="cliId"
+        valueExpr="cliId"
+        editorType="dxSelectBox"
+        [inputAttr]="{ 'aria-label': 'Cassa' }"
+        [searchEnabled]="true"
+        placeholder="Cassa"
+        [value]="filterForm.get('traStation')?.value"
+        (valueChange)="filterForm.get('traStation')?.setValue($event)">
+      </dx-select-box>
+    </div>
+
+    <div class="filter-item">
+      <app-label-secondary [label]="'Tabella'"></app-label-secondary>
+      <dx-select-box
+        [items]="tabellaItems()"
+        displayExpr="des"
+        valueExpr="id"
+        placeholder="Tabella"
+        editorType="dxSelectBox"
+        [inputAttr]="{ 'aria-label': 'Tabella' }"
+        [searchEnabled]="true"
+        [value]="filterForm.get('traTabNam')?.value"
+        (valueChange)="filterForm.get('traTabNam')?.setValue($event)">
+      </dx-select-box>
+    </div>
+
+    <div class="filter-item">
+      <app-label-secondary [label]="'Id Entità'"></app-label-secondary>
+      <dx-text-box placeholder="Id Entità" [value]="filterForm.get('traEntCode')?.value" (valueChange)="filterForm.get('traEntCode')?.setValue($event)"></dx-text-box>
+    </div>
+
+    <div class="filter-item">
+      <app-label-secondary [label]="'Errore'"></app-label-secondary>
+      <dx-select-box
+        [items]="errorOptions"
+        displayExpr="text"
+        valueExpr="id"
+        placeholder="Errore"
+        [value]="filterForm.get('traError')?.value"
+        (valueChange)="filterForm.get('traError')?.setValue($event)">
+      </dx-select-box>
+    </div>
+
+    <div class="filter-item">
+      <app-label-secondary [label]="'Dal'"></app-label-secondary>
+      <dx-date-box type="date" displayFormat="dd/MM/yyyy" placeholder="Dal" [value]="filterForm.get('dataFrom')?.value" (valueChange)="filterForm.get('dataFrom')?.setValue($event)"></dx-date-box>
+    </div>
+
+    <div class="filter-item">
+      <app-label-secondary [label]="'Al'"></app-label-secondary>
+      <dx-date-box type="date" displayFormat="dd/MM/yyyy" placeholder="Al" [value]="filterForm.get('dataTo')?.value" (valueChange)="filterForm.get('dataTo')?.setValue($event)"></dx-date-box>
+    </div>
+
+    <div class="filter-actions">
+      <app-button-ricerca text="Visualizza" (onClick)="onVisualizza()"></app-button-ricerca>
+    </div>
+  </form>
+
+  <dx-data-grid #dataGrid [dataSource]="traces()" [showBorders]="true" [selection]="{ mode: 'single' }" (onSelectionChanged)="onRowSelectionChanged($event)">
+    <dxi-column dataField="traId" caption="Id" alignment="left"></dxi-column>
+    <dxi-column dataField="traTime" caption="Data e ora" dataType="date" format="dd/MM/yyyy HH:mm:ss"></dxi-column>
+    <dxi-column dataField="traUser" caption="Utente"></dxi-column>
+    <dxi-column dataField="traFunCode" caption="Funzione"></dxi-column>
+    <dxi-column dataField="traSubFun" caption="Sottofunzione"></dxi-column>
+    <dxi-column dataField="traStation" caption="Stazione"></dxi-column>
+    <dxi-column dataField="traTabNam" caption="Tabella"></dxi-column>
+    <dxi-column dataField="traEntCode" caption="Entità"></dxi-column>
+
+    <dxi-column dataField="traError" caption="Errore" dataType="boolean"></dxi-column>
+  </dx-data-grid>
+
+  <ng-template #chooseTemplate let-cellData>
+      <dx-button
+      stylingMode="contained"
+      text="Scegli"
+      icon="info"
+      (onClick)="openDetail(cellData.data)">
+    </dx-button>
+  </ng-template>
+
+  <dx-popup
+    [visible]="detailVisible()"
+    (onHidden)="closeDetail()"
+    [showTitle]="true"
+    [width]="520"
+    [height]="560">
+    <div *dxTemplate="let data of 'content'">
+      <app-trace-detaill-component [trace]="selectedTrace()"></app-trace-detaill-component>
+    </div>
+  </dx-popup>
+
+</div>

@@ -10,6 +10,7 @@ import { DxButtonModule } from 'devextreme-angular';
 })
 export class ButtonRicercaComponent {
   @Input() isLoading: boolean = false;
+  @Input() text: string = 'Ricerca';
   @Output() onClick = new EventEmitter<void>();
 
   onButtonClick(): void {

@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { DxDataGridModule } from 'devextreme-angular';
+import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { DxDataGridModule, DxDataGridComponent } from 'devextreme-angular';
 
 @Component({
   selector: 'app-table-roles',
@@ -12,4 +12,13 @@ export class TableRolesComponent {
   @Input() dataSource: any;
   @Input() pageSize = 3;
   @Output() selectionChanged = new EventEmitter<any>();
+  @ViewChild(DxDataGridComponent) private grid?: DxDataGridComponent;
+
+  public clearSelection(): void {
+    try {
+      this.grid?.instance?.clearSelection();
+    } catch (e) {
+      // ignore
+    }
+  }
 }

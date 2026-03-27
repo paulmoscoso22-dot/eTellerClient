@@ -1,0 +1,61 @@
+.container {
+  max-width: 98%;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+/* Filter grid styles */
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.filter-item label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #444;
+  font-size: 13px;
+}
+
+.filter-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 6px;
+}
+
+/* Responsive: 2 columns on medium screens, 1 column on small screens */
+@media (max-width: 900px) {
+  .filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+  .filter-item label {
+    font-size: 12px;
+  }
+  .filter-actions {
+    justify-content: center;
+  }
+}
+
+/* Improve overall spacing for the data grid */
+dx-data-grid {
+  margin-top: 12px;
+}

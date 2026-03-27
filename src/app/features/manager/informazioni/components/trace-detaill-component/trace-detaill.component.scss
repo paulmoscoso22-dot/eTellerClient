@@ -1,0 +1,40 @@
+.trace-detaill-component {
+  h3 {
+    margin: 0 0 8px 0;
+    font-size: 1rem;
+  }
+  pre {
+    background: #f6f6f6;
+    padding: 8px;
+    border-radius: 4px;
+    overflow: auto;
+  }
+
+  .trace-item {
+    margin: 8px 0 16px 0;
+  }
+
+  .trace-kv-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .trace-kv-table th {
+    text-align: left; /* ensure title column is left-aligned */
+    width: 220px; /* reserve space for the title column */
+    padding: 6px 8px;
+    vertical-align: top;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .trace-kv-table td {
+    padding: 6px 8px;
+    vertical-align: top;
+    color: #222;
+  }
+
+  .trace-kv-table tr + tr th {
+    padding-top: 10px;
+  }
+}

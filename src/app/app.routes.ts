@@ -99,15 +99,15 @@ export const routes: Routes = [
       },
       {
         path: 'gestione-messaggi-host',
-        loadComponent: () => import('./features/manager/informazioni/pages/gestione-messaggi-host.component').then(m => m.GestioneMessaggiHostComponent)
+        loadComponent: () => import('./features/manager/informazioni/pages/gestione-messaggi-host/gestione-messaggi-host.component').then(m => m.GestioneMessaggiHostComponent)
       },
       {
         path: 'trace',
-        loadComponent: () => import('./features/manager/informazioni/pages/trace.component').then(m => m.TraceComponent)
+        loadComponent: () => import('./features/manager/informazioni/pages/trace/trace.component').then(m => m.TraceComponent)
       },
       {
         path: 'log-sched-task',
-        loadComponent: () => import('./features/manager/informazioni/pages/log-sched-task.component').then(m => m.LogSchedTaskComponent)
+        loadComponent: () => import('./features/manager/informazioni/pages/log-sched-task/log-sched-task.component').then(m => m.LogSchedTaskComponent)
       },
       //divise
       {

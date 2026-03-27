@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
 import { DxFormModule, DxButtonModule, DxTextBoxModule, DxCheckBoxModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ManagerService } from '../../services/manager.service';
+import { ManagerService } from '../../services/sicurezza.service';
 import { GetAllUsersByUsrIdRequest, InfoAutorizzazioneUtenteResponse } from '../../models/manager.models';
 import { ButtonRicercaComponent } from '../../../../../components/buttons/search/button-ricerca.component';
+import { AuthFacade } from '../../../../auth/auth.facade';
 
 @Component({
   selector: 'app-info-autorizzazioni',
@@ -16,11 +17,12 @@ import { ButtonRicercaComponent } from '../../../../../components/buttons/search
 })
 export class InfoAutorizzazioniComponent implements OnInit, OnDestroy {
   private readonly managerService = inject(ManagerService);
+  private readonly authFacade = inject(AuthFacade);
   private readonly destroyRef = inject(DestroyRef);
   userAuthorizations = signal<InfoAutorizzazioneUtenteResponse[]>([]);
-  
+
   filterData = signal<GetAllUsersByUsrIdRequest>({
-    usrId: '',
+    usrId: this.authFacade.getAuthTemp().User,
     funlikeName: undefined,
     funlikeDes: undefined,
     tutti: false
@@ -28,11 +30,18 @@ export class InfoAutorizzazioniComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadUserAuthorizations();
+    this.loadInitialData();
   }
 
   ngOnDestroy(): void {
     // Cleanup is automatically handled by takeUntilDestroyed
     
+  }
+
+  private loadInitialData(): void {
+    this.managerService.getAllUsersByUsrId(this.filterData())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({ error: (err) => console.error('Error loading user authorizations:', err) });
   }
 
   private loadUserAuthorizations(): void {
@@ -49,25 +58,16 @@ export class InfoAutorizzazioniComponent implements OnInit, OnDestroy {
   }
 
   onSearch(): void {
-    const request = this.filterData();
-    this.managerService.getAllUsersByUsrId(request)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (data) => {
-          this.userAuthorizations.set(data);
-        },
-        error: (error) => {
-          console.error('Error searching user authorizations:', error);
-        }
-      });
+    this.loadInitialData();
   }
 
   onClear(): void {
     this.filterData.set({
-      usrId: '',
+      usrId: this.authFacade.getAuthTemp().User,
       funlikeName: undefined,
       funlikeDes: undefined,
       tutti: false
     });
+    this.loadInitialData();
   }
 }

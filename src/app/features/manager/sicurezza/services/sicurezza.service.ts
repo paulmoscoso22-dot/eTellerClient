@@ -2,14 +2,16 @@ import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiService } from '../../../../services/api.service';
-import { GetAllUsersByUsrIdRequest, InfoAutorizzazioneUtenteResponse, SysFunctionsResponse, GetSysFunctionByFunIdRequest, GetSysRoleByFunIdRequest, SysRoleResponse, GetUsersRoleFunIdRequest, UsersRoleFunctionResponse } from '../models/manager.models';
+import { GetAllUsersByUsrIdRequest, InfoAutorizzazioneUtenteResponse, SysFunctionsResponse, GetSysFunctionByFunIdRequest, GetSysRoleByFunIdRequest, SysRoleResponse, GetUsersRoleFunIdRequest, UsersRoleFunctionResponse, InsertSysFunctionRequest, UpdateSysFunctionRequest, DeleteSysFunctionRequest } from '../models/manager.models';
 import { environment } from '../../../../../environments/environment';
+import { AuthTemp } from '../../../../features/auth/auth.facade';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ManagerService {
   private readonly apiService = inject(ApiService);
+  private readonly authTemp = new AuthTemp();
 
   private userAuthorizationsSubject = new BehaviorSubject<InfoAutorizzazioneUtenteResponse[]>([]);
   public userAuthorizations$ = this.userAuthorizationsSubject.asObservable();
@@ -25,6 +27,21 @@ export class ManagerService {
   
   private usersRoleFunctionSubject = new BehaviorSubject<UsersRoleFunctionResponse[]>([]);
   public usersRoleFunction$ = this.usersRoleFunctionSubject.asObservable();
+
+  private insertSysFunctionSubject = new BehaviorSubject<boolean>(false);
+  public insertSysFunction$ = this.insertSysFunctionSubject.asObservable();
+
+  private updateSysFunctionSubject = new BehaviorSubject<boolean>(false);
+  public updateSysFunction$ = this.updateSysFunctionSubject.asObservable();
+
+  private deleteSysFunctionSubject = new BehaviorSubject<boolean>(false);
+  public deleteSysFunction$ = this.deleteSysFunctionSubject.asObservable();
+
+  constructor() {
+    // Optionally, you can load initial data here
+
+  }
+
 
   getAllUsersByUsrId(request: GetAllUsersByUsrIdRequest): Observable<InfoAutorizzazioneUtenteResponse[]> {
     return this.apiService.post<InfoAutorizzazioneUtenteResponse[]>(
@@ -68,6 +85,33 @@ export class ManagerService {
       request
     ).pipe(
       tap(data => this.usersRoleFunctionSubject.next(data))
+    );
+  }
+
+  insertSysFunction(request: InsertSysFunctionRequest): Observable<boolean> {
+    return this.apiService.post<boolean>(
+      `/Manager/InsertSysFunction`,
+      request
+    ).pipe(
+      tap(data => this.insertSysFunctionSubject.next(data))
+    );
+  }
+
+  updateSysFunction(request: UpdateSysFunctionRequest): Observable<boolean> {
+    return this.apiService.put<boolean>(
+      `/Manager/UpdateSysFunction`,
+      request
+    ).pipe(
+      tap(data => this.updateSysFunctionSubject.next(data))
+    );
+  }
+
+  deleteSysFunction(request: DeleteSysFunctionRequest): Observable<boolean> {
+    return this.apiService.deleteWithBody<boolean>(
+      `/Manager/DeleteSysFunction`,
+      request
+    ).pipe(
+      tap(data => this.deleteSysFunctionSubject.next(data))
     );
   }
 

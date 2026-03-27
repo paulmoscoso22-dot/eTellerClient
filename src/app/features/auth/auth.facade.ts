@@ -5,6 +5,11 @@ import { tap } from 'rxjs/operators';
 import { LoginCommand, LoginResponse } from './domain/auth.models';
 import { AuthService } from './services/auth.service';
 
+export class AuthTemp {
+  User: string = '127';
+  Cassa: string = 'AA4';
+}
+
 export interface RegisterRequest {
   username: string;
   email: string;
@@ -140,5 +145,12 @@ export class AuthFacade {
       }
     }
     this.isAuthenticatedSubject.next(true);
+  }
+
+  getAuthTemp(): AuthTemp {
+    return {
+      User: '127',
+      Cassa: 'AA4',
+    };
   }
 }

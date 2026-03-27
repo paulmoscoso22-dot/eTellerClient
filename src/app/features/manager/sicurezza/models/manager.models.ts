@@ -50,5 +50,28 @@ export class UsersRoleFunctionResponse {
   usrExtref: string = '';
 }
 
+export class InsertSysFunctionRequest {
+  traUser: string = '';
+  traStation: string = '';
+  funName: string = '';
+  funDescription?: string;
+  funHostcode: number = 0;
+  offline: boolean = false;
+}
 
+export class UpdateSysFunctionRequest {
+  traUser: string = '';
+  traStation: string = '';
+  funId: number = 0;
+  funName: string = '';
+  funDescription?: string;
+  funHostcode: number = 0;
+  offline: boolean = false;
+}
+
+export class DeleteSysFunctionRequest {
+  traUser: string = '';
+  traStation: string = '';
+  funId: number = 0;
+}
 

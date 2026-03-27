@@ -25,24 +25,70 @@
       </app-table-user-role>
     </div>
   </div>
+  <div class="mt-3">
+    <app-label-secondary [label]="'Funzione'"></app-label-secondary>
+    <dx-text-box [value]="selectedFunName()" (onValueChanged)="selectedFunName.set($event.value)" style="width:95%"></dx-text-box>
+  </div>
+  <div class="mt-2">
+    <dx-check-box [value]="selectedOffline()" (onValueChanged)="selectedOffline.set($event.value)" text="Funzione possibile in modalità offline"></dx-check-box>
+  </div>
+  <div class="mt-3">
+    <app-label-secondary [label]="'Descrizione'"></app-label-secondary>
+    <dx-text-area [value]="selectedFunDescription()" (onValueChanged)="selectedFunDescription.set($event.value)" style="width:95%; height:120px"></dx-text-area>
+  </div>
 
-    <div class="actions-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;margin-bottom:8px">
-      <dx-button text="Aggiungi" type="success" (onClick)="onAdd()"></dx-button>
-      <dx-button text="Modifica" type="default" (onClick)="onEdit()"></dx-button>
-      <dx-button text="Cancella" type="danger" (onClick)="onDelete()"></dx-button>
-      <dx-button text="Traccia" type="default" (onClick)="onTrace(ch)"></dx-button>
-      <dx-button text="Reset" type="default" (onClick)="onReset()"></dx-button>
-      <dx-button text="Stampa lista funzioni" type="default" (onClick)="onPrintFunctions()"></dx-button>
-      <dx-button text="Stampa utenti con funzione" type="default" (onClick)="onPrintUsers()"></dx-button>
-    </div>
+  <div class="actions-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;margin-bottom:8px">
+    <dx-button text="Aggiungi" type="success" (onClick)="onAdd()"></dx-button>
+    <dx-button text="Modifica" type="default" (onClick)="onEdit()"></dx-button>
+    <dx-button text="Cancella" type="danger" (onClick)="onDelete()"></dx-button>
+    <dx-button text="Traccia" type="default" (onClick)="onTrace()"></dx-button>
+    <dx-button text="Reset" type="default" (onClick)="onReset()"></dx-button>
+    <dx-button text="Stampa lista funzioni" type="default" (onClick)="onPrintFunctions()"></dx-button>
+    <dx-button text="Stampa utenti con funzione" type="default" (onClick)="onPrintUsers()"></dx-button>
+  </div>
 
-    <div class="mt-3">
-      <app-label-secondary [label]="'Funzione'"></app-label-secondary>
-      <dx-text-box [value]="selectedFunName()"  style="width:95%"></dx-text-box>
-    </div>
-    <div class="mt-3">
-      <app-label-secondary [label]="'Descrizione'"></app-label-secondary>
-      <dx-text-area [value]="selectedFunDescription()" [readOnly]="true" style="width:95%; height:120px"></dx-text-area>
-    </div>
+  <dx-popup
+    [visible]="showAddPopup()"
+    [showTitle]="true"
+    title="Nuova Funzione"
+    [width]="400"
+    [height]="380"
+    (onHiding)="onCancelAdd()">
+    <form [formGroup]="addForm">
+      <div class="form-group">
+        <app-label-secondary [label]="'Nome Funzione'"></app-label-secondary>
+        <dx-text-box formControlName="funName" style="width:100%"></dx-text-box>
+        <small *ngIf="addForm.get('funName')?.invalid && addForm.get('funName')?.touched" style="color:red">
+          Nome funzione richiesto
+        </small>
+      </div>
+      <div class="form-group mt-3">
+        <app-label-secondary [label]="'Descrizione'"></app-label-secondary>
+        <dx-text-area formControlName="funDescription" [height]="80" style="width:100%"></dx-text-area>
+      </div>
+      <div class="form-group mt-3">
+        <app-label-secondary [label]="'Host Code'"></app-label-secondary>
+        <dx-text-box formControlName="funHostcode" style="width:100%"></dx-text-box>
+        <small *ngIf="addForm.get('funHostcode')?.invalid && addForm.get('funHostcode')?.touched" style="color:red">
+          Host code richiesto
+        </small>
+      </div>
+      <div class="form-group mt-3">
+        <dx-check-box formControlName="offline" text="Offline"></dx-check-box>
+      </div>
+      <div class="form-actions mt-3" style="display:flex;gap:8px;justify-content:flex-end">
+        <dx-button text="Annulla" type="default" (onClick)="onCancelAdd()"></dx-button>
+        <dx-button text="Salva" type="success" [disabled]="isLoading()" (onClick)="onSaveAdd()"></dx-button>
+      </div>
+    </form>
+  </dx-popup>
 </div>
+
+  <dx-toast
+    [(visible)]="toastVisible"
+    [type]="toastType()"
+    [message]="toastMessage()"
+    [displayTime]="3000">
+  </dx-toast>
+
 

@@ -39,4 +39,11 @@ export class ApiService {
   delete<T>(endpoint: string): Observable<T> {
     return this.http.delete<T>(this.env.buildApiUrl(endpoint));
   }
+
+  /**
+   * DELETE request with body
+   */
+  deleteWithBody<T>(endpoint: string, body: unknown): Observable<T> {
+    return this.http.delete<T>(this.env.buildApiUrl(endpoint), { body });
+  }
 }

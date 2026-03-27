@@ -1,0 +1,58 @@
+
+<div class="trace-detaill-component">
+	<app-label-secondary [label]="'Trace Detail'"></app-label-secondary>
+
+	<!-- Render key/value two-column table for each trace or single trace -->
+	<div>
+
+		<!-- If trace is an array, render a table per item -->
+		<div >
+			<div  class="trace-item">
+				<table class="trace-kv-table">
+					<tbody>
+						<tr><th>ID traccia</th><td>{{ trace?.traId ?? '-' }}</td></tr>
+						<tr><th>Data e Ora</th><td>{{ trace?.traTime | date:'short' }}</td></tr>
+						<tr><th>Utente</th><td>{{ trace?.traUser || '-' }}</td></tr>
+						<tr><th>Funzione</th><td>{{ desFunzione() }}</td></tr>
+						<tr><th>Sottofunzione</th><td>{{ trace?.traSubFun || '-' }}</td></tr>
+						<tr><th>Cassa</th><td>{{ trace?.traStation || '-' }}</td></tr>
+						<tr><th>ID soggetto traccia</th><td>{{ trace?.traEntCode || '-' }}</td></tr>
+						<tr><th>ID traccia op. stornata</th><td>{{ trace?.traRevTrxTrace || '-' }}</td></tr>
+						<tr><th>Descrizione</th><td>{{ trace?.traDes || '-' }}</td></tr>
+						<tr><th>ID traccia HOST</th><td>{{ trace?.traExtRef || '-' }}</td></tr>
+						<tr><th>Errore</th><td>{{ trace?.traError ? 'YES' : 'NO' }}</td></tr>
+						<tr><th>Nome tabella</th><td>{{ trace?.traTabNam || '-' }}</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- Single trace object -->
+		<ng-template #singleTrace>
+			<div class="trace-item">
+				<table class="trace-kv-table">
+					<tbody>
+						<tr><th>ID traccia</th><td>{{ trace?.traId ?? '-' }}</td></tr>
+						<tr><th>Data e Ora</th><td>{{ trace?.traTime | date:'short' }}</td></tr>
+						<tr><th>Utente</th><td>{{ trace?.traUser || '-' }}</td></tr>
+						<tr><th>Funzione</th><td>{{ desFunzione() }}</td></tr>
+						<tr><th>Sottofunzione</th><td>{{ trace?.traSubFun || '-' }}</td></tr>
+						<tr><th>Cassa</th><td>{{ trace?.traStation || '-' }}</td></tr>
+						<tr><th>ID soggetto traccia</th><td>{{ trace?.traEntCode || '-' }}</td></tr>
+						<tr><th>ID traccia op. stornata</th><td>{{ trace?.traRevTrxTrace || '-' }}</td></tr>
+						<tr><th>Descrizione</th><td>{{ trace?.traDes || '-' }}</td></tr>
+						<tr><th>ID traccia HOST</th><td>{{ trace?.traExtRef || '-' }}</td></tr>
+						<tr><th>Errore</th><td>{{ trace?.traError ? 'YES' : 'NO' }}</td></tr>
+						<tr><th>Nome tabella</th><td>{{ trace?.traTabNam || '-' }}</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</ng-template>
+
+	</div>
+    
+	<ng-template #noData>
+		<p>Nessun dato disponibile per il trace.</p>
+	</ng-template>
+
+</div>
