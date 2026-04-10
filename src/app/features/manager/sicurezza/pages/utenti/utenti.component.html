@@ -1,3 +1,126 @@
 <div class="container">
-  <h1>Utenti</h1>
+  <h2 style="font-size: 28px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-bottom: 20px; font-weight: 600;">
+    Gestione Utenti
+  </h2>
+  <app-table-utenti
+    [users$]="users$"
+    (userSelected)="onSelectionChanged($event)">
+  </app-table-utenti>
+
+<div id="ContainerUtenti" style="display: flex; flex-wrap: wrap; gap: 20px; width: 100%;">
+   <div id="form" style="flex: 1 1 400px;">
+     <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="dx-fieldset" style="display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px;">
+      <!-- Usr Id -->
+      <div class="dx-field">
+        <div class="dx-field-label">User ID</div>
+        <div class="dx-field-value">
+          <dx-text-box formControlName="usrId" [readOnly]="true"></dx-text-box>
+        </div>
+      </div>
+
+      <!-- Usr Status -->
+      <div class="dx-field">
+        <div class="dx-field-label">Status</div>
+        <div class="dx-field-value">
+          <dx-select-box
+            formControlName="usrStatus"
+            [dataSource]="statiEntita$ | async"
+            displayExpr="steDes"
+            valueExpr="steId">
+          </dx-select-box>
+        </div>
+      </div>
+
+      <!-- Usr Extref -->
+      <div class="dx-field">
+        <div class="dx-field-label">External Ref</div>
+        <div class="dx-field-value">
+          <dx-text-box formControlName="usrExtref"></dx-text-box>
+        </div>
+      </div>
+
+      <!-- Usr Host Id -->
+      <div class="dx-field">
+        <div class="dx-field-label">Host ID</div>
+        <div class="dx-field-value">
+          <dx-text-box formControlName="usrHostId"></dx-text-box>
+        </div>
+      </div>
+
+      <!-- Usr Bra Id -->
+      <div class="dx-field">
+        <div class="dx-field-label">Branch ID</div>
+        <div class="dx-field-value">
+          <dx-select-box
+            formControlName="usrBraId"
+            [dataSource]="branches$ | async"
+            displayExpr="braDes"
+            valueExpr="braId">
+          </dx-select-box>
+        </div>
+      </div>
+
+      <!-- Usr Chg Pas (Boolean = Checkbox) -->
+      <!-- <div class="dx-field">
+        <div class="dx-field-label">Change Password</div>
+        <div class="dx-field-value">
+          <dx-check-box formControlName="usrChgPas"></dx-check-box>
+        </div>
+      </div> -->
+
+      <!-- Usr Lingua -->
+      <div class="dx-field">
+        <div class="dx-field-label">Language</div>
+        <div class="dx-field-value">
+          <dx-select-box
+            formControlName="usrLingua"
+            [dataSource]="languages$ | async"
+            displayExpr="lanDes"
+            valueExpr="lanId">
+          </dx-select-box>
+        </div>
+      </div>
+
+      <div class="dx-field" style="grid-column: span 2; display: flex; justify-content: flex-end;">
+        <dx-button text="Submit" type="default" [useSubmitBehavior]="true"></dx-button>
+      </div>
+    </div>
+  </form>
+  </div>
+  <div id="ruoliAssegnai" style="flex: 1 1 250px;">
+    <!-- <h3>Ruoli Assegnati</h3> -->
+    <dx-data-grid 
+      [dataSource]="assignedRoles()" 
+      [showBorders]="true" 
+      height="250"
+      keyExpr="roleId"
+      [(selectedRowKeys)]="selectedAssignedRoleKeys">
+      <dxo-selection mode="single"></dxo-selection>
+      <!-- <dxi-column dataField="roleId" caption="ID"></dxi-column> -->
+      <dxi-column dataField="roleName" caption="Ruoli Assegnati"></dxi-column>
+      <!-- <dxi-column dataField="roleDes" caption="Descrizione"></dxi-column> -->
+    </dx-data-grid>
+  </div>
+  <div id="moveleftRight" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
+    <dx-button text="<<" type="default" (onClick)="addRole()"></dx-button>
+    <dx-button text=">>" type="default" (onClick)="removeRole()"></dx-button>
+  </div>
+  <div id="ruoliPossibili" style="flex: 1 1 250px;">
+    <!-- <h3>Ruoli Possibili</h3> -->
+    <dx-data-grid 
+      [dataSource]="possibleRoles()" 
+      [showBorders]="true" 
+      height="250"
+      keyExpr="roleId"
+      [(selectedRowKeys)]="selectedPossibleRoleKeys">
+      <dxo-selection mode="single"></dxo-selection>
+      <!-- <dxi-column dataField="roleId" caption="ID"></dxi-column> -->
+      <dxi-column dataField="roleName" caption="Ruoli Possibili"></dxi-column>
+      <!-- <dxi-column dataField="roleDes" caption="Descrizione"></dxi-column> -->
+    </dx-data-grid>
+  </div>
+ 
+</div>
+
 </div>

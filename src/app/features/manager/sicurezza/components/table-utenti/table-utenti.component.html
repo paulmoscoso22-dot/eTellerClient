@@ -1,0 +1,26 @@
+@if (users$ | async; as users) {
+  <dx-data-grid
+    [dataSource]="users"
+    [showBorders]="true"
+    [columnAutoWidth]="true"
+    [rowAlternationEnabled]="true"
+    (onSelectionChanged)="onSelectionChanged($event)">
+    
+    <dxo-selection mode="single"></dxo-selection>
+    <dxo-search-panel [visible]="true"></dxo-search-panel>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-paging [pageSize]="4"></dxo-paging>
+    <dxo-pager
+      [showPageSizeSelector]="true"
+      [allowedPageSizes]="[10, 25, 50, 100]"
+      [showInfo]="true"
+    ></dxo-pager>
+
+    <dxi-column dataField="usrId" caption="User ID"></dxi-column>
+    <dxi-column dataField="usrHostId" caption="Host ID"></dxi-column>
+    <dxi-column dataField="usrBraId" caption="Branch ID"></dxi-column>
+    <dxi-column dataField="usrStatus" caption="Status"></dxi-column>
+    <dxi-column dataField="usrExtref" caption="Ext Reference"></dxi-column>
+    <dxi-column dataField="usrLingua" caption="Language"></dxi-column>
+  </dx-data-grid>
+}

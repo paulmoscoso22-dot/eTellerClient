@@ -1,3 +1,130 @@
 <div class="container">
-  <h1>Ruoli</h1>
+  <app-label-primary-h1 label="Gestione Ruoli"></app-label-primary-h1>
+  <div style="display:flex; gap:16px; align-items:flex-start;">
+    <div style="flex:1; min-width:0;">
+      <app-label-secondary label="Ruoli Descrizione"></app-label-secondary>
+      <dx-data-grid 
+        id="roles"
+        [dataSource]="roles()"
+        keyExpr="roleId"
+        [selection]="{ mode: 'single' }"
+        [width]="'100%'"
+        [height]="400"
+        [showBorders]="true"
+        [columnAutoWidth]="true"
+        [allowColumnReordering]="true"
+        [allowColumnResizing]="true"
+        (onSelectionChanged)="onRoleSelectionChanged($event)"
+      >
+        <dxo-paging [pageSize]="25" [enabled]="true"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[25, 50, 100]" [showInfo]="true"></dxo-pager>
+
+        <dxi-column dataField="roleId" caption="Role ID" [width]="120"></dxi-column>
+        <dxi-column dataField="roleName" caption="Role Name" [width]="250"></dxi-column>
+        <!-- <dxi-column dataField="roleDes" caption="Description"></dxi-column> -->
+      </dx-data-grid>
+
+      <div style="flex:1; min-width:0;">
+        <app-label-secondary label="Nome:"></app-label-secondary>
+        <dx-text-box
+          [value]="selectedRoleName()"
+          (valueChange)="selectedRoleName.set($event)"
+          [readOnly]="false"
+          [width]="'100%'"
+        ></dx-text-box>
+      </div>
+    </div>
+
+    <div style="flex:1; min-width:0;">
+      <app-label-secondary label="Utenti associati"></app-label-secondary>
+      <dx-data-grid
+        [dataSource]="usersByRole()"
+        keyExpr="usrId"
+        [selection]="{ mode: 'single' }"
+        [width]="'100%'"
+        [height]="400"
+        [showBorders]="true"
+        [columnAutoWidth]="true"
+        [allowColumnReordering]="true"
+        [allowColumnResizing]="true"
+      >
+        <dxo-paging [pageSize]="25" [enabled]="true"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[25, 50, 100]" [showInfo]="true"></dxo-pager>
+        <!-- <dxi-column dataField="usrId" caption="User ID" [width]="150"></dxi-column>
+        <dxi-column dataField="usrStatus" caption="Status" [width]="120"></dxi-column>
+        <dxi-column dataField="usrBraId" caption="Branch ID" [width]="120"></dxi-column> -->
+        <dxi-column dataField="usrExtref" caption="Ext. Ref" [width]="150"></dxi-column>
+        <!-- <dxi-column dataField="usrHostId" caption="Host ID" [width]="150"></dxi-column> -->
+      </dx-data-grid>
+       <div style="flex:1; min-width:0;">
+        <app-label-secondary label="Descrizione:"></app-label-secondary>
+        <dx-text-box
+          [value]="selectedRoleDes() ?? ''"
+          (valueChange)="selectedRoleDes.set($event)"
+          [readOnly]="false"
+          [width]="'100%'"
+        ></dx-text-box>
+      </div>
+    </div>
+  </div>
+
+  <div id="buttons" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;">
+    <dx-button text="Aggiungi" type="default" (onClick)="onAggiungi()"></dx-button>
+    <dx-button text="Modifica" type="default" (onClick)="onModifica()"></dx-button>
+    <dx-button text="Cancella" type="danger" (onClick)="onCancella()"></dx-button>
+    <dx-button text="Traccia" type="normal" (onClick)="onTrace()"></dx-button>
+    <dx-button text="Reset" type="normal"></dx-button>
+    <dx-button text="Stampa lista ruoli" type="normal"></dx-button>
+    <dx-button text="Stampa utente con ruolo" type="normal"></dx-button>
+  </div>
+
+  <app-label-primary-h1  label="Cerca un ruolo" fontSize="18px"></app-label-primary-h1>
+    <div style="display:flex; gap:16px; align-items:flex-start;">
+      <div style="flex:1; min-width:0;">
+        <app-label-secondary label="Nome:"></app-label-secondary>
+        <dx-text-box id="NomeRoleFuncion" [width]="'100%'" [value]="searchName() ?? ''" (valueChange)="searchName.set($event)"></dx-text-box>
+      </div>
+      <div style="flex:1; min-width:0;">
+        <app-label-secondary label="Descrizione:"></app-label-secondary>
+        <dx-text-box id="DescRoleFunction" [width]="'100%'" [value]="searchDes() ?? ''" (valueChange)="searchDes.set($event)"></dx-text-box>
+      </div>
+    </div>
+   <div style="height: 10px;">
+   </div>
+  <div class="buttonRicerca" style="display:flex; justify-content:flex-end;">
+    <app-button-ricerca id="cerca" title="Cerca" (onClick)="onCerca()"></app-button-ricerca>
+  </div>
+  <div class="function">
+    <app-label-secondary label="Funzioni per Ruolo"></app-label-secondary>
+    <dx-data-grid id="functionRole"
+      [dataSource]="functionsByRole()"
+      keyExpr="funId"
+      [selection]="{ mode: 'single' }"
+      [width]="'100%'"
+      [height]="400"
+      [showBorders]="true"
+      [columnAutoWidth]="true"
+      [allowColumnReordering]="true"
+      [allowColumnResizing]="true"
+    >
+      <dxo-paging [pageSize]="25" [enabled]="true"></dxo-paging>
+      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[25, 50, 100]" [showInfo]="true"></dxo-pager>
+      <dxi-column dataField="funId" caption="Fun ID" [width]="100"></dxi-column>
+      <dxi-column dataField="funName" caption="Nome Funzione"></dxi-column>
+      <dxi-column dataField="accessLevel" caption="Livello Accesso" [width]="300" cellTemplate="accessLevelCell">
+        <div *dxTemplate="let cell of 'accessLevelCell'">
+          <dx-select-box
+            [dataSource]="funcAccTyp()"
+            valueExpr="fatId"
+            displayExpr="fatDes"
+            [value]="cell.value"
+            [readOnly]="false"
+          ></dx-select-box>
+        </div>
+      </dxi-column>
+      <dxi-column dataField="funDescription" caption="Descrizione"></dxi-column>
+    </dx-data-grid>
+  </div>
+  
 </div>
+

@@ -1,3 +1,48 @@
 <div class="container">
   <h1>Personalizzazioni</h1>
+
+  <div class="data-grid-container" style="width:100%;">
+    <dx-data-grid
+      [dataSource]="personalisations()"
+      keyExpr="parId"
+      [selection]="{ mode: 'single' }"
+      (onSelectionChanged)="onSelectionChanged($event)"
+      [width]="'100%'"
+      [height]="360"
+      [showBorders]="true"
+      [columnAutoWidth]="true"
+      [allowColumnReordering]="true"
+      [allowColumnResizing]="true"
+    >
+      <dxo-paging [pageSize]="25" [enabled]="true"></dxo-paging>
+      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[25, 50, 100]" [showInfo]="true"></dxo-pager>
+
+      <dxi-column dataField="parId" caption="ParId" width="200"></dxi-column>
+      <dxi-column dataField="parDes" caption="Description" width="400"></dxi-column>
+      <dxi-column dataField="parValue" caption="Value" width="400"></dxi-column>
+    </dx-data-grid>
+  </div>
+
+  <div class="form-container" style="margin-top:12px;padding:8px;border:1px solid #e6e6e6;border-radius:6px;background:#fff;width:100%;">
+    <form [formGroup]="form" (ngSubmit)="onSave()">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+
+        <div class="dx-field" style="display:flex;align-items:flex-start;gap:12px;">
+          <label class="dx-field-label" style="width:140px;font-weight:600;padding-top:6px;">Descrizione</label>
+          <dx-text-area formControlName="parDes" placeholder="Inserisci descrizione" [height]="100" style="flex:1;min-width:0;width:100%;"></dx-text-area>
+        </div>
+
+        <div class="dx-field" style="display:flex;align-items:center;gap:12px;">
+          <label class="dx-field-label" style="width:140px;font-weight:600;">Valore</label>
+          <dx-text-box formControlName="parValue" placeholder="Inserisci valore" style="flex:1;min-width:0;width:100%;"></dx-text-box>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;margin-top:4px;">
+          <dx-button text="Traccia" stylingMode="outlined" style="margin-right:8px;min-width:0;" (onClick)="onTrace()"></dx-button>
+          <dx-button text="Salva" type="success" [useSubmitBehavior]="true"></dx-button>
+        </div>
+
+      </div>
+    </form>
+  </div>
 </div>

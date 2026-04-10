@@ -30,7 +30,7 @@ export class TraceComponent implements OnInit {
 
   // placeholder lists for combo boxes
   funzioni: WritableSignal<Array<{ tfcId: string | null; tfcDes: string }>> = signal<Array<{ tfcId: string | null; tfcDes: string }>>([{ tfcId: null, tfcDes: 'ALL' }]);
-  utenti: WritableSignal<Array<{ usrId: string }>> = signal<Array<{ usrId: string }>>([{ usrId: 'ALL' }]);
+  utenti: WritableSignal<Array<{ usrId: string | null; des: string }>> = signal<Array<{ usrId: string | null; des: string }>>([{ usrId: null, des: 'ALL' }]);
   clients: WritableSignal<Array<{ cliId: string | null; cliDes: string | null }>> = signal<Array<{ cliId: string | null; cliDes: string | null }>>([{ cliId: null, cliDes: 'ALL' }]);
   casse = ['ALL', 'Cassa1', 'Cassa2'];
   tabellaItems: WritableSignal<Array<{ id: string | null; des: string | null }>> = signal<Array<{ id: string | null; des: string | null }>>([{ id: null, des: 'ALL' }]);
@@ -132,7 +132,7 @@ export class TraceComponent implements OnInit {
     this.informazioniService.activeBlockedUsers$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((v: SysUsersActiveAndBlockedResponse[]) => {
-        this.utenti.set([{ usrId: 'ALL' }, ...v.map(x => ({ usrId: x.usrId }))]);
+        this.utenti.set([{ usrId: null, des: 'ALL' }, ...v.map(x => ({ usrId: x.usrId, des: x.usrId }))]);
       });
   }
 

@@ -13,7 +13,7 @@
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "src/app/features/manager/sicurezza/models/ruoli.model.sts"  ],
   "exclude": [
     "src/**/*.spec.ts"
   ]
