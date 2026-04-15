@@ -7,7 +7,7 @@ import { ISysRoleResonse, IGetUserByRoleRequest, IInsertRoleRequest, IUpdateRole
 import { IGetFunctionRoleByRoleIdRequest, IFunctionRoleResponse, IStFunAcctypResponse } from '../models/function.models';
 import { PersonalisationResponse, UpdatePersonalisationRequest } from '../models/personalisation.models';
 import { AuthTemp } from '../../../../features/auth/auth.facade';
-import { ISysUsersActiveAndBlockedResponse, GetUsersByUserIdRequest, ISysUserByIdResponse } from '../models/utenti.models';
+import { ISysUsersActiveAndBlockedResponse, GetUsersByUserIdRequest, ISysUserByIdResponse, InsertUserResponse, IUpdateUserRequest, ResetPasswordRequest, SysUsersUseClientResponse, IUpdateUserClientExitRequest } from '../models/utenti.models';
 
 @Injectable({
   providedIn: 'root',
@@ -51,6 +51,9 @@ export class ManagerService {
   private insertSysFunctionSubject = new BehaviorSubject<boolean>(false);
   public insertSysFunction$ = this.insertSysFunctionSubject.asObservable();
 
+  private insertUserSubject = new BehaviorSubject<boolean>(false);
+  public insertUser$ = this.insertUserSubject.asObservable();
+
   private insertRoleSubject = new BehaviorSubject<SysRoleResponse | null>(null);
   public insertRole$ = this.insertRoleSubject.asObservable();
 
@@ -75,6 +78,15 @@ export class ManagerService {
   private userByIdSubject = new BehaviorSubject<ISysUserByIdResponse | null>(null);
   public userById$ = this.userByIdSubject.asObservable();
 
+  private resetPasswordSubject = new BehaviorSubject<number | null>(null);
+  public resetPassword$ = this.resetPasswordSubject.asObservable();
+
+  private userUseClientSubject = new BehaviorSubject<SysUsersUseClientResponse[]>([]);
+  public userUseClient$ = this.userUseClientSubject.asObservable();
+
+  private updateUserClientExitSubject = new BehaviorSubject<number | null>(null);
+  public updateUserClientExit$ = this.updateUserClientExitSubject.asObservable();
+
  //#Region user
   getAllUsersByUsrId(request: GetAllUsersByUsrIdRequest): Observable<InfoAutorizzazioneUtenteResponse[]> {
     return this.apiService.post<InfoAutorizzazioneUtenteResponse[]>(
@@ -82,6 +94,24 @@ export class ManagerService {
       request
     ).pipe(
       tap(data => this.userAuthorizationsSubject.next(data))
+    );
+  }
+
+  getUserUseClient(): Observable<SysUsersUseClientResponse[]> {
+    return this.apiService.post<SysUsersUseClientResponse[]>(
+      '/Manager/User/GetUserUseClient',
+      {}
+    ).pipe(
+      tap(data => this.userUseClientSubject.next(data))
+    );
+  }
+
+  updateUserClientExit(request: IUpdateUserClientExitRequest): Observable<number> {
+    return this.apiService.put<number>(
+      '/Manager/User/UpdateUserClientExit',
+      request
+    ).pipe(
+      tap(data => this.updateUserClientExitSubject.next(data))
     );
   }
   // #endregion user
@@ -277,5 +307,36 @@ export class ManagerService {
       tap(data => this.userByIdSubject.next(data))
     );
   }
+
+  updateUserSubject = new BehaviorSubject<ISysUserByIdResponse | null>(null);
+  public updateUser$ = this.updateUserSubject.asObservable();
+
+  insertUser(request: InsertUserResponse): Observable<boolean> {
+    return this.apiService.post<boolean>(
+      `/Manager/User/InsertUser`,
+      request
+    ).pipe(
+      tap(data => this.insertUserSubject.next(data))
+    );
+  }
+
+  UpdateUser(request: IUpdateUserRequest): Observable<ISysUserByIdResponse> {
+    return this.apiService.put<ISysUserByIdResponse>(
+      `/Manager/User/UpdateUser`,
+      request
+    ).pipe(
+      tap(data => this.updateUserSubject.next(data))
+    );
+  }
+
+  resetPassword(request: ResetPasswordRequest): Observable<number> {
+    return this.apiService.put<number>(
+      `/Manager/User/ResetPassword`,
+      request
+    ).pipe(
+      tap(data => this.resetPasswordSubject.next(data))
+    );
+  }
+  
   // #endregion user
 }

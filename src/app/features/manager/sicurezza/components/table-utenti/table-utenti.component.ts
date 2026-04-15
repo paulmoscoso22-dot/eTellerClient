@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DxDataGridModule } from 'devextreme-angular';
+import { DxDataGridComponent, DxDataGridModule } from 'devextreme-angular';
 import { Observable } from 'rxjs';
 import { ISysUsersActiveAndBlockedResponse } from '../../models/utenti.models';
 
@@ -12,10 +12,18 @@ import { ISysUsersActiveAndBlockedResponse } from '../../models/utenti.models';
   styleUrls: ['./table-utenti.component.css']
 })
 export class TableUtentiComponent {
+  @ViewChild(DxDataGridComponent, { static: false }) dataGrid!: DxDataGridComponent;
+
   @Input() users$: Observable<ISysUsersActiveAndBlockedResponse[]> | null = null;
   @Output() userSelected = new EventEmitter<any>();
 
   onSelectionChanged(e: any): void {
     this.userSelected.emit(e);
+  }
+
+  clearSelection(): void {
+    if (this.dataGrid && this.dataGrid.instance) {
+      this.dataGrid.instance.clearSelection();
+    }
   }
 }

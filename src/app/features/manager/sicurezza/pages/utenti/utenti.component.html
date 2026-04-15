@@ -15,7 +15,11 @@
       <div class="dx-field">
         <div class="dx-field-label">User ID</div>
         <div class="dx-field-value">
-          <dx-text-box formControlName="usrId" [readOnly]="true"></dx-text-box>
+          <dx-text-box formControlName="usrId">
+            <dx-validator>
+              <dxi-validation-rule type="required" message="User ID is required"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
         </div>
       </div>
 
@@ -28,6 +32,9 @@
             [dataSource]="statiEntita$ | async"
             displayExpr="steDes"
             valueExpr="steId">
+            <dx-validator>
+              <dxi-validation-rule type="required" message="Status is required"></dxi-validation-rule>
+            </dx-validator>
           </dx-select-box>
         </div>
       </div>
@@ -44,7 +51,11 @@
       <div class="dx-field">
         <div class="dx-field-label">Host ID</div>
         <div class="dx-field-value">
-          <dx-text-box formControlName="usrHostId"></dx-text-box>
+          <dx-text-box formControlName="usrHostId">
+            <dx-validator>
+              <dxi-validation-rule type="required" message="Host ID is required"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
         </div>
       </div>
 
@@ -57,17 +68,12 @@
             [dataSource]="branches$ | async"
             displayExpr="braDes"
             valueExpr="braId">
+            <dx-validator>
+              <dxi-validation-rule type="required" message="Branch is required"></dxi-validation-rule>
+            </dx-validator>
           </dx-select-box>
         </div>
       </div>
-
-      <!-- Usr Chg Pas (Boolean = Checkbox) -->
-      <!-- <div class="dx-field">
-        <div class="dx-field-label">Change Password</div>
-        <div class="dx-field-value">
-          <dx-check-box formControlName="usrChgPas"></dx-check-box>
-        </div>
-      </div> -->
 
       <!-- Usr Lingua -->
       <div class="dx-field">
@@ -78,12 +84,19 @@
             [dataSource]="languages$ | async"
             displayExpr="lanDes"
             valueExpr="lanId">
+            <dx-validator>
+              <dxi-validation-rule type="required" message="Language is required"></dxi-validation-rule>
+            </dx-validator>
           </dx-select-box>
         </div>
       </div>
 
-      <div class="dx-field" style="grid-column: span 2; display: flex; justify-content: flex-end;">
-        <dx-button text="Submit" type="default" [useSubmitBehavior]="true"></dx-button>
+      <div id="Buttons" class="dx-field" style="grid-column: span 2; display: flex; justify-content: flex-end; gap: 10px;">
+        <dx-button id="aggiungi" text="Aggiungi" type="default" [useSubmitBehavior]="true" [disabled]="!!selectedUserId()"></dx-button>
+        <dx-button text="Modifica" type="default" (onClick)="onUpdate()" [disabled]="!selectedUserId()"></dx-button>
+        <dx-button text="Traccia" type="default" (onClick)="onTrace()"></dx-button>
+        <dx-button text="Reset Password" type="default" (onClick)="openResetPasswordPopup()" [disabled]="!selectedUserId()"></dx-button>
+        <dx-button text="Clear" type="default" (onClick)="onClear()"></dx-button>
       </div>
     </div>
   </form>
@@ -121,6 +134,52 @@
     </dx-data-grid>
   </div>
  
+  </div>
+  <div id="otherButtons" style="display: flex; justify-content: flex-end; gap: 10px; width: 100%; margin-top: 20px;">
+    
+    <dx-button text="Stampa lista utenti" type="default"></dx-button>
+    <dx-button text="Stampa dettaglio utente" type="default"></dx-button>
+  </div>
 </div>
 
-</div>
+<dx-popup
+  [width]="400"
+  [height]="250"
+  [showTitle]="true"
+  title="Reset Password"
+  [dragEnabled]="false"
+  [hideOnOutsideClick]="false"
+  [(visible)]="isResetPasswordPopupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <form [formGroup]="resetPasswordForm" (ngSubmit)="changePassword()">
+      <div class="dx-fieldset">
+        <div class="dx-field">
+          <div class="dx-field-label">Password</div>
+          <div class="dx-field-value">
+            <dx-text-box formControlName="password" mode="password">
+              <dx-validator>
+                <dxi-validation-rule type="required" message="Password is required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </div>
+        </div>
+        <div class="dx-field">
+          <div class="dx-field-label">Conferma la password</div>
+          <div class="dx-field-value">
+            <dx-text-box formControlName="confirmPassword" mode="password">
+              <dx-validator>
+                <dxi-validation-rule type="required" message="Conferma password is required"></dxi-validation-rule>
+                <!-- Optional: add custom validation rule to match passwords -->
+              </dx-validator>
+            </dx-text-box>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+        <dx-button text="Annulla" type="normal" (onClick)="cancelResetPassword()"></dx-button>
+        <dx-button text="Cambia" type="default" [useSubmitBehavior]="true"></dx-button>
+      </div>
+    </form>
+  </div>
+</dx-popup>
+

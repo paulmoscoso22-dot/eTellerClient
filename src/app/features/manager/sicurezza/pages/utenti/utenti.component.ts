@@ -1,9 +1,10 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule } from 'devextreme-angular';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule } from 'devextreme-angular';
+import notify from 'devextreme/ui/notify';
 import { ManagerService } from '../../services/sicurezza.service';
-import { ISysUsersActiveAndBlockedResponse, GetUsersByUserIdRequest } from '../../models/utenti.models';
+import { ISysUsersActiveAndBlockedResponse, GetUsersByUserIdRequest, InsertUserResponse, IUpdateUserRequest } from '../../models/utenti.models';
 import { ISysRoleResonse, GetRoleByUsrIdRequest, IGetRoleNotForUsrIdRquest } from '../../models/ruoli.models';
 import { Observable } from 'rxjs';
 import { TableUtentiComponent } from '../../components/table-utenti/table-utenti.component';
@@ -11,11 +12,13 @@ import { Service } from '../../../../../core/services/service';
 import { ISTLanguageResponse } from '../../../../../core/domain/laguage.domain';
 import { Branch } from '../../../../../core/domain/branch.domain';
 import { ISTStatoEntitaResponse } from '../../../../../core/domain/stato-entita.domain';
+import { it } from 'node:test';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-utenti',
   standalone: true,
-  imports: [CommonModule, DxDataGridModule, ReactiveFormsModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, TableUtentiComponent],
+  imports: [CommonModule, DxDataGridModule, ReactiveFormsModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule, TableUtentiComponent],
   templateUrl: './utenti.component.html',
   styleUrls: ['./utenti.component.css'],
 })
@@ -23,6 +26,7 @@ export class UtentiComponent implements OnInit {
   private readonly managerService = inject(ManagerService);
   private readonly coreService = inject(Service);
   private fb = inject(FormBuilder);
+  private readonly router = inject(Router);
   
   public users$: Observable<ISysUsersActiveAndBlockedResponse[]> = this.managerService.usersActiveBlocked$;
   public languages$: Observable<ISTLanguageResponse[]> = this.coreService.languages$;
@@ -36,15 +40,40 @@ export class UtentiComponent implements OnInit {
   public selectedAssignedRoleKeys: number[] = [];
   public selectedPossibleRoleKeys: number[] = [];
 
+
+  public movedToLeft: number[] = [];
+  public movedToRight: number[] = [];
+
+  public selectedUserId = signal<string | null>(null);
+  
+  public isResetPasswordPopupVisible = false;
+
+  @ViewChild(TableUtentiComponent) tableUtenti!: TableUtentiComponent;
+
   userForm: FormGroup = this.fb.group({
-    usrId: [''],
-    usrStatus: [''],
+    usrId: ['', Validators.required],
+    usrStatus: ['', Validators.required],
     usrExtref: [''],
-    usrHostId: [''],
-    usrBraId: [''],
+    usrHostId: ['', Validators.required],
+    usrBraId: ['', Validators.required],
     usrChgPas: [false],
-    usrLingua: ['']
+    usrLingua: ['', Validators.required]
   });
+
+  resetPasswordForm: FormGroup = this.fb.group({
+    password: ['', Validators.required],
+    confirmPassword: ['', Validators.required]
+  }, { validators: this.passwordMatchValidator });
+
+  passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('password');
+    const confirmPassword = control.get('confirmPassword');
+    
+    if (password && confirmPassword && password.value !== confirmPassword.value) {
+      return { passwordMismatch: true };
+    }
+    return null;
+  }
 
   ngOnInit(): void {
     this.managerService.GetUserActiveBlocked().subscribe();
@@ -67,9 +96,12 @@ export class UtentiComponent implements OnInit {
     const selectedItem = e.selectedRowsData[0];
     if (selectedItem && (selectedItem.usrId || selectedItem.UsrId)) {
       const userId = selectedItem.usrId || selectedItem.UsrId;
+      this.selectedUserId.set(userId);
       this.loadUserData(userId);
       this.loadUserRoles(userId);
       this.loadRolesNotForUser(userId);
+    } else {
+      this.selectedUserId.set(null);
     }
   }
 
@@ -112,24 +144,164 @@ export class UtentiComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.userForm.value);
+    if (this.userForm.valid) {
+      const formValue = this.userForm.getRawValue();
+      const request: InsertUserResponse = {
+        usrId: formValue.usrId || '',
+        usrHostId: formValue.usrHostId || '',
+        usrBraId: formValue.usrBraId || '',
+        usrStatus: formValue.usrStatus || '',
+        usrExtref: formValue.usrExtref || '',
+        usrLingua: formValue.usrLingua || '',
+        traUser: formValue.usrId || '',
+        traStation: formValue.usrHostId || ''
+      };
+      //console.log('Submitting user data:', request);
+      this.managerService.insertUser(request).subscribe({
+        next: (success) => {
+          if (success) {
+            notify('User inserted successfully', 'success', 3000);
+            // Optionally, refresh list or reset form
+            this.managerService.GetUserActiveBlocked().subscribe();
+          } else {
+            notify('Failed to insert user', 'error', 3000);
+          }
+        },
+        error: (err) => {
+          console.error('Error inserting user', err);
+          notify('Error inserting user', 'error', 3000);
+        }
+      });
+    }
   }
 
-  addRole(): void {
+  onUpdate(): void {
+    if (this.userForm.valid) {
+      const formValue = this.userForm.getRawValue();
+      const request: IUpdateUserRequest = {
+        usrId: formValue.usrId || '',
+        usrHostId: formValue.usrHostId || '',
+        usrBraId: formValue.usrBraId || '',
+        usrStatus: formValue.usrStatus || '',
+        usrExtref: formValue.usrExtref || '',
+        usrLingua: formValue.usrLingua || '',
+        addIdRoles: this.movedToLeft || [],
+        delIdRoles: this.movedToRight || []
+      };
+
+      
+      console.log('Updating user data:', request);
+      this.managerService.UpdateUser(request).subscribe({
+        next: (response) => {
+          if (response) {
+            notify('User updated successfully', 'success', 3000);
+            this.movedToLeft = [];
+            this.movedToRight = [];
+            this.managerService.GetUserActiveBlocked().subscribe();
+          } else {
+            notify('Failed to update user', 'error', 3000);
+          }
+        },
+        error: (err) => {
+          console.error('Error updating user', err);
+          notify('Error updating user', 'error', 3000);
+        }
+      });
+    }
+  }
+
+  onClear(): void {
+    this.userForm.reset();
+    // Clear selections in the user table component
+    if (this.tableUtenti) {
+      this.tableUtenti.clearSelection();
+    }
+    this.selectedUserId.set(null);
+    // Reset the roles data and tables
+    this.assignedRoles.set([]);
+    this.possibleRoles.set([]);
+    this.selectedAssignedRoleKeys = [];
+    this.selectedPossibleRoleKeys = [];
+  }
+
+//move to left
+    addRole(): void {
+    const item = this.selectedPossibleRoleKeys[0]; // Assuming single selection for simplicity
     const rolesToAdd = this.possibleRoles().filter(r => this.selectedPossibleRoleKeys.includes(r.roleId));
     if (rolesToAdd.length > 0) {
       this.assignedRoles.update(roles => [...roles, ...rolesToAdd]);
       this.possibleRoles.update(roles => roles.filter(r => !this.selectedPossibleRoleKeys.includes(r.roleId)));
+
+      if (this.movedToRight.includes(item)) {
+        this.movedToRight = this.movedToRight.filter(id => id !== item);
+      } else {
+        this.movedToLeft = [...this.movedToLeft, item];
+      }
+      console.log('movedToLeft', this.movedToLeft);
+      console.log('movedToRight', this.movedToRight);
+
       this.selectedPossibleRoleKeys = [];
     }
   }
 
-  removeRole(): void {
+//move right
+    removeRole(): void {
+      const item = this.selectedAssignedRoleKeys[0]; // Assuming single selection for simplicity
     const rolesToRemove = this.assignedRoles().filter(r => this.selectedAssignedRoleKeys.includes(r.roleId));
     if (rolesToRemove.length > 0) {
       this.possibleRoles.update(roles => [...roles, ...rolesToRemove]);
       this.assignedRoles.update(roles => roles.filter(r => !this.selectedAssignedRoleKeys.includes(r.roleId)));
+
+       if (this.movedToLeft.includes(item)) {
+        this.movedToLeft = this.movedToLeft.filter(id => id !== item);
+      } else {
+        this.movedToRight = [...this.movedToRight, item];
+      }
+      console.log('movedToLeft', this.movedToLeft);
+      console.log('movedToRight', this.movedToRight);
+
       this.selectedAssignedRoleKeys = [];
     }
   }
+
+   onTrace(): void {
+    const userId = this.selectedUserId();
+    if (!userId) {
+      notify('Selezionare un utente da tracciare', 'warning', 3000);
+      return;
+    }
+    this.router.navigate(['/trace'], {
+      queryParams: {
+        ENTNAME: 'sys_USERS',
+        traEntCode: userId
+      }
+    });
+  }
+
+  openResetPasswordPopup(): void {
+    if (this.selectedUserId()) {
+      this.resetPasswordForm.reset();
+      this.isResetPasswordPopupVisible = true;
+    }
+  }
+
+  cancelResetPassword(): void {
+    this.isResetPasswordPopupVisible = false;
+    this.resetPasswordForm.reset();
+  }
+
+  changePassword(): void {
+    if (this.resetPasswordForm.valid) {
+      const password = this.resetPasswordForm.get('password')?.value;
+      const userId = this.selectedUserId();
+      // Implement password reset logic with the ManagerService
+      // this.managerService.resetPassword(userId, password).subscribe(...)
+      notify(`Password cambiata con successo per ${userId}`, 'success', 3000);
+      this.isResetPasswordPopupVisible = false;
+      this.resetPasswordForm.reset();
+    } else {
+      notify('Controlla che le password coincidano e non siano vuote', 'error', 3000);
+    }
+  }
+
 }

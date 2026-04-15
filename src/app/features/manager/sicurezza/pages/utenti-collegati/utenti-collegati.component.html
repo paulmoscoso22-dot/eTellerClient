@@ -1,3 +1,42 @@
 <div class="container">
-  <h1>Utenti collegati</h1>
+  <h2 style="font-size: 28px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-bottom: 20px; font-weight: 600;">
+    Utenti collegati
+  </h2>
+  
+  <dx-data-grid
+    [dataSource]="userUseClient$ | async"
+    [showBorders]="true"
+    [allowColumnResizing]="true"
+    [columnAutoWidth]="true"
+    [hoverStateEnabled]="true"
+    keyExpr="usrCliId"
+    (onSelectionChanged)="onSelectionChanged($event)">
+    
+    <dxo-selection mode="single"></dxo-selection>
+    <dxo-paging [pageSize]="10"></dxo-paging>
+    <dxo-pager
+      [showPageSizeSelector]="true"
+      [allowedPageSizes]="[10, 20, 30]"
+      [showInfo]="true">
+    </dxo-pager>
+    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    
+    <dxi-column dataField="usrCliId" caption="ID" [visible]="false"></dxi-column>
+    <dxi-column dataField="cliId" caption="Client ID"></dxi-column>
+    <dxi-column dataField="usrId" caption="User ID"></dxi-column>
+    <dxi-column dataField="dataIn" caption="Data Inizio" dataType="datetime" format="dd/MM/yyyy HH:mm:ss"></dxi-column>
+    <dxi-column dataField="dataOut" caption="Data Fine" dataType="datetime" format="dd/MM/yyyy HH:mm:ss"></dxi-column>
+    <dxi-column dataField="forced" caption="Forzato" dataType="boolean"></dxi-column>
+  </dx-data-grid>
+
+  <div style="display: flex; justify-content: flex-end; gap: 10px; width: 100%; margin-top: 20px;">
+    <dx-button 
+      text="Forza Uscita" 
+      type="danger" 
+      [disabled]="!selectedUsrCliId()" 
+      (onClick)="forzaUscita()">
+    </dx-button>
+  </div>
 </div>
