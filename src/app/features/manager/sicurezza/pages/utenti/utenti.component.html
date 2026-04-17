@@ -7,8 +7,8 @@
     (userSelected)="onSelectionChanged($event)">
   </app-table-utenti>
 
-<div id="ContainerUtenti" style="display: flex; flex-wrap: wrap; gap: 20px; width: 100%;">
-   <div id="form" style="flex: 1 1 400px;">
+<div id="ContainerUtenti" style="display: flex; flex-direction: row; flex-wrap: nowrap; gap: 20px; width: 100%;">
+   <div id="form" style="flex: 1 1 50%;">
      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
     <div class="dx-fieldset" style="display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px;">
       <!-- Usr Id -->
@@ -101,39 +101,14 @@
     </div>
   </form>
   </div>
-  <div id="ruoliAssegnai" style="flex: 1 1 250px;">
-    <!-- <h3>Ruoli Assegnati</h3> -->
-    <dx-data-grid 
-      [dataSource]="assignedRoles()" 
-      [showBorders]="true" 
-      height="250"
-      keyExpr="roleId"
-      [(selectedRowKeys)]="selectedAssignedRoleKeys">
-      <dxo-selection mode="single"></dxo-selection>
-      <!-- <dxi-column dataField="roleId" caption="ID"></dxi-column> -->
-      <dxi-column dataField="roleName" caption="Ruoli Assegnati"></dxi-column>
-      <!-- <dxi-column dataField="roleDes" caption="Descrizione"></dxi-column> -->
-    </dx-data-grid>
+  <div style="flex: 1 1 50%;">
+    <app-control-assign 
+      [assignedRoles]="assignedRoles" 
+      [possibleRoles]="possibleRoles"
+      (rolesChanged)="onRolesChanged($event)">
+    </app-control-assign>
   </div>
-  <div id="moveleftRight" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
-    <dx-button text="<<" type="default" (onClick)="addRole()"></dx-button>
-    <dx-button text=">>" type="default" (onClick)="removeRole()"></dx-button>
-  </div>
-  <div id="ruoliPossibili" style="flex: 1 1 250px;">
-    <!-- <h3>Ruoli Possibili</h3> -->
-    <dx-data-grid 
-      [dataSource]="possibleRoles()" 
-      [showBorders]="true" 
-      height="250"
-      keyExpr="roleId"
-      [(selectedRowKeys)]="selectedPossibleRoleKeys">
-      <dxo-selection mode="single"></dxo-selection>
-      <!-- <dxi-column dataField="roleId" caption="ID"></dxi-column> -->
-      <dxi-column dataField="roleName" caption="Ruoli Possibili"></dxi-column>
-      <!-- <dxi-column dataField="roleDes" caption="Descrizione"></dxi-column> -->
-    </dx-data-grid>
-  </div>
- 
+  
   </div>
   <div id="otherButtons" style="display: flex; justify-content: flex-end; gap: 10px; width: 100%; margin-top: 20px;">
     

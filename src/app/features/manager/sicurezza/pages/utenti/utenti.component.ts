@@ -8,6 +8,7 @@ import { ISysUsersActiveAndBlockedResponse, GetUsersByUserIdRequest, InsertUserR
 import { ISysRoleResonse, GetRoleByUsrIdRequest, IGetRoleNotForUsrIdRquest } from '../../models/ruoli.models';
 import { Observable } from 'rxjs';
 import { TableUtentiComponent } from '../../components/table-utenti/table-utenti.component';
+import { ControlAssignComponent } from '../../../../../components/control-assign/control-assign.component';
 import { Service } from '../../../../../core/services/service';
 import { ISTLanguageResponse } from '../../../../../core/domain/laguage.domain';
 import { Branch } from '../../../../../core/domain/branch.domain';
@@ -18,7 +19,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-utenti',
   standalone: true,
-  imports: [CommonModule, DxDataGridModule, ReactiveFormsModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule, TableUtentiComponent],
+  imports: [CommonModule, DxDataGridModule, ReactiveFormsModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule, TableUtentiComponent, ControlAssignComponent],
   templateUrl: './utenti.component.html',
   styleUrls: ['./utenti.component.css'],
 })
@@ -224,44 +225,9 @@ export class UtentiComponent implements OnInit {
     this.selectedPossibleRoleKeys = [];
   }
 
-//move to left
-    addRole(): void {
-    const item = this.selectedPossibleRoleKeys[0]; // Assuming single selection for simplicity
-    const rolesToAdd = this.possibleRoles().filter(r => this.selectedPossibleRoleKeys.includes(r.roleId));
-    if (rolesToAdd.length > 0) {
-      this.assignedRoles.update(roles => [...roles, ...rolesToAdd]);
-      this.possibleRoles.update(roles => roles.filter(r => !this.selectedPossibleRoleKeys.includes(r.roleId)));
-
-      if (this.movedToRight.includes(item)) {
-        this.movedToRight = this.movedToRight.filter(id => id !== item);
-      } else {
-        this.movedToLeft = [...this.movedToLeft, item];
-      }
-      console.log('movedToLeft', this.movedToLeft);
-      console.log('movedToRight', this.movedToRight);
-
-      this.selectedPossibleRoleKeys = [];
-    }
-  }
-
-//move right
-    removeRole(): void {
-      const item = this.selectedAssignedRoleKeys[0]; // Assuming single selection for simplicity
-    const rolesToRemove = this.assignedRoles().filter(r => this.selectedAssignedRoleKeys.includes(r.roleId));
-    if (rolesToRemove.length > 0) {
-      this.possibleRoles.update(roles => [...roles, ...rolesToRemove]);
-      this.assignedRoles.update(roles => roles.filter(r => !this.selectedAssignedRoleKeys.includes(r.roleId)));
-
-       if (this.movedToLeft.includes(item)) {
-        this.movedToLeft = this.movedToLeft.filter(id => id !== item);
-      } else {
-        this.movedToRight = [...this.movedToRight, item];
-      }
-      console.log('movedToLeft', this.movedToLeft);
-      console.log('movedToRight', this.movedToRight);
-
-      this.selectedAssignedRoleKeys = [];
-    }
+  onRolesChanged(event: any): void {
+    this.movedToLeft = event.movedToLeft;
+    this.movedToRight = event.movedToRight;
   }
 
    onTrace(): void {
