@@ -7,13 +7,6 @@
     </app-header>
   </div>
 
-  <!-- Titolo pagina: riga full-width con unica linea di separazione -->
-  @if (pageTitle()) {
-    <div class="page-title-row">
-      <h1 class="page-title">{{ pageTitle() }}</h1>
-    </div>
-  }
-
   <!-- Menu + Body -->
   <div class="content-row">
     @if (isSidebarVisible()) {
@@ -29,15 +22,24 @@
     }
 
     <main class="main-content">
-      <!-- Area contenuto: breadcrumb + pagina scrollano insieme -->
-      <div class="content-area">
-        <div class="breadcrumb-row">
-          <app-breadcrumb
-            [items]="breadcrumbItems()"
-            [isDarkTheme]="isDarkTheme"
-            (itemClick)="onBreadcrumbItemClick($event)">
-          </app-breadcrumb>
+      <!-- Titolo pagina — allineato con il breadcrumb -->
+      @if (pageTitle()) {
+        <div class="page-title-row">
+          <h1 class="page-title">{{ pageTitle() }}</h1>
         </div>
+      }
+
+      <!-- Breadcrumb -->
+      <div class="breadcrumb-row">
+        <app-breadcrumb
+          [items]="breadcrumbItems()"
+          [isDarkTheme]="isDarkTheme"
+          (itemClick)="onBreadcrumbItemClick($event)">
+        </app-breadcrumb>
+      </div>
+
+      <!-- Contenuto pagina -->
+      <div class="content-area">
         <router-outlet></router-outlet>
       </div>
     </main>
