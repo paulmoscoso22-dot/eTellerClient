@@ -7,11 +7,18 @@
     </app-header>
   </div>
 
+  <!-- Titolo pagina: riga full-width con unica linea di separazione -->
+  @if (pageTitle()) {
+    <div class="page-title-row">
+      <h1 class="page-title">{{ pageTitle() }}</h1>
+    </div>
+  }
+
   <!-- Menu + Body -->
   <div class="content-row">
     @if (isSidebarVisible()) {
       <div class="sidebar">
-        <app-sidebar 
+        <app-sidebar
           [items]="rawMenuItems"
           [showSearch]="true"
           searchPlaceholder="Cerca nel menu..."
@@ -19,21 +26,20 @@
           (breadcrumbChanged)="onBreadcrumbChanged($event)">
         </app-sidebar>
       </div>
-   }
+    }
 
     <main class="main-content">
-      <!-- Breadcrumb -->
-      <div class="breadcrumb-row">
-        <app-breadcrumb 
-          [items]="breadcrumbItems()"
-          [isDarkTheme]="isDarkTheme"
-          (itemClick)="onBreadcrumbItemClick($event)">
-        </app-breadcrumb>
+      <!-- Area contenuto: breadcrumb + pagina scrollano insieme -->
+      <div class="content-area">
+        <div class="breadcrumb-row">
+          <app-breadcrumb
+            [items]="breadcrumbItems()"
+            [isDarkTheme]="isDarkTheme"
+            (itemClick)="onBreadcrumbItemClick($event)">
+          </app-breadcrumb>
+        </div>
+        <router-outlet></router-outlet>
       </div>
-      
-      <!-- Content -->
-      <router-outlet></router-outlet>
-
     </main>
   </div>
 </div>

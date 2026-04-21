@@ -27,14 +27,36 @@
 
 .main-content {
   flex: 1 1 auto;
-  overflow-y: scroll;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   background-color: var(--dx-color-main-bg, #ffffff);
 }
 
-/* Breadcrumb inside main-content */
-.main-content .breadcrumb-row {
+/* Titolo pagina — riga full-width, unica linea di separazione */
+.page-title-row {
+  padding: 0.7rem 1rem;
+  background-color: var(--dx-color-main-bg, #ffffff);
+  border-bottom: 1px solid var(--dx-color-border, #ddd);
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #20294c;
+}
+
+/* Area contenuto: breadcrumb + pagina scrollano insieme */
+.content-area {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Breadcrumb dentro content-area */
+.breadcrumb-row {
   flex: 0 0 auto;
   padding: 0.5rem 1rem;
   min-height: 2.5rem;

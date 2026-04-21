@@ -63,7 +63,8 @@ export const routes: Routes = [
       },
       {
         path: 'info-autorizzazioni',
-        loadComponent: () => import('./features/manager/sicurezza/pages/info-autorizzazioni/info-autorizzazioni.component').then(m => m.InfoAutorizzazioniComponent)
+        loadComponent: () => import('./features/manager/sicurezza/pages/info-autorizzazioni/info-autorizzazioni.component').then(m => m.InfoAutorizzazioniComponent),
+        data: { titleKey: 'infoAutorizzazioni.title' }
       },
       {
         path: 'funzioni',

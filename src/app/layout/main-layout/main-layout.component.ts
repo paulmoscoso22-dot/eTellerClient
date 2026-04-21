@@ -1,6 +1,7 @@
 import { Component, computed, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { BreadcrumbItem } from '../../domain/breadcrumb-item';
 import { MenuItem } from '../../domain/menu-item';
 import { MenuService } from '../../services/menu.service';
@@ -25,6 +26,17 @@ export class MainLayoutComponent implements OnDestroy {
   // Breadcrumb
   breadcrumbItems = signal<BreadcrumbItem[]>([]);
 
+  // Chiave di traduzione del titolo dalla rotta (se definita)
+  private routeTitleKey = signal<string | null>(null);
+
+  // Titolo pagina: usa titleKey della rotta se presente, altrimenti la label attiva del breadcrumb
+  pageTitle = computed(() => {
+    const key = this.routeTitleKey();
+    if (key) return this.transloco.translate(key);
+    const items = this.breadcrumbItems();
+    return (items.find(i => i.isActive) ?? items[items.length - 1])?.label ?? '';
+  });
+
   // Menu reattivo dal service
   private menuService = inject(MenuService);
   // menuItems = this.menuService.getMenuItems(); use direct access in template or getter
@@ -42,10 +54,16 @@ export class MainLayoutComponent implements OnDestroy {
     private router: Router,
     private themeService: Theme
   ) {
-     // Effetto per reagire ai cambiamenti del tema - layout specific if needed, or rely on global styles
-     effect(() => {
-        this.isDarkTheme = this.themeService.currentTheme().includes('dark');
-      });
+    effect(() => {
+      this.isDarkTheme = this.themeService.currentTheme().includes('dark');
+    });
+
+    // Legge titleKey dai dati della rotta ad ogni navigazione
+    this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
+      let route = this.router.routerState.snapshot.root;
+      while (route.firstChild) route = route.firstChild;
+      this.routeTitleKey.set(route.data?.['titleKey'] ?? null);
+    });
   }
 
   ngOnDestroy(): void {

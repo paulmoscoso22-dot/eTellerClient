@@ -9,7 +9,6 @@
 .search-box {
   position: relative;
   padding: 0.7rem;
-  border-bottom: 1px solid var(--border-color, #ddd);
 }
 
 .search-input {
