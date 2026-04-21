@@ -5,13 +5,15 @@ import { DxFormModule, DxButtonModule, DxTextBoxModule, DxCheckBoxModule } from 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ManagerService } from '../../services/sicurezza.service';
 import { GetAllUsersByUsrIdRequest, InfoAutorizzazioneUtenteResponse } from '../../models/manager.models';
+import { IStFunAcctypResponse } from '../../models/function.models';
 import { ButtonRicercaComponent } from '../../../../../components/buttons/search/button-ricerca.component';
 import { AuthFacade } from '../../../../auth/auth.facade';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-info-autorizzazioni',
   standalone: true,
-  imports: [CommonModule, DxDataGridModule, DxFormModule, DxButtonModule, DxTextBoxModule, DxCheckBoxModule, ButtonRicercaComponent],
+  imports: [CommonModule, DxDataGridModule, DxFormModule, DxButtonModule, DxTextBoxModule, DxCheckBoxModule, ButtonRicercaComponent, TranslocoPipe],
   templateUrl: './info-autorizzazioni.component.html',
   styleUrls: ['./info-autorizzazioni.component.css'],
 })
@@ -20,6 +22,7 @@ export class InfoAutorizzazioniComponent implements OnInit, OnDestroy {
   private readonly authFacade = inject(AuthFacade);
   private readonly destroyRef = inject(DestroyRef);
   userAuthorizations = signal<InfoAutorizzazioneUtenteResponse[]>([]);
+  funcAccTyp = signal<IStFunAcctypResponse[]>([]);
 
   filterData = signal<GetAllUsersByUsrIdRequest>({
     usrId: this.authFacade.getAuthTemp().User,
@@ -30,6 +33,7 @@ export class InfoAutorizzazioniComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadUserAuthorizations();
+    this.loadFuncAccTyp();
     this.loadInitialData();
   }
 
@@ -42,6 +46,15 @@ export class InfoAutorizzazioniComponent implements OnInit, OnDestroy {
     this.managerService.getAllUsersByUsrId(this.filterData())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({ error: (err) => console.error('Error loading user authorizations:', err) });
+  }
+
+  private loadFuncAccTyp(): void {
+    this.managerService.funcAccTyp$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((data) => this.funcAccTyp.set(data));
+    this.managerService.getFuncAccTyp()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({ error: (err) => console.error('Error loading access types:', err) });
   }
 
   private loadUserAuthorizations(): void {

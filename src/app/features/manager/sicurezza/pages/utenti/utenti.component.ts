@@ -15,11 +15,12 @@ import { Branch } from '../../../../../core/domain/branch.domain';
 import { ISTStatoEntitaResponse } from '../../../../../core/domain/stato-entita.domain';
 import { it } from 'node:test';
 import { Router } from '@angular/router';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-utenti',
   standalone: true,
-  imports: [CommonModule, DxDataGridModule, ReactiveFormsModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule, TableUtentiComponent, ControlAssignComponent],
+  imports: [CommonModule, DxDataGridModule, ReactiveFormsModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule, TableUtentiComponent, ControlAssignComponent, TranslocoPipe],
   templateUrl: './utenti.component.html',
   styleUrls: ['./utenti.component.css'],
 })

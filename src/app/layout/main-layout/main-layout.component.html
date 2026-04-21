@@ -11,7 +11,7 @@
   <div class="content-row">
     @if (isSidebarVisible()) {
       <div class="sidebar">
-        <app-sidebar 
+        <app-sidebar
           [items]="rawMenuItems"
           [showSearch]="true"
           searchPlaceholder="Cerca nel menu..."
@@ -19,21 +19,29 @@
           (breadcrumbChanged)="onBreadcrumbChanged($event)">
         </app-sidebar>
       </div>
-   }
+    }
 
     <main class="main-content">
+      <!-- Titolo pagina — allineato con il breadcrumb -->
+      @if (pageTitle()) {
+        <div class="page-title-row">
+          <h1 class="page-title">{{ pageTitle() }}</h1>
+        </div>
+      }
+
       <!-- Breadcrumb -->
       <div class="breadcrumb-row">
-        <app-breadcrumb 
+        <app-breadcrumb
           [items]="breadcrumbItems()"
           [isDarkTheme]="isDarkTheme"
           (itemClick)="onBreadcrumbItemClick($event)">
         </app-breadcrumb>
       </div>
-      
-      <!-- Content -->
-      <router-outlet></router-outlet>
 
+      <!-- Contenuto pagina -->
+      <div class="content-area">
+        <router-outlet></router-outlet>
+      </div>
     </main>
   </div>
 </div>

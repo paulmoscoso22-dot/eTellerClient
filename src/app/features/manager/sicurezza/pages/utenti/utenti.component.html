@@ -96,7 +96,7 @@
         <dx-button text="Modifica" type="default" (onClick)="onUpdate()" [disabled]="!selectedUserId()"></dx-button>
         <dx-button text="Traccia" type="default" (onClick)="onTrace()"></dx-button>
         <dx-button text="Reset Password" type="default" (onClick)="openResetPasswordPopup()" [disabled]="!selectedUserId()"></dx-button>
-        <dx-button text="Clear" type="default" (onClick)="onClear()"></dx-button>
+        <dx-button [text]="'common.reset' | transloco" icon="revert" type="default" (onClick)="onClear()"></dx-button>
       </div>
     </div>
   </form>
