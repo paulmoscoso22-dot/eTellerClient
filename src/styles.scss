@@ -78,6 +78,11 @@ h1 {
     color: #ffffff !important;
 }
 
+.dx-datagrid-headers .dx-header-row > td:hover,
+.dx-datagrid-headers .dx-header-row > td.dx-state-hover {
+    color: #ffffff !important;
+}
+
 .dx-datagrid-headers .dx-datagrid-filter-row > td {
     background-color: #ffffff !important;
 }

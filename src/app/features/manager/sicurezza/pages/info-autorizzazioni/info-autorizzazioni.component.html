@@ -1,22 +1,22 @@
 <div class="container">
-  <h1>Info Autorizzazioni</h1>
+  <h1>{{ 'infoAutorizzazioni.title' | transloco }}</h1>
   
   <!-- Filter Form -->
   <div class="filter-section mb-4">
     <dx-form [formData]="filterData()" [showColonAfterLabel]="false" labelLocation="top">
       <dxi-item itemType="group" [colCount]="2">
         <dxi-item dataField="funlikeName" editorType="dxTextBox">
-          <dxo-label text="Function Name"></dxo-label>
+          <dxo-label [text]="'infoAutorizzazioni.filterFunName' | transloco"></dxo-label>
         </dxi-item>
         <dxi-item dataField="funlikeDes" editorType="dxTextBox">
-          <dxo-label text="Function Description"></dxo-label>
+          <dxo-label [text]="'infoAutorizzazioni.filterFunDes' | transloco"></dxo-label>
         </dxi-item>
       </dxi-item>
     </dx-form>
     
     <div class="button-group d-flex gap-2 mt-3">
       <app-button-ricerca (onClick)="onSearch()"></app-button-ricerca>
-      <dx-button text="Clear" icon="clearsquare" (onClick)="onClear()"></dx-button>
+      <dx-button [text]="'common.reset' | transloco" icon="revert" (onClick)="onClear()"></dx-button>
     </div>
   </div>
 
@@ -30,12 +30,12 @@
     [allowColumnReordering]="true"
     [allowColumnResizing]="true"
     columnResizingMode="nextColumn">
-    <dxi-column dataField="funId" caption="Function ID" width="100" dataType="number"></dxi-column>
-    <dxi-column dataField="funName" caption="Function Name"></dxi-column>
-    <dxi-column dataField="funDescription" caption="Description"></dxi-column>
-    <dxi-column dataField="funHostcode" caption="Host Code" width="100" dataType="number"></dxi-column>
-    <dxi-column dataField="offline" caption="Offline" width="100" dataType="boolean"></dxi-column>
-    <dxi-column dataField="roleName" caption="Role Name"></dxi-column>
-    <dxi-column dataField="accessLevel" caption="Access Level" width="120" dataType="number"></dxi-column>
+    <dxi-column dataField="funId" [caption]="'infoAutorizzazioni.colFunId' | transloco" width="100" dataType="number" alignment="center"></dxi-column>
+    <dxi-column dataField="funName" [caption]="'infoAutorizzazioni.colFunName' | transloco"></dxi-column>
+    <dxi-column dataField="funDescription" [caption]="'infoAutorizzazioni.colFunDescription' | transloco"></dxi-column>
+    <dxi-column dataField="roleName" [caption]="'infoAutorizzazioni.colRoleName' | transloco"></dxi-column>
+    <dxi-column dataField="accessLevel" [caption]="'infoAutorizzazioni.colAccessLevel' | transloco" width="160" alignment="center">
+      <dxo-lookup [dataSource]="funcAccTyp()" valueExpr="fatId" displayExpr="fatDes"></dxo-lookup>
+    </dxi-column>
   </dx-data-grid>
 </div>

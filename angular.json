@@ -25,6 +25,11 @@
                 "input": "public"
               },
               {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets"
+              },
+              {
                 "glob": "**/*.css",
                 "input": "node_modules/devextreme/dist/css",
                 "output": "/assets"
