@@ -8,7 +8,7 @@
 }
 
 h1 {
-  color: #333;
+  color: #20294c;
   margin-bottom: 30px;
   font-size: 24px;
   border-bottom: 2px solid #007bff;
@@ -71,8 +71,13 @@ h1 {
   width: 100%;
 }
 
-.data-grid-container ::ng-deep .dx-datagrid-headers {
-  background-color: #f8f9fa;
+.data-grid-container ::ng-deep .dx-datagrid-headers .dx-header-row > td {
+  background-color: #20294c;
+  color: #ffffff;
+}
+
+.data-grid-container ::ng-deep .dx-datagrid-headers .dx-datagrid-filter-row > td {
+  background-color: #ffffff;
 }
 
 .data-grid-container ::ng-deep .dx-datagrid-row {

@@ -62,3 +62,22 @@ html, body {
     scrollbar-width: thin;
     scrollbar-color: var(--dx-color-border, #cbd5e1) var(--dx-color-main-bg, #ffffff);
 }
+
+/* =============================================================================
+   Titoli principali di pagina
+   ============================================================================= */
+h1 {
+    color: #20294c !important;
+}
+
+/* =============================================================================
+   DevExtreme DataGrid - Intestazione tabella
+   ============================================================================= */
+.dx-datagrid-headers .dx-header-row > td {
+    background-color: #20294c !important;
+    color: #ffffff !important;
+}
+
+.dx-datagrid-headers .dx-datagrid-filter-row > td {
+    background-color: #ffffff !important;
+}

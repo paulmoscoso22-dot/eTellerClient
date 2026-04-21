@@ -32,7 +32,7 @@
 }
 
 .breadcrumb-item a {
-  color: var(--dx-color-text, #64748b);
+  color: #20294c;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -53,7 +53,7 @@
 }
 
 .breadcrumb-item.active {
-  color: var(--dx-color-text, #0f172a);
+  color: #20294c;
   font-weight: 600;
 }
 

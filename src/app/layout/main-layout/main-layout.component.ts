@@ -8,6 +8,7 @@ import { HeaderComponent } from '../../components/layaout/header/header';
 import { Sidebar } from '../../components/layaout/sidebar/sidebar';
 import { Breadcrumb } from '../../components/layaout/breadcrumb/breadcrumb';
 import { Theme } from '../../services/theme';
+import { TranslocoService } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-main-layout',
@@ -34,6 +35,8 @@ export class MainLayoutComponent implements OnDestroy {
   }
 
   private navigationSubscription: any;
+
+  private transloco = inject(TranslocoService);
 
   constructor(
     private router: Router,
@@ -68,18 +71,19 @@ export class MainLayoutComponent implements OnDestroy {
   }
 
   onBreadcrumbChanged(trail: MenuItem[]): void {
-    // Converti il trail di MenuItem in BreadcrumbItems
-    const items: BreadcrumbItem[] = [];
-    
-    trail.forEach((item, index) => {
-      items.push({
-        label: item.label,
-        link: item.url || '',
-        isActive: index === trail.length - 1
-      });
-    });
-    
+    const items: BreadcrumbItem[] = trail.map((item, index) => ({
+      label: this.formatBreadcrumbLabel(item.label),
+      link: item.url || '',
+      isActive: index === trail.length - 1
+    }));
     this.breadcrumbItems.set(items);
+  }
+
+  private formatBreadcrumbLabel(label: string): string {
+    const translated = this.transloco.translate(label);
+    // Se la traduzione non è stata trovata transloco restituisce la chiave stessa
+    const text = translated.startsWith('menu.') ? translated.slice(5) : translated;
+    return text.charAt(0).toUpperCase() + text.slice(1);
   }
 
   onBreadcrumbItemClick(item: BreadcrumbItem): void {
