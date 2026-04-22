@@ -70,6 +70,7 @@
     "reset": "Réinitialiser"
   },
   "utenti": {
+    "searchPlaceholder": "Rechercher par ID, Utilisateur ou Agence...",
     "colAttivo": "Actif",
     "statusActive": "Actif",
     "statusInactive": "Inactif",

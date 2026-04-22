@@ -70,6 +70,7 @@
     "reset": "Reset"
   },
   "utenti": {
+    "searchPlaceholder": "Search by ID, User or Branch...",
     "colAttivo": "Active",
     "statusActive": "Active",
     "statusInactive": "Inactive",

@@ -6,21 +6,35 @@
   overflow: hidden;
 }
 
-/* ── Status indicator (colonna Attivo) ── */
+/* ── Status Badge (colonna Attivo) ── */
 .status-cell {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.status-icon {
-  font-size: 1rem;
+/* Dot verde pieno: utente attivo */
+.status-badge {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
   cursor: default;
-  user-select: none;
+  flex-shrink: 0;
 }
 
-.status-active   { color: #1a6e2e; }
-.status-inactive { color: #9ca3af; }
+.badge-active {
+  background-color: #28a745;
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
+}
+
+/* Circle-slash rossa: utente non attivo */
+.badge-inactive {
+  font-size: 0.875rem;
+  color: #dc3545;
+  cursor: default;
+  line-height: 1;
+}
 
 /* ── Colonna Azioni ── */
 .actions-cell {

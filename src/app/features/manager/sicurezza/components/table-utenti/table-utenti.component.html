@@ -9,7 +9,6 @@
     (onSelectionChanged)="onSelectionChanged($event)">
 
     <dxo-selection mode="single"></dxo-selection>
-    <dxo-filter-row [visible]="true"></dxo-filter-row>
     <dxo-paging [pageSize]="10"></dxo-paging>
     <dxo-pager
       [showPageSizeSelector]="true"
@@ -17,9 +16,10 @@
       [showInfo]="true">
     </dxo-pager>
 
+    <!-- Colonna Attivo: Status Badge (nessuna intestazione) -->
     <dxi-column
-      [caption]="'utenti.colAttivo' | transloco"
-      [width]="64"
+      caption=""
+      [width]="40"
       [allowSorting]="false"
       [allowFiltering]="false"
       [alignment]="'center'"
@@ -27,19 +27,24 @@
     </dxi-column>
 
     <div *dxTemplate="let cell of 'attivoTemplate'" class="status-cell">
-      <i *ngIf="cell.data.isOnline"
-         class="bi bi-check-lg status-icon status-active"
-         [title]="'utenti.statusActive' | transloco">
-      </i>
-      <i *ngIf="!cell.data.isOnline"
-         class="bi bi-slash-circle status-icon status-inactive"
-         [title]="'utenti.statusInactive' | transloco">
-      </i>
+      @if (cell.data.isOnline) {
+        <span class="status-badge badge-active"
+              [title]="'utenti.statusActive' | transloco"
+              [attr.aria-label]="'utenti.statusActive' | transloco">
+        </span>
+      } @else {
+        <i class="bi bi-slash-circle badge-inactive"
+           [title]="'utenti.statusInactive' | transloco"
+           [attr.aria-label]="'utenti.statusInactive' | transloco">
+        </i>
+      }
     </div>
 
-    <dxi-column dataField="usrId"     [caption]="'utenti.colUsrId'  | transloco"></dxi-column>
-    <dxi-column dataField="usrHostId" [caption]="'utenti.colHostId' | transloco"></dxi-column>
+    <!-- ID columns: right-aligned -->
+    <dxi-column dataField="usrId"     [caption]="'utenti.colUsrId'  | transloco" [alignment]="'right'"></dxi-column>
+    <dxi-column dataField="usrHostId" [caption]="'utenti.colHostId' | transloco" [alignment]="'right'"></dxi-column>
 
+    <!-- Text columns: left-aligned (default) -->
     <dxi-column dataField="usrBraId"  [caption]="'utenti.colBraId'  | transloco">
       <dxo-lookup [dataSource]="branches()" valueExpr="braId" displayExpr="braDes"></dxo-lookup>
     </dxi-column>
@@ -54,6 +59,7 @@
       <dxo-lookup [dataSource]="languages()" valueExpr="lanId" displayExpr="lanDes"></dxo-lookup>
     </dxi-column>
 
+    <!-- Azioni column: centered -->
     <dxi-column
       [caption]="'utenti.colAzioni' | transloco"
       [width]="110"

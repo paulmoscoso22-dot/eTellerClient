@@ -22,6 +22,10 @@ export class TableUtentiComponent {
 
   @Input() users$: Observable<ISysUsersActiveAndBlockedResponse[]> | null = null;
   @Input() filterValue: any = null;
+  @Input() set searchValue(val: string) {
+    // defer so the grid instance is ready
+    setTimeout(() => this.dataGrid?.instance?.searchByText(val ?? ''));
+  }
   @Output() userSelected = new EventEmitter<any>();
   @Output() actionClicked = new EventEmitter<{ action: string; data: any }>();
 
