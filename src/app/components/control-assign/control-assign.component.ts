@@ -12,6 +12,7 @@ import { DxDataGridModule, DxButtonModule } from 'devextreme-angular';
 export class ControlAssignComponent {
   @Input() assignedRoles = signal<any[]>([]);
   @Input() possibleRoles = signal<any[]>([]);
+  @Input() disabled = false;
 
   @Output() rolesChanged = new EventEmitter<{
     assigned: any[];

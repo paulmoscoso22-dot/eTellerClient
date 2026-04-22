@@ -1,1 +1,61 @@
-/* Styles for table-utenti */
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Status indicator (colonna Attivo) ── */
+.status-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.status-icon {
+  font-size: 1rem;
+  cursor: default;
+  user-select: none;
+}
+
+.status-active   { color: #1a6e2e; }
+.status-inactive { color: #9ca3af; }
+
+/* ── Colonna Azioni ── */
+.actions-cell {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-icon {
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.action-icon-view {
+  color: var(--dx-color-accent, #0078d4);
+}
+.action-icon-view:hover {
+  opacity: 0.8;
+}
+
+.action-icon-edit {
+  color: #20294c;
+}
+.action-icon-edit:hover {
+  opacity: 0.75;
+}
+
+.action-more-btn {
+  display: inline-flex;
+  align-items: center;
+}
+
+.action-more-btn .dx-button {
+  min-width: unset;
+  padding: 0 4px;
+}

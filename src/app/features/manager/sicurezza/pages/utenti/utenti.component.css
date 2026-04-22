@@ -1,12 +1,62 @@
-.container {
-  max-width: 98%;
-  margin: 20px auto;
-  padding: 20px;
-  background: white;
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
-h1 {
-  color: #333;
-  margin-bottom: 20px;
-  font-size: 24px;
+.utenti-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 12px 16px 16px;
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0;
+}
+
+.print-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.detail-section {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
+.detail-form {
+  flex: 1 1 50%;
+}
+
+.detail-roles {
+  flex: 1 1 50%;
+}
+
+.form-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 16px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
 }

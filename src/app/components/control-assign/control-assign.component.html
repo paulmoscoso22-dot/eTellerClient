@@ -15,8 +15,8 @@
   </div>
 
   <div id="moveleftRight" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
-    <dx-button text="<<" type="default" (onClick)="addRole()"></dx-button>
-    <dx-button text=">>" type="default" (onClick)="removeRole()"></dx-button>
+    <dx-button text="<<" type="default" [disabled]="disabled" (onClick)="addRole()"></dx-button>
+    <dx-button text=">>" type="default" [disabled]="disabled" (onClick)="removeRole()"></dx-button>
   </div>
 
   <div id="ruoliPossibili" style="flex: 1 1 250px;">

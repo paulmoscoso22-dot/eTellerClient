@@ -2,25 +2,46 @@
   <i class="bi bi-list list-icon" (click)="onMenuIconClicked()"></i>
   <div class="logo-sep"></div>
   <app-logo></app-logo>
-  <!-- App Name -->
   <app-application-name></app-application-name>
 
-  <div class="header-spacer" style="margin-left: auto;"></div>
+  <div class="header-spacer"></div>
 
-  <!-- Spacer per spingere elementi a destra -->
-  <!-- <div class="header-spacer"></div> -->
-
-  <!-- Version Badge -->
-  <!-- <app-version-display></app-version-display> -->
-
-  <!-- Environment Badge -->
-  <!-- <app-environment-badge></app-environment-badge> -->
-
-  <!-- Separator -->
-  <!-- <div class="header-separator"></div> -->
-  <!-- <div class="logo-sep"></div> -->
-  <!-- User Badge -->
   <app-user-badge (clicked)="onUserBadgeClick()"></app-user-badge>
+
+  <div class="logo-sep"></div>
+
+  <!-- Status Indicator -->
+  <div
+    id="status-indicator"
+    class="status-indicator"
+    [class.online]="isOnline()"
+    [attr.aria-label]="isOnline() ? 'Sistema online' : 'Sistema offline'">
+    <i class="bi" [class.bi-check]="isOnline()" [class.bi-x]="!isOnline()"></i>
+  </div>
+  <dx-tooltip
+    target="#status-indicator"
+    showEvent="mouseenter"
+    hideEvent="mouseleave"
+    position="bottom">
+    <div *dxTemplate="let d of 'content'" class="status-tooltip">
+      <i class="bi" [class.bi-check-circle-fill]="isOnline()" [class.bi-x-circle-fill]="!isOnline()"></i>
+      {{ isOnline() ? 'Online — Connessione stabile' : 'Offline — Sistema non raggiungibile' }}
+    </div>
+  </dx-tooltip>
+
+  <div class="logo-sep"></div>
+
+  <dx-drop-down-button
+    class="lang-selector"
+    [items]="languages"
+    [text]="currentLang()"
+    displayExpr="label"
+    keyExpr="code"
+    (onItemClick)="onLanguageSelect($event)"
+    stylingMode="text"
+    [showArrowIcon]="false"
+    [width]="52">
+  </dx-drop-down-button>
 
   <div class="logo-sep"></div>
   <i class="bi bi-box-arrow-right list-icon" routerLink="/login" title="Exit"></i>

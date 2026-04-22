@@ -1,127 +1,173 @@
-<div class="container">
-  <h2 style="font-size: 28px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-bottom: 20px; font-weight: 600;">
-    Gestione Utenti
-  </h2>
+<div class="utenti-container">
+
+  <!-- Toolbar: filtro a sinistra, azioni a destra -->
+  <div class="filter-row">
+    <dx-radio-group
+      [items]="filterItems"
+      [value]="selectedFilter()"
+      valueExpr="value"
+      layout="horizontal"
+      (onValueChanged)="onFilterChanged($event)">
+      <div *dxTemplate="let item of 'item'">
+        {{ item.labelKey | transloco }}
+      </div>
+    </dx-radio-group>
+
+    <div class="print-actions">
+      <dx-button [text]="'utenti.btnNew'       | transloco" type="default" icon="plus" (onClick)="openNewUserPopup()"></dx-button>
+      <dx-button [text]="'utenti.btnPrintList' | transloco" type="default"></dx-button>
+    </div>
+  </div>
+
+  <!-- Lista utenti -->
   <app-table-utenti
     [users$]="users$"
-    (userSelected)="onSelectionChanged($event)">
+    [filterValue]="gridFilterValue()"
+    (userSelected)="onSelectionChanged($event)"
+    (actionClicked)="onTableAction($event)">
   </app-table-utenti>
 
-<div id="ContainerUtenti" style="display: flex; flex-direction: row; flex-wrap: nowrap; gap: 20px; width: 100%;">
-   <div id="form" style="flex: 1 1 50%;">
-     <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-    <div class="dx-fieldset" style="display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px;">
-      <!-- Usr Id -->
-      <div class="dx-field">
-        <div class="dx-field-label">User ID</div>
-        <div class="dx-field-value">
-          <dx-text-box formControlName="usrId">
-            <dx-validator>
-              <dxi-validation-rule type="required" message="User ID is required"></dxi-validation-rule>
-            </dx-validator>
-          </dx-text-box>
-        </div>
-      </div>
-
-      <!-- Usr Status -->
-      <div class="dx-field">
-        <div class="dx-field-label">Status</div>
-        <div class="dx-field-value">
-          <dx-select-box
-            formControlName="usrStatus"
-            [dataSource]="statiEntita$ | async"
-            displayExpr="steDes"
-            valueExpr="steId">
-            <dx-validator>
-              <dxi-validation-rule type="required" message="Status is required"></dxi-validation-rule>
-            </dx-validator>
-          </dx-select-box>
-        </div>
-      </div>
-
-      <!-- Usr Extref -->
-      <div class="dx-field">
-        <div class="dx-field-label">External Ref</div>
-        <div class="dx-field-value">
-          <dx-text-box formControlName="usrExtref"></dx-text-box>
-        </div>
-      </div>
-
-      <!-- Usr Host Id -->
-      <div class="dx-field">
-        <div class="dx-field-label">Host ID</div>
-        <div class="dx-field-value">
-          <dx-text-box formControlName="usrHostId">
-            <dx-validator>
-              <dxi-validation-rule type="required" message="Host ID is required"></dxi-validation-rule>
-            </dx-validator>
-          </dx-text-box>
-        </div>
-      </div>
-
-      <!-- Usr Bra Id -->
-      <div class="dx-field">
-        <div class="dx-field-label">Branch ID</div>
-        <div class="dx-field-value">
-          <dx-select-box
-            formControlName="usrBraId"
-            [dataSource]="branches$ | async"
-            displayExpr="braDes"
-            valueExpr="braId">
-            <dx-validator>
-              <dxi-validation-rule type="required" message="Branch is required"></dxi-validation-rule>
-            </dx-validator>
-          </dx-select-box>
-        </div>
-      </div>
-
-      <!-- Usr Lingua -->
-      <div class="dx-field">
-        <div class="dx-field-label">Language</div>
-        <div class="dx-field-value">
-          <dx-select-box
-            formControlName="usrLingua"
-            [dataSource]="languages$ | async"
-            displayExpr="lanDes"
-            valueExpr="lanId">
-            <dx-validator>
-              <dxi-validation-rule type="required" message="Language is required"></dxi-validation-rule>
-            </dx-validator>
-          </dx-select-box>
-        </div>
-      </div>
-
-      <div id="Buttons" class="dx-field" style="grid-column: span 2; display: flex; justify-content: flex-end; gap: 10px;">
-        <dx-button id="aggiungi" text="Aggiungi" type="default" [useSubmitBehavior]="true" [disabled]="!!selectedUserId()"></dx-button>
-        <dx-button text="Modifica" type="default" (onClick)="onUpdate()" [disabled]="!selectedUserId()"></dx-button>
-        <dx-button text="Traccia" type="default" (onClick)="onTrace()"></dx-button>
-        <dx-button text="Reset Password" type="default" (onClick)="openResetPasswordPopup()" [disabled]="!selectedUserId()"></dx-button>
-        <dx-button [text]="'common.reset' | transloco" icon="revert" type="default" (onClick)="onClear()"></dx-button>
-      </div>
-    </div>
-  </form>
-  </div>
-  <div style="flex: 1 1 50%;">
-    <app-control-assign 
-      [assignedRoles]="assignedRoles" 
-      [possibleRoles]="possibleRoles"
-      (rolesChanged)="onRolesChanged($event)">
-    </app-control-assign>
-  </div>
-  
-  </div>
-  <div id="otherButtons" style="display: flex; justify-content: flex-end; gap: 10px; width: 100%; margin-top: 20px;">
-    
-    <dx-button text="Stampa lista utenti" type="default"></dx-button>
-    <dx-button text="Stampa dettaglio utente" type="default"></dx-button>
-  </div>
 </div>
 
+<!-- Popup Dettaglio / Form utente -->
+<dx-popup
+  [(visible)]="isDetailPopupVisible"
+  [showTitle]="true"
+  [title]="popupMode() === 'edit' ? (('utenti.popupEditTitle' | transloco) + ' — ' + selectedUserId())
+         : popupMode() === 'view' ? (('utenti.popupViewTitle' | transloco) + ' — ' + selectedUserId())
+         : ('utenti.btnNew' | transloco)"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [width]="'90%'"
+  [height]="'auto'"
+  [maxHeight]="'90vh'"
+  (onHidden)="onClear()">
+  <div *dxTemplate="let data of 'content'">
+
+    <div class="detail-section">
+
+      <div class="detail-form">
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+          <div class="form-fields">
+
+            <div class="dx-field">
+              <div class="dx-field-label">{{ 'utenti.fieldUsrId' | transloco }}</div>
+              <div class="dx-field-value">
+                <dx-text-box formControlName="usrId" [readOnly]="popupMode() === 'view'">
+                  <dx-validator>
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                  </dx-validator>
+                </dx-text-box>
+              </div>
+            </div>
+
+            <div class="dx-field">
+              <div class="dx-field-label">{{ 'utenti.fieldStatus' | transloco }}</div>
+              <div class="dx-field-value">
+                <dx-select-box
+                  formControlName="usrStatus"
+                  [dataSource]="statiEntita$ | async"
+                  displayExpr="steDes"
+                  valueExpr="steId"
+                  [readOnly]="popupMode() === 'view'">
+                  <dx-validator>
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                  </dx-validator>
+                </dx-select-box>
+              </div>
+            </div>
+
+            <div class="dx-field">
+              <div class="dx-field-label">{{ 'utenti.fieldExtref' | transloco }}</div>
+              <div class="dx-field-value">
+                <dx-text-box formControlName="usrExtref" [readOnly]="popupMode() === 'view'"></dx-text-box>
+              </div>
+            </div>
+
+            <div class="dx-field">
+              <div class="dx-field-label">{{ 'utenti.fieldHostId' | transloco }}</div>
+              <div class="dx-field-value">
+                <dx-text-box formControlName="usrHostId" [readOnly]="popupMode() === 'view'">
+                  <dx-validator>
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                  </dx-validator>
+                </dx-text-box>
+              </div>
+            </div>
+
+            <div class="dx-field">
+              <div class="dx-field-label">{{ 'utenti.fieldBraId' | transloco }}</div>
+              <div class="dx-field-value">
+                <dx-select-box
+                  formControlName="usrBraId"
+                  [dataSource]="branches$ | async"
+                  displayExpr="braDes"
+                  valueExpr="braId"
+                  [readOnly]="popupMode() === 'view'">
+                  <dx-validator>
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                  </dx-validator>
+                </dx-select-box>
+              </div>
+            </div>
+
+            <div class="dx-field">
+              <div class="dx-field-label">{{ 'utenti.fieldLingua' | transloco }}</div>
+              <div class="dx-field-value">
+                <dx-select-box
+                  formControlName="usrLingua"
+                  [dataSource]="languages$ | async"
+                  displayExpr="lanDes"
+                  valueExpr="lanId"
+                  [readOnly]="popupMode() === 'view'">
+                  <dx-validator>
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                  </dx-validator>
+                </dx-select-box>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+            @if (popupMode() === 'new') {
+              <dx-button [text]="'utenti.btnAdd' | transloco" type="default" [useSubmitBehavior]="true"></dx-button>
+            }
+            @if (popupMode() === 'edit') {
+              <dx-button [text]="'utenti.btnEdit'          | transloco" type="default" (onClick)="onUpdate()"></dx-button>
+              <dx-button [text]="'utenti.btnResetPassword' | transloco" type="default" (onClick)="openResetPasswordPopup()"></dx-button>
+              <dx-button [text]="'utenti.btnPrintDetail'   | transloco" type="default"></dx-button>
+              <dx-button [text]="'utenti.btnStorico'       | transloco" type="default" (onClick)="onTrace()"></dx-button>
+            }
+            @if (popupMode() === 'view') {
+              <dx-button [text]="'utenti.btnStorico' | transloco" type="default" (onClick)="onTrace()"></dx-button>
+              <dx-button [text]="'utenti.btnPrintDetail' | transloco" type="default"></dx-button>
+            }
+          </div>
+        </form>
+      </div>
+
+      <div class="detail-roles">
+        <app-control-assign
+          [assignedRoles]="assignedRoles"
+          [possibleRoles]="possibleRoles"
+          [disabled]="popupMode() === 'view'"
+          (rolesChanged)="onRolesChanged($event)">
+        </app-control-assign>
+      </div>
+
+    </div>
+
+  </div>
+</dx-popup>
+
+<!-- Popup Reset Password -->
 <dx-popup
   [width]="400"
-  [height]="250"
+  [height]="260"
   [showTitle]="true"
-  title="Reset Password"
+  [title]="'utenti.popupTitle' | transloco"
   [dragEnabled]="false"
   [hideOnOutsideClick]="false"
   [(visible)]="isResetPasswordPopupVisible">
@@ -129,32 +175,30 @@
     <form [formGroup]="resetPasswordForm" (ngSubmit)="changePassword()">
       <div class="dx-fieldset">
         <div class="dx-field">
-          <div class="dx-field-label">Password</div>
+          <div class="dx-field-label">{{ 'utenti.fieldPassword' | transloco }}</div>
           <div class="dx-field-value">
             <dx-text-box formControlName="password" mode="password">
               <dx-validator>
-                <dxi-validation-rule type="required" message="Password is required"></dxi-validation-rule>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
               </dx-validator>
             </dx-text-box>
           </div>
         </div>
         <div class="dx-field">
-          <div class="dx-field-label">Conferma la password</div>
+          <div class="dx-field-label">{{ 'utenti.fieldConfirmPassword' | transloco }}</div>
           <div class="dx-field-value">
             <dx-text-box formControlName="confirmPassword" mode="password">
               <dx-validator>
-                <dxi-validation-rule type="required" message="Conferma password is required"></dxi-validation-rule>
-                <!-- Optional: add custom validation rule to match passwords -->
+                <dxi-validation-rule type="required"></dxi-validation-rule>
               </dx-validator>
             </dx-text-box>
           </div>
         </div>
       </div>
-      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
-        <dx-button text="Annulla" type="normal" (onClick)="cancelResetPassword()"></dx-button>
-        <dx-button text="Cambia" type="default" [useSubmitBehavior]="true"></dx-button>
+      <div class="popup-actions">
+        <dx-button [text]="'utenti.btnCancel' | transloco" type="normal" (onClick)="cancelResetPassword()"></dx-button>
+        <dx-button [text]="'utenti.btnChange' | transloco" type="default" [useSubmitBehavior]="true"></dx-button>
       </div>
     </form>
   </div>
 </dx-popup>
-

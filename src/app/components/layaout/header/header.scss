@@ -86,3 +86,48 @@
   background-color: var(--dx-color-border);
   margin: 0 0.75rem;
 }
+
+// =============================================================================
+// STATUS INDICATOR - Indicatore di stato connessione
+// =============================================================================
+.status-indicator {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: default;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #ffffff;
+  background-color: #DC3545; // default: offline
+
+  &.online {
+    background-color: #28A745;
+  }
+}
+
+.status-tooltip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+}
+
+// =============================================================================
+// LANGUAGE SELECTOR - Selettore lingua
+// =============================================================================
+.lang-selector {
+  ::ng-deep .dx-button-content {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--dx-color-icon);
+    padding: 0.25rem 0.4rem;
+  }
+
+  ::ng-deep .dx-button:hover .dx-button-content {
+    color: var(--dx-color-text);
+  }
+}

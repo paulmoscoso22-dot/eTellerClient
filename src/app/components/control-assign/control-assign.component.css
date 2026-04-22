@@ -1,1 +1,7 @@
 /* Styles for ControlAssignComponent */
+
+/* Bottoni << >> in stato disabilitato: grigio opaco */
+::ng-deep #moveleftRight .dx-button.dx-state-disabled {
+  opacity: 0.4;
+  filter: grayscale(1);
+}

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule } from 'devextreme-angular';
+import { DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule, DxRadioGroupModule } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import { ManagerService } from '../../services/sicurezza.service';
 import { ISysUsersActiveAndBlockedResponse, GetUsersByUserIdRequest, InsertUserResponse, IUpdateUserRequest } from '../../models/utenti.models';
@@ -13,14 +13,13 @@ import { Service } from '../../../../../core/services/service';
 import { ISTLanguageResponse } from '../../../../../core/domain/laguage.domain';
 import { Branch } from '../../../../../core/domain/branch.domain';
 import { ISTStatoEntitaResponse } from '../../../../../core/domain/stato-entita.domain';
-import { it } from 'node:test';
 import { Router } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-utenti',
   standalone: true,
-  imports: [CommonModule, DxDataGridModule, ReactiveFormsModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule, TableUtentiComponent, ControlAssignComponent, TranslocoPipe],
+  imports: [CommonModule, DxDataGridModule, ReactiveFormsModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule, DxRadioGroupModule, TableUtentiComponent, ControlAssignComponent, TranslocoPipe],
   templateUrl: './utenti.component.html',
   styleUrls: ['./utenti.component.css'],
 })
@@ -29,7 +28,17 @@ export class UtentiComponent implements OnInit {
   private readonly coreService = inject(Service);
   private fb = inject(FormBuilder);
   private readonly router = inject(Router);
-  
+
+  readonly filterItems = [
+    { value: 'activeBlocked', labelKey: 'utenti.filterActiveBlocked' },
+    { value: 'all',           labelKey: 'utenti.filterAll' },
+  ];
+  selectedFilter = signal<string>('activeBlocked');
+
+  // Status codes returned by GetUserActiveBlocked — used to rebuild the grid filter
+  private activeblockedStatusIds: string[] = [];
+  gridFilterValue = signal<any>(null);
+
   public users$: Observable<ISysUsersActiveAndBlockedResponse[]> = this.managerService.usersActiveBlocked$;
   public languages$: Observable<ISTLanguageResponse[]> = this.coreService.languages$;
   public branches$: Observable<Branch[]> = this.coreService.branches$;
@@ -47,7 +56,9 @@ export class UtentiComponent implements OnInit {
   public movedToRight: number[] = [];
 
   public selectedUserId = signal<string | null>(null);
-  
+  popupMode = signal<'new' | 'view' | 'edit'>('new');
+
+  isDetailPopupVisible = false;
   public isResetPasswordPopupVisible = false;
 
   @ViewChild(TableUtentiComponent) tableUtenti!: TableUtentiComponent;
@@ -77,8 +88,35 @@ export class UtentiComponent implements OnInit {
     return null;
   }
 
+  onFilterChanged(e: any): void {
+    const value = e.value as string;
+    this.selectedFilter.set(value);
+    if (value === 'all') {
+      this.gridFilterValue.set(null);
+    } else {
+      this.gridFilterValue.set(this.buildActiveblockedFilter());
+    }
+    this.onClear();
+  }
+
+  private buildActiveblockedFilter(): any {
+    if (this.activeblockedStatusIds.length === 0) return null;
+    if (this.activeblockedStatusIds.length === 1) {
+      return ['usrStatus', '=', this.activeblockedStatusIds[0]];
+    }
+    return this.activeblockedStatusIds
+      .map(id => ['usrStatus', '=', id] as any[])
+      .reduce((acc: any, curr: any) => [acc, 'or', curr]);
+  }
+
   ngOnInit(): void {
     this.managerService.GetUserActiveBlocked().subscribe();
+    this.managerService.usersActiveBlocked$.subscribe(data => {
+      this.activeblockedStatusIds = [...new Set(data.map(u => u.usrStatus))];
+      if (this.selectedFilter() === 'activeBlocked') {
+        this.gridFilterValue.set(this.buildActiveblockedFilter());
+      }
+    });
     this.coreService.GetLanguages().subscribe();
     this.coreService.getBranches().subscribe();
     this.coreService.GetAllStatiEntita().subscribe();
@@ -94,14 +132,60 @@ export class UtentiComponent implements OnInit {
     });
   }
 
+  openNewUserPopup(): void {
+    this.userForm.reset();
+    this.selectedUserId.set(null);
+    this.assignedRoles.set([]);
+    this.possibleRoles.set([]);
+    this.popupMode.set('new');
+    this.isDetailPopupVisible = true;
+  }
+
+  openViewPopup(data: any): void {
+    const userId = data.usrId || data.UsrId;
+    this.selectedUserId.set(userId);
+    this.loadUserData(userId);
+    this.loadUserRoles(userId);
+    this.loadRolesNotForUser(userId);
+    this.popupMode.set('view');
+    this.isDetailPopupVisible = true;
+  }
+
+  openEditPopup(data: any): void {
+    const userId = data.usrId || data.UsrId;
+    this.selectedUserId.set(userId);
+    this.loadUserData(userId);
+    this.loadUserRoles(userId);
+    this.loadRolesNotForUser(userId);
+    this.popupMode.set('edit');
+    this.isDetailPopupVisible = true;
+  }
+
+  onTableAction(event: { action: string; data: any }): void {
+    switch (event.action) {
+      case 'view':
+        this.openViewPopup(event.data);
+        break;
+      case 'edit':
+        this.openEditPopup(event.data);
+        break;
+      case 'resetPwd':
+        this.selectedUserId.set(event.data.usrId || event.data.UsrId);
+        this.openResetPasswordPopup();
+        break;
+      case 'storico':
+        this.selectedUserId.set(event.data.usrId || event.data.UsrId);
+        this.onTrace();
+        break;
+      case 'print':
+        break;
+    }
+  }
+
   onSelectionChanged(e: any): void {
     const selectedItem = e.selectedRowsData[0];
     if (selectedItem && (selectedItem.usrId || selectedItem.UsrId)) {
-      const userId = selectedItem.usrId || selectedItem.UsrId;
-      this.selectedUserId.set(userId);
-      this.loadUserData(userId);
-      this.loadUserRoles(userId);
-      this.loadRolesNotForUser(userId);
+      this.selectedUserId.set(selectedItem.usrId || selectedItem.UsrId);
     } else {
       this.selectedUserId.set(null);
     }
@@ -214,16 +298,15 @@ export class UtentiComponent implements OnInit {
 
   onClear(): void {
     this.userForm.reset();
-    // Clear selections in the user table component
     if (this.tableUtenti) {
       this.tableUtenti.clearSelection();
     }
     this.selectedUserId.set(null);
-    // Reset the roles data and tables
     this.assignedRoles.set([]);
     this.possibleRoles.set([]);
     this.selectedAssignedRoleKeys = [];
     this.selectedPossibleRoleKeys = [];
+    this.isDetailPopupVisible = false;
   }
 
   onRolesChanged(event: any): void {

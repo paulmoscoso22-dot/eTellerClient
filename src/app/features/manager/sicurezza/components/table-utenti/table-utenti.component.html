@@ -1,26 +1,84 @@
 @if (users$ | async; as users) {
   <dx-data-grid
     [dataSource]="users"
+    [filterValue]="filterValue"
     [showBorders]="true"
     [columnAutoWidth]="true"
     [rowAlternationEnabled]="true"
+    [height]="'100%'"
     (onSelectionChanged)="onSelectionChanged($event)">
-    
+
     <dxo-selection mode="single"></dxo-selection>
-    <dxo-search-panel [visible]="true"></dxo-search-panel>
     <dxo-filter-row [visible]="true"></dxo-filter-row>
-    <dxo-paging [pageSize]="4"></dxo-paging>
+    <dxo-paging [pageSize]="10"></dxo-paging>
     <dxo-pager
       [showPageSizeSelector]="true"
       [allowedPageSizes]="[10, 25, 50, 100]"
-      [showInfo]="true"
-    ></dxo-pager>
+      [showInfo]="true">
+    </dxo-pager>
 
-    <dxi-column dataField="usrId" caption="User ID"></dxi-column>
-    <dxi-column dataField="usrHostId" caption="Host ID"></dxi-column>
-    <dxi-column dataField="usrBraId" caption="Branch ID"></dxi-column>
-    <dxi-column dataField="usrStatus" caption="Status"></dxi-column>
-    <dxi-column dataField="usrExtref" caption="Ext Reference"></dxi-column>
-    <dxi-column dataField="usrLingua" caption="Language"></dxi-column>
+    <dxi-column
+      [caption]="'utenti.colAttivo' | transloco"
+      [width]="64"
+      [allowSorting]="false"
+      [allowFiltering]="false"
+      [alignment]="'center'"
+      cellTemplate="attivoTemplate">
+    </dxi-column>
+
+    <div *dxTemplate="let cell of 'attivoTemplate'" class="status-cell">
+      <i *ngIf="cell.data.isOnline"
+         class="bi bi-check-lg status-icon status-active"
+         [title]="'utenti.statusActive' | transloco">
+      </i>
+      <i *ngIf="!cell.data.isOnline"
+         class="bi bi-slash-circle status-icon status-inactive"
+         [title]="'utenti.statusInactive' | transloco">
+      </i>
+    </div>
+
+    <dxi-column dataField="usrId"     [caption]="'utenti.colUsrId'  | transloco"></dxi-column>
+    <dxi-column dataField="usrHostId" [caption]="'utenti.colHostId' | transloco"></dxi-column>
+
+    <dxi-column dataField="usrBraId"  [caption]="'utenti.colBraId'  | transloco">
+      <dxo-lookup [dataSource]="branches()" valueExpr="braId" displayExpr="braDes"></dxo-lookup>
+    </dxi-column>
+
+    <dxi-column dataField="usrStatus" [caption]="'utenti.colStatus' | transloco">
+      <dxo-lookup [dataSource]="statiEntita()" valueExpr="steId" displayExpr="steDes"></dxo-lookup>
+    </dxi-column>
+
+    <dxi-column dataField="usrExtref" [caption]="'utenti.colExtref' | transloco"></dxi-column>
+
+    <dxi-column dataField="usrLingua" [caption]="'utenti.colLingua' | transloco">
+      <dxo-lookup [dataSource]="languages()" valueExpr="lanId" displayExpr="lanDes"></dxo-lookup>
+    </dxi-column>
+
+    <dxi-column
+      [caption]="'utenti.colAzioni' | transloco"
+      [width]="110"
+      [allowSorting]="false"
+      [allowFiltering]="false"
+      [alignment]="'center'"
+      cellTemplate="actionsTemplate">
+    </dxi-column>
+
+    <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
+      <i class="bi bi-eye action-icon action-icon-view"    [title]="'utenti.actionView' | transloco" (click)="onAction('view', cell.data)"></i>
+      <i class="bi bi-pencil action-icon action-icon-edit" [title]="'utenti.actionEdit' | transloco" (click)="onAction('edit', cell.data)"></i>
+      <dx-drop-down-button
+        icon="overflow"
+        [items]="moreActions()"
+        displayExpr="text"
+        keyExpr="id"
+        [showArrowIcon]="false"
+        [useSelectMode]="false"
+        stylingMode="text"
+        [dropDownOptions]="{ width: 180 }"
+        (onItemClick)="onMoreAction($event, cell.data)"
+        class="action-more-btn">
+      </dx-drop-down-button>
+    </div>
+
   </dx-data-grid>
 }

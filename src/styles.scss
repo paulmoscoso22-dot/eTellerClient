@@ -86,3 +86,8 @@ h1 {
 .dx-datagrid-headers .dx-datagrid-filter-row > td {
     background-color: #ffffff !important;
 }
+
+.dx-datagrid-rowsview .dx-data-row > td {
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+}
