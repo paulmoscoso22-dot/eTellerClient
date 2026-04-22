@@ -75,6 +75,7 @@ export class ManagerService {
   private usersActiveBlockedSubject = new BehaviorSubject<ISysUsersActiveAndBlockedResponse[]>([]);
   public usersActiveBlocked$ = this.usersActiveBlockedSubject.asObservable();
 
+
   private userByIdSubject = new BehaviorSubject<ISysUserByIdResponse | null>(null);
   public userById$ = this.userByIdSubject.asObservable();
 
