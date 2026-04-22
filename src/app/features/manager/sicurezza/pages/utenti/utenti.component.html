@@ -1,28 +1,50 @@
 <div class="utenti-container">
 
-  <!-- Toolbar: filtro a sinistra, azioni a destra -->
-  <div class="filter-row">
-    <dx-radio-group
-      [items]="filterItems"
-      [value]="selectedFilter()"
-      valueExpr="value"
-      layout="horizontal"
-      (onValueChanged)="onFilterChanged($event)">
-      <div *dxTemplate="let item of 'item'">
-        {{ item.labelKey | transloco }}
-      </div>
-    </dx-radio-group>
+  <!-- Unified Toolbar: filtri | ricerca | azioni -->
+  <div class="unified-toolbar">
 
-    <div class="print-actions">
-      <dx-button [text]="'utenti.btnNew'       | transloco" type="default" icon="plus" (onClick)="openNewUserPopup()"></dx-button>
-      <dx-button [text]="'utenti.btnPrintList' | transloco" type="default"></dx-button>
+    <div class="segmented-control" role="group">
+      @for (item of filterItems; track item.value) {
+        <button class="segment-btn"
+                [class.active]="selectedFilter() === item.value"
+                (click)="onFilterChanged({ value: item.value })">
+          {{ item.labelKey | transloco }}
+        </button>
+      }
     </div>
+
+    <div class="search-input-wrapper">
+      <i class="bi bi-search search-inner-icon"></i>
+      <dx-text-box
+        [placeholder]="'utenti.searchPlaceholder' | transloco"
+        [showClearButton]="true"
+        valueChangeEvent="input"
+        (onValueChanged)="onSearchChanged($event)">
+      </dx-text-box>
+    </div>
+
+    <div class="toolbar-actions">
+      <dx-button
+        class="btn-brand"
+        [text]="'utenti.btnNew' | transloco"
+        stylingMode="contained"
+        icon="plus"
+        (onClick)="openNewUserPopup()">
+      </dx-button>
+      <dx-button
+        class="btn-outline"
+        [text]="'utenti.btnPrintList' | transloco"
+        stylingMode="outlined">
+      </dx-button>
+    </div>
+
   </div>
 
   <!-- Lista utenti -->
   <app-table-utenti
     [users$]="users$"
     [filterValue]="gridFilterValue()"
+    [searchValue]="searchValue()"
     (userSelected)="onSelectionChanged($event)"
     (actionClicked)="onTableAction($event)">
   </app-table-utenti>

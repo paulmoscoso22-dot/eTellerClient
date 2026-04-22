@@ -70,6 +70,7 @@
     "reset": "Zurücksetzen"
   },
   "utenti": {
+    "searchPlaceholder": "Nach ID, Benutzer oder Filiale suchen...",
     "colAttivo": "Aktiv",
     "statusActive": "Aktiv",
     "statusInactive": "Inaktiv",

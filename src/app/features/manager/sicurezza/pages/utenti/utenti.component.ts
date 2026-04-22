@@ -56,7 +56,8 @@ export class UtentiComponent implements OnInit {
   public movedToRight: number[] = [];
 
   public selectedUserId = signal<string | null>(null);
-  popupMode = signal<'new' | 'view' | 'edit'>('new');
+  popupMode   = signal<'new' | 'view' | 'edit'>('new');
+  searchValue = signal<string>('');
 
   isDetailPopupVisible = false;
   public isResetPasswordPopupVisible = false;
@@ -97,6 +98,10 @@ export class UtentiComponent implements OnInit {
       this.gridFilterValue.set(this.buildActiveblockedFilter());
     }
     this.onClear();
+  }
+
+  onSearchChanged(e: any): void {
+    this.searchValue.set(e.value ?? '');
   }
 
   private buildActiveblockedFilter(): any {
@@ -342,10 +347,8 @@ export class UtentiComponent implements OnInit {
 
   changePassword(): void {
     if (this.resetPasswordForm.valid) {
-      const password = this.resetPasswordForm.get('password')?.value;
       const userId = this.selectedUserId();
-      // Implement password reset logic with the ManagerService
-      // this.managerService.resetPassword(userId, password).subscribe(...)
+      // TODO: this.managerService.resetPassword(userId, this.resetPasswordForm.get('password')?.value).subscribe(...)
       notify(`Password cambiata con successo per ${userId}`, 'success', 3000);
       this.isResetPasswordPopupVisible = false;
       this.resetPasswordForm.reset();

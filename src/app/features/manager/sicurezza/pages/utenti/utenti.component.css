@@ -12,19 +12,145 @@
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
-  padding: 12px 16px 16px;
+  padding: 8px 16px 12px;
 }
 
-.filter-row {
+/* ── Unified Toolbar ── */
+.unified-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0;
+  gap: 12px;
+  margin-bottom: 10px;
+  height: 36px;
 }
 
-.print-actions {
+.toolbar-actions {
   display: flex;
+  align-items: center;
   gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Segmented Control ── */
+.segmented-control {
+  display: inline-flex;
+  border: 1.5px solid #20294c;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.segment-btn {
+  height: 36px;
+  padding: 0 16px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  color: #20294c;
+  cursor: pointer;
+  line-height: 36px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.segment-btn:not(:last-child) {
+  border-right: 1.5px solid #20294c;
+}
+
+.segment-btn.active {
+  background: #20294c;
+  color: #fff;
+}
+
+.segment-btn:not(.active):hover {
+  background: color-mix(in srgb, #20294c 10%, transparent);
+}
+
+/* ── Search Input con icona interna ── */
+.search-input-wrapper {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 220px;
+  max-width: 400px;
+}
+
+.search-inner-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  font-size: 0.875rem;
+  color: var(--dx-color-icon, #9ca3af);
+  pointer-events: none;
+}
+
+/* Spazio a sinistra per l'icona */
+::ng-deep .search-input-wrapper .dx-texteditor-input {
+  padding-left: 30px !important;
+}
+
+/* Stile "filled" leggero */
+::ng-deep .search-input-wrapper .dx-texteditor.dx-editor-outlined {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-color: transparent;
+  border-radius: 6px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+::ng-deep .search-input-wrapper .dx-texteditor.dx-editor-outlined.dx-state-focused {
+  background-color: #fff;
+  border-color: #20294c;
+}
+
+::ng-deep .search-input-wrapper .dx-texteditor.dx-editor-outlined.dx-state-hover:not(.dx-state-focused) {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+/* ── Bottoni toolbar ── */
+
+/* Altezza uniforme toolbar (36px) */
+::ng-deep .unified-toolbar .dx-texteditor {
+  height: 36px;
+}
+
+::ng-deep .unified-toolbar .dx-texteditor-input-container {
+  height: 34px;
+}
+
+/* Bottone "Nuovo": brand color pieno */
+::ng-deep .btn-brand .dx-button {
+  background-color: #20294c;
+  border-color: #20294c;
+  height: 36px;
+}
+
+::ng-deep .btn-brand .dx-button .dx-button-text,
+::ng-deep .btn-brand .dx-button .dx-icon {
+  color: #fff;
+}
+
+::ng-deep .btn-brand .dx-button.dx-state-hover,
+::ng-deep .btn-brand .dx-button:hover {
+  background-color: #2d3a6b;
+  border-color: #2d3a6b;
+}
+
+/* Bottone "Stampa lista": outline */
+::ng-deep .btn-outline .dx-button {
+  background-color: transparent;
+  border: 1.5px solid #20294c;
+  height: 36px;
+}
+
+::ng-deep .btn-outline .dx-button .dx-button-text {
+  color: #20294c;
+}
+
+::ng-deep .btn-outline .dx-button.dx-state-hover,
+::ng-deep .btn-outline .dx-button:hover {
+  background-color: color-mix(in srgb, #20294c 8%, transparent);
 }
 
 .detail-section {
@@ -59,4 +185,18 @@
   justify-content: flex-end;
   gap: 8px;
   margin-top: 12px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 680px) {
+  .unified-toolbar {
+    flex-wrap: wrap;
+    height: auto;
+  }
+
+  .search-input-wrapper {
+    flex: 1 1 180px;
+    min-width: 0;
+    max-width: unset;
+  }
 }

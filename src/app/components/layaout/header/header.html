@@ -10,13 +10,17 @@
 
   <div class="logo-sep"></div>
 
-  <!-- Status Indicator -->
-  <div
-    id="status-indicator"
-    class="status-indicator"
-    [class.online]="isOnline()"
-    [attr.aria-label]="isOnline() ? 'Sistema online' : 'Sistema offline'">
-    <i class="bi" [class.bi-check]="isOnline()" [class.bi-x]="!isOnline()"></i>
+  <!-- Status Indicator + Timestamp -->
+  <div class="status-wrapper">
+    <div
+      id="status-indicator"
+      class="status-indicator"
+      [class.online]="isOnline()"
+      [attr.aria-label]="statusAriaLabel"
+      role="status">
+      <i class="bi" [class.bi-check]="isOnline()" [class.bi-x]="!isOnline()"></i>
+    </div>
+    <span class="status-timestamp">{{ relativeTime() }}</span>
   </div>
   <dx-tooltip
     target="#status-indicator"
@@ -25,7 +29,10 @@
     position="bottom">
     <div *dxTemplate="let d of 'content'" class="status-tooltip">
       <i class="bi" [class.bi-check-circle-fill]="isOnline()" [class.bi-x-circle-fill]="!isOnline()"></i>
-      {{ isOnline() ? 'Online — Connessione stabile' : 'Offline — Sistema non raggiungibile' }}
+      <div>
+        <div class="status-tooltip-label">{{ isOnline() ? 'Operativo' : 'Errore — Sistema non raggiungibile' }}</div>
+        <div class="status-tooltip-time">{{ absoluteTimestamp }}</div>
+      </div>
     </div>
   </dx-tooltip>
 

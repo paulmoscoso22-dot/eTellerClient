@@ -70,6 +70,7 @@
     "reset": "Ripristina"
   },
   "utenti": {
+    "searchPlaceholder": "Cerca per ID, Utente o Filiale...",
     "colAttivo": "Attivo",
     "statusActive": "Attivo",
     "statusInactive": "Non attivo",
