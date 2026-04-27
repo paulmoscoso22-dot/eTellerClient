@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
@@ -11,14 +11,14 @@ import { Subject, switchMap } from 'rxjs';
 import { ManagerService } from '../../services/sicurezza.service';
 import { ISysRoleResonse, IUserSelectRoleResponse, IInsertRoleRequest, IUpdateRoleRequest, IDeleteRoleRequest } from '../../models/ruoli.models';
 import { IFunctionRoleResponse, IStFunAcctypResponse } from '../../models/function.models';
-import { LabelSecondaryComponent } from '../../../../../components/labels/label-secondary/label-secondary.component';
-import { LabelPrimaryH1Component } from '../../../../../components/labels/label-primary-h1/label-primary-h1.component';
-import { ButtonRicercaComponent } from '../../../../../components/buttons/search/button-ricerca.component';
+import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
+import { CardDataGridComponent, GridColumnDef } from '../../../../../components/card-data-grid/card-data-grid.component';
+import { CardToolbarComponent } from '../../../../../components/card-toolbar/card-toolbar.component';
 
 @Component({
   selector: 'app-ruoli',
   standalone: true,
-  imports: [CommonModule, DxDataGridModule, DxTextBoxModule, DxSelectBoxModule, DxButtonModule, LabelSecondaryComponent, LabelPrimaryH1Component, ButtonRicercaComponent],
+  imports: [CommonModule, DxDataGridModule, DxTextBoxModule, DxSelectBoxModule, DxButtonModule, HeaderCardComponent, CardDataGridComponent, CardToolbarComponent],
   templateUrl: './ruoli.component.html',
   styleUrls: ['./ruoli.component.css'],
 })
@@ -27,6 +27,19 @@ export class RuoliComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly selectedRole$ = new Subject<ISysRoleResonse>();
+
+  readonly roleColumns: GridColumnDef[] = [
+    { dataField: 'roleId',   caption: 'ID',          width: 60 },
+    { dataField: 'roleName', caption: 'Nome Ruolo',  width: 160 },
+    { dataField: 'roleDes',  caption: 'Descrizione' }
+  ];
+
+  readonly userColumns: GridColumnDef[] = [
+    { dataField: 'usrId',     caption: 'User ID',     width: 100 },
+    { dataField: 'usrExtref', caption: 'Riferimento' },
+    { dataField: 'usrBraId',  caption: 'Filiale',     width: 80 },
+    { dataField: 'usrStatus', caption: 'Stato',       width: 90, type: 'status' }
+  ];
 
   roles = signal<ISysRoleResonse[]>([]);
   usersByRole = signal<IUserSelectRoleResponse[]>([]);
@@ -37,6 +50,25 @@ export class RuoliComponent implements OnInit {
   searchName = signal<string | null>(null);
   searchDes = signal<string | null>(null);
   funcAccTyp = signal<IStFunAcctypResponse[]>([]);
+  searchRoles = signal<string>('');
+  filteredRoles = computed(() => {
+    const q = this.searchRoles().toLowerCase().trim();
+    if (!q) return this.roles();
+    return this.roles().filter(r =>
+      r.roleName.toLowerCase().includes(q) ||
+      (r.roleDes ?? '').toLowerCase().includes(q)
+    );
+  });
+
+  searchUsers = signal<string>('');
+  filteredUsersByRole = computed(() => {
+    const q = this.searchUsers().toLowerCase().trim();
+    if (!q) return this.usersByRole();
+    return this.usersByRole().filter(u =>
+      (u.usrId ?? '').toString().toLowerCase().includes(q) ||
+      (u.usrExtref ?? '').toLowerCase().includes(q)
+    );
+  });
 
   ngOnInit(): void {
     this.bindAllRoles();
@@ -211,6 +243,32 @@ export class RuoliComponent implements OnInit {
         }
     });
   }
+
+  onReset(): void {
+    this.selectedRoleId.set(0);
+    this.selectedRoleName.set('');
+    this.selectedRoleDes.set(null);
+    this.usersByRole.set([]);
+    this.functionsByRole.set([]);
+    this.searchName.set(null);
+    this.searchDes.set(null);
+  }
+
+  onRowEdit(role: ISysRoleResonse): void {
+    this.selectedRoleName.set(role.roleName);
+    this.selectedRoleDes.set(role.roleDes);
+    this.selectedRoleId.set(role.roleId);
+    this.selectedRole$.next(role);
+  }
+
+  onTraceRow(role: ISysRoleResonse): void {
+    this.router.navigate(['/trace'], {
+      queryParams: { traTabNam: 'sys_ROLE', traEntCode: String(role.roleId) }
+    });
+  }
+
+  onStampaLista(): void { console.log('Stampa lista ruoli'); }
+  onStampaUtenti(): void { console.log('Stampa utenti con ruolo'); }
 
   onTrace(): void {
     if (!this.selectedRoleId()) {

@@ -1,6 +1,193 @@
-.container {
-  max-width: 95%;
-  margin: 0 auto;
-  padding: 12px 20px 20px;
-  background: white;
+/* ══════════════════════════════════════════
+   Info Autorizzazioni — Banca del Sempione Style
+   ══════════════════════════════════════════ */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 12px 16px 0;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.card-section {
+  background: #fff;
+  border: 1px solid #dce3ee;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.sempione-card-header {
+  background: #003366;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.gold-divider {
+  height: 2px;
+  background: #C5A059;
+  flex-shrink: 0;
+}
+
+.card-icon {
+  width: 15px;
+  height: 15px;
+  color: #fff;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #fff;
+  flex: 1;
+}
+
+.card-count {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: rgba(197, 160, 89, 0.25);
+  color: #C5A059;
+  border: 1px solid rgba(197, 160, 89, 0.6);
+  white-space: nowrap;
+}
+
+/* ── Filter Toolbar ── */
+.card-toolbar {
+  background: #f0f4f8;
+  border-bottom: 1px solid #dce3ee;
+  padding: 7px 12px;
+  flex-shrink: 0;
+}
+
+.toolbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toolbar-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.toolbar-lbl {
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ── Card Body ── */
+.card-body--grid {
+  padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Compact DX inputs ── */
+:host ::ng-deep .dx-texteditor {
+  height: 28px;
+}
+
+:host ::ng-deep .dx-texteditor-input {
+  min-height: unset;
+  height: 26px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 13px;
+}
+
+:host ::ng-deep .dx-texteditor-buttons-container {
+  height: 26px;
+}
+
+:host ::ng-deep .dx-button {
+  height: 28px;
+}
+
+/* ── DX Grid — Sempione ── */
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td {
+  background-color: #f8fafd !important;
+  color: #374151 !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border-bottom: 2px solid #003366 !important;
+}
+
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td:hover {
+  background-color: #eef2f8 !important;
+}
+
+:host ::ng-deep .dx-data-row > td {
+  padding: 5px 10px !important;
+  font-size: 12px !important;
+  vertical-align: middle !important;
+}
+
+:host ::ng-deep .dx-data-row.dx-row-alt > td {
+  background-color: #f8fafc !important;
+}
+
+:host ::ng-deep .dx-data-row.dx-state-hover > td {
+  background-color: rgba(0, 51, 102, 0.04) !important;
+}
+
+:host ::ng-deep .dx-selection.dx-data-row > td {
+  background-color: rgba(0, 51, 102, 0.10) !important;
+  color: #003366 !important;
+  font-weight: 600 !important;
+}
+
+/* ── Button: Cerca ── */
+:host ::ng-deep .btn-cerca.dx-button-default.dx-button-mode-contained {
+  background-color: #003366;
+  border-color: #003366;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .btn-cerca.dx-button-default.dx-button-mode-contained:hover {
+  background-color: #004080;
+  border-color: #004080;
 }

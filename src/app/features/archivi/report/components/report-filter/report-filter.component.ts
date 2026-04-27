@@ -107,4 +107,14 @@ export class ReportFilterComponent implements OnInit {
       this.searchForm.patchValue({ trxDataAl: date }, { emitEvent: false });
     }
   }
+
+  reset(): void {
+    this.searchForm.reset({
+      trxCassa: '',
+      trxDataDal: null,
+      trxDataAl: null,
+      trxStatus: this.statusDefaultValue,
+      trxBraId: ''
+    });
+  }
 }

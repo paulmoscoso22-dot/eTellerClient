@@ -91,3 +91,193 @@ h1 {
     padding-top: 3px !important;
     padding-bottom: 3px !important;
 }
+
+/* =============================================================================
+   Sempione Popup — Distinzione campi editabili / non editabili
+   ============================================================================= */
+
+// ── Campi EDITABILI: stile DevExtreme standard (nessuna override necessaria)
+
+// ── Campi READONLY generici nel popup (es. "Ultimo errore", campi di sistema)
+//    → sfondo grigio chiaro + bordo tratteggiato
+.dx-popup-content .dx-texteditor.dx-state-readonly,
+.dx-popup-content .dx-numberbox.dx-state-readonly,
+.dx-popup-content .dx-textarea.dx-state-readonly {
+    background-color: #f8fafc !important;
+    border-color: #c9d5e0 !important;
+    border-style: dashed !important;
+}
+
+.dx-popup-content .dx-texteditor.dx-state-readonly .dx-texteditor-input,
+.dx-popup-content .dx-numberbox.dx-state-readonly .dx-texteditor-input,
+.dx-popup-content .dx-textarea.dx-state-readonly .dx-texteditor-input {
+    color: #6b7280 !important;
+    cursor: default !important;
+}
+
+// ── Campi CHIAVE LOCKED (field-id-locked): in edit mode la chiave non è modificabile
+//    → sfondo grigio + bordo sinistro oro Sempione
+.dx-popup-content .field-id-locked .dx-texteditor,
+.dx-popup-content .field-id-locked .dx-dropdowneditor {
+    background-color: #f0f2f5 !important;
+    border-color: #dce3ee !important;
+    border-style: solid !important;
+    border-left: 3px solid #C5A059 !important;
+}
+
+.dx-popup-content .field-id-locked .dx-texteditor .dx-texteditor-input,
+.dx-popup-content .field-id-locked .dx-dropdowneditor .dx-texteditor-input {
+    color: #374151 !important;
+    cursor: not-allowed !important;
+}
+
+// ── VIEW MODE: tutti i campi → trasparente, testo navy bold (aspetto label)
+.popup-view-mode .dx-texteditor.dx-state-readonly,
+.popup-view-mode .dx-dropdowneditor.dx-state-readonly,
+.popup-view-mode .dx-numberbox.dx-state-readonly,
+.popup-view-mode .dx-textarea.dx-state-readonly {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    border-style: solid !important;
+    border-left-color: transparent !important;
+    border-left-width: 1px !important;
+    box-shadow: none !important;
+}
+
+.popup-view-mode .dx-texteditor.dx-state-readonly .dx-texteditor-input,
+.popup-view-mode .dx-dropdowneditor.dx-state-readonly .dx-texteditor-input,
+.popup-view-mode .dx-numberbox.dx-state-readonly .dx-texteditor-input,
+.popup-view-mode .dx-textarea.dx-state-readonly .dx-texteditor-input {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #003366 !important;
+    padding-left: 0 !important;
+    cursor: default !important;
+}
+
+// Nasconde la freccia dei select in view mode
+.popup-view-mode .dx-state-readonly.dx-dropdowneditor .dx-dropdowneditor-icon {
+    display: none !important;
+}
+
+// Checkbox in view mode: solo lettura visiva
+.popup-view-mode .dx-checkbox.dx-state-readonly {
+    pointer-events: none !important;
+    opacity: 1 !important;
+}
+
+/* =============================================================================
+   Sempione Popup — Stili bottoni globali (action bar)
+   ============================================================================= */
+
+// ── PRIMARY (verde): Aggiungi / Salva
+.btn-action-primary.dx-button {
+    background-color: #2d6a4f !important;
+    border-color: #2d6a4f !important;
+    height: 36px !important;
+
+    .dx-button-text, .dx-icon { color: #fff !important; }
+
+    &.dx-state-hover, &:hover {
+        background-color: #1b4332 !important;
+        border-color: #1b4332 !important;
+    }
+}
+
+// ── OUTLINE (navy): bottoni secondari (Storico, Stampa, ecc.)
+.btn-action-outline.dx-button {
+    background-color: transparent !important;
+    border: 1.5px solid #003366 !important;
+    height: 36px !important;
+
+    .dx-button-text, .dx-icon { color: #003366 !important; }
+
+    &.dx-state-hover, &:hover {
+        background-color: rgba(0, 51, 102, 0.06) !important;
+    }
+}
+
+// ── DANGER (rosso): azioni pericolose (Reset Password, ecc.)
+.btn-action-danger.dx-button {
+    background-color: transparent !important;
+    border: 1.5px solid #dc2626 !important;
+    height: 36px !important;
+
+    .dx-button-text, .dx-icon { color: #dc2626 !important; }
+
+    &.dx-state-hover, &:hover {
+        background-color: #fef2f2 !important;
+    }
+}
+
+// ── CLOSE / NAVY (blu Sempione): bottone Chiudi in modalità visualizzazione
+.btn-action-close.dx-button {
+    background-color: #003366 !important;
+    border-color: #003366 !important;
+    height: 36px !important;
+
+    .dx-button-text, .dx-icon { color: #fff !important; }
+
+    &.dx-state-hover, &:hover {
+        background-color: #004080 !important;
+        border-color: #004080 !important;
+    }
+}
+
+/* =============================================================================
+   Sempione Popup Header — Globale su tutti i dx-popup
+   Navy #003366 | Gold line #C5A059 | White text
+   ============================================================================= */
+
+// Barra titolo
+.dx-popup-title.dx-toolbar {
+    background-color: #003366 !important;
+    border-bottom: 2px solid #C5A059 !important;
+    min-height: 44px !important;
+    padding: 0 8px 0 14px !important;
+    flex-shrink: 0;
+}
+
+// Zona testo titolo: nessun troncamento, testo bianco
+.dx-popup-title .dx-toolbar-before {
+    overflow: visible !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+}
+
+.dx-popup-title .dx-toolbar-label {
+    color: #fff !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.07em !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    max-width: none !important;
+}
+
+.dx-popup-title .dx-item-content.dx-toolbar-item-content {
+    overflow: visible !important;
+    white-space: normal !important;
+}
+
+// Bottone chiudi ×
+.dx-popup-title .dx-closebutton {
+    color: rgba(255, 255, 255, 0.8) !important;
+    border-radius: 4px !important;
+
+    .dx-icon {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    &:hover,
+    &.dx-state-hover {
+        background-color: rgba(255, 255, 255, 0.12) !important;
+        color: #fff !important;
+
+        .dx-icon {
+            color: #fff !important;
+        }
+    }
+}

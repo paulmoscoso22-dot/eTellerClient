@@ -1,6 +1,4 @@
 <div class="container">
-  <h1>Totali di Cassa</h1>
-
   <!-- Search Form -->
   <app-totale-cassa-filter
     [isLoading]="isLoading"
@@ -67,10 +65,11 @@
     </div>
   }
 
-  <!-- No Data Message -->
   @if (!isLoading() && totaliCassa().length === 0 && !error()) {
     <div class="no-data-message">
-      Nessun dato trovato. Effettuare una ricerca.
+      <div class="no-data-icon">⊘</div>
+      <div class="no-data-title">Nessun risultato trovato</div>
+      <div class="no-data-subtitle">Imposta i filtri e avvia la ricerca per visualizzare i dati.</div>
     </div>
   }
 </div>

@@ -1,12 +1,545 @@
-.container {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  background: white;
+/* ══════════════════════════════════════════
+   Casse e Periferiche — Banca del Sempione Style
+   Brand navy : #003366  |  Gold : #C5A059
+   ══════════════════════════════════════════ */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
-h1 {
-  color: #333;
-  margin-bottom: 20px;
-  font-size: 24px;
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 12px 16px 0;
+  gap: 10px;
+}
+
+/* ── Card shell ── */
+.card-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #dce3ee;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
+}
+
+/* ── Sempione Card Header ── */
+.sempione-card-header {
+  background: #003366;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.gold-divider {
+  height: 2px;
+  background: #C5A059;
+  flex-shrink: 0;
+}
+
+.card-icon {
+  width: 15px;
+  height: 15px;
+  color: #fff;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #fff;
+  flex: 1;
+}
+
+/* ── Card Toolbar ── */
+.card-toolbar {
+  background: #f0f4f8;
+  border-bottom: 1px solid #dce3ee;
+  padding: 7px 12px;
+  flex-shrink: 0;
+}
+
+.toolbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Search ── */
+.toolbar-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+.toolbar-search-icon {
+  position: absolute;
+  left: 7px;
+  width: 13px;
+  height: 13px;
+  color: #6b7280;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.toolbar-textbox {
+  flex: 1;
+  min-width: 0;
+}
+
+:host ::ng-deep .toolbar-textbox .dx-texteditor-input {
+  padding-left: 26px !important;
+}
+
+/* ── Buttons ── */
+:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained {
+  background-color: #003366;
+  border-color: #003366;
+  height: 28px;
+}
+
+:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained:hover {
+  background-color: #004080;
+  border-color: #004080;
+}
+
+/* ── Uniform toolbar height ── */
+:host ::ng-deep .card-toolbar .dx-texteditor {
+  height: 28px;
+}
+
+:host ::ng-deep .card-toolbar .dx-texteditor-input {
+  min-height: unset;
+  height: 26px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 13px;
+}
+
+/* ── Card Body ── */
+.card-body--grid {
+  padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Grid header ── */
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td {
+  background-color: #f8fafd !important;
+  color: #374151 !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border-bottom: 2px solid #003366 !important;
+}
+
+/* ── Compact rows ── */
+:host ::ng-deep .dx-data-row > td {
+  padding: 5px 10px !important;
+  font-size: 12px !important;
+  vertical-align: middle !important;
+}
+
+/* ── Zebra-striping ── */
+:host ::ng-deep .dx-data-row.dx-row-alt > td {
+  background-color: #f8fafc !important;
+}
+
+/* ── Hover ── */
+:host ::ng-deep .dx-data-row.dx-state-hover > td {
+  background-color: rgba(0, 51, 102, 0.04) !important;
+}
+
+/* ── Selected row ── */
+:host ::ng-deep .dx-selection.dx-data-row > td {
+  background-color: rgba(0, 51, 102, 0.10) !important;
+  color: #003366 !important;
+  font-weight: 600 !important;
+}
+
+/* ── Lingua badge ── */
+.lang-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lang-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8f0fe;
+  color: #1a56db;
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-family: monospace;
+}
+
+/* ── Status pill ── */
+.status-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.status-pill--active    { background: #d1fae5; color: #065f46; }
+.status-pill--inactive  { background: #f1f5f9; color: #94a3b8; }
+.status-pill--suspended { background: #fef3c7; color: #92400e; }
+
+/* ── Bool pill ── */
+.bool-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bool-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 20px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.bool-pill--yes { background: #d1fae5; color: #065f46; }
+.bool-pill--no  { background: #f1f5f9; color: #94a3b8; }
+
+/* ── Action buttons ── */
+.actions-cell {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.14s ease;
+}
+
+.action-btn svg {
+  width: 13px;
+  height: 13px;
+  stroke: #9ca3af;
+  transition: stroke 0.14s ease;
+}
+
+.action-btn--view:hover { background: rgba(0, 51, 102, 0.08); }
+.action-btn--view:hover svg { stroke: #003366; }
+
+.action-btn--edit:hover { background: rgba(0, 51, 102, 0.08); }
+.action-btn--edit:hover svg { stroke: #003366; }
+
+/* ══ POPUP STYLES ══ */
+
+.popup-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 64px;
+}
+
+.popup-card {
+  background: #fff;
+  border: 1px solid #e4e8ed;
+  border-radius: 8px;
+  padding: 16px 20px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.popup-card--system {
+  background: #fafbfc;
+}
+
+.popup-card-title {
+  margin: 0 0 14px 0;
+  padding-bottom: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #003366;
+  border-bottom: 2px solid #dce3ee;
+}
+
+.popup-fields-grid {
+  display: grid;
+  gap: 12px 24px;
+}
+
+.popup-fields-grid--2col { grid-template-columns: 1fr 1fr; }
+.popup-fields-grid--3col { grid-template-columns: 1fr 1fr 1fr; }
+
+.popup-col-span-2 { grid-column: span 2; }
+
+.popup-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.popup-flag-group {
+  justify-content: flex-start;
+  padding-top: 4px;
+}
+
+.popup-flag-group .popup-field-label {
+  margin-bottom: 6px;
+}
+
+.popup-field-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+:host ::ng-deep .field-id-locked .dx-texteditor {
+  background-color: #f5f6f8 !important;
+}
+
+:host ::ng-deep .popup-view-mode .dx-texteditor.dx-state-readonly {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .popup-view-mode .dx-texteditor.dx-state-readonly .dx-texteditor-input {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #003366 !important;
+  padding-left: 2px !important;
+}
+
+:host ::ng-deep .popup-view-mode .dx-state-readonly.dx-dropdowneditor .dx-dropdowneditor-icon {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Dual-list ── */
+.dual-list-container {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  min-height: 160px;
+}
+
+.dual-list-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dce3ee;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.dual-list-header {
+  background: #f0f4f8;
+  padding: 6px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  border-bottom: 1px solid #dce3ee;
+  flex-shrink: 0;
+}
+
+.dual-list-header--assigned {
+  background: #eef4ff;
+  color: #1e40af;
+}
+
+.dual-list-items {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.dual-list-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: #374151;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s ease;
+}
+
+.dual-list-item:hover {
+  background: rgba(0, 51, 102, 0.04);
+}
+
+.dual-list-item--selected {
+  background: rgba(0, 51, 102, 0.10) !important;
+  color: #003366;
+  font-weight: 600;
+}
+
+.dual-list-empty {
+  padding: 12px 10px;
+  font-size: 11px;
+  color: #94a3b8;
+  font-style: italic;
+  text-align: center;
+}
+
+.dev-type-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  color: #475569;
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 9px;
+  font-weight: 700;
+  font-family: monospace;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.dev-type-badge--assigned {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* ── Transfer buttons ── */
+.dual-list-controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.transfer-btn {
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.14s ease, border-color 0.14s ease;
+  padding: 0;
+}
+
+.transfer-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: #6b7280;
+  transition: stroke 0.14s ease;
+}
+
+.transfer-btn:not(:disabled):hover {
+  background: #003366;
+  border-color: #003366;
+}
+
+.transfer-btn:not(:disabled):hover svg {
+  stroke: #fff;
+}
+
+.transfer-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Popup action bar ── */
+.popup-action-bar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  background: #fff;
+  border-top: 1px solid #e4e8ed;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.07);
+  z-index: 10;
+}
+
+.popup-actions-secondary,
+.popup-actions-primary {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+:host ::ng-deep .btn-action-primary.dx-button {
+  background-color: #2d6a4f;
+  border-color: #2d6a4f;
+  height: 36px;
+}
+
+:host ::ng-deep .btn-action-primary.dx-button:hover {
+  background-color: #1b4332;
+  border-color: #1b4332;
 }

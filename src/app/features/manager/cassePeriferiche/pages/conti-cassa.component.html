@@ -1,3 +1,388 @@
-<div class="container">
-  <h1>Conti cassa</h1>
+<div class="page-shell">
+
+  <!-- ── Main Card: Conti Cassa ── -->
+  <section class="card-section">
+
+    <div class="sempione-card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+        <line x1="2" y1="10" x2="22" y2="10"></line>
+      </svg>
+      <h2 class="card-title">Conti Cassa</h2>
+    </div>
+    <div class="gold-divider"></div>
+
+    <!-- Toolbar filtri -->
+    <div class="card-toolbar">
+
+      <div class="toolbar-row">
+        <span class="filter-label">Cassa:</span>
+        <dx-select-box
+          [dataSource]="cassaFilterList"
+          displayExpr="cliDes"
+          valueExpr="cliId"
+          [value]="filterCassa()"
+          [showClearButton]="false"
+          class="filter-control"
+          (onValueChanged)="onFilterCassaChanged($event)">
+        </dx-select-box>
+
+        <span class="filter-label">Genere:</span>
+        <dx-select-box
+          [dataSource]="actFilterList"
+          displayExpr="actDes"
+          valueExpr="actId"
+          [value]="filterActId()"
+          [showClearButton]="false"
+          class="filter-control"
+          (onValueChanged)="onFilterActChanged($event)">
+        </dx-select-box>
+
+        <span class="filter-label">Località:</span>
+        <dx-select-box
+          [dataSource]="brancheFilterList"
+          displayExpr="braDes"
+          valueExpr="braId"
+          [value]="filterBraId()"
+          [showClearButton]="false"
+          class="filter-control"
+          (onValueChanged)="onFilterBraChanged($event)">
+        </dx-select-box>
+
+        <div class="toolbar-row-spacer"></div>
+
+        <div class="toolbar-actions">
+          <dx-button
+            class="btn-cerca"
+            text="Cerca"
+            type="default"
+            stylingMode="contained"
+            icon="search">
+          </dx-button>
+          <dx-button
+            class="btn-reset"
+            text="Reset"
+            stylingMode="outlined"
+            icon="revert"
+            (onClick)="resetFilters()">
+          </dx-button>
+          <dx-button
+            class="btn-new"
+            text="Nuovo"
+            type="default"
+            stylingMode="contained"
+            (onClick)="openNewPopup()">
+          </dx-button>
+        </div>
+      </div>
+
+      <div class="toolbar-row-separator"></div>
+
+      <div class="toolbar-row">
+        <span class="filter-label">Divisa:</span>
+        <dx-select-box
+          [dataSource]="divisaFilterList"
+          displayExpr="curLondes"
+          valueExpr="curId"
+          [value]="filterCurId()"
+          [showClearButton]="false"
+          class="filter-control"
+          (onValueChanged)="onFilterCurChanged($event)">
+        </dx-select-box>
+
+        <span class="filter-label">N° Conto:</span>
+        <dx-text-box
+          [value]="filterAccId()"
+          [showClearButton]="true"
+          valueChangeEvent="input"
+          class="filter-control"
+          (onValueChanged)="onFilterAccIdChanged($event)">
+        </dx-text-box>
+
+        <span class="filter-label">Gruppo:</span>
+        <dx-select-box
+          [dataSource]="gruppoFilterList"
+          displayExpr="cutDes"
+          valueExpr="cutId"
+          [value]="filterCutId()"
+          [showClearButton]="false"
+          class="filter-control"
+          (onValueChanged)="onFilterCutChanged($event)">
+        </dx-select-box>
+
+        <span class="filter-label">Descrizione:</span>
+        <dx-text-box
+          [value]="filterDes()"
+          [showClearButton]="true"
+          valueChangeEvent="input"
+          class="filter-control filter-control--wide"
+          (onValueChanged)="onFilterDesChanged($event)">
+        </dx-text-box>
+      </div>
+
+    </div>
+
+    <!-- Griglia -->
+    <div class="card-body card-body--grid">
+      <dx-data-grid
+        [dataSource]="filteredConti()"
+        [showBorders]="false"
+        [columnAutoWidth]="true"
+        [rowAlternationEnabled]="true"
+        [hoverStateEnabled]="true"
+        [height]="'100%'"
+        keyExpr="iacId">
+
+        <dxo-selection mode="single"></dxo-selection>
+        <dxo-paging [pageSize]="20"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
+
+        <dxi-column dataField="iacHostPrefix" caption="Cod. Conto"   [width]="100" alignment="left"></dxi-column>
+        <dxi-column dataField="iacActId"      caption="Tipo"         [width]="110" alignment="center" cellTemplate="actTemplate"></dxi-column>
+        <dxi-column dataField="iacCutId"      caption="Gruppo"       [width]="110" alignment="center" cellTemplate="cutTemplate"></dxi-column>
+        <dxi-column dataField="iacCurId"      caption="Divisa"       [width]="80"  alignment="center" cellTemplate="curTemplate"></dxi-column>
+        <dxi-column dataField="iacAccId"      caption="Numero Conto" [width]="130" alignment="left"></dxi-column>
+        <dxi-column dataField="iacDes"        caption="Descrizione"                alignment="left"></dxi-column>
+        <dxi-column dataField="iacCliCassa"   caption="Cassa"        [width]="100" alignment="center"></dxi-column>
+        <dxi-column dataField="iacBraId"      caption="Localita"     [width]="150" alignment="left" cellTemplate="braTemplate"></dxi-column>
+
+        <dxi-column
+          caption="Azioni"
+          [width]="80"
+          [allowSorting]="false"
+          [allowFiltering]="false"
+          alignment="center"
+          cellTemplate="actionsTemplate">
+        </dxi-column>
+
+        <div *dxTemplate="let cell of 'actTemplate'" class="badge-cell">
+          <span class="type-badge">{{ getActDes(cell.value) }}</span>
+        </div>
+
+        <div *dxTemplate="let cell of 'cutTemplate'" class="badge-cell">
+          <span class="group-badge">{{ cell.value }}</span>
+        </div>
+
+        <div *dxTemplate="let cell of 'curTemplate'" class="badge-cell">
+          @if (cell.value) {
+            <span class="cur-badge">{{ cell.value }}</span>
+          } @else {
+            <span class="cur-badge cur-badge--all">ALL</span>
+          }
+        </div>
+
+        <div *dxTemplate="let cell of 'braTemplate'">
+          {{ getBraDes(cell.value) }}
+        </div>
+
+        <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
+          <button class="action-btn action-btn--view" title="Visualizza" (click)="onTableAction('view', cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--edit" title="Modifica" (click)="onTableAction('edit', cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+        </div>
+
+      </dx-data-grid>
+    </div>
+
+  </section>
+
 </div>
+
+<!-- ── Popup Dettaglio Conto Cassa ── -->
+<dx-popup
+  [(visible)]="isDetailPopupVisible"
+  [showTitle]="true"
+  [title]="popupMode() === 'edit' ? 'Modifica Conto Cassa — ' + selectedLabel()
+         : popupMode() === 'view' ? 'Dettaglio Conto Cassa — ' + selectedLabel()
+         : 'Nuovo Conto Cassa'"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [width]="'90%'"
+  [maxWidth]="740"
+  [height]="'auto'"
+  [maxHeight]="'90vh'"
+  (onHidden)="closePopup()">
+
+  <div *dxTemplate="let data of 'content'">
+    <form [formGroup]="contoForm"
+          class="popup-layout"
+          [class.popup-view-mode]="popupMode() === 'view'">
+
+      <!-- ── Card 1: Identificazione ── -->
+      <section class="popup-card">
+        <h3 class="popup-card-title">Identificazione</h3>
+        <div class="popup-fields-grid popup-fields-grid--2col">
+
+          <div class="popup-field-group" [class.field-id-locked]="popupMode() !== 'new'">
+            <label class="popup-field-label">Numero Conto *</label>
+            <dx-text-box
+              formControlName="iacAccId"
+              [readOnly]="popupMode() !== 'new'"
+              placeholder="Max 50 caratteri">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+                <dxi-validation-rule type="stringLength" [max]="50" message="Massimo 50 caratteri"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Tipo Conto Host *
+              <span class="field-hint" title="10 per conti correnti, 95 per conti generali">&#9432;</span>
+            </label>
+            <dx-text-box
+              formControlName="iacHostPrefix"
+              [readOnly]="popupMode() === 'view'"
+              placeholder="Es. 10 o 95">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+                <dxi-validation-rule type="stringLength" [max]="25" message="Massimo 25 caratteri"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group popup-col-span-2">
+            <label class="popup-field-label">Descrizione *</label>
+            <dx-text-box
+              formControlName="iacDes"
+              [readOnly]="popupMode() === 'view'"
+              placeholder="Max 50 caratteri">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+                <dxi-validation-rule type="stringLength" [max]="50" message="Massimo 50 caratteri"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Card 2: Classificazione ── -->
+      <section class="popup-card">
+        <h3 class="popup-card-title">Classificazione</h3>
+        <div class="popup-fields-grid popup-fields-grid--3col">
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Tipo Conto *</label>
+            <dx-select-box
+              formControlName="iacActId"
+              [dataSource]="actList"
+              displayExpr="actDes"
+              valueExpr="actId"
+              [readOnly]="popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-select-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Gruppo Operazioni *</label>
+            <dx-select-box
+              formControlName="iacCutId"
+              [dataSource]="gruppoList"
+              displayExpr="cutDes"
+              valueExpr="cutId"
+              [readOnly]="popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-select-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Divisa
+              <span class="field-hint" title="Se non specificata, il conto vale per tutte le divise">&#9432;</span>
+            </label>
+            <dx-select-box
+              formControlName="iacCurId"
+              [dataSource]="divisaFormList"
+              displayExpr="curLondes"
+              valueExpr="curId"
+              [readOnly]="popupMode() === 'view'">
+            </dx-select-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Cassa *</label>
+            <dx-select-box
+              formControlName="iacCliCassa"
+              [dataSource]="cassaList"
+              displayExpr="cliDes"
+              valueExpr="cliId"
+              [readOnly]="popupMode() === 'view'"
+              (onValueChanged)="popupMode() !== 'view' && onCassaFormChanged($event)">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-select-box>
+          </div>
+
+          <div class="popup-field-group field-id-locked">
+            <label class="popup-field-label">Località</label>
+            <dx-text-box
+              formControlName="iacBraId"
+              [readOnly]="true">
+            </dx-text-box>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Action Bar sticky ── -->
+      <div class="popup-action-bar">
+
+        <div class="popup-actions-secondary">
+          @if (popupMode() !== 'new') {
+            <dx-button
+              class="btn-action-outline"
+              text="Storico"
+              icon="clock"
+              stylingMode="outlined"
+              (onClick)="onTrace()">
+            </dx-button>
+          }
+        </div>
+
+        <div class="popup-actions-primary">
+          @if (popupMode() === 'view') {
+            <dx-button
+              class="btn-action-close"
+              text="Chiudi"
+              icon="close"
+              (onClick)="closePopup()">
+            </dx-button>
+          }
+          @if (popupMode() === 'new') {
+            <dx-button
+              class="btn-action-primary"
+              text="Aggiungi"
+              icon="plus"
+              (onClick)="onSubmit()">
+            </dx-button>
+          }
+          @if (popupMode() === 'edit') {
+            <dx-button
+              class="btn-action-primary"
+              text="Salva"
+              icon="save"
+              (onClick)="onUpdate()">
+            </dx-button>
+          }
+        </div>
+
+      </div>
+
+    </form>
+  </div>
+</dx-popup>

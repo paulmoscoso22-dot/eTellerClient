@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ContoCorrenteFormComponent } from '../../components/conto-corrente-form/conto-corrente-form.component';
 
 @Component({
   selector: 'app-versamento',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './versamento.component.html',
-  styleUrl: './versamento.component.css',
+  imports: [ContoCorrenteFormComponent],
+  template: `<app-conto-corrente-form mode="versamento"></app-conto-corrente-form>`,
+  styles: [':host { display: contents; }']
 })
-export class VersamentoComponent {
-  constructor() {}
-}
+export class VersamentoComponent {}

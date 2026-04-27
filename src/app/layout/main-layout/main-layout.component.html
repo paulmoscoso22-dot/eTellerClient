@@ -9,17 +9,16 @@
 
   <!-- Menu + Body -->
   <div class="content-row">
-    @if (isSidebarVisible()) {
-      <div class="sidebar">
-        <app-sidebar
-          [items]="rawMenuItems"
-          [showSearch]="true"
-          searchPlaceholder="Cerca nel menu..."
-          (itemClick)="onMenuItemClick($event)"
-          (breadcrumbChanged)="onBreadcrumbChanged($event)">
-        </app-sidebar>
-      </div>
-    }
+    <div class="sidebar" [class.sidebar--collapsed]="isSidebarCollapsed()">
+      <app-sidebar
+        [items]="rawMenuItems"
+        [showSearch]="true"
+        searchPlaceholder="Cerca nel menu..."
+        [isCollapsed]="isSidebarCollapsed()"
+        (itemClick)="onMenuItemClick($event)"
+        (breadcrumbChanged)="onBreadcrumbChanged($event)">
+      </app-sidebar>
+    </div>
 
     <main class="main-content">
       <!-- Titolo pagina — allineato con il breadcrumb -->

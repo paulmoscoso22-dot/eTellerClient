@@ -1,39 +1,250 @@
-.container {
-  max-width: 98%;
-  margin: 20px auto;
-  padding: 20px;
-  background: white;
-}
+/* ══════════════════════════════════════════
+   Funzioni — Banca del Sempione Style
+   Brand navy : #003366  |  Gold : #C5A059
+   ══════════════════════════════════════════ */
 
-h1 {
-  color: #333;
-  margin-bottom: 20px;
-  font-size: 24px;
-}
-
-.grids-row {
+/* ── Host: fills content-area, no outer scroll ── */
+:host {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Page shell ── */
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 12px 16px 0;
+  overflow: hidden;
+}
+
+/* ── Two-column grid (60 / 40) ── */
+.two-col-grid {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 60fr 40fr;
+  gap: 12px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Columns ── */
+.col-main,
+.col-side {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 4px;
+}
+
+.col-main::-webkit-scrollbar,
+.col-side::-webkit-scrollbar { width: 4px; }
+.col-main::-webkit-scrollbar-track,
+.col-side::-webkit-scrollbar-track { background: transparent; }
+.col-main::-webkit-scrollbar-thumb,
+.col-side::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+
+/* ── Card shell ── */
+.card-section {
+  background: #fff;
+  border: 1px solid #dce3ee;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Card that expands to fill remaining column space */
+.card-fill {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+
+/* ── Card Body ── */
+.card-body {
+  padding: 12px 14px;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+/* Grid-hosting body: no padding, fills remaining card height */
+.card-body--grid {
+  padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-fill .card-body--grid {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ── Horizontal form row ── */
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 0 10px;
+  margin-bottom: 6px;
+  min-height: 28px;
+}
+
+.form-row:last-child {
+  margin-bottom: 0;
+}
+
+.form-row--top {
   align-items: flex-start;
+  padding-top: 3px;
 }
 
-.grid-column {
-  background: transparent;
+.form-lbl {
+  width: 110px;
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: right;
+  line-height: 1.3;
 }
 
-.functions-col {
-  flex: 1 1 50%;
+.form-fld {
+  flex: 1;
+  min-width: 0;
 }
 
-.roles-col {
-  flex: 0 0 48%;
+/* ── Compact DevExtreme inputs ── */
+:host ::ng-deep .dx-texteditor {
+  height: 28px;
 }
 
-@media (max-width: 900px) {
-  .grids-row {
-    flex-direction: column;
+:host ::ng-deep .dx-texteditor-input {
+  min-height: unset;
+  height: 26px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 13px;
+}
+
+:host ::ng-deep .dx-texteditor-buttons-container {
+  height: 26px;
+}
+
+:host ::ng-deep .dx-button {
+  height: 28px;
+}
+
+/* DX data grid: dark navy header row */
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td {
+  background-color: #003366 !important;
+  color: #fff !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border-bottom: 2px solid #C5A059 !important;
+}
+
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td:hover {
+  background-color: #004080 !important;
+}
+
+:host ::ng-deep .dx-data-row > td {
+  padding: 7px 10px !important;
+  font-size: 12px !important;
+}
+
+:host ::ng-deep .dx-data-row.dx-state-hover > td {
+  background-color: rgba(0, 51, 102, 0.04) !important;
+}
+
+:host ::ng-deep .dx-selection.dx-data-row > td {
+  background-color: rgba(0, 51, 102, 0.1) !important;
+  color: #003366 !important;
+}
+
+/* ── Field validation error ── */
+.field-error {
+  display: block;
+  font-size: 10px;
+  color: #dc2626;
+  margin-top: 2px;
+}
+
+/* ── Popup form ── */
+.popup-form {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 12px;
+  margin-top: 8px;
+  border-top: 1px solid #e4e8ed;
+}
+
+/* ── Action bar ── */
+.action-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  background: #fff;
+  border-top: 1px solid #dce3ee;
+  box-shadow: 0 -2px 6px rgba(0, 51, 102, 0.06);
+}
+
+.actions-primary,
+.actions-secondary {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Primary "Aggiungi" button override to use brand color */
+:host ::ng-deep .actions-primary .dx-button.dx-button-default.dx-button-mode-contained {
+  background-color: #003366;
+  border-color: #003366;
+}
+
+:host ::ng-deep .actions-primary .dx-button.dx-button-default.dx-button-mode-contained:hover {
+  background-color: #004080;
+  border-color: #004080;
+}
+
+/* ── Responsive: single column below 1024px ── */
+@media (max-width: 1024px) {
+  .two-col-grid {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
-  .roles-col, .functions-col {
-    flex: 1 1 100%;
+
+  .col-main,
+  .col-side {
+    overflow: visible;
+  }
+
+  .card-fill {
+    flex: 0 0 auto;
   }
 }

@@ -1,0 +1,221 @@
+<div class="page-shell">
+
+  <!-- ── Op bar ── -->
+  <div class="op-bar">
+    <span class="op-badge op-badge--{{ mode }}">
+      @if (mode === 'acquisto') {
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" class="badge-icon">
+          <path d="M8 14V2M3 7l5-5 5 5"/>
+        </svg>
+      } @else {
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" class="badge-icon">
+          <path d="M8 2v12M3 9l5 5 5-5"/>
+        </svg>
+      }
+      {{ pageTitle }}
+      @if (operazioneNr()) {
+        &mdash; N.&nbsp;<strong>{{ operazioneNr() }}</strong>
+      }
+    </span>
+  </div>
+
+  <!-- ══ Two-column grid ══ -->
+  <div class="two-col-grid">
+
+    <!-- ── Left column ── -->
+    <div class="col-main">
+
+      <!-- Card 1: Dati Operazione -->
+      <section class="card-section">
+        <app-header-card [title]="cardDatiTitle">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </app-header-card>
+        <div class="card-body">
+
+          <div class="form-row">
+            <label class="form-lbl">Divisa operazione</label>
+            <div class="form-fld">
+              <dx-select-box
+                [(value)]="formData.trxDivope"
+                [dataSource]="currencies"
+                placeholder="Seleziona divisa...">
+              </dx-select-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Divisa CTV</label>
+            <div class="form-fld">
+              <dx-select-box
+                [(value)]="formData.trxDivctp"
+                [dataSource]="currencies"
+                [readOnly]="true">
+              </dx-select-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">{{ labelImpope }}</label>
+            <div class="form-fld">
+              <dx-number-box
+                [(value)]="formData.trxImpope"
+                format="#,##0.00"
+                (onValueChanged)="onImpopeChange($event)">
+              </dx-number-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Cambio</label>
+            <div class="form-fld">
+              <dx-number-box
+                [(value)]="formData.trxExcrat"
+                format="#,##0.0000"
+                (onValueChanged)="onExcratChange($event)">
+              </dx-number-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Cambio sistema</label>
+            <div class="form-fld">
+              <div class="display-value">
+                {{ formData.trxExrctpbas != null ? (formData.trxExrctpbas | number:'1.4-4') : '—' }}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Card 2: Calcolo Cambio -->
+      <section class="card-section">
+        <app-header-card title="Calcolo Cambio">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+        </app-header-card>
+        <div class="card-body">
+
+          <div class="form-row">
+            <label class="form-lbl">Importo CTV</label>
+            <div class="form-fld">
+              <div class="display-value display-value--accent">
+                @if (formData.trxImpctp != null) {
+                  {{ formData.trxImpctp | number:'1.2-2' }}&nbsp;{{ formData.trxDivctp || '' }}
+                } @else {
+                  —
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Controv. CHF</label>
+            <div class="form-fld">
+              <div class="display-value display-value--accent">
+                @if (formData.trxImpctv != null) {
+                  {{ formData.trxImpctv | number:'1.2-2' }}&nbsp;CHF
+                } @else {
+                  —
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">CTP controv.</label>
+            <div class="form-fld">
+              <div class="display-value">
+                {{ formData.trxCtpctv != null ? (formData.trxCtpctv | number:'1.2-2') : '—' }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Resto CTV</label>
+            <div class="form-fld">
+              <div class="display-value display-value--resto">
+                @if (formData.trxImprestoctv != null) {
+                  {{ formData.trxImprestoctv | number:'1.2-2' }}&nbsp;CHF
+                } @else {
+                  —
+                }
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ── Right column ── -->
+    <div class="col-side">
+
+      <!-- Card 3: Vigilanza e Note -->
+      <section class="card-section card-fill">
+        <app-header-card title="Vigilanza e Note">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </app-header-card>
+        <div class="card-body">
+
+          <div class="form-row">
+            <label class="form-lbl">Data valuta</label>
+            <div class="form-fld">
+              <dx-date-box [(value)]="formData.trxDatval" displayFormat="dd/MM/yyyy"></dx-date-box>
+            </div>
+          </div>
+
+          <div class="field-sep"></div>
+
+          <div class="form-row" style="align-items: center;">
+            <label class="form-lbl">Forza cambio</label>
+            <dx-check-box [(value)]="formData.cbForceChange"></dx-check-box>
+          </div>
+
+          <div class="form-row" style="align-items: center;">
+            <label class="form-lbl">Arrotonda importi</label>
+            <dx-check-box [(value)]="formData.cbArrotondaImporti" (onValueChanged)="onArrotondaChange()"></dx-check-box>
+          </div>
+
+          <div class="form-row" style="align-items: center;">
+            <label class="form-lbl">Spread dipendente</label>
+            <dx-check-box [(value)]="formData.cbUseSpreadDip"></dx-check-box>
+          </div>
+
+          <div class="field-sep"></div>
+
+          <div class="form-row form-row--top">
+            <label class="form-lbl">Note</label>
+            <div class="form-fld">
+              <dx-text-area [(value)]="formData.note" [height]="80"></dx-text-area>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+  <!-- ── Action Bar ── -->
+  <div class="action-bar">
+    <div class="actions-left">
+      <dx-button text="Annulla" icon="remove" stylingMode="outlined" (onClick)="annulla()"></dx-button>
+    </div>
+    <dx-button text="Conferma" icon="check" class="btn-confirm" (onClick)="conferma()"></dx-button>
+    <div class="actions-right">
+      <dx-button text="Stampa" icon="print" stylingMode="outlined" (onClick)="stampa()"></dx-button>
+    </div>
+  </div>
+
+</div>

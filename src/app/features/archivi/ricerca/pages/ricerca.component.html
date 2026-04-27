@@ -1,18 +1,16 @@
-<div class="container">
-  <h1>Ricerca Transazioni - Antiriciclaggio</h1>
-
+<div class="page-shell">
   <app-ricerca-filter
     [currencies]="currencies"
     [branches]="branches"
     [currencyTypes]="currencyTypes"
     [stOperationsTypes]="stOperationsTypes"
     [isLoading]="isLoading"
-    (searchClick)="onSearch($event)"
-  ></app-ricerca-filter>
+    (searchClick)="onSearch($event)">
+  </app-ricerca-filter>
 
   <app-ricerca-grid
     [transactions]="transactions"
     [isLoading]="isLoading"
-    [error]="error"
-  ></app-ricerca-grid>
+    [error]="error">
+  </app-ricerca-grid>
 </div>

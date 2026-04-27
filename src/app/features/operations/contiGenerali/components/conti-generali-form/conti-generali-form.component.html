@@ -1,0 +1,217 @@
+<div class="page-shell">
+
+  <!-- ── Op bar ── -->
+  <div class="op-bar">
+    <span class="op-badge op-badge--{{ mode }}">
+      @if (mode === 'versamento') {
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" class="badge-icon">
+          <path d="M8 14V2M3 7l5-5 5 5"/>
+        </svg>
+      } @else {
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" class="badge-icon">
+          <path d="M8 2v12M3 9l5 5 5-5"/>
+        </svg>
+      }
+      {{ pageTitle }}
+      @if (operazioneNr()) {
+        &mdash; N.&nbsp;<strong>{{ operazioneNr() }}</strong>
+      }
+    </span>
+  </div>
+
+  <!-- ══ Two-column grid ══ -->
+  <div class="two-col-grid">
+
+    <!-- ── Left column ── -->
+    <div class="col-main">
+
+      <!-- Card 1: Dati Conto Generale -->
+      <section class="card-section">
+        <app-header-card title="Dati Conto Generale">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+            <path d="M8 21h8M12 17v4"></path>
+          </svg>
+        </app-header-card>
+        <div class="card-body">
+
+          <div class="form-row">
+            <label class="form-lbl">Nr Conto</label>
+            <div class="form-fld">
+              <dx-text-box
+                [(value)]="formData.nrConto"
+                [maxLength]="7"
+                (onValueChanged)="onNrContoChange()">
+                <dxi-button name="search" location="after" [options]="nrContoSearchBtn"></dxi-button>
+              </dx-text-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Descrizione</label>
+            <div class="form-fld">
+              <dx-text-box [(value)]="formData.descrizioneConto" [readOnly]="true"></dx-text-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Divisa</label>
+            <div class="form-fld">
+              <dx-select-box
+                [(value)]="formData.divisa"
+                [dataSource]="currencies"
+                (onValueChanged)="calculate()">
+              </dx-select-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Centro di costo</label>
+            <div class="form-fld">
+              <dx-text-box [(value)]="formData.centroCosto"></dx-text-box>
+            </div>
+          </div>
+
+          <div class="field-sep"></div>
+
+          <div class="form-row">
+            <label class="form-lbl">Importo</label>
+            <div class="form-fld">
+              <dx-number-box
+                [(value)]="formData.amount"
+                format="#,##0.00"
+                (onValueChanged)="calculate()">
+              </dx-number-box>
+            </div>
+          </div>
+
+          <div class="form-row" style="align-items: center;">
+            <label class="form-lbl">Arrotonda</label>
+            <dx-check-box [(value)]="formData.cbArrotondaImporti" (onValueChanged)="calculate()"></dx-check-box>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Controvalore CHF</label>
+            <div class="form-fld">
+              <div class="display-value display-value--accent">
+                @if (formData.amountCHF != null) {
+                  {{ formData.amountCHF | number:'1.2-2' }}&nbsp;CHF
+                } @else { — }
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Cambio&nbsp;/&nbsp;sistema</label>
+            <div class="form-fld form-fld--row">
+              <dx-number-box
+                [(value)]="formData.excrat"
+                format="#,##0.0000"
+                style="flex:1"
+                (onValueChanged)="calculate()">
+              </dx-number-box>
+              <dx-button icon="money" hint="Pannello cambio" (onClick)="showCambio()"></dx-button>
+              <div class="display-value sys-rate">
+                <span class="sys-label">SYS</span>
+                {{ formData.excratSys != null ? (formData.excratSys | number:'1.4-4') : '—' }}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ── Right column ── -->
+    <div class="col-side">
+
+      <!-- Card 2: Descrizione Operazione -->
+      <section class="card-section card-fill">
+        <app-header-card title="Descrizione Operazione">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+        </app-header-card>
+        <div class="card-body">
+
+          <div class="form-row">
+            <label class="form-lbl">Data valuta</label>
+            <div class="form-fld">
+              <dx-date-box [(value)]="formData.dataValuta" displayFormat="dd/MM/yyyy"></dx-date-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Data operazione</label>
+            <div class="form-fld">
+              <div class="display-value">{{ formData.dataOperazione | date:'dd/MM/yyyy' }}</div>
+            </div>
+          </div>
+
+          <div class="field-sep"></div>
+
+          <div class="form-row">
+            <label class="form-lbl">Nome e Cognome</label>
+            <div class="form-fld">
+              <dx-text-box [(value)]="formData.nomeCognome"></dx-text-box>
+            </div>
+          </div>
+
+          <div class="form-row form-row--top">
+            <label class="form-lbl">Testo</label>
+            <div class="form-fld">
+              <dx-text-area [(value)]="formData.testo" [height]="62"></dx-text-area>
+            </div>
+          </div>
+
+          <div class="form-row form-row--top">
+            <label class="form-lbl">Commento</label>
+            <div class="form-fld">
+              <dx-text-area [(value)]="formData.commentoInterno" [height]="62"></dx-text-area>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+  <!-- ── Action Bar ── -->
+  <div class="action-bar">
+    <div class="actions-left">
+      <dx-button text="Indietro" icon="arrowleft" stylingMode="outlined" (onClick)="indietro()"></dx-button>
+      <dx-button text="Annulla"  icon="remove"    stylingMode="outlined" (onClick)="annulla()"></dx-button>
+      <dx-button text="Modifica" icon="edit"      stylingMode="outlined" (onClick)="modifica()"></dx-button>
+    </div>
+
+    <dx-button text="Conferma" icon="check" class="btn-confirm" (onClick)="conferma()"></dx-button>
+
+    <div class="actions-right">
+      <dx-drop-down-button
+        text="Altre azioni"
+        icon="overflow"
+        stylingMode="outlined"
+        [items]="altreAzioniItems"
+        keyExpr="id"
+        displayExpr="text"
+        (onItemClick)="onAltreAzioniClick($event)">
+      </dx-drop-down-button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Popup: Cambio ── -->
+<dx-popup [width]="600" [height]="400" [showTitle]="true" title="PANNELLO CALCOLO CAMBIO VALUTA"
+  [dragEnabled]="false" [hideOnOutsideClick]="true"
+  [visible]="cambioVisible()" (visibleChange)="cambioVisible.set($event)">
+  <div *dxTemplate="let data of 'content'">
+    <p>[ Tassi - Spread - Calcolo cambio ]</p>
+  </div>
+</dx-popup>

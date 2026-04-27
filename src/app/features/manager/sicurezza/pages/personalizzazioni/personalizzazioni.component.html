@@ -1,48 +1,75 @@
-<div class="container">
-  <h1>Personalizzazioni</h1>
+<div class="page-shell">
 
-  <div class="data-grid-container" style="width:100%;">
-    <dx-data-grid
-      [dataSource]="personalisations()"
-      keyExpr="parId"
-      [selection]="{ mode: 'single' }"
-      (onSelectionChanged)="onSelectionChanged($event)"
-      [width]="'100%'"
-      [height]="360"
-      [showBorders]="true"
-      [columnAutoWidth]="true"
-      [allowColumnReordering]="true"
-      [allowColumnResizing]="true"
-    >
-      <dxo-paging [pageSize]="25" [enabled]="true"></dxo-paging>
-      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[25, 50, 100]" [showInfo]="true"></dxo-pager>
+  <section class="card-section">
 
-      <dxi-column dataField="parId" caption="ParId" width="200"></dxi-column>
-      <dxi-column dataField="parDes" caption="Description" width="400"></dxi-column>
-      <dxi-column dataField="parValue" caption="Value" width="400"></dxi-column>
-    </dx-data-grid>
+    <div class="sempione-card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="4" y1="21" x2="4" y2="14"></line>
+        <line x1="4" y1="10" x2="4" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12" y2="3"></line>
+        <line x1="20" y1="21" x2="20" y2="16"></line>
+        <line x1="20" y1="12" x2="20" y2="3"></line>
+        <line x1="1" y1="14" x2="7" y2="14"></line>
+        <line x1="9" y1="8" x2="15" y2="8"></line>
+        <line x1="17" y1="16" x2="23" y2="16"></line>
+      </svg>
+      <h2 class="card-title">Personalizzazioni</h2>
+      <span class="card-count">{{ personalisations().length }}</span>
+    </div>
+    <div class="gold-divider"></div>
+
+    <!-- Data Grid -->
+    <div class="card-body card-body--grid">
+      <dx-data-grid
+        [dataSource]="personalisations()"
+        keyExpr="parId"
+        [selection]="{ mode: 'single' }"
+        [showBorders]="false"
+        [columnAutoWidth]="true"
+        [rowAlternationEnabled]="true"
+        [hoverStateEnabled]="true"
+        [allowColumnResizing]="true"
+        (onSelectionChanged)="onSelectionChanged($event)">
+
+        <dxo-search-panel [visible]="true" placeholder="Cerca..." [width]="200"></dxo-search-panel>
+        <dxo-paging [pageSize]="14" [enabled]="true"></dxo-paging>
+        <dxo-pager [showInfo]="true" [showPageSizeSelector]="false"></dxo-pager>
+
+        <dxi-column dataField="parId"    caption="ID"          [width]="200"></dxi-column>
+        <dxi-column dataField="parDes"   caption="Descrizione" [width]="400"></dxi-column>
+        <dxi-column dataField="parValue" caption="Valore"></dxi-column>
+      </dx-data-grid>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="card-body card-body--form">
+      <form [formGroup]="form" (ngSubmit)="onSave()">
+        <div class="form-row form-row--top">
+          <label class="form-lbl">Descrizione</label>
+          <div class="form-fld">
+            <dx-text-area formControlName="parDes" placeholder="Inserisci descrizione" [height]="66"></dx-text-area>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-lbl">Valore</label>
+          <div class="form-fld">
+            <dx-text-box formControlName="parValue" placeholder="Inserisci valore"></dx-text-box>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </section>
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <div class="actions-primary">
+      <dx-button text="Salva" icon="save" type="default" stylingMode="contained" class="btn-new" (onClick)="onSave()"></dx-button>
+    </div>
+    <div class="actions-secondary">
+      <dx-button text="Traccia" icon="chart" stylingMode="outlined" (onClick)="onTrace()"></dx-button>
+    </div>
   </div>
 
-  <div class="form-container" style="margin-top:12px;padding:8px;border:1px solid #e6e6e6;border-radius:6px;background:#fff;width:100%;">
-    <form [formGroup]="form" (ngSubmit)="onSave()">
-      <div style="display:flex;flex-direction:column;gap:10px;">
-
-        <div class="dx-field" style="display:flex;align-items:flex-start;gap:12px;">
-          <label class="dx-field-label" style="width:140px;font-weight:600;padding-top:6px;">Descrizione</label>
-          <dx-text-area formControlName="parDes" placeholder="Inserisci descrizione" [height]="100" style="flex:1;min-width:0;width:100%;"></dx-text-area>
-        </div>
-
-        <div class="dx-field" style="display:flex;align-items:center;gap:12px;">
-          <label class="dx-field-label" style="width:140px;font-weight:600;">Valore</label>
-          <dx-text-box formControlName="parValue" placeholder="Inserisci valore" style="flex:1;min-width:0;width:100%;"></dx-text-box>
-        </div>
-
-        <div style="display:flex;justify-content:flex-end;margin-top:4px;">
-          <dx-button text="Traccia" stylingMode="outlined" style="margin-right:8px;min-width:0;" (onClick)="onTrace()"></dx-button>
-          <dx-button text="Salva" type="success" [useSubmitBehavior]="true"></dx-button>
-        </div>
-
-      </div>
-    </form>
-  </div>
 </div>

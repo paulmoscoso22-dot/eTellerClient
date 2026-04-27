@@ -1,57 +1,83 @@
-<div class="utenti-container">
+<div class="page-shell">
 
-  <!-- Unified Toolbar: filtri | ricerca | azioni -->
-  <div class="unified-toolbar">
+  <!-- ── Main Card: Gestione Utenti ── -->
+  <section class="card-section">
 
-    <div class="segmented-control" role="group">
-      @for (item of filterItems; track item.value) {
-        <button class="segment-btn"
-                [class.active]="selectedFilter() === item.value"
-                (click)="onFilterChanged({ value: item.value })">
-          {{ item.labelKey | transloco }}
-        </button>
-      }
+    <div class="sempione-card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+      <h2 class="card-title">Gestione Utenti</h2>
+    </div>
+    <div class="gold-divider"></div>
+
+    <!-- Toolbar: filtro | ricerca | azioni -->
+    <div class="card-toolbar">
+      <div class="toolbar-inner">
+
+        <div class="segmented-control" role="group">
+          @for (item of filterItems; track item.value) {
+            <button class="segment-btn"
+                    [class.active]="selectedFilter() === item.value"
+                    (click)="onFilterChanged({ value: item.value })">
+              {{ item.labelKey | transloco }}
+            </button>
+          }
+        </div>
+
+        <div class="toolbar-search-wrap">
+          <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <dx-text-box
+            [placeholder]="'utenti.searchPlaceholder' | transloco"
+            [showClearButton]="true"
+            valueChangeEvent="input"
+            class="toolbar-textbox"
+            (onValueChanged)="onSearchChanged($event)">
+          </dx-text-box>
+        </div>
+
+        <div class="toolbar-actions">
+          <dx-button
+            class="btn-new"
+            [text]="'utenti.btnNew' | transloco"
+            type="default"
+            stylingMode="contained"
+            (onClick)="openNewUserPopup()">
+          </dx-button>
+        <dx-button
+          icon="print"
+          hint="Stampa lista utenti"
+          stylingMode="outlined"
+          class="btn-outline"
+          (onClick)="onStampaLista()">
+        </dx-button>
+        </div>
+
+      </div>
     </div>
 
-    <div class="search-input-wrapper">
-      <i class="bi bi-search search-inner-icon"></i>
-      <dx-text-box
-        [placeholder]="'utenti.searchPlaceholder' | transloco"
-        [showClearButton]="true"
-        valueChangeEvent="input"
-        (onValueChanged)="onSearchChanged($event)">
-      </dx-text-box>
+    <!-- Griglia utenti -->
+    <div class="card-body card-body--grid">
+      <app-table-utenti
+        [users$]="users$"
+        [filterValue]="gridFilterValue()"
+        [searchValue]="searchValue()"
+        (userSelected)="onSelectionChanged($event)"
+        (actionClicked)="onTableAction($event)">
+      </app-table-utenti>
     </div>
 
-    <div class="toolbar-actions">
-      <dx-button
-        class="btn-brand"
-        [text]="'utenti.btnNew' | transloco"
-        stylingMode="contained"
-        icon="plus"
-        (onClick)="openNewUserPopup()">
-      </dx-button>
-      <dx-button
-        class="btn-outline"
-        [text]="'utenti.btnPrintList' | transloco"
-        stylingMode="outlined">
-      </dx-button>
-    </div>
-
-  </div>
-
-  <!-- Lista utenti -->
-  <app-table-utenti
-    [users$]="users$"
-    [filterValue]="gridFilterValue()"
-    [searchValue]="searchValue()"
-    (userSelected)="onSelectionChanged($event)"
-    (actionClicked)="onTableAction($event)">
-  </app-table-utenti>
+  </section>
 
 </div>
 
-<!-- Popup Dettaglio / Form utente -->
+<!-- ── Popup Dettaglio / Form utente ── -->
 <dx-popup
   [(visible)]="isDetailPopupVisible"
   [showTitle]="true"
@@ -65,126 +91,174 @@
   [height]="'auto'"
   [maxHeight]="'90vh'"
   (onHidden)="onClear()">
+
   <div *dxTemplate="let data of 'content'">
+    <form [formGroup]="userForm"
+          (ngSubmit)="onSubmit()"
+          class="popup-layout"
+          [class.popup-view-mode]="popupMode() === 'view'">
 
-    <div class="detail-section">
+      <!-- ── Card 1: Informazioni Profilo ── -->
+      <section class="popup-card">
+        <h3 class="popup-card-title">Informazioni Profilo</h3>
+        <div class="popup-fields-grid">
 
-      <div class="detail-form">
-        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-          <div class="form-fields">
-
-            <div class="dx-field">
-              <div class="dx-field-label">{{ 'utenti.fieldUsrId' | transloco }}</div>
-              <div class="dx-field-value">
-                <dx-text-box formControlName="usrId" [readOnly]="popupMode() === 'view'">
-                  <dx-validator>
-                    <dxi-validation-rule type="required"></dxi-validation-rule>
-                  </dx-validator>
-                </dx-text-box>
-              </div>
-            </div>
-
-            <div class="dx-field">
-              <div class="dx-field-label">{{ 'utenti.fieldStatus' | transloco }}</div>
-              <div class="dx-field-value">
-                <dx-select-box
-                  formControlName="usrStatus"
-                  [dataSource]="statiEntita$ | async"
-                  displayExpr="steDes"
-                  valueExpr="steId"
-                  [readOnly]="popupMode() === 'view'">
-                  <dx-validator>
-                    <dxi-validation-rule type="required"></dxi-validation-rule>
-                  </dx-validator>
-                </dx-select-box>
-              </div>
-            </div>
-
-            <div class="dx-field">
-              <div class="dx-field-label">{{ 'utenti.fieldExtref' | transloco }}</div>
-              <div class="dx-field-value">
-                <dx-text-box formControlName="usrExtref" [readOnly]="popupMode() === 'view'"></dx-text-box>
-              </div>
-            </div>
-
-            <div class="dx-field">
-              <div class="dx-field-label">{{ 'utenti.fieldHostId' | transloco }}</div>
-              <div class="dx-field-value">
-                <dx-text-box formControlName="usrHostId" [readOnly]="popupMode() === 'view'">
-                  <dx-validator>
-                    <dxi-validation-rule type="required"></dxi-validation-rule>
-                  </dx-validator>
-                </dx-text-box>
-              </div>
-            </div>
-
-            <div class="dx-field">
-              <div class="dx-field-label">{{ 'utenti.fieldBraId' | transloco }}</div>
-              <div class="dx-field-value">
-                <dx-select-box
-                  formControlName="usrBraId"
-                  [dataSource]="branches$ | async"
-                  displayExpr="braDes"
-                  valueExpr="braId"
-                  [readOnly]="popupMode() === 'view'">
-                  <dx-validator>
-                    <dxi-validation-rule type="required"></dxi-validation-rule>
-                  </dx-validator>
-                </dx-select-box>
-              </div>
-            </div>
-
-            <div class="dx-field">
-              <div class="dx-field-label">{{ 'utenti.fieldLingua' | transloco }}</div>
-              <div class="dx-field-value">
-                <dx-select-box
-                  formControlName="usrLingua"
-                  [dataSource]="languages$ | async"
-                  displayExpr="lanDes"
-                  valueExpr="lanId"
-                  [readOnly]="popupMode() === 'view'">
-                  <dx-validator>
-                    <dxi-validation-rule type="required"></dxi-validation-rule>
-                  </dx-validator>
-                </dx-select-box>
-              </div>
-            </div>
-
+          <div class="popup-field-group" [class.field-id-locked]="popupMode() === 'edit'">
+            <label class="popup-field-label">{{ 'utenti.fieldUsrId' | transloco }}</label>
+            <dx-text-box
+              formControlName="usrId"
+              [readOnly]="popupMode() === 'edit' || popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
           </div>
 
-          <div class="form-actions">
-            @if (popupMode() === 'new') {
-              <dx-button [text]="'utenti.btnAdd' | transloco" type="default" [useSubmitBehavior]="true"></dx-button>
-            }
-            @if (popupMode() === 'edit') {
-              <dx-button [text]="'utenti.btnEdit'          | transloco" type="default" (onClick)="onUpdate()"></dx-button>
-              <dx-button [text]="'utenti.btnResetPassword' | transloco" type="default" (onClick)="openResetPasswordPopup()"></dx-button>
-              <dx-button [text]="'utenti.btnPrintDetail'   | transloco" type="default"></dx-button>
-              <dx-button [text]="'utenti.btnStorico'       | transloco" type="default" (onClick)="onTrace()"></dx-button>
-            }
-            @if (popupMode() === 'view') {
-              <dx-button [text]="'utenti.btnStorico' | transloco" type="default" (onClick)="onTrace()"></dx-button>
-              <dx-button [text]="'utenti.btnPrintDetail' | transloco" type="default"></dx-button>
-            }
+          <div class="popup-field-group">
+            <label class="popup-field-label">{{ 'utenti.fieldStatus' | transloco }}</label>
+            <dx-select-box
+              formControlName="usrStatus"
+              [dataSource]="statiEntitaList"
+              displayExpr="steDes"
+              valueExpr="steId"
+              [readOnly]="popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-select-box>
           </div>
-        </form>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">{{ 'utenti.fieldExtref' | transloco }}</label>
+            <dx-text-box
+              formControlName="usrExtref"
+              [readOnly]="popupMode() === 'view'">
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">{{ 'utenti.fieldHostId' | transloco }}</label>
+            <dx-text-box
+              formControlName="usrHostId"
+              [readOnly]="popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">{{ 'utenti.fieldBraId' | transloco }}</label>
+            <dx-select-box
+              formControlName="usrBraId"
+              [dataSource]="branchesList"
+              displayExpr="braDes"
+              valueExpr="braId"
+              [readOnly]="popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-select-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">{{ 'utenti.fieldLingua' | transloco }}</label>
+            <dx-select-box
+              formControlName="usrLingua"
+              [dataSource]="languagesList"
+              displayExpr="lanDes"
+              valueExpr="lanId"
+              [readOnly]="popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-select-box>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Card 2: Gestione Ruoli ── -->
+      <section class="popup-card">
+        <h3 class="popup-card-title">Gestione Ruoli</h3>
+
+        @if (popupMode() === 'view') {
+          <dx-data-grid
+            [dataSource]="assignedRoles()"
+            [showBorders]="true"
+            keyExpr="roleId"
+            [height]="200"
+            [columnAutoWidth]="true">
+            <dxi-column dataField="roleName" caption="Ruoli Assegnati"></dxi-column>
+          </dx-data-grid>
+        } @else {
+          <app-control-assign
+            [assignedRoles]="assignedRoles"
+            [possibleRoles]="possibleRoles"
+            [disabled]="false"
+            (rolesChanged)="onRolesChanged($event)">
+          </app-control-assign>
+        }
+
+      </section>
+
+      <!-- ── Action Bar sticky ── -->
+      <div class="popup-action-bar">
+
+        <div class="popup-actions-secondary">
+          @if (popupMode() !== 'new') {
+            <dx-button class="btn-action-outline"
+                       [text]="'utenti.btnStorico' | transloco"
+                       icon="clock"
+                       stylingMode="outlined"
+                       (onClick)="onTrace()">
+            </dx-button>
+            <dx-button class="btn-action-outline"
+                       [text]="'utenti.btnPrintDetail' | transloco"
+                       icon="print"
+                       stylingMode="outlined">
+            </dx-button>
+          }
+          @if (popupMode() === 'edit') {
+            <dx-button class="btn-action-danger"
+                       [text]="'utenti.btnResetPassword' | transloco"
+                       icon="key"
+                       (onClick)="openResetPasswordPopup()">
+            </dx-button>
+          }
+        </div>
+
+        <div class="popup-actions-primary">
+          @if (popupMode() === 'view') {
+            <dx-button class="btn-action-close"
+                       text="Chiudi"
+                       icon="close"
+                       (onClick)="onClear()">
+            </dx-button>
+          }
+          @if (popupMode() === 'new') {
+            <dx-button class="btn-action-primary"
+                       [text]="'utenti.btnAdd' | transloco"
+                       icon="plus"
+                       [useSubmitBehavior]="true">
+            </dx-button>
+          }
+          @if (popupMode() === 'edit') {
+            <dx-button class="btn-action-primary"
+                       [text]="'utenti.btnEdit' | transloco"
+                       icon="save"
+                       (onClick)="onUpdate()">
+            </dx-button>
+          }
+        </div>
+
       </div>
 
-      <div class="detail-roles">
-        <app-control-assign
-          [assignedRoles]="assignedRoles"
-          [possibleRoles]="possibleRoles"
-          [disabled]="popupMode() === 'view'"
-          (rolesChanged)="onRolesChanged($event)">
-        </app-control-assign>
-      </div>
-
-    </div>
-
+    </form>
   </div>
 </dx-popup>
 
-<!-- Popup Reset Password -->
+<!-- ── Popup Reset Password ── -->
 <dx-popup
   [width]="400"
   [height]="260"

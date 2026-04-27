@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
 import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
+import { DxNumberBoxModule } from 'devextreme-angular/ui/number-box';
 import { DxTextAreaModule } from 'devextreme-angular/ui/text-area';
 import { DxButtonModule } from 'devextreme-angular/ui/button';
 import { DxPopupModule } from 'devextreme-angular/ui/popup';
@@ -15,17 +16,17 @@ import { confirm } from 'devextreme/ui/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ManagerService } from '../../services/sicurezza.service';
 import { SysFunctionsResponse, SysRoleResponse, GetSysRoleByFunIdRequest, GetUsersRoleFunIdRequest, UsersRoleFunctionResponse, InsertSysFunctionRequest, UpdateSysFunctionRequest, DeleteSysFunctionRequest } from '../../models/manager.models';
-import { LabelSecondaryComponent } from '../../../../../components/labels/label-secondary/label-secondary.component';
 import { TableFunzioniComponent } from '../../components/table-funzioni/table-funzioni.component';
 import { TableRolesComponent } from '../../components/table-roles/table-roles.component';
 import { TableUserRoleComponent } from '../../components/table-user-role/table-user-role.component';
 import { ViewChild } from '@angular/core';
 import { AuthFacade, AuthTemp } from '../../../../auth/auth.facade';
+import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
 
 @Component({
   selector: 'app-funzioni',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DxDataGridModule, DxTextBoxModule, DxTextAreaModule, DxButtonModule, DxPopupModule, DxFormModule, DxCheckBoxModule, DxToastModule, LabelSecondaryComponent, TableFunzioniComponent, TableRolesComponent, TableUserRoleComponent],
+  imports: [CommonModule, ReactiveFormsModule, DxDataGridModule, DxTextBoxModule, DxNumberBoxModule, DxTextAreaModule, DxButtonModule, DxPopupModule, DxFormModule, DxCheckBoxModule, DxToastModule, TableFunzioniComponent, TableRolesComponent, TableUserRoleComponent, HeaderCardComponent],
   templateUrl: './funzioni.component.html',
   styleUrls: ['./funzioni.component.css'],
 })

@@ -1,34 +1,186 @@
-/* Search Form Styles */
-.search-form {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 4px;
-  margin-bottom: 30px;
-  border: 1px solid #dee2e6;
-}
+/* ══════════════════════════════════════════
+   Ricerca Filter — Banca del Sempione Style
+   Brand navy : #003366  |  Gold : #C5A059
+   ══════════════════════════════════════════ */
 
-.form-row {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 15px;
-  flex-wrap: wrap;
-  align-items: flex-end;
-}
-
-.form-group {
-  flex: 1;
-  min-width: 200px;
-}
-
-.form-group label {
+:host {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: #333;
-  font-size: 14px;
+  flex-shrink: 0;
 }
 
-.form-group.button-group {
+.filter-shell {
+  display: block;
+}
+
+/* ── Card shell ── */
+.card-section {
+  background: #fff;
+  border: 1px solid #dce3ee;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
+  overflow: hidden;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+}
+
+/* ── Sempione Card Header ── */
+.sempione-card-header {
+  background: #003366;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.gold-divider {
+  height: 2px;
+  background: #C5A059;
+  flex-shrink: 0;
+}
+
+.card-icon {
+  width: 15px;
+  height: 15px;
+  color: #fff;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #fff;
+}
+
+/* ── Card body ── */
+.card-body {
+  padding: 14px 16px 12px;
+}
+
+/* ── Section headings ── */
+.section-heading {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #003366;
+  margin-bottom: 8px;
+}
+
+/* ── Section divider ── */
+.section-divider {
+  height: 1px;
+  background: #e8edf4;
+  margin: 10px 0;
+}
+
+/* ── Filter grid ── */
+.filter-grid {
+  display: grid;
+  gap: 6px 14px;
+}
+
+.filter-grid--5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.field-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Compact DevExtreme inputs ── */
+:host ::ng-deep .dx-texteditor {
+  height: 28px;
+}
+
+:host ::ng-deep .dx-texteditor-input {
+  min-height: unset;
+  height: 26px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 13px;
+}
+
+:host ::ng-deep .dx-texteditor-buttons-container {
+  height: 26px;
+}
+
+/* ── Options + Actions row ── */
+.options-and-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.options-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+:host ::ng-deep .filter-check .dx-checkbox-text {
+  font-size: 12px;
+  color: #374151;
+}
+
+.actions-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Buttons ── */
+:host ::ng-deep .btn-search.dx-button-default.dx-button-mode-contained {
+  background-color: #003366;
+  border-color: #003366;
+  height: 30px;
+  font-weight: 600;
+}
+
+:host ::ng-deep .btn-search.dx-button-default.dx-button-mode-contained:hover {
+  background-color: #004080;
+  border-color: #004080;
+}
+
+:host ::ng-deep .btn-annulla.dx-button {
+  height: 30px;
+  border-color: rgba(0, 51, 102, 0.35);
+  color: #003366;
+}
+
+:host ::ng-deep .btn-annulla.dx-button:hover {
+  border-color: #003366;
+  background: rgba(0, 51, 102, 0.05);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1100px) {
+  .filter-grid--5 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .filter-grid--5 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .options-and-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

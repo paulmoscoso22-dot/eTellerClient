@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { BigliettiBancaFormComponent } from '../../components/biglietti-banca-form/biglietti-banca-form.component';
 
 @Component({
   selector: 'app-acquisto',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './acquisto.component.html',
-  styleUrls: ['./acquisto.component.css'],
+  imports: [BigliettiBancaFormComponent],
+  template: `<app-biglietti-banca-form mode="acquisto"></app-biglietti-banca-form>`,
+  styles: [':host { display: contents; }']
 })
-export class AcquistoComponent {
-  constructor() {}
-}
+export class AcquistoComponent {}

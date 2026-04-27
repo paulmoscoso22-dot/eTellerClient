@@ -2,12 +2,12 @@ import { Component, Input, Output, EventEmitter, inject, signal } from '@angular
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { 
-  DxTextBoxModule, 
-  DxDateBoxModule, 
-  DxNumberBoxModule, 
+  DxTextBoxModule,
+  DxDateBoxModule,
+  DxNumberBoxModule,
   DxButtonModule,
   DxCheckBoxModule,
-  DxAutocompleteModule
+  DxSelectBoxModule
 } from 'devextreme-angular';
 
 import { Currency } from '../../../../../core/domain/currency.domain';
@@ -26,7 +26,7 @@ import { StOperationType } from '../../../../../core/domain/stOperationType.doma
     DxNumberBoxModule,
     DxButtonModule,
     DxCheckBoxModule,
-    DxAutocompleteModule
+    DxSelectBoxModule,
   ],
   templateUrl: './ricerca-filter.component.html',
   styleUrls: ['./ricerca-filter.component.css']
@@ -121,5 +121,22 @@ export class RicercaFilterComponent {
       date.setHours(23, 59, 59, 999);
       this.searchForm.patchValue({ trxDataAl: date }, { emitEvent: false });
     }
+  }
+
+  reset(): void {
+    this.searchForm.reset({
+      trxCassa: '',
+      trxLocalita: '',
+      trxDataDal: null,
+      trxDataAl: null,
+      trxReverse: false,
+      trxCutId: '',
+      trxOptId: '',
+      trxDivope: '',
+      trxImpopeDA: null,
+      trxImpopeA: null,
+      arcAppName: '',
+      arcForced: false
+    });
   }
 }

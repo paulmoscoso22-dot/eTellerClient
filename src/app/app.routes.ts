@@ -50,6 +50,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/vigilanza/ricerca/pages/ricerca-operazioni.component').then(m => m.RicercaOperazioniComponent)
       },
       {
+        path: 'vigilanza-attesa-benefondo',
+        loadComponent: () => import('./features/vigilanza/report/pages/attesa-benefondo/attesa-benefondo.component').then(m => m.VigilanzaAttesaBenefondoComponent)
+      },
+      {
         path: 'gestione-regole',
         loadComponent: () => import('./features/vigilanza/gestione/pages/gestione-regole/gestione-regole.component').then(m => m.GestioneRegoleComponent)
       },
@@ -220,10 +224,23 @@ export const routes: Routes = [
         path: 'travelers-cheques-vendita',
         loadComponent: () => import('./features/operations/cambi/pages/travelersCheques/vendita.component').then(m => m.VenditaTravelersComponent)
       },
+      //Operazioni - conti generali
+      {
+        path: 'conti-generali-versamento',
+        loadComponent: () => import('./features/operations/contiGenerali/pages/versamento/versamento-cg.component').then(m => m.VersamentoCgComponent)
+      },
+      {
+        path: 'conti-generali-prelevamento',
+        loadComponent: () => import('./features/operations/contiGenerali/pages/prelevamento/prelevamento-cg.component').then(m => m.PrelevamentoCgComponent)
+      },
       //Operazioni - assegni cheques
       {
         path: 'versamento-cc',
         loadComponent: () => import('./features/operations/assegniCheques/pages/versamento-cc.component').then(m => m.VersamentoCcComponent)
+      },
+      {
+        path: 'incasso-assegni',
+        loadComponent: () => import('./features/operations/assegniCheques/pages/incasso-assegni.component').then(m => m.IncassoAssegniComponent)
       }
 
 

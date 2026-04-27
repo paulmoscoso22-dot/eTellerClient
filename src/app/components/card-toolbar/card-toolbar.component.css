@@ -1,0 +1,71 @@
+/* ══════════════════════════════════════════
+   CardToolbar — Banca del Sempione Style
+   Brand navy : #003366  |  Gold : #C5A059
+   ══════════════════════════════════════════ */
+
+:host {
+  display: block;
+  flex-shrink: 0;
+}
+
+.card-toolbar {
+  background: #f0f4f8;
+  border-bottom: 1px solid #dce3ee;
+  padding: 7px 12px;
+}
+
+.toolbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Search section ── */
+.toolbar-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.toolbar-search-icon {
+  width: 14px;
+  height: 14px;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.toolbar-textbox {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Actions slot ── */
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Compact DevExtreme inputs ── */
+:host ::ng-deep .dx-texteditor {
+  height: 28px;
+}
+
+:host ::ng-deep .dx-texteditor-input {
+  min-height: unset;
+  height: 26px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 13px;
+}
+
+:host ::ng-deep .dx-texteditor-buttons-container {
+  height: 26px;
+}
+
+:host ::ng-deep .dx-button {
+  height: 28px;
+}

@@ -1,48 +1,234 @@
-/* Messages */
-.error-message {
-  padding: 12px 16px;
-  margin-bottom: 20px;
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-  border-radius: 4px;
-  font-size: 14px;
-}
+/* ══════════════════════════════════════════
+   Ricerca Grid — Banca del Sempione Style
+   Brand navy : #003366  |  Gold : #C5A059
+   ══════════════════════════════════════════ */
 
-.loading-message {
-  text-align: center;
-  padding: 40px;
-  color: #666;
-  font-size: 16px;
-}
-
-.no-data-message {
-  text-align: center;
-  padding: 40px;
-  color: #999;
-  font-size: 16px;
-  background: #f8f9fa;
-  border-radius: 4px;
-  border: 1px solid #dee2e6;
-}
-
-/* Data Grid Container */
-.data-grid-container {
-  margin-top: 30px;
+:host {
   display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ── Card shell ── */
+.card-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  background: #fff;
+  border: 1px solid #dce3ee;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
+  overflow: hidden;
+}
+
+/* ── Sempione Card Header ── */
+.sempione-card-header {
+  background: #003366;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.gold-divider {
+  height: 2px;
+  background: #C5A059;
+  flex-shrink: 0;
+}
+
+.card-icon {
+  width: 15px;
+  height: 15px;
+  color: #fff;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #fff;
+  flex: 1;
+}
+
+.result-count-badge {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  width: 100%;
+  min-width: 22px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 9px;
+  background: rgba(197, 160, 89, 0.25);
+  border: 1px solid rgba(197, 160, 89, 0.5);
+  color: #C5A059;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: monospace;
 }
 
-:host ::ng-deep .dx-datagrid {
-  height: auto;
-  width: 100%;
+/* ── Card body ── */
+.card-body--grid {
+  padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-:host ::ng-deep .dx-datagrid-headers {
-  background-color: #f8f9fa;
+/* ── Grid headers ── */
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td {
+  background-color: #f8fafd !important;
+  color: #374151 !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border-bottom: 2px solid #003366 !important;
 }
 
-:host ::ng-deep .dx-datagrid-row {
-  border-bottom: 1px solid #dee2e6;
+/* ── Compact rows ── */
+:host ::ng-deep .dx-data-row > td {
+  padding: 5px 10px !important;
+  font-size: 12px !important;
+  vertical-align: middle !important;
+}
+
+:host ::ng-deep .dx-data-row.dx-row-alt > td {
+  background-color: #f8fafc !important;
+}
+
+:host ::ng-deep .dx-data-row.dx-state-hover > td {
+  background-color: rgba(0, 51, 102, 0.04) !important;
+}
+
+:host ::ng-deep .dx-selection.dx-data-row > td {
+  background-color: rgba(0, 51, 102, 0.10) !important;
+  color: #003366 !important;
+  font-weight: 600 !important;
+}
+
+/* ── Pager ── */
+:host ::ng-deep .dx-datagrid-pager {
+  border-top: 1px solid #e5e7eb;
+  padding: 3px 8px;
+  background: #fafbfc;
+}
+
+:host ::ng-deep .dx-pager {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+:host ::ng-deep .dx-pager .dx-page,
+:host ::ng-deep .dx-pager .dx-navigate-button {
+  font-size: 11px;
+  min-width: 22px;
+  height: 22px;
+  line-height: 22px;
+  border-radius: 4px;
+}
+
+:host ::ng-deep .dx-pager .dx-page.dx-selection {
+  background-color: #003366;
+  border-color: #003366;
+  color: #fff;
+  font-weight: 700;
+}
+
+:host ::ng-deep .dx-pager .dx-page:not(.dx-selection):hover,
+:host ::ng-deep .dx-pager .dx-navigate-button:hover {
+  background-color: rgba(0, 51, 102, 0.08);
+  color: #003366;
+}
+
+:host ::ng-deep .dx-pager .dx-info {
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 22px;
+}
+
+/* ── State messages ── */
+.state-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 40px 24px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.state-message svg {
+  width: 28px;
+  height: 28px;
+  stroke: #c5ccd8;
+}
+
+.state-message--loading {
+  flex-direction: row;
+  gap: 10px;
+  padding: 24px;
+  background: #f8fafc;
+}
+
+.state-message--loading svg {
+  width: 18px;
+  height: 18px;
+  stroke: #003366;
+  opacity: 0.7;
+}
+
+.spin-icon {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.state-message--error {
+  flex-direction: row;
+  gap: 10px;
+  padding: 12px 16px;
+  margin: 12px;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  border-left: 3px solid #ef4444;
+  border-radius: 6px;
+  align-items: flex-start;
+}
+
+.state-message--error svg {
+  width: 16px;
+  height: 16px;
+  stroke: #ef4444;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.state-message--empty {
+  background: #f8fafc;
+  border-top: 1px solid #e5e7eb;
+  flex: 1;
+}
+
+.state-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.state-subtitle {
+  font-size: 12px;
+  color: #9ca3af;
 }

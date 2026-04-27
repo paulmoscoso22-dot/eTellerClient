@@ -1,50 +1,62 @@
-<div class="search-form" [formGroup]="searchForm">
-  <div class="form-row">
-    <div class="form-group">
-      <dx-text-box
-        id="tocCliId"
-        formControlName="tocCliId"
-        placeholder="Codice Cassa"
-        label="Cassa"
-      ></dx-text-box>
-    </div>
+<div class="page-wrapper" [formGroup]="searchForm">
 
-    <div class="form-group">
-      <dx-date-box
-        id="tocData"
-        formControlName="tocData"
-        type="date"
-        label="Data"
-        format="dd/MM/yyyy"
-        displayFormat="dd/MM/yyyy"
-      ></dx-date-box>
-    </div>
+  <section class="card-section">
+    <h2 class="section-title">Filtri di Selezione</h2>
 
-    <div class="form-group">
-      <dx-text-box
-        id="tocCutId"
-        formControlName="tocCutId"
-        placeholder="Tipo conto"
-        label="Tipo conto"
-      ></dx-text-box>
-    </div>
+    <div class="fields-grid fields-grid--4">
 
-    <div class="form-group">
-      <dx-text-box
-        id="tocBraId"
-        formControlName="tocBraId"
-        placeholder="Località"
-        label="Località"
-      ></dx-text-box>
-    </div>
-  </div>
+      <div class="field-group">
+        <label class="field-label">Cassa</label>
+        <dx-text-box
+          formControlName="tocCliId"
+          placeholder="Codice Cassa">
+        </dx-text-box>
+      </div>
 
-  <div class="form-group button-group">
+      <div class="field-group">
+        <label class="field-label">Data</label>
+        <dx-date-box
+          formControlName="tocData"
+          type="date"
+          displayFormat="dd/MM/yyyy">
+        </dx-date-box>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Tipo Conto</label>
+        <dx-text-box
+          formControlName="tocCutId"
+          placeholder="Tipo conto">
+        </dx-text-box>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Località</label>
+        <dx-text-box
+          formControlName="tocBraId"
+          placeholder="Filiale">
+        </dx-text-box>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="action-bar">
+    <dx-button
+      text="Annulla"
+      icon="remove"
+      stylingMode="outlined"
+      (onClick)="reset()">
+    </dx-button>
+
     <dx-button
       text="Ricerca"
       type="success"
-      (onClick)="search()"
+      icon="search"
+      class="btn-search"
       [disabled]="isLoading()"
-    ></dx-button>
+      (onClick)="search()">
+    </dx-button>
   </div>
+
 </div>

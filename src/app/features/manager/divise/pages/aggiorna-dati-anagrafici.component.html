@@ -1,3 +1,289 @@
-<div class="container">
-  <h1>Aggiorna dati anagrafici</h1>
+<div class="page-shell">
+
+  <!-- ── Main Card: Aggiorna Dati Anagrafici ── -->
+  <section class="card-section">
+
+    <div class="sempione-card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M3.05 11a9 9 0 1 1 .5 4"></path>
+        <polyline points="3 16 3 11 8 11"></polyline>
+      </svg>
+      <h2 class="card-title">Aggiorna Dati Anagrafici</h2>
+    </div>
+    <div class="gold-divider"></div>
+
+    <!-- Toolbar -->
+    <div class="card-toolbar">
+      <div class="toolbar-inner">
+
+        <span class="filter-label">Codice</span>
+        <div class="toolbar-search-wrap" style="flex: 0 0 160px;">
+          <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <dx-text-box
+            placeholder="Divisa..."
+            [showClearButton]="true"
+            valueChangeEvent="input"
+            class="toolbar-textbox"
+            [value]="filterCodice()"
+            (onValueChanged)="filterCodice.set($event.value)">
+          </dx-text-box>
+        </div>
+
+        <span class="filter-label">Descrizione</span>
+        <div class="toolbar-search-wrap">
+          <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <dx-text-box
+            placeholder="Descrizione..."
+            [showClearButton]="true"
+            valueChangeEvent="input"
+            class="toolbar-textbox"
+            [value]="filterDescrizione()"
+            (onValueChanged)="filterDescrizione.set($event.value)">
+          </dx-text-box>
+        </div>
+
+        <div class="toolbar-actions">
+          <dx-button
+            class="btn-search"
+            text="Cerca"
+            type="default"
+            stylingMode="contained"
+            (onClick)="onCerca()">
+          </dx-button>
+          <dx-button
+            class="btn-reset"
+            text="Reset"
+            type="normal"
+            stylingMode="outlined"
+            (onClick)="onResetFiltri()">
+          </dx-button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Griglia divise -->
+    <div class="card-body card-body--grid">
+      <dx-data-grid
+        [dataSource]="filteredDivise()"
+        [showBorders]="false"
+        [columnAutoWidth]="true"
+        [rowAlternationEnabled]="true"
+        [hoverStateEnabled]="true"
+        [height]="'100%'"
+        [keyExpr]="['curId', 'curCutId']">
+
+        <dxo-selection mode="single"></dxo-selection>
+        <dxo-paging [pageSize]="20"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
+
+        <dxi-column dataField="curId"      caption="Divisa"          [width]="100" alignment="center" cellTemplate="currencyTemplate"></dxi-column>
+        <dxi-column dataField="curCutId"   caption="Tipo"            [width]="90"  alignment="center" cellTemplate="tipoTemplate"></dxi-column>
+        <dxi-column dataField="curShodes"  caption="Des. Abbreviata" [width]="140" alignment="left"></dxi-column>
+        <dxi-column dataField="curLondes"  caption="Descrizione"                   alignment="left"></dxi-column>
+        <dxi-column dataField="curMinamn"  caption="Taglio min."     [width]="110" alignment="right" cellTemplate="numTemplate"></dxi-column>
+        <dxi-column dataField="curTolrat"  caption="Tolleranza %"    [width]="110" alignment="right" cellTemplate="tolTemplate"></dxi-column>
+        <dxi-column dataField="curFinezza" caption="Finezza"         [width]="90"  alignment="center"></dxi-column>
+        <dxi-column dataField="curModdat"  caption="Data modifica"   [width]="140" alignment="left"></dxi-column>
+
+        <dxi-column
+          caption="Azioni"
+          [width]="80"
+          [allowSorting]="false"
+          [allowFiltering]="false"
+          alignment="center"
+          cellTemplate="actionsTemplate">
+        </dxi-column>
+
+        <div *dxTemplate="let cell of 'currencyTemplate'" class="currency-cell">
+          <span class="currency-badge">{{ cell.value }}</span>
+        </div>
+
+        <div *dxTemplate="let cell of 'tipoTemplate'" class="tipo-cell">
+          <span class="tipo-pill"
+            [class.tipo-pill--bb]="cell.value === 'BB'"
+            [class.tipo-pill--mm]="cell.value === 'MM'"
+            [class.tipo-pill--tr]="cell.value === 'TR'">
+            {{ cell.value }}
+          </span>
+        </div>
+
+        <div *dxTemplate="let cell of 'numTemplate'" class="num-cell">
+          {{ cell.value | number:'1.0-2' }}
+        </div>
+
+        <div *dxTemplate="let cell of 'tolTemplate'" class="num-cell">
+          {{ cell.value | number:'1.2-4' }} %
+        </div>
+
+        <!-- View + Edit only (no delete — page is update-only) -->
+        <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
+          <button class="action-btn action-btn--view" title="Visualizza" (click)="onTableAction('view', cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--edit" title="Modifica" (click)="onTableAction('edit', cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+        </div>
+
+      </dx-data-grid>
+    </div>
+
+  </section>
+
 </div>
+
+<!-- ── Popup Dettaglio Divisa ── -->
+<dx-popup
+  [(visible)]="isDetailPopupVisible"
+  [showTitle]="true"
+  [title]="popupMode() === 'edit' ? 'Modifica Dati Anagrafici — ' + selectedLabel()
+                                  : 'Dettaglio Dati Anagrafici — ' + selectedLabel()"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [width]="'90%'"
+  [maxWidth]="780"
+  [height]="'auto'"
+  [maxHeight]="'90vh'"
+  (onHidden)="closePopup()">
+
+  <div *dxTemplate="let data of 'content'">
+    <form [formGroup]="divisaForm"
+          class="popup-layout"
+          [class.popup-view-mode]="popupMode() === 'view'">
+
+      <!-- ── Card 1: Identificazione ── -->
+      <section class="popup-card">
+        <h3 class="popup-card-title">Identificazione</h3>
+        <div class="popup-fields-grid popup-fields-grid--3col">
+
+          <div class="popup-field-group field-id-locked">
+            <label class="popup-field-label">Divisa</label>
+            <dx-text-box formControlName="curId" [readOnly]="true"></dx-text-box>
+          </div>
+
+          <div class="popup-field-group field-id-locked">
+            <label class="popup-field-label">Tipo Divisa</label>
+            <dx-text-box formControlName="curCutId" [readOnly]="true"></dx-text-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Des. Abbreviata</label>
+            <dx-text-box formControlName="curShodes" [readOnly]="true"></dx-text-box>
+          </div>
+
+          <div class="popup-field-group popup-col-span-3">
+            <label class="popup-field-label">Descrizione</label>
+            <dx-text-box formControlName="curLondes" [readOnly]="true"></dx-text-box>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Card 2: Dati Anagrafici ── -->
+      <section class="popup-card">
+        <h3 class="popup-card-title">Dati Anagrafici</h3>
+        <div class="popup-fields-grid popup-fields-grid--3col">
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Taglio Minimo</label>
+            <dx-number-box
+              formControlName="curMinamn"
+              [min]="0"
+              [max]="10000000"
+              [format]="'#,##0.##'"
+              [readOnly]="popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+                <dxi-validation-rule type="range" [min]="0" [max]="10000000" message="Valore tra 0 e 10.000.000"></dxi-validation-rule>
+              </dx-validator>
+            </dx-number-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">% Tolleranza</label>
+            <dx-number-box
+              formControlName="curTolrat"
+              [min]="0"
+              [max]="1000000"
+              [format]="'#,##0.####'"
+              [readOnly]="popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+                <dxi-validation-rule type="range" [min]="0" [max]="1000000" message="Valore tra 0 e 1.000.000"></dxi-validation-rule>
+              </dx-validator>
+            </dx-number-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Finezza</label>
+            <dx-text-box
+              formControlName="curFinezza"
+              [readOnly]="popupMode() === 'view'"
+              placeholder="Es. 999.9">
+            </dx-text-box>
+          </div>
+
+        </div>
+
+        <div class="popup-section-sep"></div>
+
+        <div class="popup-fields-grid popup-fields-grid--2col">
+          <div class="popup-field-group">
+            <label class="popup-field-label">Data Modifica</label>
+            <dx-text-box formControlName="curModdat" [readOnly]="true"></dx-text-box>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Action Bar sticky ── -->
+      <div class="popup-action-bar">
+
+        <div class="popup-actions-secondary">
+          <dx-button
+            class="btn-action-outline"
+            text="Storico"
+            icon="clock"
+            stylingMode="outlined"
+            (onClick)="onTrace()">
+          </dx-button>
+        </div>
+
+        <div class="popup-actions-primary">
+          @if (popupMode() === 'view') {
+            <dx-button
+              class="btn-action-close"
+              text="Chiudi"
+              icon="close"
+              (onClick)="closePopup()">
+            </dx-button>
+          }
+          @if (popupMode() === 'edit') {
+            <dx-button
+              class="btn-action-primary"
+              text="Salva"
+              icon="save"
+              (onClick)="onUpdate()">
+            </dx-button>
+          }
+        </div>
+
+      </div>
+
+    </form>
+  </div>
+</dx-popup>

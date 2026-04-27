@@ -2,50 +2,45 @@
   <dx-data-grid
     [dataSource]="users"
     [filterValue]="filterValue"
-    [showBorders]="true"
+    [showBorders]="false"
     [columnAutoWidth]="true"
     [rowAlternationEnabled]="true"
+    [hoverStateEnabled]="true"
     [height]="'100%'"
     (onSelectionChanged)="onSelectionChanged($event)">
 
     <dxo-selection mode="single"></dxo-selection>
-    <dxo-paging [pageSize]="10"></dxo-paging>
-    <dxo-pager
-      [showPageSizeSelector]="true"
-      [allowedPageSizes]="[10, 25, 50, 100]"
-      [showInfo]="true">
-    </dxo-pager>
+    <dxo-paging [pageSize]="12"></dxo-paging>
+    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[12, 25, 50, 100]" [showInfo]="true"></dxo-pager>
 
-    <!-- Colonna Attivo: Status Badge (nessuna intestazione) -->
+    <!-- Colonna Status Pill (Attivo / Inattivo) -->
     <dxi-column
-      caption=""
-      [width]="40"
+      [caption]="'utenti.colAttivo' | transloco"
+      [width]="110"
       [allowSorting]="false"
       [allowFiltering]="false"
-      [alignment]="'center'"
-      cellTemplate="attivoTemplate">
+      cellTemplate="statusPillTemplate">
     </dxi-column>
 
-    <div *dxTemplate="let cell of 'attivoTemplate'" class="status-cell">
+    <div *dxTemplate="let cell of 'statusPillTemplate'" class="status-cell">
       @if (cell.data.isOnline) {
-        <span class="status-badge badge-active"
-              [title]="'utenti.statusActive' | transloco"
-              [attr.aria-label]="'utenti.statusActive' | transloco">
+        <span class="status-pill status-pill--online"
+              [title]="'utenti.statusActive' | transloco">
+          {{ 'utenti.statusActive' | transloco }}
         </span>
       } @else {
-        <i class="bi bi-slash-circle badge-inactive"
-           [title]="'utenti.statusInactive' | transloco"
-           [attr.aria-label]="'utenti.statusInactive' | transloco">
-        </i>
+        <span class="status-pill status-pill--offline"
+              [title]="'utenti.statusInactive' | transloco">
+          {{ 'utenti.statusInactive' | transloco }}
+        </span>
       }
     </div>
 
-    <!-- ID columns: right-aligned -->
-    <dxi-column dataField="usrId"     [caption]="'utenti.colUsrId'  | transloco" [alignment]="'right'"></dxi-column>
-    <dxi-column dataField="usrHostId" [caption]="'utenti.colHostId' | transloco" [alignment]="'right'"></dxi-column>
+    <!-- Colonne dati -->
+    <dxi-column dataField="usrId"     [caption]="'utenti.colUsrId'  | transloco" alignment="left"></dxi-column>
+    <dxi-column dataField="usrHostId" [caption]="'utenti.colHostId' | transloco" alignment="left"></dxi-column>
 
-    <!-- Text columns: left-aligned (default) -->
-    <dxi-column dataField="usrBraId"  [caption]="'utenti.colBraId'  | transloco">
+    <dxi-column dataField="usrBraId" [caption]="'utenti.colBraId' | transloco">
       <dxo-lookup [dataSource]="branches()" valueExpr="braId" displayExpr="braDes"></dxo-lookup>
     </dxi-column>
 
@@ -59,19 +54,33 @@
       <dxo-lookup [dataSource]="languages()" valueExpr="lanId" displayExpr="lanDes"></dxo-lookup>
     </dxi-column>
 
-    <!-- Azioni column: centered -->
+    <!-- Colonna Azioni -->
     <dxi-column
       [caption]="'utenti.colAzioni' | transloco"
-      [width]="110"
+      [width]="100"
       [allowSorting]="false"
       [allowFiltering]="false"
-      [alignment]="'center'"
+      alignment="center"
       cellTemplate="actionsTemplate">
     </dxi-column>
 
     <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
-      <i class="bi bi-eye action-icon action-icon-view"    [title]="'utenti.actionView' | transloco" (click)="onAction('view', cell.data)"></i>
-      <i class="bi bi-pencil action-icon action-icon-edit" [title]="'utenti.actionEdit' | transloco" (click)="onAction('edit', cell.data)"></i>
+      <button class="action-btn action-btn--view"
+              [title]="'utenti.actionView' | transloco"
+              (click)="onAction('view', cell.data)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+      </button>
+      <button class="action-btn action-btn--edit"
+              [title]="'utenti.actionEdit' | transloco"
+              (click)="onAction('edit', cell.data)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+      </button>
       <dx-drop-down-button
         icon="overflow"
         [items]="moreActions()"
@@ -80,7 +89,7 @@
         [showArrowIcon]="false"
         [useSelectMode]="false"
         stylingMode="text"
-        [dropDownOptions]="{ width: 180 }"
+        [dropDownOptions]="{ width: 190 }"
         (onItemClick)="onMoreAction($event, cell.data)"
         class="action-more-btn">
       </dx-drop-down-button>
