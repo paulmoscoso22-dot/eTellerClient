@@ -1,148 +1,179 @@
-<div class="search-form" [formGroup]="searchForm">
-    <div class="form-row">
-      <div class="form-group">
-        <dx-date-box
-          id="trxDataDal"
-          formControlName="trxDataDal"
-          type="date"
-          label="Data Dal"
-          format="dd/MM/yyyy"
-          displayFormat="dd/MM/yyyy"
-          (onValueChanged)="onDateDalChanged($event)"
-        ></dx-date-box>
-      </div>
+<div class="filter-shell" [formGroup]="searchForm">
 
-      <div class="form-group">
-        <dx-date-box
-          id="trxDataAl"
-          formControlName="trxDataAl"
-          type="date"
-          label="Data Al"
-          format="dd/MM/yyyy"
-          displayFormat="dd/MM/yyyy"
-          (onValueChanged)="onDateAlChanged($event)"
-        ></dx-date-box>
-      </div>
+  <section class="card-section">
+
+    <div class="sempione-card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <h2 class="card-title">Filtri Di Ricerca</h2>
     </div>
+    <div class="gold-divider"></div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <dx-number-box
-          id="trxImpopeDA"
-          formControlName="trxImpopeDA"
-          placeholder="Importo Da"
-          label="Importo Da"
-          format="#,##0.00"
-        ></dx-number-box>
+    <div class="card-body">
+
+      <!-- ── Sezione 1: Filtri Temporali ── -->
+      <div class="section-heading">Filtri Temporali</div>
+      <div class="filter-grid filter-grid--5">
+
+        <div class="field-group">
+          <label class="field-label">Data Dal</label>
+          <dx-date-box
+            formControlName="trxDataDal"
+            type="date"
+            displayFormat="dd.MM.yyyy"
+            [showClearButton]="true"
+            (onValueChanged)="onDateDalChanged($event)">
+          </dx-date-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Data Al</label>
+          <dx-date-box
+            formControlName="trxDataAl"
+            type="date"
+            displayFormat="dd.MM.yyyy"
+            [showClearButton]="true"
+            (onValueChanged)="onDateAlChanged($event)">
+          </dx-date-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Divisa</label>
+          <dx-select-box
+            formControlName="trxDivope"
+            [dataSource]="currencies()"
+            displayExpr="curLondes"
+            valueExpr="curId"
+            [showClearButton]="true"
+            placeholder="Tutte">
+          </dx-select-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Importo Da</label>
+          <dx-number-box
+            formControlName="trxImpopeDA"
+            format="#,##0.00"
+            [showClearButton]="true">
+          </dx-number-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Importo A</label>
+          <dx-number-box
+            formControlName="trxImpopeA"
+            format="#,##0.00"
+            [showClearButton]="true">
+          </dx-number-box>
+        </div>
+
       </div>
 
-      <div class="form-group">
-        <dx-number-box
-          id="trxImpopeA"
-          formControlName="trxImpopeA"
-          placeholder="Importo A"
-          label="Importo A"
-          format="#,##0.00"
-        ></dx-number-box>
+      <div class="section-divider"></div>
+
+      <!-- ── Sezione 2: Dettagli Operazione ── -->
+      <div class="section-heading">Dettagli Operazione</div>
+      <div class="filter-grid filter-grid--5">
+
+        <div class="field-group">
+          <label class="field-label">Cassa</label>
+          <dx-text-box
+            formControlName="trxCassa"
+            placeholder="Codice cassa..."
+            [showClearButton]="true">
+          </dx-text-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Località</label>
+          <dx-select-box
+            formControlName="trxLocalita"
+            [dataSource]="branches()"
+            displayExpr="braDes"
+            valueExpr="braId"
+            [showClearButton]="true"
+            placeholder="Tutte">
+          </dx-select-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Genere</label>
+          <dx-select-box
+            formControlName="trxCutId"
+            [dataSource]="currencyTypes()"
+            displayExpr="cutDes"
+            valueExpr="cutId"
+            [showClearButton]="true"
+            placeholder="Tutti">
+          </dx-select-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Tipo Operazione</label>
+          <dx-select-box
+            formControlName="trxOptId"
+            [dataSource]="stOperationsTypes()"
+            displayExpr="optDes"
+            valueExpr="optId"
+            [showClearButton]="true"
+            placeholder="Tutti">
+          </dx-select-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Nome Applicazione</label>
+          <dx-text-box
+            formControlName="arcAppName"
+            placeholder="App name..."
+            [showClearButton]="true">
+          </dx-text-box>
+        </div>
+
       </div>
+
+      <div class="section-divider"></div>
+
+      <!-- ── Sezione 3: Opzioni + Azioni ── -->
+      <div class="section-heading">Opzioni</div>
+      <div class="options-and-actions">
+
+        <div class="options-group">
+          <dx-check-box
+            formControlName="trxReverse"
+            text="Transazioni Inverse"
+            class="filter-check">
+          </dx-check-box>
+          <dx-check-box
+            formControlName="arcForced"
+            text="Forzato"
+            class="filter-check">
+          </dx-check-box>
+        </div>
+
+        <div class="actions-group">
+          <dx-button
+            class="btn-annulla"
+            text="Annulla"
+            icon="revert"
+            stylingMode="outlined"
+            (onClick)="reset()">
+          </dx-button>
+          <dx-button
+            class="btn-search"
+            text="Ricerca"
+            type="default"
+            stylingMode="contained"
+            icon="search"
+            [disabled]="isLoading()"
+            (onClick)="search()">
+          </dx-button>
+        </div>
+
+      </div>
+
     </div>
+  </section>
 
-    <div class="form-row">
-      <div class="form-group">
-        <dx-text-box
-          id="trxCassa"
-          formControlName="trxCassa"
-          placeholder="Codice Cassa"
-          label="Cassa"
-        ></dx-text-box>
-      </div>
-
-      <div class="form-group">
-        <dx-autocomplete
-          id="trxLocalita"
-          formControlName="trxLocalita"
-          placeholder="Località"
-          label="Località"
-          [items]="branches()"
-          displayExpr="braDes"
-          valueExpr="braId"
-        ></dx-autocomplete>
-      </div>
-
-      <div class="form-group">
-        <dx-autocomplete
-          id="trxCutId"
-          formControlName="trxCutId"
-          placeholder="Genere"
-          label="Genere"
-          [items]="currencyTypes()"
-          displayExpr="cutDes"
-          valueExpr="cutId"
-        ></dx-autocomplete>
-      </div>
-
-      <div class="form-group">
-        <dx-check-box
-          id="trxReverse"
-          formControlName="trxReverse"
-          [value]="true"
-          text="Transazioni Inverse"
-        ></dx-check-box>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <dx-autocomplete
-          id="trxOptId"
-          formControlName="trxOptId"
-          placeholder="Tipo operazione"
-          label="Tipo operazione"
-          [items]="stOperationsTypes()"
-          displayExpr="optDes"
-          valueExpr="optId"
-        ></dx-autocomplete>
-      </div>
-
-      <div class="form-group">
-        <dx-autocomplete
-          id="trxDivope"
-          formControlName="trxDivope"
-          placeholder="Divisa"
-          label="Divisa"
-          [items]="currencies()"
-          displayExpr="curLondes"
-          valueExpr="curId"
-        ></dx-autocomplete>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <dx-text-box
-          id="arcAppName"
-          formControlName="arcAppName"
-          placeholder="Nome Applicazione"
-          label="Nome Applicazione"
-        ></dx-text-box>
-      </div>
-
-      <div class="form-group">
-        <dx-check-box
-          id="arcForced"
-          formControlName="arcForced"
-          [value]="true"
-          text="Forzato"
-        ></dx-check-box>
-      </div>
-    </div>
-
-    <div class="form-group button-group" style="justify-content: flex-end;">
-        <dx-button
-          text="Ricerca"
-          type="success"
-          (onClick)="search()"
-          [disabled]="isLoading()"
-        ></dx-button>
-      </div>
-  </div>
+</div>

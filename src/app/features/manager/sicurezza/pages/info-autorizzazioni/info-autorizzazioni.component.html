@@ -1,39 +1,81 @@
-<div class="container">
-  <!-- Filter Form -->
-  <div class="filter-section mb-4">
-    <dx-form [formData]="filterData()" [showColonAfterLabel]="false" labelLocation="top">
-      <dxi-item itemType="group" [colCount]="2">
-        <dxi-item dataField="funlikeName" editorType="dxTextBox">
-          <dxo-label [text]="'infoAutorizzazioni.filterFunName' | transloco"></dxo-label>
-        </dxi-item>
-        <dxi-item dataField="funlikeDes" editorType="dxTextBox">
-          <dxo-label [text]="'infoAutorizzazioni.filterFunDes' | transloco"></dxo-label>
-        </dxi-item>
-      </dxi-item>
-    </dx-form>
-    
-    <div class="button-group d-flex gap-2 mt-3">
-      <app-button-ricerca (onClick)="onSearch()"></app-button-ricerca>
-      <dx-button [text]="'common.reset' | transloco" icon="revert" (onClick)="onClear()"></dx-button>
-    </div>
-  </div>
+<div class="page-shell">
 
-  <hr class="my-4">
-  
-  <!-- Data Grid -->
-  <dx-data-grid
-    [dataSource]="userAuthorizations()"
-    [showBorders]="true"
-    [columnAutoWidth]="true"
-    [allowColumnReordering]="true"
-    [allowColumnResizing]="true"
-    columnResizingMode="nextColumn">
-    <dxi-column dataField="funId" [caption]="'infoAutorizzazioni.colFunId' | transloco" width="100" dataType="number" alignment="center"></dxi-column>
-    <dxi-column dataField="funName" [caption]="'infoAutorizzazioni.colFunName' | transloco"></dxi-column>
-    <dxi-column dataField="funDescription" [caption]="'infoAutorizzazioni.colFunDescription' | transloco"></dxi-column>
-    <dxi-column dataField="roleName" [caption]="'infoAutorizzazioni.colRoleName' | transloco"></dxi-column>
-    <dxi-column dataField="accessLevel" [caption]="'infoAutorizzazioni.colAccessLevel' | transloco" width="160" alignment="center">
-      <dxo-lookup [dataSource]="funcAccTyp()" valueExpr="fatId" displayExpr="fatDes"></dxo-lookup>
-    </dxi-column>
-  </dx-data-grid>
+  <section class="card-section">
+
+    <div class="sempione-card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <h2 class="card-title">{{ 'infoAutorizzazioni.title' | transloco }}</h2>
+      <span class="card-count">{{ userAuthorizations().length }}</span>
+    </div>
+    <div class="gold-divider"></div>
+
+    <!-- Filter Toolbar -->
+    <div class="card-toolbar">
+      <div class="toolbar-inner">
+        <div class="toolbar-search-wrap">
+          <label class="toolbar-lbl">{{ 'infoAutorizzazioni.filterFunName' | transloco }}</label>
+          <dx-text-box
+            [value]="filterData().funlikeName ?? ''"
+            (valueChange)="setFunlikeName($event)"
+            placeholder="Filtra per nome...">
+          </dx-text-box>
+        </div>
+        <div class="toolbar-search-wrap">
+          <label class="toolbar-lbl">{{ 'infoAutorizzazioni.filterFunDes' | transloco }}</label>
+          <dx-text-box
+            [value]="filterData().funlikeDes ?? ''"
+            (valueChange)="setFunlikeDes($event)"
+            placeholder="Filtra per descrizione...">
+          </dx-text-box>
+        </div>
+        <div class="toolbar-actions">
+          <dx-button
+            text="Cerca"
+            icon="search"
+            type="default"
+            stylingMode="contained"
+            class="btn-cerca"
+            (onClick)="onSearch()">
+          </dx-button>
+          <dx-button
+            [text]="'common.reset' | transloco"
+            icon="revert"
+            stylingMode="outlined"
+            (onClick)="onClear()">
+          </dx-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Grid -->
+    <div class="card-body card-body--grid">
+      <dx-data-grid
+        [dataSource]="userAuthorizations()"
+        [showBorders]="false"
+        [columnAutoWidth]="true"
+        [rowAlternationEnabled]="true"
+        [hoverStateEnabled]="true"
+        [allowColumnResizing]="true"
+        columnResizingMode="nextColumn">
+
+        <dxo-paging [pageSize]="16" [enabled]="true"></dxo-paging>
+        <dxo-pager [showInfo]="true" [showPageSizeSelector]="false"></dxo-pager>
+
+        <dxi-column dataField="funId"          [caption]="'infoAutorizzazioni.colFunId'          | transloco" [width]="80"  dataType="number" alignment="center"></dxi-column>
+        <dxi-column dataField="funName"        [caption]="'infoAutorizzazioni.colFunName'         | transloco"></dxi-column>
+        <dxi-column dataField="funDescription" [caption]="'infoAutorizzazioni.colFunDescription'  | transloco"></dxi-column>
+        <dxi-column dataField="roleName"       [caption]="'infoAutorizzazioni.colRoleName'        | transloco" [width]="180"></dxi-column>
+        <dxi-column dataField="accessLevel"    [caption]="'infoAutorizzazioni.colAccessLevel'     | transloco" [width]="160" alignment="center">
+          <dxo-lookup [dataSource]="funcAccTyp()" valueExpr="fatId" displayExpr="fatDes"></dxo-lookup>
+        </dxi-column>
+
+      </dx-data-grid>
+    </div>
+
+  </section>
+
 </div>

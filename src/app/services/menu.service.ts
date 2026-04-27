@@ -49,7 +49,7 @@ export class MenuService  {
               isVisible: true
             },
             {
-              label: 'menu.prelievo',
+              label: 'menu.prelevamento',
               url: 'prelievo',
               icon: 'arrowup',
               isVisible: true
@@ -109,6 +109,25 @@ export class MenuService  {
           ]
         },
         {
+          label: 'menu.contiGenerali',
+          icon: 'doc',
+          isVisible: true,
+          children: [
+            {
+              label: 'menu.versamento',
+              url: 'conti-generali-versamento',
+              icon: 'arrowup',
+              isVisible: true
+            },
+            {
+              label: 'menu.prelevamento',
+              url: 'conti-generali-prelevamento',
+              icon: 'arrowdown',
+              isVisible: true
+            }
+          ]
+        },
+        {
           label: 'menu.assegniCheques',
           icon: 'check',
           isVisible: true,
@@ -117,6 +136,12 @@ export class MenuService  {
               label: 'menu.versamentoCc',
               url: 'versamento-cc',
               icon: 'arrowdown',
+              isVisible: true
+            },
+            {
+              label: 'menu.incassoAssegni',
+              url: 'incasso-assegni',
+              icon: 'arrowup',
               isVisible: true
             }
           ]
@@ -160,6 +185,14 @@ export class MenuService  {
           isVisible: true,
           children: [
             { label: 'menu.ricercaOperazioni', url: 'ricerca-operazioni', icon: 'search', isVisible: true }
+          ]
+        },
+        {
+          label: 'menu.report',
+          icon: 'chart',
+          isVisible: true,
+          children: [
+            { label: 'menu.attesaBenefondo', url: 'vigilanza-attesa-benefondo', icon: 'hourglass', isVisible: true }
           ]
         },
         {

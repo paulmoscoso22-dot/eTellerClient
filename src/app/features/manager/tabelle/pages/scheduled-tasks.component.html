@@ -1,3 +1,352 @@
-<div class="container">
-  <h1>Scheduled Tasks</h1>
+<div class="page-shell">
+
+  <!-- ── Main Card: Gestione Scheduled Tasks ── -->
+  <section class="card-section">
+
+    <div class="sempione-card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+      <h2 class="card-title">Gestione Scheduled Tasks</h2>
+    </div>
+    <div class="gold-divider"></div>
+
+    <!-- Toolbar -->
+    <div class="card-toolbar">
+      <div class="toolbar-inner">
+
+        <div class="toolbar-search-wrap">
+          <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <dx-text-box
+            placeholder="Cerca per ID, nome o descrizione..."
+            [showClearButton]="true"
+            valueChangeEvent="input"
+            class="toolbar-textbox"
+            (onValueChanged)="onSearchChanged($event)">
+          </dx-text-box>
+        </div>
+
+        <div class="toolbar-actions">
+          <dx-button
+            class="btn-new"
+            text="Nuovo"
+            type="default"
+            stylingMode="contained"
+            (onClick)="openNewPopup()">
+          </dx-button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Griglia tasks -->
+    <div class="card-body card-body--grid">
+      <dx-data-grid
+        [dataSource]="filteredTasks()"
+        [showBorders]="false"
+        [columnAutoWidth]="true"
+        [rowAlternationEnabled]="true"
+        [hoverStateEnabled]="true"
+        [height]="'100%'"
+        keyExpr="futId">
+
+        <dxo-selection mode="single"></dxo-selection>
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[15, 25, 50]" [showInfo]="true"></dxo-pager>
+
+        <dxi-column dataField="futId"        caption="ID"       [width]="110" alignment="left"></dxi-column>
+        <dxi-column dataField="futFunname"   caption="Nome"                   alignment="left"></dxi-column>
+        <dxi-column dataField="futScriptname" caption="Script"  [width]="180" alignment="left"></dxi-column>
+        <dxi-column dataField="futTimeout"   caption="Timeout"  [width]="80"  alignment="right"></dxi-column>
+        <dxi-column dataField="futActive"    caption="Attiva"   [width]="80"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
+        <dxi-column dataField="futAutatt"    caption="Auto"     [width]="70"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
+        <dxi-column dataField="futTrace"     caption="Traccia"  [width]="80"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
+        <dxi-column dataField="futOffline"   caption="Offline"  [width]="78"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
+        <dxi-column                          caption="Periodo"  [width]="120" alignment="left"   [allowSorting]="false" [allowFiltering]="false" cellTemplate="periodoTemplate"></dxi-column>
+        <dxi-column dataField="futLastrun"   caption="Ultimo"   [width]="140" alignment="left"></dxi-column>
+        <dxi-column dataField="futErrcount"  caption="Err."     [width]="60"  alignment="center" cellTemplate="errTemplate"></dxi-column>
+
+        <dxi-column
+          caption="Azioni"
+          [width]="110"
+          [allowSorting]="false"
+          [allowFiltering]="false"
+          alignment="center"
+          cellTemplate="actionsTemplate">
+        </dxi-column>
+
+        <!-- Bool pill template -->
+        <div *dxTemplate="let cell of 'boolTemplate'" class="bool-cell">
+          @if (cell.value) {
+            <span class="bool-pill bool-pill--yes">✓</span>
+          } @else {
+            <span class="bool-pill bool-pill--no">—</span>
+          }
+        </div>
+
+        <!-- Periodo template -->
+        <div *dxTemplate="let cell of 'periodoTemplate'" class="text-cell">
+          {{ getPeriodLabel(cell.data) }}
+        </div>
+
+        <!-- Errori template -->
+        <div *dxTemplate="let cell of 'errTemplate'" class="err-cell">
+          @if (cell.value > 0) {
+            <span class="err-pill">{{ cell.value }}</span>
+          } @else {
+            <span class="bool-pill bool-pill--yes">0</span>
+          }
+        </div>
+
+        <!-- Azioni template -->
+        <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
+          <button class="action-btn action-btn--view" title="Visualizza" (click)="onTableAction('view', cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--edit" title="Modifica" (click)="onTableAction('edit', cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--delete" title="Elimina" (click)="onTableAction('delete', cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6l-1 14H6L5 6"></path>
+              <path d="M10 11v6M14 11v6"></path>
+              <path d="M9 6V4h6v2"></path>
+            </svg>
+          </button>
+        </div>
+
+      </dx-data-grid>
+    </div>
+
+  </section>
+
 </div>
+
+<!-- ── Popup Dettaglio Task ── -->
+<dx-popup
+  [(visible)]="isDetailPopupVisible"
+  [showTitle]="true"
+  [title]="popupMode() === 'edit' ? 'Modifica Task — ' + selectedFutId()
+         : popupMode() === 'view' ? 'Dettaglio Task — ' + selectedFutId()
+         : 'Nuovo Scheduled Task'"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [width]="'90%'"
+  [maxWidth]="900"
+  [height]="'auto'"
+  [maxHeight]="'90vh'"
+  (onHidden)="closePopup()">
+
+  <div *dxTemplate="let data of 'content'">
+    <form [formGroup]="taskForm"
+          class="popup-layout"
+          [class.popup-view-mode]="popupMode() === 'view'">
+
+      <!-- ── Card 1: Dati Task ── -->
+      <section class="popup-card">
+        <h3 class="popup-card-title">Dati Task</h3>
+
+        <div class="popup-fields-grid popup-fields-grid--4col">
+
+          <div class="popup-field-group" [class.field-id-locked]="popupMode() !== 'new'">
+            <label class="popup-field-label">Codice</label>
+            <dx-text-box formControlName="futId" [readOnly]="popupMode() !== 'new'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group popup-col-span-3">
+            <label class="popup-field-label">Nome</label>
+            <dx-text-box formControlName="futFunname" [readOnly]="popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group popup-col-span-3">
+            <label class="popup-field-label">Descrizione</label>
+            <dx-text-box formControlName="futDes" [readOnly]="popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Timeout (ms)</label>
+            <dx-number-box
+              formControlName="futTimeout"
+              [min]="100"
+              [max]="10000000"
+              [readOnly]="popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+                <dxi-validation-rule type="range" [min]="100" [max]="10000000" message="Valore tra 100 e 10.000.000"></dxi-validation-rule>
+              </dx-validator>
+            </dx-number-box>
+          </div>
+
+          <div class="popup-field-group popup-col-span-4">
+            <label class="popup-field-label">Script</label>
+            <dx-text-box formControlName="futScriptname" [readOnly]="popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </div>
+
+        </div>
+
+        <!-- Flag row -->
+        <div class="popup-flags-row">
+          <div class="popup-flag-group">
+            <label class="popup-field-label">Traccia</label>
+            <dx-check-box formControlName="futTrace" [readOnly]="popupMode() === 'view'"></dx-check-box>
+          </div>
+          <div class="popup-flag-group">
+            <label class="popup-field-label">Abilitata</label>
+            <dx-check-box formControlName="futActive" [readOnly]="popupMode() === 'view'"></dx-check-box>
+          </div>
+          <div class="popup-flag-group">
+            <label class="popup-field-label">Offline</label>
+            <dx-check-box formControlName="futOffline" [readOnly]="popupMode() === 'view'"></dx-check-box>
+          </div>
+          <div class="popup-flag-group popup-flag-group--accent">
+            <label class="popup-field-label">Auto (schedulata)</label>
+            <dx-check-box formControlName="futAutatt" [readOnly]="popupMode() === 'view'"></dx-check-box>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Card 2a: Schedulazione (visibile se futAutatt = true) ── -->
+      @if (showScheduling) {
+        <section class="popup-card popup-card--scheduling">
+          <h3 class="popup-card-title popup-card-title--scheduling">Schedulazione automatica</h3>
+
+          <div class="popup-fields-grid popup-fields-grid--2col">
+            <div class="popup-field-group">
+              <label class="popup-field-label">DLL</label>
+              <dx-text-box formControlName="futNamedll" [readOnly]="popupMode() === 'view'"></dx-text-box>
+            </div>
+            <div class="popup-field-group">
+              <label class="popup-field-label">Classe</label>
+              <dx-text-box formControlName="futClassname" [readOnly]="popupMode() === 'view'"></dx-text-box>
+            </div>
+          </div>
+
+          <div class="popup-fields-grid popup-fields-grid--4col" style="margin-top: 12px;">
+            <div class="popup-field-group">
+              <label class="popup-field-label">Dalle</label>
+              <dx-text-box formControlName="futStart" placeholder="HH:MM:SS" [readOnly]="popupMode() === 'view'"></dx-text-box>
+            </div>
+            <div class="popup-field-group">
+              <label class="popup-field-label">Alle</label>
+              <dx-text-box formControlName="futEnd" placeholder="HH:MM:SS" [readOnly]="popupMode() === 'view'"></dx-text-box>
+            </div>
+            <div class="popup-field-group">
+              <label class="popup-field-label">Tipo Periodo</label>
+              <dx-select-box
+                formControlName="futPeriodtyp"
+                [dataSource]="periodTypes"
+                displayExpr="des"
+                valueExpr="id"
+                [readOnly]="popupMode() === 'view'">
+              </dx-select-box>
+            </div>
+            <div class="popup-field-group">
+              <label class="popup-field-label">Valore</label>
+              <dx-number-box formControlName="futPeriod" [min]="0" [readOnly]="popupMode() === 'view'"></dx-number-box>
+            </div>
+          </div>
+
+          <div class="popup-fields-grid popup-fields-grid--4col" style="margin-top: 12px;">
+            <div class="popup-field-group">
+              <label class="popup-field-label">Errori max</label>
+              <dx-number-box formControlName="futErrcount" [min]="1" [max]="100" [readOnly]="popupMode() === 'view'"></dx-number-box>
+            </div>
+          </div>
+        </section>
+      }
+
+      <!-- ── Card 2b: Configurazione Manuale (visibile se futAutatt = false) ── -->
+      @if (!showScheduling) {
+        <section class="popup-card">
+          <h3 class="popup-card-title">Configurazione Manuale</h3>
+          <div class="popup-flags-row">
+            <div class="popup-flag-group">
+              <label class="popup-field-label">Validazione Host</label>
+              <dx-check-box formControlName="futHosval" [readOnly]="popupMode() === 'view'"></dx-check-box>
+            </div>
+          </div>
+        </section>
+      }
+
+      <!-- ── Action Bar sticky ── -->
+      <div class="popup-action-bar">
+
+        <div class="popup-actions-secondary">
+          @if (popupMode() === 'edit') {
+            <dx-button
+              class="btn-action-outline"
+              text="Esecuzione singola"
+              icon="runner"
+              stylingMode="outlined"
+              (onClick)="onOneTimeRun()">
+            </dx-button>
+            <dx-button
+              class="btn-action-outline"
+              text="Reset errori"
+              icon="revert"
+              stylingMode="outlined"
+              (onClick)="onResetErrors()">
+            </dx-button>
+          }
+        </div>
+
+        <div class="popup-actions-primary">
+          @if (popupMode() === 'view') {
+            <dx-button
+              class="btn-action-close"
+              text="Chiudi"
+              icon="close"
+              (onClick)="closePopup()">
+            </dx-button>
+          }
+          @if (popupMode() === 'new') {
+            <dx-button
+              class="btn-action-primary"
+              text="Aggiungi"
+              icon="plus"
+              (onClick)="onSubmit()">
+            </dx-button>
+          }
+          @if (popupMode() === 'edit') {
+            <dx-button
+              class="btn-action-primary"
+              text="Salva"
+              icon="save"
+              (onClick)="onUpdate()">
+            </dx-button>
+          }
+        </div>
+
+      </div>
+
+    </form>
+  </div>
+</dx-popup>

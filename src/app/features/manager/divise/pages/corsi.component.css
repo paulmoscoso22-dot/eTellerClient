@@ -1,12 +1,455 @@
-.container {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  background: white;
+/* ══════════════════════════════════════════
+   Corsi — Banca del Sempione Style
+   Brand navy : #003366  |  Gold : #C5A059
+   ══════════════════════════════════════════ */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
-h1 {
-  color: #333;
-  margin-bottom: 20px;
-  font-size: 24px;
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 12px 16px 0;
+  gap: 10px;
+}
+
+/* ── Card shell ── */
+.card-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #dce3ee;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
+}
+
+/* ── Sempione Card Header ── */
+.sempione-card-header {
+  background: #003366;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.gold-divider {
+  height: 2px;
+  background: #C5A059;
+  flex-shrink: 0;
+}
+
+.card-icon {
+  width: 15px;
+  height: 15px;
+  color: #fff;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #fff;
+  flex: 1;
+}
+
+/* ── Card Toolbar ── */
+.card-toolbar {
+  background: #f0f4f8;
+  border-bottom: 1px solid #dce3ee;
+  padding: 7px 12px;
+  flex-shrink: 0;
+}
+
+.toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.toolbar-row + .toolbar-row {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid #dce3ee;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* ── Filter field ── */
+.filter-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.filter-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Search wrap ── */
+.toolbar-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.toolbar-search-icon {
+  position: absolute;
+  left: 7px;
+  width: 13px;
+  height: 13px;
+  color: #9ca3af;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.toolbar-textbox {
+  width: 140px;
+}
+
+.toolbar-textbox-wide {
+  width: 180px;
+}
+
+:host ::ng-deep .toolbar-textbox .dx-texteditor-input,
+:host ::ng-deep .toolbar-textbox-wide .dx-texteditor-input {
+  padding-left: 26px !important;
+}
+
+/* ── Last update badge ── */
+.last-update-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: #64748b;
+  background: #e8edf2;
+  border: 1px solid #dce3ee;
+  border-radius: 10px;
+  padding: 2px 8px;
+  flex-shrink: 0;
+}
+
+/* ── Buttons ── */
+:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained {
+  background-color: #003366;
+  border-color: #003366;
+  height: 28px;
+}
+
+:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained:hover {
+  background-color: #004080;
+  border-color: #004080;
+}
+
+:host ::ng-deep .btn-cerca.dx-button-default.dx-button-mode-contained {
+  background-color: #003366;
+  border-color: #003366;
+  height: 28px;
+}
+
+:host ::ng-deep .btn-cerca.dx-button-default.dx-button-mode-contained:hover {
+  background-color: #004080;
+  border-color: #004080;
+}
+
+:host ::ng-deep .btn-reset.dx-button {
+  height: 28px;
+}
+
+/* ── Uniform toolbar control height ── */
+:host ::ng-deep .card-toolbar .dx-texteditor {
+  height: 28px;
+}
+
+:host ::ng-deep .card-toolbar .dx-texteditor-input {
+  min-height: unset;
+  height: 26px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 13px;
+}
+
+:host ::ng-deep .card-toolbar .dx-selectbox,
+:host ::ng-deep .card-toolbar .dx-datebox {
+  height: 28px;
+}
+
+/* ── Card Body ── */
+.card-body--grid {
+  padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Grid header ── */
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td {
+  background-color: #f8fafd !important;
+  color: #374151 !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border-bottom: 2px solid #003366 !important;
+}
+
+/* ── Compact rows ── */
+:host ::ng-deep .dx-data-row > td {
+  padding: 5px 10px !important;
+  font-size: 12px !important;
+  vertical-align: middle !important;
+}
+
+/* ── Zebra-striping ── */
+:host ::ng-deep .dx-data-row.dx-row-alt > td {
+  background-color: #f8fafc !important;
+}
+
+/* ── Hover ── */
+:host ::ng-deep .dx-data-row.dx-state-hover > td {
+  background-color: rgba(0, 51, 102, 0.04) !important;
+}
+
+/* ── Selected row ── */
+:host ::ng-deep .dx-selection.dx-data-row > td {
+  background-color: rgba(0, 51, 102, 0.10) !important;
+  color: #003366 !important;
+  font-weight: 600 !important;
+}
+
+/* ── Currency badge ── */
+.currency-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.currency-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8f0fe;
+  color: #1a56db;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-family: monospace;
+}
+
+/* ── Tipo pill ── */
+.tipo-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tipo-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.tipo-pill--bb { background: #dbeafe; color: #1e40af; }
+.tipo-pill--mm { background: #d1fae5; color: #065f46; }
+.tipo-pill--tr { background: #fef3c7; color: #92400e; }
+
+/* ── Rate cell ── */
+.rate-cell {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: #003366;
+  text-align: right;
+}
+
+/* ── Action buttons ── */
+.actions-cell {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.14s ease;
+}
+
+.action-btn svg {
+  width: 13px;
+  height: 13px;
+  stroke: #9ca3af;
+  transition: stroke 0.14s ease;
+}
+
+.action-btn--view:hover  { background: rgba(0, 51, 102, 0.08); }
+.action-btn--view:hover svg { stroke: #003366; }
+
+.action-btn--edit:hover  { background: rgba(0, 51, 102, 0.08); }
+.action-btn--edit:hover svg { stroke: #003366; }
+
+.action-btn--delete:hover { background: rgba(220, 38, 38, 0.08); }
+.action-btn--delete:hover svg { stroke: #dc2626; }
+
+/* ══ POPUP STYLES ══ */
+
+.popup-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 64px;
+}
+
+.popup-card {
+  background: #fff;
+  border: 1px solid #e4e8ed;
+  border-radius: 8px;
+  padding: 16px 20px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.popup-card-title {
+  margin: 0 0 14px 0;
+  padding-bottom: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #003366;
+  border-bottom: 2px solid #dce3ee;
+}
+
+.popup-fields-grid {
+  display: grid;
+  gap: 12px 24px;
+}
+
+.popup-fields-grid--3col { grid-template-columns: 1fr 1fr 1fr; }
+.popup-fields-grid--4col { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+.popup-col-span-3 { grid-column: span 3; }
+
+.popup-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.popup-field-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.popup-section-sep {
+  height: 1px;
+  background: #e4e8ed;
+  margin: 16px 0 14px;
+}
+
+:host ::ng-deep .field-id-locked .dx-texteditor,
+:host ::ng-deep .field-id-locked .dx-dropdowneditor {
+  background-color: #f5f6f8 !important;
+}
+
+:host ::ng-deep .popup-view-mode .dx-texteditor.dx-state-readonly {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .popup-view-mode .dx-texteditor.dx-state-readonly .dx-texteditor-input {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #003366 !important;
+  padding-left: 2px !important;
+}
+
+:host ::ng-deep .popup-view-mode .dx-state-readonly.dx-dropdowneditor .dx-dropdowneditor-icon {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.popup-action-bar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  background: #fff;
+  border-top: 1px solid #e4e8ed;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.07);
+  z-index: 10;
+}
+
+.popup-actions-secondary,
+.popup-actions-primary {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+:host ::ng-deep .btn-action-primary.dx-button {
+  background-color: #2d6a4f;
+  border-color: #2d6a4f;
+  height: 36px;
+}
+
+:host ::ng-deep .btn-action-primary.dx-button:hover {
+  background-color: #1b4332;
+  border-color: #1b4332;
 }

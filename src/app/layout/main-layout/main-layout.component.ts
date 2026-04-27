@@ -21,7 +21,7 @@ import { TranslocoService } from '@jsverse/transloco';
 export class MainLayoutComponent implements OnDestroy {
 
   isDarkTheme = false;
-  isSidebarVisible = signal(true);
+  isSidebarCollapsed = signal(false);
 
   // Breadcrumb
   breadcrumbItems = signal<BreadcrumbItem[]>([]);
@@ -73,7 +73,7 @@ export class MainLayoutComponent implements OnDestroy {
   }
 
   onMenuIconClicked(): void {
-    this.isSidebarVisible.set(!this.isSidebarVisible());
+    this.isSidebarCollapsed.set(!this.isSidebarCollapsed());
   }
 
   onUserIconClicked(): void {

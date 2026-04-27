@@ -1,12 +1,379 @@
-.container {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  background: white;
+/* ══════════════════════════════════════════
+   Gestione Servizi — Banca del Sempione Style
+   Brand navy : #003366  |  Gold : #C5A059
+   ══════════════════════════════════════════ */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
-h1 {
-  color: #333;
-  margin-bottom: 20px;
-  font-size: 24px;
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 12px 16px 0;
+  gap: 10px;
+}
+
+/* ── Card shell ── */
+.card-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #dce3ee;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
+}
+
+/* ── Sempione Card Header ── */
+.sempione-card-header {
+  background: #003366;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.gold-divider {
+  height: 2px;
+  background: #C5A059;
+  flex-shrink: 0;
+}
+
+.card-icon {
+  width: 15px;
+  height: 15px;
+  color: #fff;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #fff;
+  flex: 1;
+}
+
+/* ── Card Toolbar ── */
+.card-toolbar {
+  background: #f0f4f8;
+  border-bottom: 1px solid #dce3ee;
+  padding: 7px 12px;
+  flex-shrink: 0;
+}
+
+.toolbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Card Body ── */
+.card-body--grid {
+  padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Search ── */
+.toolbar-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.toolbar-search-icon {
+  width: 14px;
+  height: 14px;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.toolbar-textbox {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Bottone Nuovo ── */
+:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained {
+  background-color: #003366;
+  border-color: #003366;
+  height: 28px;
+}
+
+:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained:hover {
+  background-color: #004080;
+  border-color: #004080;
+}
+
+/* ── Altezza uniforme toolbar ── */
+:host ::ng-deep .card-toolbar .dx-texteditor {
+  height: 28px;
+}
+
+:host ::ng-deep .card-toolbar .dx-texteditor-input {
+  min-height: unset;
+  height: 26px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 13px;
+}
+
+/* ── Grid header ── */
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td {
+  background-color: #f8fafd !important;
+  color: #374151 !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border-bottom: 2px solid #003366 !important;
+}
+
+/* ── Compact rows ── */
+:host ::ng-deep .dx-data-row > td {
+  padding: 5px 10px !important;
+  font-size: 12px !important;
+  vertical-align: middle !important;
+}
+
+/* ── Zebra-striping ── */
+:host ::ng-deep .dx-data-row.dx-row-alt > td {
+  background-color: #f8fafc !important;
+}
+
+/* ── Hover ── */
+:host ::ng-deep .dx-data-row.dx-state-hover > td {
+  background-color: rgba(0, 51, 102, 0.04) !important;
+}
+
+/* ── Selected row ── */
+:host ::ng-deep .dx-selection.dx-data-row > td {
+  background-color: rgba(0, 51, 102, 0.10) !important;
+  color: #003366 !important;
+  font-weight: 600 !important;
+}
+
+/* ── Bool Pill ── */
+.bool-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bool-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.bool-pill--yes {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.bool-pill--no {
+  background: #f3f4f6;
+  color: #9ca3af;
+}
+
+/* ── Action buttons ── */
+.actions-cell {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.14s ease;
+}
+
+.action-btn svg {
+  width: 13px;
+  height: 13px;
+  stroke: #9ca3af;
+  transition: stroke 0.14s ease;
+}
+
+.action-btn--view:hover {
+  background: rgba(0, 51, 102, 0.08);
+}
+
+.action-btn--view:hover svg {
+  stroke: #003366;
+}
+
+.action-btn--edit:hover {
+  background: rgba(0, 51, 102, 0.08);
+}
+
+.action-btn--edit:hover svg {
+  stroke: #003366;
+}
+
+.action-btn--delete:hover {
+  background: rgba(220, 38, 38, 0.08);
+}
+
+.action-btn--delete:hover svg {
+  stroke: #dc2626;
+}
+
+/* ══ POPUP STYLES ══ */
+
+.popup-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 64px;
+}
+
+.popup-card {
+  background: #fff;
+  border: 1px solid #e4e8ed;
+  border-radius: 8px;
+  padding: 16px 20px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.popup-card-title {
+  margin: 0 0 14px 0;
+  padding-bottom: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #003366;
+  border-bottom: 2px solid #dce3ee;
+}
+
+.popup-fields-grid {
+  display: grid;
+  gap: 12px 24px;
+}
+
+.popup-fields-grid--2col {
+  grid-template-columns: 1fr 1fr;
+}
+
+.popup-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.popup-field-group--full {
+  margin-top: 12px;
+}
+
+.popup-field-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.popup-flags-row {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e4e8ed;
+}
+
+.popup-flag-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+:host ::ng-deep .field-id-locked .dx-texteditor {
+  background-color: #f5f6f8 !important;
+}
+
+:host ::ng-deep .popup-view-mode .dx-texteditor.dx-state-readonly {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .popup-view-mode .dx-texteditor.dx-state-readonly .dx-texteditor-input {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #003366 !important;
+  padding-left: 2px !important;
+}
+
+.popup-action-bar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  background: #fff;
+  border-top: 1px solid #e4e8ed;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.07);
+  z-index: 10;
+}
+
+.popup-actions-secondary,
+.popup-actions-primary {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+:host ::ng-deep .btn-action-primary.dx-button {
+  background-color: #2d6a4f;
+  border-color: #2d6a4f;
+  height: 36px;
+}
+
+:host ::ng-deep .btn-action-primary.dx-button:hover {
+  background-color: #1b4332;
+  border-color: #1b4332;
 }

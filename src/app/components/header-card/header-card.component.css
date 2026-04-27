@@ -1,0 +1,46 @@
+:host {
+  display: contents;
+}
+
+.sempione-card-header {
+  background: #003366;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.gold-divider {
+  height: 2px;
+  background: #C5A059;
+  flex-shrink: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #fff;
+  flex: 1;
+}
+
+.card-count {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 1px 8px;
+  flex-shrink: 0;
+}
+
+:host ::ng-deep .card-icon {
+  width: 14px;
+  height: 14px;
+  color: #fff;
+  opacity: 0.9;
+  flex-shrink: 0;
+}

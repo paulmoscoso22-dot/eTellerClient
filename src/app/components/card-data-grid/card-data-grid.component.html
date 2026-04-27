@@ -1,0 +1,70 @@
+<dx-data-grid
+  [dataSource]="dataSource"
+  [keyExpr]="keyExpr"
+  [selection]="{ mode: 'single' }"
+  [showBorders]="false"
+  [columnAutoWidth]="true"
+  [rowAlternationEnabled]="true"
+  [hoverStateEnabled]="true"
+  (onSelectionChanged)="selectionChanged.emit($event)">
+
+  <dxo-paging [pageSize]="pageSize" [enabled]="paginationEnabled"></dxo-paging>
+  <dxo-pager [showInfo]="true" [showPageSizeSelector]="false" [visible]="paginationEnabled ? 'auto' : false"></dxo-pager>
+
+  @for (col of columns; track col.dataField) {
+    @if (col.type === 'status') {
+      <dxi-column
+        [dataField]="col.dataField"
+        [caption]="col.caption"
+        [width]="col.width"
+        [allowSorting]="col.allowSorting ?? true"
+        cellTemplate="statusCell"
+        alignment="center">
+      </dxi-column>
+    } @else {
+      <dxi-column
+        [dataField]="col.dataField"
+        [caption]="col.caption"
+        [width]="col.width"
+        [alignment]="col.alignment"
+        [allowSorting]="col.allowSorting ?? true">
+      </dxi-column>
+    }
+  }
+
+  <!-- Built-in status pill template (used by columns with type='status') -->
+  <div *dxTemplate="let cell of 'statusCell'">
+    <span [class]="cell.value?.toLowerCase() === 'a'
+      ? 'status-pill status-pill--active'
+      : 'status-pill status-pill--blocked'">
+      {{ cell.value?.toLowerCase() === 'a' ? 'Attivo' : 'Bloccato' }}
+    </span>
+  </div>
+
+  @if (showEditAction || showTraceAction) {
+    <dxi-column caption="Azioni" [width]="76" cellTemplate="rowActions" [allowSorting]="false" alignment="center">
+      <div *dxTemplate="let cell of 'rowActions'">
+        <div class="row-actions">
+          @if (showEditAction) {
+            <button class="row-btn row-btn--edit" title="Modifica"
+                    (click)="rowEdit.emit(cell.data); $event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </button>
+          }
+          @if (showTraceAction) {
+            <button class="row-btn row-btn--trace" title="Traccia"
+                    (click)="rowTrace.emit(cell.data); $event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+            </button>
+          }
+        </div>
+      </div>
+    </dxi-column>
+  }
+
+</dx-data-grid>

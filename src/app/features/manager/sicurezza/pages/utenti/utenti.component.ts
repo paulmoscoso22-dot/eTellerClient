@@ -40,11 +40,13 @@ export class UtentiComponent implements OnInit {
   gridFilterValue = signal<any>(null);
 
   public users$: Observable<ISysUsersActiveAndBlockedResponse[]> = this.managerService.usersActiveBlocked$;
-  public languages$: Observable<ISTLanguageResponse[]> = this.coreService.languages$;
-  public branches$: Observable<Branch[]> = this.coreService.branches$;
-  public statiEntita$: Observable<ISTStatoEntitaResponse[]> = this.coreService.allStatiEntita$;
   public rolesByUser$: Observable<ISysRoleResonse[]> = this.managerService.rolesByUser$;
   public rolesNotForUser$: Observable<ISysRoleResonse[]> = this.managerService.rolesNotForUser$;
+
+  // Array locali per i select box: evitano il problema di timing con l'async pipe
+  statiEntitaList: ISTStatoEntitaResponse[] = [];
+  branchesList: Branch[] = [];
+  languagesList: ISTLanguageResponse[] = [];
 
   public assignedRoles = signal<ISysRoleResonse[]>([]);
   public possibleRoles = signal<ISysRoleResonse[]>([]);
@@ -126,6 +128,10 @@ export class UtentiComponent implements OnInit {
     this.coreService.getBranches().subscribe();
     this.coreService.GetAllStatiEntita().subscribe();
 
+    this.coreService.languages$.subscribe(data => { if (data?.length) this.languagesList = data; });
+    this.coreService.branches$.subscribe(data => { if (data?.length) this.branchesList = data; });
+    this.coreService.allStatiEntita$.subscribe(data => { if (data?.length) this.statiEntitaList = data; });
+
     this.managerService.rolesByUser$.subscribe((roles) => {
       this.assignedRoles.set(roles ? [...roles] : []);
       this.selectedAssignedRoleKeys = [];
@@ -166,24 +172,32 @@ export class UtentiComponent implements OnInit {
     this.isDetailPopupVisible = true;
   }
 
-  onTableAction(event: { action: string; data: any }): void {
-    switch (event.action) {
-      case 'view':
-        this.openViewPopup(event.data);
-        break;
-      case 'edit':
-        this.openEditPopup(event.data);
-        break;
-      case 'resetPwd':
-        this.selectedUserId.set(event.data.usrId || event.data.UsrId);
-        this.openResetPasswordPopup();
-        break;
-      case 'storico':
-        this.selectedUserId.set(event.data.usrId || event.data.UsrId);
-        this.onTrace();
-        break;
-      case 'print':
-        break;
+   onTableAction(event: { action: string; data: any }): void {
+     switch (event.action) {
+       case 'view':
+         this.openViewPopup(event.data);
+         break;
+       case 'edit':
+         this.openEditPopup(event.data);
+         break;
+       case 'resetPwd':
+         this.selectedUserId.set(event.data.usrId || event.data.UsrId);
+         this.openResetPasswordPopup();
+         break;
+       case 'storico':
+         this.selectedUserId.set(event.data.usrId || event.data.UsrId);
+         this.onTrace();
+         break;
+       case 'print':
+         break;
+     }
+   }
+
+  onStampaLista(): void {
+    if (typeof window !== 'undefined' && (window as any).print) {
+      (window as any).print();
+    } else {
+      console.log('Stampa lista utenti richiesta');
     }
   }
 

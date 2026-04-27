@@ -75,4 +75,13 @@ export class TotaleCassaFilterComponent implements OnInit {
       tocBraId
     });
   }
+
+  reset(): void {
+    this.searchForm.reset({
+      tocCliId: '',
+      tocData: null,
+      tocCutId: '',
+      tocBraId: ''
+    });
+  }
 }

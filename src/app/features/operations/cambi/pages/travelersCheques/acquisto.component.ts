@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { TravelersChequesFormComponent } from '../../components/travelers-cheques-form/travelers-cheques-form.component';
 
 @Component({
   selector: 'app-acquisto-travelers',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './acquisto.component.html',
-  styleUrls: ['./acquisto.component.css'],
+  imports: [TravelersChequesFormComponent],
+  template: `<app-travelers-cheques-form mode="acquisto"></app-travelers-cheques-form>`,
+  styles: [':host { display: contents; }']
 })
-export class AcquistoTravelersComponent {
-  constructor() {}
-}
+export class AcquistoTravelersComponent {}

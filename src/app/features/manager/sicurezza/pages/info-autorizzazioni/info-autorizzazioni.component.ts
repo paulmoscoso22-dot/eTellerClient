@@ -1,19 +1,18 @@
 import { Component, signal, inject, OnInit, OnDestroy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
-import { DxFormModule, DxButtonModule, DxTextBoxModule, DxCheckBoxModule } from 'devextreme-angular';
+import { DxButtonModule, DxTextBoxModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ManagerService } from '../../services/sicurezza.service';
 import { GetAllUsersByUsrIdRequest, InfoAutorizzazioneUtenteResponse } from '../../models/manager.models';
 import { IStFunAcctypResponse } from '../../models/function.models';
-import { ButtonRicercaComponent } from '../../../../../components/buttons/search/button-ricerca.component';
 import { AuthFacade } from '../../../../auth/auth.facade';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-info-autorizzazioni',
   standalone: true,
-  imports: [CommonModule, DxDataGridModule, DxFormModule, DxButtonModule, DxTextBoxModule, DxCheckBoxModule, ButtonRicercaComponent, TranslocoPipe],
+  imports: [CommonModule, DxDataGridModule, DxButtonModule, DxTextBoxModule, TranslocoPipe],
   templateUrl: './info-autorizzazioni.component.html',
   styleUrls: ['./info-autorizzazioni.component.css'],
 })
@@ -68,6 +67,14 @@ export class InfoAutorizzazioniComponent implements OnInit, OnDestroy {
           console.error('Error loading user authorizations:', error);
         }
       });
+  }
+
+  setFunlikeName(v: string): void {
+    this.filterData.update(d => ({ ...d, funlikeName: v || undefined }));
+  }
+
+  setFunlikeDes(v: string): void {
+    this.filterData.update(d => ({ ...d, funlikeDes: v || undefined }));
   }
 
   onSearch(): void {

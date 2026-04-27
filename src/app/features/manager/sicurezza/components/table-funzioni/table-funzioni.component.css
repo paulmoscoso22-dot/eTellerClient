@@ -1,3 +1,34 @@
-.table-funzioni {
-  width: 100%;
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td {
+  background-color: #003366 !important;
+  color: #fff !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border-bottom: 2px solid #C5A059 !important;
+}
+
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td:hover {
+  background-color: #004080 !important;
+}
+
+:host ::ng-deep .dx-data-row > td {
+  padding: 7px 10px !important;
+  font-size: 12px !important;
+}
+
+:host ::ng-deep .dx-data-row.dx-state-hover > td {
+  background-color: rgba(0, 51, 102, 0.04) !important;
+}
+
+:host ::ng-deep .dx-selection.dx-data-row > td {
+  background-color: rgba(0, 51, 102, 0.1) !important;
+  color: #003366 !important;
 }

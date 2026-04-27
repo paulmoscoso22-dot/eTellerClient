@@ -55,9 +55,10 @@
   </div>
 }
 
-<!-- No Data Message -->
 @if (!isLoading() && transactions().length === 0 && !error()) {
   <div class="no-data-message">
-    Nessuna transazione trovata
+    <div class="no-data-icon">⊘</div>
+    <div class="no-data-title">Nessun risultato trovato</div>
+    <div class="no-data-subtitle">Imposta i filtri e avvia la ricerca per visualizzare i dati.</div>
   </div>
 }

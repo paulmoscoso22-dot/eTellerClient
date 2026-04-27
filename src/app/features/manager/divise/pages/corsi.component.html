@@ -1,3 +1,404 @@
-<div class="container">
-  <h1>Corsi</h1>
+<div class="page-shell">
+
+  <!-- ── Main Card: Corsi ── -->
+  <section class="card-section">
+
+    <div class="sempione-card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="1" x2="12" y2="23"></line>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+      </svg>
+      <h2 class="card-title">Corsi</h2>
+    </div>
+    <div class="gold-divider"></div>
+
+    <!-- Toolbar: filtri -->
+    <div class="card-toolbar">
+
+      <!-- Riga 1: filtri -->
+      <div class="toolbar-row">
+
+        <div class="filter-field">
+          <span class="filter-label">Codice</span>
+          <div class="toolbar-search-wrap">
+            <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <dx-text-box
+              placeholder="Divisa..."
+              [showClearButton]="true"
+              valueChangeEvent="input"
+              class="toolbar-textbox"
+              [value]="filterCodice()"
+              (onValueChanged)="filterCodice.set($event.value)">
+            </dx-text-box>
+          </div>
+        </div>
+
+        <div class="filter-field">
+          <span class="filter-label">Descrizione</span>
+          <div class="toolbar-search-wrap">
+            <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <dx-text-box
+              placeholder="Descrizione..."
+              [showClearButton]="true"
+              valueChangeEvent="input"
+              class="toolbar-textbox-wide"
+              [value]="filterDescrizione()"
+              (onValueChanged)="filterDescrizione.set($event.value)">
+            </dx-text-box>
+          </div>
+        </div>
+
+        <div class="filter-field">
+          <span class="filter-label">Tipo</span>
+          <dx-select-box
+            [dataSource]="tipoOptions"
+            displayExpr="des"
+            valueExpr="id"
+            [value]="filterTipo()"
+            (onValueChanged)="filterTipo.set($event.value)"
+            [width]="160">
+          </dx-select-box>
+        </div>
+
+        <div class="filter-field">
+          <span class="filter-label">Dal</span>
+          <dx-date-box
+            [value]="filterDateDal()"
+            (onValueChanged)="filterDateDal.set($event.value)"
+            displayFormat="dd.MM.yyyy"
+            [showClearButton]="true"
+            [width]="130">
+          </dx-date-box>
+        </div>
+
+        <div class="filter-field">
+          <span class="filter-label">Al</span>
+          <dx-date-box
+            [value]="filterDateAl()"
+            (onValueChanged)="filterDateAl.set($event.value)"
+            displayFormat="dd.MM.yyyy"
+            [showClearButton]="true"
+            [width]="130">
+          </dx-date-box>
+        </div>
+
+        <dx-button
+          class="btn-cerca"
+          text="Cerca"
+          type="default"
+          stylingMode="contained"
+          (onClick)="onCerca()">
+        </dx-button>
+        <dx-button
+          class="btn-reset"
+          text="Reset"
+          type="normal"
+          stylingMode="outlined"
+          (onClick)="onResetFiltri()">
+        </dx-button>
+
+      </div>
+
+      <!-- Riga 2: info + azione -->
+      <div class="toolbar-row">
+        <span class="last-update-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          Ultimo aggiornamento: {{ lastUpdate() }}
+        </span>
+        <div class="toolbar-actions">
+          <dx-button
+            class="btn-new"
+            text="Nuovo Corso"
+            type="default"
+            stylingMode="contained"
+            (onClick)="openNewPopup()">
+          </dx-button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Griglia corsi -->
+    <div class="card-body card-body--grid">
+      <dx-data-grid
+        [dataSource]="filteredCorsi()"
+        [showBorders]="false"
+        [columnAutoWidth]="true"
+        [rowAlternationEnabled]="true"
+        [hoverStateEnabled]="true"
+        [height]="'100%'"
+        [keyExpr]="['cprCurId1', 'cprCurId2', 'cprCutId', 'cprValdat']">
+
+        <dxo-selection mode="single"></dxo-selection>
+        <dxo-paging [pageSize]="20"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
+
+        <dxi-column dataField="cprCurId1"   caption="Div. CTP"    [width]="100" alignment="center" cellTemplate="currencyTemplate"></dxi-column>
+        <dxi-column dataField="cprCurId2"   caption="Div. BASE"   [width]="100" alignment="center" cellTemplate="currencyTemplate"></dxi-column>
+        <dxi-column dataField="cprCutId"    caption="Tipo"        [width]="90"  alignment="center" cellTemplate="tipoTemplate"></dxi-column>
+        <dxi-column dataField="curHostcod"  caption="Cod. HOST"   [width]="110" alignment="left"></dxi-column>
+        <dxi-column dataField="cprRateBuy"  caption="Cambio BUY"  [width]="110" alignment="right" cellTemplate="rateTemplate"></dxi-column>
+        <dxi-column dataField="cprRateSell" caption="Cambio SELL" [width]="110" alignment="right" cellTemplate="rateTemplate"></dxi-column>
+        <dxi-column dataField="cprValdat"   caption="Data Valuta" [width]="140" alignment="left"></dxi-column>
+        <dxi-column dataField="cprDatreg"   caption="Data Reg."   [width]="140" alignment="left"></dxi-column>
+        <dxi-column dataField="curLondes"   caption="Descrizione"               alignment="left"></dxi-column>
+
+        <dxi-column
+          caption="Azioni"
+          [width]="110"
+          [allowSorting]="false"
+          [allowFiltering]="false"
+          alignment="center"
+          cellTemplate="actionsTemplate">
+        </dxi-column>
+
+        <!-- Currency badge template -->
+        <div *dxTemplate="let cell of 'currencyTemplate'" class="currency-cell">
+          <span class="currency-badge">{{ cell.value }}</span>
+        </div>
+
+        <!-- Tipo template -->
+        <div *dxTemplate="let cell of 'tipoTemplate'" class="tipo-cell">
+          <span class="tipo-pill"
+            [class.tipo-pill--bb]="cell.value === 'BB'"
+            [class.tipo-pill--mm]="cell.value === 'MM'"
+            [class.tipo-pill--tr]="cell.value === 'TR'">
+            {{ cell.value }}
+          </span>
+        </div>
+
+        <!-- Rate template -->
+        <div *dxTemplate="let cell of 'rateTemplate'" class="rate-cell">
+          {{ cell.value | number:'1.4-4' }}
+        </div>
+
+        <!-- Azioni template -->
+        <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
+          <button class="action-btn action-btn--view" title="Visualizza" (click)="onTableAction('view', cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--edit" title="Modifica" (click)="onTableAction('edit', cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--delete" title="Elimina" (click)="onTableAction('delete', cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6l-1 14H6L5 6"></path>
+              <path d="M10 11v6M14 11v6"></path>
+              <path d="M9 6V4h6v2"></path>
+            </svg>
+          </button>
+        </div>
+
+      </dx-data-grid>
+    </div>
+
+  </section>
+
 </div>
+
+<!-- ── Popup Dettaglio Corso ── -->
+<dx-popup
+  [(visible)]="isDetailPopupVisible"
+  [showTitle]="true"
+  [title]="popupMode() === 'edit' ? 'Modifica Corso — ' + selectedLabel()
+         : popupMode() === 'view' ? 'Dettaglio Corso — ' + selectedLabel()
+         : 'Nuovo Corso'"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [width]="'90%'"
+  [maxWidth]="860"
+  [height]="'auto'"
+  [maxHeight]="'90vh'"
+  (onHidden)="closePopup()">
+
+  <div *dxTemplate="let data of 'content'">
+    <form [formGroup]="corsoForm"
+          class="popup-layout"
+          [class.popup-view-mode]="popupMode() === 'view'">
+
+      <!-- ── Card 1: Identificazione ── -->
+      <section class="popup-card">
+        <h3 class="popup-card-title">Identificazione</h3>
+        <div class="popup-fields-grid popup-fields-grid--4col">
+
+          <div class="popup-field-group" [class.field-id-locked]="popupMode() !== 'new'">
+            <label class="popup-field-label">Divisa CTP</label>
+            <dx-select-box
+              formControlName="cprCurId1"
+              [dataSource]="currencies"
+              [readOnly]="popupMode() !== 'new'"
+              placeholder="Seleziona...">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-select-box>
+          </div>
+
+          <div class="popup-field-group" [class.field-id-locked]="popupMode() !== 'new'">
+            <label class="popup-field-label">Divisa BASE</label>
+            <dx-select-box
+              formControlName="cprCurId2"
+              [dataSource]="currencies"
+              [readOnly]="popupMode() !== 'new'"
+              placeholder="Seleziona...">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-select-box>
+          </div>
+
+          <div class="popup-field-group" [class.field-id-locked]="popupMode() !== 'new'">
+            <label class="popup-field-label">Tipo</label>
+            <dx-select-box
+              formControlName="cprCutId"
+              [dataSource]="tipoOptions"
+              displayExpr="des"
+              valueExpr="id"
+              [readOnly]="popupMode() !== 'new'"
+              placeholder="Seleziona...">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-select-box>
+          </div>
+
+          <div class="popup-field-group" [class.field-id-locked]="popupMode() !== 'new'">
+            <label class="popup-field-label">Data Valuta</label>
+            <dx-date-box
+              formControlName="cprValdat"
+              displayFormat="dd.MM.yyyy HH:mm:ss"
+              type="datetime"
+              [readOnly]="popupMode() !== 'new'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-date-box>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Card 2: Tassi di Cambio ── -->
+      <section class="popup-card">
+        <h3 class="popup-card-title">Tassi di Cambio</h3>
+
+        <div class="popup-fields-grid popup-fields-grid--3col">
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Cambio BUY</label>
+            <dx-number-box
+              formControlName="cprRateBuy"
+              [min]="0"
+              [format]="'#,##0.0000'"
+              [readOnly]="popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-number-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Cambio SELL</label>
+            <dx-number-box
+              formControlName="cprRateSell"
+              [min]="0"
+              [format]="'#,##0.0000'"
+              [readOnly]="popupMode() === 'view'">
+              <dx-validator>
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dx-validator>
+            </dx-number-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Codice HOST</label>
+            <dx-text-box
+              formControlName="curHostcod"
+              [readOnly]="popupMode() === 'view'">
+            </dx-text-box>
+          </div>
+
+        </div>
+
+        <div class="popup-section-sep"></div>
+
+        <div class="popup-fields-grid popup-fields-grid--3col">
+
+          <div class="popup-field-group popup-col-span-3">
+            <label class="popup-field-label">Descrizione</label>
+            <dx-text-box
+              formControlName="curLondes"
+              [readOnly]="true">
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Data Registrazione</label>
+            <dx-text-box
+              formControlName="cprDatreg"
+              [readOnly]="true">
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Data Modifica</label>
+            <dx-text-box
+              formControlName="curModdat"
+              [readOnly]="true">
+            </dx-text-box>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Action Bar sticky ── -->
+      <div class="popup-action-bar">
+        <div class="popup-actions-secondary"></div>
+        <div class="popup-actions-primary">
+          @if (popupMode() === 'view') {
+            <dx-button
+              class="btn-action-close"
+              text="Chiudi"
+              icon="close"
+              (onClick)="closePopup()">
+            </dx-button>
+          }
+          @if (popupMode() === 'new') {
+            <dx-button
+              class="btn-action-primary"
+              text="Aggiungi"
+              icon="plus"
+              (onClick)="onSubmit()">
+            </dx-button>
+          }
+          @if (popupMode() === 'edit') {
+            <dx-button
+              class="btn-action-primary"
+              text="Salva"
+              icon="save"
+              (onClick)="onUpdate()">
+            </dx-button>
+          }
+        </div>
+      </div>
+
+    </form>
+  </div>
+</dx-popup>

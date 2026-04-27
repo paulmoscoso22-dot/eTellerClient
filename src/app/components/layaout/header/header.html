@@ -12,14 +12,15 @@
 
   <!-- Status Indicator + Timestamp -->
   <div class="status-wrapper">
-    <div
+    <span
       id="status-indicator"
-      class="status-indicator"
-      [class.online]="isOnline()"
+      class="status-pill"
+      [class.status-pill--online]="isOnline()"
+      [class.status-pill--offline]="!isOnline()"
       [attr.aria-label]="statusAriaLabel"
       role="status">
-      <i class="bi" [class.bi-check]="isOnline()" [class.bi-x]="!isOnline()"></i>
-    </div>
+      {{ isOnline() ? 'ONLINE' : 'NON ONLINE' }}
+    </span>
     <span class="status-timestamp">{{ relativeTime() }}</span>
   </div>
   <dx-tooltip

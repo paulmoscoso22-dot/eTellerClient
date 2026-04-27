@@ -1,3 +1,8 @@
+/* ══════════════════════════════════════════
+   Gestione Utenti — Banca del Sempione Style
+   Brand navy : #003366  |  Gold : #C5A059
+   ══════════════════════════════════════════ */
+
 :host {
   display: flex;
   flex-direction: column;
@@ -6,23 +11,75 @@
   overflow: hidden;
 }
 
-.utenti-container {
+.page-shell {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
-  padding: 8px 16px 12px;
+  padding: 12px 16px 0;
+  gap: 10px;
 }
 
-/* ── Unified Toolbar ── */
-.unified-toolbar {
+/* ── Card shell ── */
+.card-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #dce3ee;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
+}
+
+/* ── Sempione Card Header ── */
+.sempione-card-header {
+  background: #003366;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.gold-divider {
+  height: 2px;
+  background: #C5A059;
+  flex-shrink: 0;
+}
+
+.card-icon {
+  width: 15px;
+  height: 15px;
+  color: #fff;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #fff;
+  flex: 1;
+}
+
+/* ── Card Toolbar ── */
+.card-toolbar {
+  background: #f0f4f8;
+  border-bottom: 1px solid #dce3ee;
+  padding: 7px 12px;
+  flex-shrink: 0;
+}
+
+.toolbar-inner {
+  display: flex;
+  align-items: center;
   gap: 12px;
-  margin-bottom: 10px;
-  height: 36px;
 }
 
 .toolbar-actions {
@@ -32,152 +89,231 @@
   flex-shrink: 0;
 }
 
+/* ── Card Body ── */
+.card-body--grid {
+  padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 /* ── Segmented Control ── */
 .segmented-control {
   display: inline-flex;
-  border: 1.5px solid #20294c;
+  border: 1.5px solid #003366;
   border-radius: 6px;
   overflow: hidden;
   flex-shrink: 0;
 }
 
 .segment-btn {
-  height: 36px;
-  padding: 0 16px;
-  font-size: 0.8125rem;
+  height: 28px;
+  padding: 0 14px;
+  font-size: 0.8rem;
   font-weight: 500;
   border: none;
   background: transparent;
-  color: #20294c;
+  color: #003366;
   cursor: pointer;
-  line-height: 36px;
+  line-height: 28px;
   transition: background 0.15s ease, color 0.15s ease;
 }
 
 .segment-btn:not(:last-child) {
-  border-right: 1.5px solid #20294c;
+  border-right: 1.5px solid #003366;
 }
 
 .segment-btn.active {
-  background: #20294c;
+  background: #003366;
   color: #fff;
 }
 
 .segment-btn:not(.active):hover {
-  background: color-mix(in srgb, #20294c 10%, transparent);
+  background: rgba(0, 51, 102, 0.08);
 }
 
-/* ── Search Input con icona interna ── */
-.search-input-wrapper {
-  position: relative;
-  flex: 1 1 auto;
-  min-width: 220px;
-  max-width: 400px;
+/* ── Search (flex approach, identical to Ruoli) ── */
+.toolbar-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
 }
 
-.search-inner-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1;
-  font-size: 0.875rem;
-  color: var(--dx-color-icon, #9ca3af);
+.toolbar-search-icon {
+  width: 14px;
+  height: 14px;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.toolbar-textbox {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Bottone Nuovo ── */
+:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained {
+  background-color: #003366;
+  border-color: #003366;
+  height: 28px;
+}
+
+:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained:hover {
+  background-color: #004080;
+  border-color: #004080;
+}
+
+/* ── Bottone Stampa: outline ── */
+:host ::ng-deep .btn-outline.dx-button.dx-button-mode-outlined {
+  border-color: rgba(0, 51, 102, 0.4);
+  color: #003366;
+  height: 28px;
+}
+
+:host ::ng-deep .btn-outline.dx-button.dx-button-mode-outlined:hover {
+  border-color: #003366;
+  background: rgba(0, 51, 102, 0.05);
+}
+
+/* ── Altezza uniforme toolbar ── */
+:host ::ng-deep .card-toolbar .dx-texteditor {
+  height: 28px;
+}
+
+:host ::ng-deep .card-toolbar .dx-texteditor-input {
+  min-height: unset;
+  height: 26px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 13px;
+}
+
+/* ══ POPUP STYLES (unchanged) ══ */
+
+.popup-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 64px;
+}
+
+.popup-card {
+  background: #fff;
+  border: 1px solid #e4e8ed;
+  border-radius: 8px;
+  padding: 16px 20px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.popup-card-title {
+  margin: 0 0 14px 0;
+  padding-bottom: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #003366;
+  border-bottom: 2px solid #dce3ee;
+}
+
+.popup-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px 24px;
+}
+
+.popup-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.popup-field-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+:host ::ng-deep .field-id-locked .dx-texteditor {
+  background-color: #f5f6f8 !important;
+}
+
+:host ::ng-deep .popup-view-mode .dx-texteditor.dx-state-readonly {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .popup-view-mode .dx-texteditor.dx-state-readonly .dx-texteditor-input {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #003366 !important;
+  padding-left: 2px !important;
+}
+
+:host ::ng-deep .popup-view-mode .dx-state-readonly.dx-dropdowneditor .dx-dropdowneditor-icon {
+  opacity: 0;
   pointer-events: none;
 }
 
-/* Spazio a sinistra per l'icona */
-::ng-deep .search-input-wrapper .dx-texteditor-input {
-  padding-left: 30px !important;
-}
-
-/* Stile "filled" leggero */
-::ng-deep .search-input-wrapper .dx-texteditor.dx-editor-outlined {
-  background-color: rgba(0, 0, 0, 0.04);
-  border-color: transparent;
-  border-radius: 6px;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
-}
-
-::ng-deep .search-input-wrapper .dx-texteditor.dx-editor-outlined.dx-state-focused {
-  background-color: #fff;
-  border-color: #20294c;
-}
-
-::ng-deep .search-input-wrapper .dx-texteditor.dx-editor-outlined.dx-state-hover:not(.dx-state-focused) {
-  background-color: rgba(0, 0, 0, 0.06);
-}
-
-/* ── Bottoni toolbar ── */
-
-/* Altezza uniforme toolbar (36px) */
-::ng-deep .unified-toolbar .dx-texteditor {
-  height: 36px;
-}
-
-::ng-deep .unified-toolbar .dx-texteditor-input-container {
-  height: 34px;
-}
-
-/* Bottone "Nuovo": brand color pieno */
-::ng-deep .btn-brand .dx-button {
-  background-color: #20294c;
-  border-color: #20294c;
-  height: 36px;
-}
-
-::ng-deep .btn-brand .dx-button .dx-button-text,
-::ng-deep .btn-brand .dx-button .dx-icon {
-  color: #fff;
-}
-
-::ng-deep .btn-brand .dx-button.dx-state-hover,
-::ng-deep .btn-brand .dx-button:hover {
-  background-color: #2d3a6b;
-  border-color: #2d3a6b;
-}
-
-/* Bottone "Stampa lista": outline */
-::ng-deep .btn-outline .dx-button {
-  background-color: transparent;
-  border: 1.5px solid #20294c;
-  height: 36px;
-}
-
-::ng-deep .btn-outline .dx-button .dx-button-text {
-  color: #20294c;
-}
-
-::ng-deep .btn-outline .dx-button.dx-state-hover,
-::ng-deep .btn-outline .dx-button:hover {
-  background-color: color-mix(in srgb, #20294c 8%, transparent);
-}
-
-.detail-section {
+.popup-action-bar {
+  position: sticky;
+  bottom: 0;
   display: flex;
-  flex-direction: row;
-  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  background: #fff;
+  border-top: 1px solid #e4e8ed;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.07);
+  z-index: 10;
 }
 
-.detail-form {
-  flex: 1 1 50%;
-}
-
-.detail-roles {
-  flex: 1 1 50%;
-}
-
-.form-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 16px;
-}
-
-.form-actions {
+.popup-actions-secondary,
+.popup-actions-primary {
   display: flex;
-  justify-content: flex-end;
   gap: 8px;
-  margin-top: 8px;
+  align-items: center;
+}
+
+:host ::ng-deep .btn-action-primary.dx-button {
+  background-color: #2d6a4f;
+  border-color: #2d6a4f;
+  height: 36px;
+}
+
+:host ::ng-deep .btn-action-primary.dx-button:hover {
+  background-color: #1b4332;
+  border-color: #1b4332;
+}
+
+:host ::ng-deep .btn-action-outline.dx-button {
+  background: transparent;
+  border: 1.5px solid #003366;
+  height: 36px;
+  color: #003366;
+}
+
+:host ::ng-deep .btn-action-outline.dx-button:hover {
+  background: rgba(0, 51, 102, 0.06);
+}
+
+:host ::ng-deep .btn-action-danger.dx-button {
+  background: transparent;
+  border: 1.5px solid #dc2626;
+  height: 36px;
+  color: #dc2626;
+}
+
+:host ::ng-deep .btn-action-danger.dx-button:hover {
+  background: #fef2f2;
 }
 
 .popup-actions {
@@ -187,9 +323,8 @@
   margin-top: 12px;
 }
 
-/* ── Responsive ── */
 @media (max-width: 680px) {
-  .unified-toolbar {
+  .toolbar-inner {
     flex-wrap: wrap;
     height: auto;
   }
@@ -198,5 +333,14 @@
     flex: 1 1 180px;
     min-width: 0;
     max-width: unset;
+  }
+
+  .popup-fields-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .popup-action-bar {
+    flex-wrap: wrap;
+    gap: 8px;
   }
 }

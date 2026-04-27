@@ -10,7 +10,7 @@ import { GiornaleAntiriciclaggioTransaction } from '../../../report/domain/trans
   standalone: true,
   imports: [
     CommonModule,
-    DxDataGridModule
+    DxDataGridModule,
   ],
   templateUrl: './ricerca-grid.component.html',
   styleUrls: ['./ricerca-grid.component.css']

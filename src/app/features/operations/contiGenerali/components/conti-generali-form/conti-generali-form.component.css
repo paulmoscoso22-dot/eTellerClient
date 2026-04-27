@@ -1,0 +1,244 @@
+/* ══════════════════════════════════════════
+   Conti Generali Form — Banca del Sempione
+   Brand navy : #003366  |  Gold : #C5A059
+   ══════════════════════════════════════════ */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Page shell ── */
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 10px 16px 0;
+  overflow: hidden;
+}
+
+/* ── Op bar ── */
+.op-bar {
+  flex: 0 0 auto;
+  margin-bottom: 8px;
+}
+
+.op-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #fff;
+}
+
+.op-badge--versamento  { background: #14532d; }
+.op-badge--prelevamento { background: #7f1d1d; }
+
+.badge-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* ── Two-column grid ── */
+.two-col-grid {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 62fr 38fr;
+  align-content: start;
+  gap: 10px;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 8px;
+}
+
+.two-col-grid::-webkit-scrollbar       { width: 4px; }
+.two-col-grid::-webkit-scrollbar-track { background: transparent; }
+.two-col-grid::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+
+/* ── Columns ── */
+.col-main,
+.col-side {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Card ── */
+.card-section {
+  background: #fff;
+  border: 1px solid #dce3ee;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.card-fill { flex: 1 1 auto; }
+
+/* ── Card body ── */
+.card-body {
+  padding: 14px 16px 16px;
+}
+
+/* ── Form rows ── */
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 0 8px;
+  margin-bottom: 5px;
+  min-height: 28px;
+}
+
+.form-row:last-child { margin-bottom: 0; }
+
+.form-row--top {
+  align-items: flex-start;
+  padding-top: 3px;
+}
+
+.form-lbl {
+  width: 128px;
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-align: right;
+  line-height: 1.3;
+}
+
+.form-fld {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-fld--row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Field separator ── */
+.field-sep {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 8px 0;
+}
+
+/* ── Compact DevExtreme inputs ── */
+:host ::ng-deep .dx-texteditor {
+  height: 28px;
+}
+
+:host ::ng-deep .dx-texteditor-input {
+  min-height: unset;
+  height: 26px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 13px;
+}
+
+:host ::ng-deep .dx-texteditor-buttons-container {
+  height: 26px;
+}
+
+:host ::ng-deep .dx-button {
+  height: 28px;
+}
+
+/* ── Display values ── */
+.display-value {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  background: #f5f6f8;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  border: 1px solid #e9ecef;
+}
+
+.display-value--accent {
+  background: #f0f4f8;
+  color: #003366;
+  font-weight: 700;
+  border-color: #d0daea;
+}
+
+/* System rate field */
+.sys-rate {
+  width: 130px;
+  flex-shrink: 0;
+  gap: 4px;
+}
+
+.sys-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+/* ── Action bar ── */
+.action-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  background: #fff;
+  border-top: 1px solid #dce3ee;
+  box-shadow: 0 -2px 6px rgba(0, 51, 102, 0.06);
+}
+
+.actions-left,
+.actions-right {
+  display: flex;
+  gap: 6px;
+}
+
+/* Conferma button — primary navy */
+:host ::ng-deep .btn-confirm.dx-button {
+  background-color: #003366;
+  border-color: #003366;
+  color: #fff;
+  height: 32px;
+}
+
+:host ::ng-deep .btn-confirm.dx-button:hover {
+  background-color: #004080;
+  border-color: #004080;
+}
+
+:host ::ng-deep .btn-confirm .dx-button-content {
+  padding: 0 24px;
+}
+
+:host ::ng-deep .btn-confirm .dx-icon {
+  color: #fff;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .two-col-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-fill {
+    flex: 0 0 auto;
+  }
+}

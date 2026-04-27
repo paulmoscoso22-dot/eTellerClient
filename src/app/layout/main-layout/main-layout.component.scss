@@ -22,7 +22,11 @@
 .sidebar {
   flex: 0 0 250px;
   overflow: hidden;
-  transition: flex-basis 0.3s ease;
+  transition: flex-basis 0.25s ease;
+}
+
+.sidebar--collapsed {
+  flex-basis: 56px;
 }
 
 .main-content {

@@ -1,0 +1,9 @@
+<div class="sempione-card-header">
+  <ng-content select=".card-icon"></ng-content>
+  <h2 class="card-title">{{ title }}</h2>
+  @if (count !== null && count !== undefined) {
+    <span class="card-count">{{ count }}</span>
+  }
+  <ng-content select="[card-actions]"></ng-content>
+</div>
+<div class="gold-divider"></div>

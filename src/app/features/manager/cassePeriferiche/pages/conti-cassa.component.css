@@ -1,12 +1,421 @@
-.container {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  background: white;
+/* ══════════════════════════════════════════
+   Conti Cassa — Banca del Sempione Style
+   Brand navy : #003366  |  Gold : #C5A059
+   ══════════════════════════════════════════ */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
-h1 {
-  color: #333;
-  margin-bottom: 20px;
-  font-size: 24px;
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 12px 16px 0;
+  gap: 10px;
+}
+
+/* ── Card shell ── */
+.card-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #dce3ee;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
+}
+
+/* ── Sempione Card Header ── */
+.sempione-card-header {
+  background: #003366;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.gold-divider {
+  height: 2px;
+  background: #C5A059;
+  flex-shrink: 0;
+}
+
+.card-icon {
+  width: 15px;
+  height: 15px;
+  color: #fff;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #fff;
+  flex: 1;
+}
+
+/* ── Card Toolbar ── */
+.card-toolbar {
+  background: #f0f4f8;
+  border-bottom: 1px solid #dce3ee;
+  padding: 7px 12px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Toolbar rows ── */
+.toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  flex-wrap: nowrap;
+}
+
+.toolbar-row-separator {
+  height: 1px;
+  background: #dce3ee;
+  margin: 2px 0;
+}
+
+.toolbar-row-spacer {
+  flex: 1;
+}
+
+.filter-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.filter-control {
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.filter-control--wide {
+  width: 200px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ── Uniform toolbar control height ── */
+:host ::ng-deep .card-toolbar .dx-texteditor {
+  height: 28px;
+}
+
+:host ::ng-deep .card-toolbar .dx-texteditor-input {
+  min-height: unset;
+  height: 26px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 12px;
+}
+
+/* ── Buttons ── */
+:host ::ng-deep .btn-cerca.dx-button-default.dx-button-mode-contained {
+  background-color: #003366;
+  border-color: #003366;
+  height: 28px;
+}
+
+:host ::ng-deep .btn-cerca.dx-button-default.dx-button-mode-contained:hover {
+  background-color: #004080;
+  border-color: #004080;
+}
+
+:host ::ng-deep .btn-reset.dx-button {
+  height: 28px;
+}
+
+:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained {
+  background-color: #003366;
+  border-color: #003366;
+  height: 28px;
+}
+
+:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained:hover {
+  background-color: #004080;
+  border-color: #004080;
+}
+
+/* ── Card Body ── */
+.card-body--grid {
+  padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Grid header ── */
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td {
+  background-color: #f8fafd !important;
+  color: #374151 !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border-bottom: 2px solid #003366 !important;
+}
+
+/* ── Compact rows ── */
+:host ::ng-deep .dx-data-row > td {
+  padding: 5px 10px !important;
+  font-size: 12px !important;
+  vertical-align: middle !important;
+}
+
+/* ── Zebra-striping ── */
+:host ::ng-deep .dx-data-row.dx-row-alt > td {
+  background-color: #f8fafc !important;
+}
+
+/* ── Hover ── */
+:host ::ng-deep .dx-data-row.dx-state-hover > td {
+  background-color: rgba(0, 51, 102, 0.04) !important;
+}
+
+/* ── Selected row ── */
+:host ::ng-deep .dx-selection.dx-data-row > td {
+  background-color: rgba(0, 51, 102, 0.10) !important;
+  color: #003366 !important;
+  font-weight: 600 !important;
+}
+
+/* ── Cell badges ── */
+.badge-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.group-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: monospace;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.cur-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: monospace;
+  letter-spacing: 0.05em;
+  background: #e8f0fe;
+  color: #1a56db;
+}
+
+.cur-badge--all {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+/* ── Action buttons ── */
+.actions-cell {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.14s ease;
+}
+
+.action-btn svg {
+  width: 13px;
+  height: 13px;
+  stroke: #9ca3af;
+  transition: stroke 0.14s ease;
+}
+
+.action-btn--view:hover { background: rgba(0, 51, 102, 0.08); }
+.action-btn--view:hover svg { stroke: #003366; }
+
+.action-btn--edit:hover { background: rgba(0, 51, 102, 0.08); }
+.action-btn--edit:hover svg { stroke: #003366; }
+
+/* ══ POPUP STYLES ══ */
+
+.popup-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 64px;
+}
+
+.popup-card {
+  background: #fff;
+  border: 1px solid #e4e8ed;
+  border-radius: 8px;
+  padding: 16px 20px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.popup-card-title {
+  margin: 0 0 14px 0;
+  padding-bottom: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #003366;
+  border-bottom: 2px solid #dce3ee;
+}
+
+.popup-fields-grid {
+  display: grid;
+  gap: 12px 24px;
+}
+
+.popup-fields-grid--2col { grid-template-columns: 1fr 1fr; }
+.popup-fields-grid--3col { grid-template-columns: 1fr 1fr 1fr; }
+
+.popup-col-span-2 { grid-column: span 2; }
+
+.popup-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.popup-field-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.field-hint {
+  font-size: 13px;
+  color: #94a3b8;
+  cursor: help;
+  text-transform: none;
+  font-style: normal;
+}
+
+:host ::ng-deep .field-id-locked .dx-texteditor,
+:host ::ng-deep .field-id-locked .dx-dropdowneditor {
+  background-color: #f5f6f8 !important;
+}
+
+:host ::ng-deep .popup-view-mode .dx-texteditor.dx-state-readonly {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .popup-view-mode .dx-texteditor.dx-state-readonly .dx-texteditor-input {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #003366 !important;
+  padding-left: 2px !important;
+}
+
+:host ::ng-deep .popup-view-mode .dx-state-readonly.dx-dropdowneditor .dx-dropdowneditor-icon {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Popup action bar ── */
+.popup-action-bar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  background: #fff;
+  border-top: 1px solid #e4e8ed;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.07);
+  z-index: 10;
+}
+
+.popup-actions-secondary,
+.popup-actions-primary {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+:host ::ng-deep .btn-action-primary.dx-button {
+  background-color: #2d6a4f;
+  border-color: #2d6a4f;
+  height: 36px;
+}
+
+:host ::ng-deep .btn-action-primary.dx-button:hover {
+  background-color: #1b4332;
+  border-color: #1b4332;
 }

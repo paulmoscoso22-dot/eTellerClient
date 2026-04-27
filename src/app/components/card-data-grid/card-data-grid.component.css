@@ -1,0 +1,168 @@
+/* ══════════════════════════════════════════
+   CardDataGrid — Banca del Sempione Style
+   Brand navy : #003366  |  Gold : #C5A059
+   ══════════════════════════════════════════ */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Grid Headers — light grey with navy bottom border ── */
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td {
+  background-color: #f8fafd !important;
+  color: #374151 !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border-bottom: 2px solid #003366 !important;
+}
+
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td:hover {
+  background-color: #eef2f8 !important;
+}
+
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td .dx-sort-indicator,
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td .dx-column-indicators .dx-icon {
+  color: #003366 !important;
+}
+
+/* ── Compact rows ── */
+:host ::ng-deep .dx-data-row > td {
+  padding: 5px 10px !important;
+  font-size: 12px !important;
+  vertical-align: middle !important;
+}
+
+/* ── Zebra striping ── */
+:host ::ng-deep .dx-data-row.dx-row-alt > td {
+  background-color: #f8fafc !important;
+}
+
+/* ── Hover ── */
+:host ::ng-deep .dx-data-row.dx-state-hover > td {
+  background-color: rgba(0, 51, 102, 0.04) !important;
+}
+
+/* ── Selected row ── */
+:host ::ng-deep .dx-selection.dx-data-row > td {
+  background-color: rgba(0, 51, 102, 0.10) !important;
+  color: #003366 !important;
+  font-weight: 600 !important;
+}
+
+/* ── Pager — compact, proportional to table rows ── */
+:host ::ng-deep .dx-datagrid-pager {
+  border-top: 1px solid #e5e7eb;
+  padding: 3px 8px;
+  background: #fafbfc;
+  flex-shrink: 0;
+}
+
+:host ::ng-deep .dx-pager {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+:host ::ng-deep .dx-pager .dx-page,
+:host ::ng-deep .dx-pager .dx-navigate-button {
+  font-size: 11px;
+  min-width: 22px;
+  height: 22px;
+  line-height: 22px;
+  border-radius: 4px;
+  padding: 0 4px;
+}
+
+:host ::ng-deep .dx-pager .dx-page.dx-selection {
+  background-color: #003366;
+  border-color: #003366;
+  color: #fff;
+  font-weight: 700;
+}
+
+:host ::ng-deep .dx-pager .dx-page:not(.dx-selection):hover {
+  background-color: rgba(0, 51, 102, 0.08);
+  color: #003366;
+}
+
+:host ::ng-deep .dx-pager .dx-navigate-button:hover {
+  background-color: rgba(0, 51, 102, 0.08);
+  color: #003366;
+}
+
+:host ::ng-deep .dx-pager .dx-info {
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 22px;
+}
+
+/* ── Status pill ── */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.status-pill--active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-pill--blocked {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* ── Row action buttons ── */
+.row-actions {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+}
+
+.row-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.14s ease;
+}
+
+.row-btn svg {
+  width: 13px;
+  height: 13px;
+  stroke: #9ca3af;
+  transition: stroke 0.14s ease;
+}
+
+.row-btn--edit:hover {
+  background: rgba(0, 51, 102, 0.08);
+}
+
+.row-btn--edit:hover svg {
+  stroke: #003366;
+}
+
+.row-btn--trace:hover {
+  background: rgba(0, 51, 102, 0.08);
+}
+
+.row-btn--trace:hover svg {
+  stroke: #003366;
+}

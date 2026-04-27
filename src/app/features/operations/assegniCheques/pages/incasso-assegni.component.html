@@ -1,0 +1,387 @@
+<div class="page-shell">
+
+  <!-- ── Op bar ── -->
+  <div class="op-bar">
+    <span class="op-badge">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" class="badge-icon">
+        <path d="M8 14V2M3 7l5-5 5 5"/>
+      </svg>
+      Incasso Assegno
+      @if (operazioneNr()) {
+        &mdash; N.&nbsp;<strong>{{ operazioneNr() }}</strong>
+      }
+    </span>
+  </div>
+
+  <!-- ══ Two-column grid ══ -->
+  <div class="two-col-grid">
+
+    <!-- ── Left column ── -->
+    <div class="col-main">
+
+      <!-- Card 1: Dati Conto -->
+      <section class="card-section">
+        <app-header-card title="Dati Conto">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </app-header-card>
+        <div class="card-body">
+
+          <div class="form-row">
+            <label class="form-lbl">Nr Conto</label>
+            <div class="form-fld">
+              <dx-text-box [(value)]="formData.nrConto">
+                <dxi-button name="search" location="after" [options]="nrContoSearchBtn"></dxi-button>
+              </dx-text-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Titolare</label>
+            <div class="form-fld">
+              <dx-text-box [(value)]="formData.titolare" [readOnly]="true"></dx-text-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Divisa conto</label>
+            <div class="form-fld">
+              <dx-text-box [(value)]="formData.divisaConto" [readOnly]="true"></dx-text-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Rubrica</label>
+            <div class="form-fld">
+              <dx-text-box [(value)]="formData.rubrica" [readOnly]="true"></dx-text-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Saldo</label>
+            <div class="form-fld">
+              <div class="display-value">
+                {{ formData.saldo != null ? (formData.saldo | number:'1.2-2') : '—' }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Importo operazione</label>
+            <div class="form-fld">
+              <div class="display-value">
+                {{ formData.importoOperazione != null ? (formData.importoOperazione | number:'1.2-2') : '—' }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Controvalore CHF</label>
+            <div class="form-fld">
+              <div class="display-value display-value--accent">
+                @if (formData.controvaloreChfOpe != null) {
+                  {{ formData.controvaloreChfOpe | number:'1.2-2' }}&nbsp;CHF
+                } @else { — }
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row" style="align-items: center;">
+            <label class="form-lbl">Stampa saldo</label>
+            <dx-check-box [(value)]="formData.stampaSaldo"></dx-check-box>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Card 2: Assegno -->
+      <section class="card-section">
+        <app-header-card title="Assegno / Cheque">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="6" width="20" height="13" rx="2"></rect>
+            <path d="M6 10h4M6 14h8"></path>
+          </svg>
+        </app-header-card>
+        <div class="card-body">
+
+          <div class="form-row">
+            <label class="form-lbl">Divisa</label>
+            <div class="form-fld">
+              <dx-select-box
+                [(value)]="formData.divisaBanca"
+                [dataSource]="currencies"
+                (onValueChanged)="calculate()">
+              </dx-select-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Cambio CTV</label>
+            <div class="form-fld">
+              <div class="display-value">
+                {{ formData.cambioCtv != null ? (formData.cambioCtv | number:'1.4-4') : '—' }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Importo assegno</label>
+            <div class="form-fld">
+              <dx-number-box
+                [(value)]="formData.importoAssegno"
+                format="#,##0.00"
+                (onValueChanged)="calculate()">
+              </dx-number-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Controvalore CHF</label>
+            <div class="form-fld">
+              <div class="display-value display-value--accent">
+                @if (formData.controvaloreChfAssegno != null) {
+                  {{ formData.controvaloreChfAssegno | number:'1.2-2' }}&nbsp;CHF
+                } @else { — }
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Commissioni</label>
+            <div class="form-fld form-fld--row">
+              <dx-radio-group
+                [(value)]="formData.commissioniMode"
+                [dataSource]="commissioniModeOptions"
+                displayExpr="text"
+                valueExpr="value"
+                layout="horizontal"
+                class="comm-radio"
+                (onValueChanged)="calculate()">
+              </dx-radio-group>
+              <dx-number-box
+                [(value)]="formData.tassoCommissioni"
+                format="#,##0.0000"
+                style="flex:1; min-width:0"
+                (onValueChanged)="calculate()">
+              </dx-number-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">IVA %</label>
+            <div class="form-fld form-fld--row">
+              <dx-number-box
+                [(value)]="formData.ivaPercent"
+                format="#,##0.00"
+                style="flex:1"
+                (onValueChanged)="calculate()">
+              </dx-number-box>
+              <div class="display-value iva-amt">
+                {{ formData.ivaImporto != null ? (formData.ivaImporto | number:'1.2-2') : '—' }}
+              </div>
+              <div class="display-value iva-ctv">
+                {{ formData.ivaCTV != null ? (formData.ivaCTV | number:'1.2-2') : '—' }}&nbsp;CHF
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Cambio&nbsp;/&nbsp;sistema</label>
+            <div class="form-fld form-fld--row">
+              <dx-number-box
+                [(value)]="formData.cambio"
+                format="#,##0.0000"
+                style="flex:1"
+                (onValueChanged)="calculate()">
+              </dx-number-box>
+              <dx-button icon="money" hint="Pannello cambio" (onClick)="showCambio()"></dx-button>
+              <div class="display-value sys-rate">
+                <span class="sys-label">SYS</span>
+                {{ formData.cambioSistema != null ? (formData.cambioSistema | number:'1.4-4') : '—' }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row" style="align-items: center;">
+            <label class="form-lbl">Forza cambio</label>
+            <dx-check-box [(value)]="formData.cbForceChange"></dx-check-box>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Nr Assegno</label>
+            <div class="form-fld">
+              <dx-text-box [(value)]="formData.nrAssegno"></dx-text-box>
+            </div>
+          </div>
+
+          <div class="form-row" style="align-items: center;">
+            <label class="form-lbl">Salvo buon fine</label>
+            <dx-check-box [(value)]="formData.ckSBF"></dx-check-box>
+          </div>
+
+          <div class="field-sep"></div>
+
+          <div class="form-row">
+            <label class="form-lbl">Totale</label>
+            <div class="form-fld">
+              <div class="display-value display-value--accent">
+                {{ formData.totale != null ? (formData.totale | number:'1.2-2') : '—' }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Totale CHF</label>
+            <div class="form-fld">
+              <div class="display-value display-value--accent">
+                @if (formData.totaleCTV != null) {
+                  {{ formData.totaleCTV | number:'1.2-2' }}&nbsp;CHF
+                } @else { — }
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ── Right column ── -->
+    <div class="col-side">
+
+      <!-- Card 3: Vigilanza -->
+      <section class="card-section">
+        <app-header-card title="Vigilanza">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </app-header-card>
+        <div class="card-body">
+
+          <div class="form-row" style="align-items: center;">
+            <label class="form-lbl">Forza vigilanza</label>
+            <dx-check-box [(value)]="formData.forzaVigilanza"></dx-check-box>
+          </div>
+
+          <div class="field-sep"></div>
+
+          <div class="aml-row">
+            <div class="aml-info">
+              <span class="aml-dot"></span>
+              <span class="aml-status">Anti-Riciclaggio (AML)</span>
+            </div>
+            <dx-button text="Dettaglio" stylingMode="outlined" (onClick)="showAppearer()"></dx-button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Card 4: Descrizione Operazione -->
+      <section class="card-section card-fill">
+        <app-header-card title="Descrizione Operazione">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+        </app-header-card>
+        <div class="card-body">
+
+          <div class="form-row">
+            <label class="form-lbl">Data valuta</label>
+            <div class="form-fld">
+              <dx-date-box [(value)]="formData.dataValuta" displayFormat="dd/MM/yyyy"></dx-date-box>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-lbl">Data operazione</label>
+            <div class="form-fld">
+              <div class="display-value">{{ formData.dataOperazione | date:'dd/MM/yyyy' }}</div>
+            </div>
+          </div>
+
+          <div class="field-sep"></div>
+
+          <div class="form-row">
+            <label class="form-lbl">Nome e Cognome</label>
+            <div class="form-fld">
+              <dx-text-box [(value)]="formData.nomeCognome"></dx-text-box>
+            </div>
+          </div>
+
+          <div class="form-row form-row--top">
+            <label class="form-lbl">Testo</label>
+            <div class="form-fld">
+              <dx-text-area [(value)]="formData.testo" [height]="62"></dx-text-area>
+            </div>
+          </div>
+
+          <div class="form-row form-row--top">
+            <label class="form-lbl">Commento</label>
+            <div class="form-fld">
+              <dx-text-area [(value)]="formData.commentoInterno" [height]="62"></dx-text-area>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+  <!-- ── Action Bar ── -->
+  <div class="action-bar">
+    <div class="actions-left">
+      <dx-button text="Indietro" icon="arrowleft" stylingMode="outlined" (onClick)="indietro()"></dx-button>
+      <dx-button text="Annulla"  icon="remove"    stylingMode="outlined" (onClick)="annulla()"></dx-button>
+      <dx-button text="Modifica" icon="edit"      stylingMode="outlined" (onClick)="modifica()"></dx-button>
+    </div>
+
+    <dx-button text="Conferma" icon="check" class="btn-confirm" (onClick)="conferma()"></dx-button>
+
+    <div class="actions-right">
+      <dx-drop-down-button
+        text="Altre azioni"
+        icon="overflow"
+        stylingMode="outlined"
+        [items]="altreAzioniItems"
+        keyExpr="id"
+        displayExpr="text"
+        (onItemClick)="onAltreAzioniClick($event)">
+      </dx-drop-down-button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Popup: Ricerca Conto ── -->
+<dx-popup [width]="620" [height]="560" [showTitle]="true" title="RICERCA CONTO CLIENTE"
+  [dragEnabled]="false" [hideOnOutsideClick]="true"
+  [visible]="ricercaContoVisible()" (visibleChange)="ricercaContoVisible.set($event)">
+  <div *dxTemplate="let data of 'content'">
+    <p>[ Ricerca conto ]</p>
+  </div>
+</dx-popup>
+
+<!-- ── Popup: Cambio ── -->
+<dx-popup [width]="600" [height]="400" [showTitle]="true" title="PANNELLO CALCOLO CAMBIO VALUTA"
+  [dragEnabled]="false" [hideOnOutsideClick]="true"
+  [visible]="cambioVisible()" (visibleChange)="cambioVisible.set($event)">
+  <div *dxTemplate="let data of 'content'">
+    <p>[ Tassi - Spread - Calcolo cambio ]</p>
+  </div>
+</dx-popup>
+
+<!-- ── Popup: AML ── -->
+<dx-popup [width]="600" [height]="400" [showTitle]="true" title="PANNELLO INFORMATIVO SISTEMA"
+  [dragEnabled]="false" [hideOnOutsideClick]="true"
+  [visible]="appearerVisible()" (visibleChange)="appearerVisible.set($event)">
+  <div *dxTemplate="let data of 'content'">
+    <p>[ Messaggi / warning operazione / AML ]</p>
+  </div>
+</dx-popup>

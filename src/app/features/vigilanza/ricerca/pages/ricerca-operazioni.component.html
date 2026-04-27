@@ -1,197 +1,381 @@
-<div class="container">
-  <h1>Ricerca Operazioni</h1>
+<!-- Page Background -->
+<div class="page-shell">
 
-  <!-- Search Form -->
-  <div class="search-form" [formGroup]="searchForm">
-    <div class="form-row">
-      <div class="form-group">
-        <dx-date-box
-          id="trxDataDal"
-          formControlName="trxDataDal"
-          type="date"
-          label="Data da"
-          format="dd/MM/yyyy"
-          displayFormat="dd/MM/yyyy"
-        ></dx-date-box>
+  <!-- ═══ CARD 1: FILTRI DI RICERCA ═══ -->
+  <section class="card-section card-filtri">
+
+    <!-- Card Header -->
+    <div class="sempione-card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <h2 class="card-title">Filtri Di Ricerca</h2>
+    </div>
+    <div class="gold-divider"></div>
+
+    <!-- Card Body -->
+    <div class="card-body" [formGroup]="searchForm">
+
+      <!-- Section 1: Filtri Temporali -->
+      <div class="section-heading">Filtri Temporali</div>
+      <div class="filter-grid filter-grid--5">
+
+        <div class="field-group">
+          <label class="field-label">Data Dal</label>
+          <dx-date-box
+            formControlName="trxDataDal"
+            type="date"
+            displayFormat="dd.MM.yyyy"
+            [showClearButton]="true">
+          </dx-date-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Data Al</label>
+          <dx-date-box
+            formControlName="trxDataAl"
+            type="date"
+            displayFormat="dd.MM.yyyy"
+            [showClearButton]="true">
+          </dx-date-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Divisa</label>
+          <dx-select-box
+            formControlName="trxDivope"
+            [dataSource]="currencies()"
+            displayExpr="curId"
+            valueExpr="curId"
+            [showClearButton]="true"
+            placeholder="Tutte">
+          </dx-select-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Importo Da</label>
+          <dx-number-box
+            formControlName="trxImpopeDA"
+            format="#,##0.00"
+            [showClearButton]="true">
+          </dx-number-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Importo A</label>
+          <dx-number-box
+            formControlName="trxImpopeA"
+            format="#,##0.00"
+            [showClearButton]="true">
+          </dx-number-box>
+        </div>
+
       </div>
 
-      <div class="form-group">
-        <dx-date-box
-          id="trxDataAl"
-          formControlName="trxDataAl"
-          type="date"
-          label="Data a"
-          format="dd/MM/yyyy"
-          displayFormat="dd/MM/yyyy"
-        ></dx-date-box>
+      <div class="section-divider"></div>
+
+      <!-- Section 2: Dettagli Operazione -->
+      <div class="section-heading">Dettagli Operazione</div>
+      <div class="filter-grid filter-grid--5">
+
+        <div class="field-group">
+          <label class="field-label">Cassa</label>
+          <dx-text-box
+            formControlName="trxCassa"
+            placeholder="Codice cassa..."
+            [showClearButton]="true">
+          </dx-text-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Filiale</label>
+          <dx-select-box
+            formControlName="trxLocalita"
+            [dataSource]="branches()"
+            displayExpr="braDes"
+            valueExpr="braId"
+            [showClearButton]="true"
+            placeholder="Tutte">
+          </dx-select-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Genere</label>
+          <dx-select-box
+            formControlName="trxCutId"
+            [dataSource]="currencyTypes()"
+            displayExpr="cutDes"
+            valueExpr="cutId"
+            [showClearButton]="true"
+            placeholder="Tutti">
+          </dx-select-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Tipo Operazione</label>
+          <dx-select-box
+            formControlName="trxOptId"
+            [dataSource]="stOperationsTypes()"
+            displayExpr="optDes"
+            valueExpr="optId"
+            [showClearButton]="true"
+            placeholder="Tutti">
+          </dx-select-box>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Comparente</label>
+          <dx-text-box
+            formControlName="arcAppName"
+            [showClearButton]="true"
+            valueChangeEvent="input"
+            placeholder="Nome comparente...">
+          </dx-text-box>
+        </div>
+
       </div>
 
-      <div class="form-group">
-        <dx-text-box
-          id="trxCassa"
-          formControlName="trxCassa"
-          placeholder="Codice Cassa"
-          label="Cassa"
-        ></dx-text-box>
+      <div class="section-divider"></div>
+
+      <!-- Section 3: Opzioni + Azioni -->
+      <div class="section-heading">Opzioni</div>
+      <div class="options-and-actions">
+
+        <div class="options-group">
+          <dx-check-box
+            formControlName="trxReverse"
+            text="Transazioni Inverse"
+            class="filter-check">
+          </dx-check-box>
+          <dx-check-box
+            formControlName="arcForced"
+            text="Forzato"
+            class="filter-check">
+          </dx-check-box>
+        </div>
+
+        <div class="actions-group">
+          <dx-button
+            text="Annulla"
+            icon="revert"
+            stylingMode="outlined"
+            (onClick)="resetFilters()">
+          </dx-button>
+          <dx-button
+            text="Ricerca"
+            type="default"
+            stylingMode="contained"
+            icon="search"
+            [disabled]="isLoading()"
+            (onClick)="search()">
+          </dx-button>
+        </div>
+
       </div>
 
-      <div class="form-group">
-        <dx-autocomplete
-          id="trxLocalita"
-          formControlName="trxLocalita"
-          placeholder="Filiale"
-          label="Filiale"
-          [items]="branches()"
-          displayExpr="braDes"
-          valueExpr="braId"
-        ></dx-autocomplete>
-      </div>
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <dx-autocomplete
-          id="trxDivope"
-          formControlName="trxDivope"
-          placeholder="Valuta"
-          label="Valuta"
-          [items]="currencies()"
-          displayExpr="curLondes"
-          valueExpr="curId"
-        ></dx-autocomplete>
-      </div>
+  </section>
 
-      <div class="form-group">
-        <dx-number-box
-          id="trxImpopeDA"
-          formControlName="trxImpopeDA"
-          placeholder="Importo minimo"
-          label="Importo minimo"
-          format="#,##0.00"
-        ></dx-number-box>
-      </div>
+  <!-- ═══ CARD 2: RISULTATI RICERCA ═══ -->
+  <section class="card-section card-risultati">
 
-      <div class="form-group">
-        <dx-number-box
-          id="trxImpopeA"
-          formControlName="trxImpopeA"
-          placeholder="Importo massimo"
-          label="Importo massimo"
-          format="#,##0.00"
-        ></dx-number-box>
-      </div>
+    <!-- Card Header -->
+    <div class="sempione-card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="16" y1="13" x2="8" y2="13"></line>
+        <line x1="16" y1="17" x2="8" y2="17"></line>
+      </svg>
+      <h2 class="card-title">Risultati Ricerca</h2>
+      <span class="card-count">{{ operations().length }}</span>
+    </div>
+    <div class="gold-divider"></div>
 
-      <div class="form-group">
-        <dx-autocomplete
-          id="trxCutId"
-          formControlName="trxCutId"
-          placeholder="Genere operazione"
-          label="Genere operazione"
-          [items]="currencyTypes()"
-          displayExpr="cutDes"
-          valueExpr="cutId"
-        ></dx-autocomplete>
-      </div>
+    <!-- Card Body -->
+    <div class="card-body card-body--grid">
+
+      @if (error()) {
+        <div class="grid-message grid-message--error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          {{ error() }}
+        </div>
+      }
+
+      @if (isLoading()) {
+        <div class="grid-message grid-message--loading">
+          <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          </svg>
+          Ricerca in corso...
+        </div>
+      }
+
+      @if (!isLoading() && !error() && operations().length > 0) {
+        <dx-data-grid
+          [dataSource]="operations()"
+          [showBorders]="false"
+          [columnAutoWidth]="true"
+          [rowAlternationEnabled]="true"
+          [hoverStateEnabled]="true"
+          [height]="'100%'"
+          keyExpr="trxId">
+
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-paging [pageSize]="30"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 30, 50, 100]" [showInfo]="true"></dxo-pager>
+
+          <dxi-column dataField="trxId"           caption="Nop"          [width]="80"  alignment="center"></dxi-column>
+          <dxi-column dataField="trxDate"         caption="Data"         [width]="100" alignment="center" dataType="date" format="dd.MM.yy"></dxi-column>
+          <dxi-column dataField="cutDes"          caption="Utente/Cassa" [width]="140" alignment="left"></dxi-column>
+          <dxi-column dataField="optDes"          caption="Operazione"   [width]="160" alignment="left"></dxi-column>
+          <dxi-column dataField="trxReport"       caption="N. Rapporto"  [width]="110" alignment="center"></dxi-column>
+          <dxi-column dataField="trxCurId"        caption="Div"          [width]="60"  alignment="center" cellTemplate="curTemplate"></dxi-column>
+          <dxi-column dataField="trxAmount"       caption="Imp. CTP"     [width]="110" alignment="right"  dataType="number" format="#,##0.00"></dxi-column>
+          <dxi-column dataField="trxRate"         caption="Cambio"       [width]="100" alignment="right"  dataType="number" format="#,##0.0000"></dxi-column>
+          <dxi-column dataField="appearerName"    caption="Comparente"   [width]="160" alignment="left"></dxi-column>
+          <dxi-column dataField="beneficiaryName" caption="Beneficiario" [width]="160" alignment="left"></dxi-column>
+          <dxi-column dataField="staDes"          caption="Stato"        [width]="100" alignment="center" cellTemplate="statoTemplate"></dxi-column>
+
+          <dxi-column caption="Dettaglio" [width]="80" [allowSorting]="false" [allowFiltering]="false" alignment="center" cellTemplate="actionsTemplate"></dxi-column>
+
+          <div *dxTemplate="let cell of 'curTemplate'" class="cur-cell">
+            <span class="cur-badge">{{ cell.value }}</span>
+          </div>
+
+          <div *dxTemplate="let cell of 'statoTemplate'" class="stato-cell">
+            <span class="stato-pill" [ngClass]="getStatoPillClass(cell.value)">{{ cell.value }}</span>
+          </div>
+
+          <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
+            <button class="action-btn action-btn--view" title="Visualizza dettaglio" (click)="openViewPopup(cell.data)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+
+          <dxo-load-panel [enabled]="false"></dxo-load-panel>
+
+        </dx-data-grid>
+      }
+
+      @if (!isLoading() && !error() && operations().length === 0) {
+        <div class="grid-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+          <h3 class="empty-title">Nessun risultato trovato</h3>
+          <p class="empty-subtitle">Affina i filtri sopra per visualizzare le operazioni</p>
+        </div>
+      }
+
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <dx-autocomplete
-          id="trxOptId"
-          formControlName="trxOptId"
-          placeholder="Tipo operazione"
-          label="Tipo operazione"
-          [items]="stOperationsTypes()"
-          displayExpr="optDes"
-          valueExpr="optId"
-        ></dx-autocomplete>
-      </div>
+  </section>
 
-      <div class="form-group">
-        <dx-text-box
-          id="arcAppName"
-          formControlName="arcAppName"
-          placeholder="Nome comparente"
-          label="Nome comparente"
-        ></dx-text-box>
-      </div>
-
-      <div class="form-group">
-        <dx-check-box
-          id="trxReverse"
-          formControlName="trxReverse"
-          text="Solo stornate"
-        ></dx-check-box>
-      </div>
-
-      <div class="form-group">
-        <dx-check-box
-          id="arcForced"
-          formControlName="arcForced"
-          text="Solo forzate vigilanza"
-        ></dx-check-box>
-      </div>
-    </div>
-
-    <div class="form-group button-group" style="justify-content: flex-end;">
-      <dx-button
-        text="Ricerca"
-        type="success"
-        stylingMode="contained"
-        (onClick)="search()"
-        [disabled]="isLoading()"
-      ></dx-button>
-    </div>
-  </div>
-
-  <!-- Error Message -->
-  @if (error()) {
-    <div class="error-message">
-      {{ error() }}
-    </div>
-  }
-
-  <!-- Loading Indicator -->
-  @if (isLoading()) {
-    <div class="loading-message">
-      Caricamento...
-    </div>
-  }
-
-  <!-- Data Grid -->
-  @if (!isLoading() && operations().length > 0) {
-    <div class="data-grid-container">
-    <dx-data-grid
-      [dataSource]="operations()"
-      keyExpr="trxId"
-      [showBorders]="true"
-      [columnAutoWidth]="true"
-      [allowColumnReordering]="true"
-      [allowColumnResizing]="true"
-    >
-      <dxo-paging [pageSize]="10" [enabled]="true"></dxo-paging>
-      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]" [showInfo]="true"></dxo-pager>
-      
-      <dxi-column dataField="trxId" caption="TRX_ID" width="80"></dxi-column>
-      <dxi-column dataField="trxDate" caption="Data" width="120" dataType="datetime" format="dd/MM/yyyy"></dxi-column>
-      <dxi-column dataField="cutDes" caption="Genere" width="150"></dxi-column>
-      <dxi-column dataField="optDes" caption="Tipo" width="150"></dxi-column>
-      <dxi-column dataField="trxReport" caption="Report" width="100"></dxi-column>
-      <dxi-column dataField="trxCurId" caption="Div" width="80"></dxi-column>
-      <dxi-column dataField="trxAmount" caption="Importo" width="120" dataType="number" format="#,##0.00"></dxi-column>
-      <dxi-column dataField="trxRate" caption="Cambio" width="100" dataType="number" format="#,##0.0000"></dxi-column>
-      <dxi-column dataField="appearerName" caption="Nome Comparente" width="180"></dxi-column>
-      <dxi-column dataField="beneficiaryName" caption="Nome Beneficiario" width="180"></dxi-column>
-      <dxi-column dataField="staDes" caption="Stato" width="100"></dxi-column>
-    </dx-data-grid>
-    </div>
-  }
-
-  <!-- No Data Message -->
-  @if (!isLoading() && operations().length === 0 && !error()) {
-    <div class="no-data-message">
-      Nessuna operazione trovata
-    </div>
-  }
 </div>
 
+<!-- ── Popup Dettaglio Operazione ── -->
+<dx-popup
+  [(visible)]="isDetailPopupVisible"
+  [showTitle]="true"
+  [title]="'Dettaglio Operazione — Nop ' + (selectedOperation()?.trxId ?? '')"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="true"
+  [showCloseButton]="true"
+  [width]="'90%'"
+  [maxWidth]="740"
+  [height]="'auto'"
+  [maxHeight]="'88vh'"
+  (onHidden)="closePopup()">
+
+  <div *dxTemplate="let data of 'content'">
+    @if (selectedOperation(); as op) {
+      <div class="popup-layout popup-view-mode">
+
+        <section class="popup-card">
+          <h3 class="popup-card-title">Transazione</h3>
+          <div class="popup-fields-grid popup-fields-grid--3col">
+            <div class="popup-field-group">
+              <label class="popup-field-label">Nop</label>
+              <div class="popup-field-value">{{ op.trxId }}</div>
+            </div>
+            <div class="popup-field-group">
+              <label class="popup-field-label">Data</label>
+              <div class="popup-field-value">{{ op.trxDate | date:'dd.MM.yyyy HH:mm' }}</div>
+            </div>
+            <div class="popup-field-group">
+              <label class="popup-field-label">Stato</label>
+              <div class="popup-field-value">
+                <span class="stato-pill" [ngClass]="getStatoPillClass(op.staDes)">{{ op.staDes }}</span>
+              </div>
+            </div>
+            <div class="popup-field-group">
+              <label class="popup-field-label">Genere</label>
+              <div class="popup-field-value">{{ op.cutDes }}</div>
+            </div>
+            <div class="popup-field-group">
+              <label class="popup-field-label">Tipo Operazione</label>
+              <div class="popup-field-value">{{ op.optDes }}</div>
+            </div>
+            <div class="popup-field-group">
+              <label class="popup-field-label">N. Rapporto</label>
+              <div class="popup-field-value mono">{{ op.trxReport || '—' }}</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="popup-card">
+          <h3 class="popup-card-title">Importi</h3>
+          <div class="popup-fields-grid popup-fields-grid--3col">
+            <div class="popup-field-group">
+              <label class="popup-field-label">Divisa</label>
+              <div class="popup-field-value">
+                <span class="cur-badge">{{ op.trxCurId }}</span>
+              </div>
+            </div>
+            <div class="popup-field-group">
+              <label class="popup-field-label">Importo CTP</label>
+              <div class="popup-field-value amount">{{ op.trxAmount | number:'1.2-2' }}</div>
+            </div>
+            <div class="popup-field-group">
+              <label class="popup-field-label">Cambio</label>
+              <div class="popup-field-value mono">{{ op.trxRate | number:'1.4-4' }}</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="popup-card">
+          <h3 class="popup-card-title">Parti Coinvolte</h3>
+          <div class="popup-fields-grid popup-fields-grid--2col">
+            <div class="popup-field-group">
+              <label class="popup-field-label">Comparente</label>
+              <div class="popup-field-value">{{ op.appearerName || '—' }}</div>
+            </div>
+            <div class="popup-field-group">
+              <label class="popup-field-label">Beneficiario</label>
+              <div class="popup-field-value">{{ op.beneficiaryName || '—' }}</div>
+            </div>
+          </div>
+        </section>
+
+        <div class="popup-action-bar">
+          <div class="popup-actions-secondary"></div>
+          <div class="popup-actions-primary">
+            <dx-button class="btn-action-close" text="Chiudi" icon="close" (onClick)="closePopup()"></dx-button>
+          </div>
+        </div>
+
+      </div>
+    }
+  </div>
+</dx-popup>

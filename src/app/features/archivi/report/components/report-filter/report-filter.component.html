@@ -1,72 +1,82 @@
-<div class="search-form" [formGroup]="searchForm">
-  <div class="form-row">
-    @if (showCassa) {
-      <div class="form-group">
-        <dx-text-box
-          id="trxCassa"
-          formControlName="trxCassa"
-          placeholder="Codice Cassa"
-          label="Cassa"
-        ></dx-text-box>
-      </div>
-    }
+<div class="page-wrapper" [formGroup]="searchForm">
 
-    @if (showBranch) {
-      <div class="form-group">
-        <dx-text-box
-          id="trxBraId"
-          formControlName="trxBraId"
-          placeholder="Codice Filiale"
-          label="Filiale"
-        ></dx-text-box>
-      </div>
-    }
+  <section class="card-section">
+    <h2 class="section-title">Filtri di Selezione</h2>
 
-    @if (showStatus) {
-      <div class="form-group">
-        <dx-number-box
-          id="trxStatus"
-          formControlName="trxStatus"
-          placeholder="Status"
-          label="Status"
-          [readOnly]="statusReadOnly"
-        ></dx-number-box>
-      </div>
-    }
-  </div>
+    <div class="fields-grid fields-grid--3">
 
-  <div class="form-row">
-    <div class="form-group">
-      <dx-date-box
-        id="trxDataDal"
-        formControlName="trxDataDal"
-        type="date"
-        label="Data Dal"
-        format="dd/MM/yyyy"
-        displayFormat="dd/MM/yyyy"
-        (onValueChanged)="onDateDalChanged($event)"
-      ></dx-date-box>
+      @if (showCassa) {
+        <div class="field-group">
+          <label class="field-label">Cassa</label>
+          <dx-text-box
+            formControlName="trxCassa"
+            placeholder="Codice Cassa">
+          </dx-text-box>
+        </div>
+      }
+
+      @if (showBranch) {
+        <div class="field-group">
+          <label class="field-label">Filiale</label>
+          <dx-text-box
+            formControlName="trxBraId"
+            placeholder="Codice Filiale">
+          </dx-text-box>
+        </div>
+      }
+
+      @if (showStatus) {
+        <div class="field-group">
+          <label class="field-label">Status</label>
+          @if (statusReadOnly) {
+            <div class="status-badge" [ngClass]="'status-badge--' + statusDefaultValue">
+              {{ statusDefaultValue }}
+            </div>
+          } @else {
+            <dx-number-box formControlName="trxStatus"></dx-number-box>
+          }
+        </div>
+      }
+
+      <div class="field-group">
+        <label class="field-label">Data Dal</label>
+        <dx-date-box
+          formControlName="trxDataDal"
+          type="date"
+          displayFormat="dd/MM/yyyy"
+          (onValueChanged)="onDateDalChanged($event)">
+        </dx-date-box>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Data Al</label>
+        <dx-date-box
+          formControlName="trxDataAl"
+          type="date"
+          displayFormat="dd/MM/yyyy"
+          (onValueChanged)="onDateAlChanged($event)">
+        </dx-date-box>
+      </div>
+
     </div>
+  </section>
 
-    <div class="form-group">
-      <dx-date-box
-        id="trxDataAl"
-        formControlName="trxDataAl"
-        type="date"
-        label="Data Al"
-        format="dd/MM/yyyy"
-        displayFormat="dd/MM/yyyy"
-        (onValueChanged)="onDateAlChanged($event)"
-      ></dx-date-box>
-    </div>
-  </div>
+  <div class="action-bar">
+    <dx-button
+      text="Annulla"
+      icon="remove"
+      stylingMode="outlined"
+      (onClick)="reset()">
+    </dx-button>
 
-  <div class="form-group button-group">
     <dx-button
       text="Ricerca"
       type="success"
-      (onClick)="search()"
+      icon="search"
+      class="btn-search"
       [disabled]="isLoading()"
-    ></dx-button>
+      (onClick)="search()">
+    </dx-button>
   </div>
+
 </div>

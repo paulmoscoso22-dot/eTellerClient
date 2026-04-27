@@ -1,0 +1,28 @@
+<div class="card-toolbar">
+  <div class="toolbar-inner">
+
+    @if (showSearch) {
+      <div class="toolbar-search-wrap">
+        <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <dx-text-box
+          [value]="searchValue"
+          (valueChange)="searchValueChange.emit($event)"
+          [placeholder]="searchPlaceholder"
+          class="toolbar-textbox">
+        </dx-text-box>
+      </div>
+    }
+
+    <!-- Slot for extra filter controls (label + textbox pairs, etc.) -->
+    <ng-content></ng-content>
+
+    <!-- Slot for action buttons (right side) -->
+    <div class="toolbar-actions">
+      <ng-content select="[toolbar-actions]"></ng-content>
+    </div>
+
+  </div>
+</div>

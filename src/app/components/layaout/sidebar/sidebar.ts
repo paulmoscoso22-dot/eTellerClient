@@ -15,6 +15,7 @@ export class Sidebar implements OnInit, OnChanges {
   @Input() items: MenuItem[] = [];
   @Input() showSearch: boolean = false;
   @Input() searchPlaceholder: string = 'Search...';
+  @Input() isCollapsed: boolean = false;
   
   @Output() itemClick = new EventEmitter<MenuItem>();
   @Output() breadcrumbChanged = new EventEmitter<MenuItem[]>();
