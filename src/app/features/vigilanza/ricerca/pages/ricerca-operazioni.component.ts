@@ -65,14 +65,14 @@ export class RicercaOperazioniComponent implements OnInit, OnDestroy {
       trxLocalita: [''],
       trxDataDal: [null],
       trxDataAl: [null],
-      trxReverse: [null],
+      trxReverse: [false],
       trxCutId: [''],
       trxOptId: [''],
       trxDivope: [''],
       trxImpopeDA: [null],
       trxImpopeA: [null],
       arcAppName: [''],
-      arcForced: [null]
+      arcForced: [false]
     });
   }
 
@@ -114,9 +114,25 @@ export class RicercaOperazioniComponent implements OnInit, OnDestroy {
   resetFilters(): void {
     this.searchForm.reset({
       trxCassa: '', trxLocalita: '', trxDataDal: null, trxDataAl: null,
-      trxReverse: null, trxCutId: '', trxOptId: '', trxDivope: '',
-      trxImpopeDA: null, trxImpopeA: null, arcAppName: '', arcForced: null
+      trxReverse: false, trxCutId: '', trxOptId: '', trxDivope: '',
+      trxImpopeDA: null, trxImpopeA: null, arcAppName: '', arcForced: false
     });
+  }
+
+  onDateDalChanged(e: any): void {
+    if (e.value) {
+      const date = new Date(e.value);
+      date.setHours(0, 0, 0, 0);
+      this.searchForm.patchValue({ trxDataDal: date }, { emitEvent: false });
+    }
+  }
+
+  onDateAlChanged(e: any): void {
+    if (e.value) {
+      const date = new Date(e.value);
+      date.setHours(23, 59, 59, 999);
+      this.searchForm.patchValue({ trxDataAl: date }, { emitEvent: false });
+    }
   }
 
   getStatoPillClass(stato: string): string {
