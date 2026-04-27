@@ -1,0 +1,73 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Status Badge ── */
+.status-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.status-badge {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  cursor: default;
+  flex-shrink: 0;
+}
+
+.badge-active {
+  background-color: #28a745;
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
+}
+
+.badge-inactive {
+  font-size: 0.875rem;
+  color: #dc3545;
+  cursor: default;
+  line-height: 1;
+}
+
+/* ── Colonna Azioni ── */
+.actions-cell {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-icon {
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.action-icon-view {
+  color: var(--dx-color-accent, #0078d4);
+}
+.action-icon-view:hover {
+  opacity: 0.8;
+}
+
+.action-icon-edit {
+  color: #20294c;
+}
+.action-icon-edit:hover {
+  opacity: 0.75;
+}
+
+.action-more-btn {
+  display: inline-flex;
+  align-items: center;
+}
+
+.action-more-btn .dx-button {
+  min-width: unset;
+  padding: 0 4px;
+}

@@ -1,0 +1,36 @@
+.casse-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Popup body layout ── */
+.popup-body {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.form-section {
+  flex: 0 0 340px;
+  min-width: 260px;
+}
+
+.devices-section {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* ── Popup action bar ── */
+.popup-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid var(--dx-color-border, #e0e0e0);
+  margin-top: 16px;
+}
+

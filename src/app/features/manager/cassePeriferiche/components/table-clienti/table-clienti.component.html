@@ -1,0 +1,83 @@
+@if (clients$ | async; as clients) {
+  <dx-data-grid
+    [dataSource]="clients"
+    [filterValue]="filterValue"
+    [showBorders]="true"
+    [columnAutoWidth]="true"
+    [rowAlternationEnabled]="true"
+    [height]="'100%'"
+    (onSelectionChanged)="onSelectionChanged($event)">
+
+    <dxo-selection mode="single"></dxo-selection>
+    <dxo-paging [pageSize]="10"></dxo-paging>
+    <dxo-pager
+      [showPageSizeSelector]="true"
+      [allowedPageSizes]="[10, 25, 50, 100]"
+      [showInfo]="true">
+    </dxo-pager>
+
+    <!-- Status badge column -->
+    <dxi-column
+      caption=""
+      [width]="40"
+      [allowSorting]="false"
+      [allowFiltering]="false"
+      [alignment]="'center'"
+      cellTemplate="statusTemplate">
+    </dxi-column>
+
+    <div *dxTemplate="let cell of 'statusTemplate'" class="status-cell">
+      @if (cell.data.cliStatus === 'A') {
+        <span class="status-badge badge-active"
+              [title]="'clienti.statusActive' | transloco"
+              [attr.aria-label]="'clienti.statusActive' | transloco">
+        </span>
+      } @else {
+        <i class="bi bi-slash-circle badge-inactive"
+           [title]="'clienti.statusInactive' | transloco"
+           [attr.aria-label]="'clienti.statusInactive' | transloco">
+        </i>
+      }
+    </div>
+
+    <dxi-column dataField="cliId"       [caption]="'Cassa'       | transloco" [alignment]="'right'"></dxi-column>
+    <dxi-column dataField="cliIp"       [caption]="'IP'       | transloco"></dxi-column>
+    <dxi-column dataField="cliMac"      [caption]="'Mac'      | transloco"></dxi-column>
+    <!-- <dxi-column dataField="cliAuthcode" [caption]="'clienti.colCliAuthcode' | transloco"></dxi-column> -->
+    <dxi-column dataField="cliBraId"    [caption]="'clienti.colCliBraId'    | transloco"></dxi-column>
+    <!-- <dxi-column dataField="cliDes"      [caption]="'clienti.colCliDes'      | transloco"></dxi-column> -->
+    <dxi-column dataField="cliOff"      [caption]="'Località'      | transloco"></dxi-column>
+    <dxi-column dataField="cliStatus"   [caption]="'Stato'   | transloco"></dxi-column>
+    <dxi-column dataField="cliLingua"   [caption]="'Lingua'   | transloco"></dxi-column>
+    <dxi-column dataField="cliCnt"      [caption]="'Operazione'      | transloco" [alignment]="'right'"></dxi-column>
+    <dxi-column dataField="cliDatcounter" [caption]="'Data' | transloco" dataType="date" format="dd/MM/yyyy HH:mm:ss"></dxi-column>
+
+    <!-- Azioni column -->
+    <dxi-column
+      [caption]="'clienti.colAzioni' | transloco"
+      [width]="110"
+      [allowSorting]="false"
+      [allowFiltering]="false"
+      [alignment]="'center'"
+      cellTemplate="actionsTemplate">
+    </dxi-column>
+
+    <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
+      <i class="bi bi-eye action-icon action-icon-view"    [title]="'clienti.actionView' | transloco" (click)="onAction('view', cell.data)"></i>
+      <i class="bi bi-pencil action-icon action-icon-edit" [title]="'clienti.actionEdit' | transloco" (click)="onAction('edit', cell.data)"></i>
+      <dx-drop-down-button
+        icon="overflow"
+        [items]="moreActions()"
+        displayExpr="text"
+        keyExpr="id"
+        [showArrowIcon]="false"
+        [useSelectMode]="false"
+        stylingMode="text"
+        [dropDownOptions]="{ width: 180 }"
+        (onItemClick)="onMoreAction($event, cell.data)"
+        class="action-more-btn">
+      </dx-drop-down-button>
+    </div>
+
+  </dx-data-grid>
+}

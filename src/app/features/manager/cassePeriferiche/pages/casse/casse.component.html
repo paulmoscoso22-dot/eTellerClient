@@ -1,0 +1,144 @@
+<div class="casse-container">
+  <app-table-clienti
+    [clients$]="clients$"
+    (clientSelected)="onSelectionChanged($event)"
+    (actionClicked)="onTableAction($event)">
+  </app-table-clienti>
+</div>
+
+<!-- Popup Dettaglio Cassa -->
+<dx-popup
+  [(visible)]="isPopupVisible"
+  [showTitle]="true"
+  [title]="popupMode() === 'edit'
+    ? ('casse.popupEditTitle' | transloco) + ' — ' + selectedCliId()
+    : ('casse.popupViewTitle' | transloco) + ' — ' + selectedCliId()"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [width]="'95%'"
+  [height]="'auto'"
+  [maxHeight]="'90vh'"
+  (onHidden)="onPopupHidden()">
+
+  <div *dxTemplate="let data of 'content'">
+    <div class="popup-body">
+
+      <!-- Form fields -->
+      <div class="form-section">
+        <form [formGroup]="clientForm">
+
+          <div class="dx-field">
+            <div class="dx-field-label">{{ 'casse.fieldCliId' | transloco }}</div>
+            <div class="dx-field-value">
+              <dx-text-box formControlName="cliId" [readOnly]="true"></dx-text-box>
+            </div>
+          </div>
+
+          <div class="dx-field">
+            <div class="dx-field-label">{{ 'casse.fieldCliIp' | transloco }}</div>
+            <div class="dx-field-value">
+              <dx-text-box formControlName="cliIp" [readOnly]="isReadOnly"></dx-text-box>
+            </div>
+          </div>
+
+          <div class="dx-field">
+            <div class="dx-field-label">{{ 'casse.fieldCliMac' | transloco }}</div>
+            <div class="dx-field-value">
+              <dx-text-box formControlName="cliMac" [readOnly]="isReadOnly"></dx-text-box>
+            </div>
+          </div>
+
+          <div class="dx-field">
+            <div class="dx-field-label">{{ 'casse.fieldCliLingua' | transloco }}</div>
+            <div class="dx-field-value">
+              <dx-select-box
+                formControlName="cliLingua"
+                [dataSource]="languages$ | async"
+                displayExpr="lanDes"
+                valueExpr="lanId"
+                [readOnly]="isReadOnly">
+              </dx-select-box>
+            </div>
+          </div>
+
+          <div class="dx-field">
+            <div class="dx-field-label">{{ 'casse.fieldCliBraId' | transloco }}</div>
+            <div class="dx-field-value">
+              <dx-select-box
+                formControlName="cliBraId"
+                [dataSource]="branches$ | async"
+                displayExpr="braDes"
+                valueExpr="braId"
+                [readOnly]="isReadOnly">
+              </dx-select-box>
+            </div>
+          </div>
+
+          <div class="dx-field">
+            <div class="dx-field-label">{{ 'casse.fieldCliOff' | transloco }}</div>
+            <div class="dx-field-value">
+              <dx-text-box formControlName="cliOff" [readOnly]="isReadOnly"></dx-text-box>
+            </div>
+          </div>
+
+          <div class="dx-field">
+            <div class="dx-field-label">{{ 'casse.fieldCliStatus' | transloco }}</div>
+            <div class="dx-field-value">
+              <dx-select-box
+                formControlName="cliStatus"
+                [dataSource]="statiEntita$ | async"
+                displayExpr="steDes"
+                valueExpr="steId"
+                [readOnly]="isReadOnly">
+              </dx-select-box>
+            </div>
+          </div>
+
+          <div class="dx-field">
+            <div class="dx-field-label">{{ 'casse.fieldCliDes' | transloco }}</div>
+            <div class="dx-field-value">
+              <dx-text-box formControlName="cliDes" [readOnly]="isReadOnly"></dx-text-box>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Periferiche collegate / possibili -->
+      <div class="devices-section">
+        <app-control-assign
+          [assignedRoles]="assignedDevices"
+          [possibleRoles]="possibleDevices"
+          [disabled]="isReadOnly"
+          (rolesChanged)="onDevicesChanged($event)">
+        </app-control-assign>
+      </div>
+
+    </div>
+
+    <!-- Popup actions -->
+    <div class="popup-actions">
+      @if (popupMode() === 'edit') {
+        <dx-button
+          [text]="'casse.btnModifica' | transloco"
+          type="default"
+          stylingMode="contained">
+        </dx-button>
+        <dx-button
+          [text]="'casse.btnTraccia' | transloco"
+          type="normal"
+          stylingMode="outlined">
+        </dx-button>
+      }
+      <dx-button
+        [text]="'casse.btnReset' | transloco"
+        type="normal"
+        stylingMode="outlined"
+        (onClick)="onReset()">
+      </dx-button>
+    </div>
+
+  </div>
+</dx-popup>
+

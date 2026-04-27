@@ -88,15 +88,15 @@ export const routes: Routes = [
       },
       {
         path: 'casse',
-        loadComponent: () => import('./features/manager/cassePeriferiche/pages/casse.component').then(m => m.CasseComponent)
+        loadComponent: () => import('./features/manager/cassePeriferiche/pages/casse/casse.component').then(m => m.CasseComponent)
       },
       {
         path: 'conti-cassa',
-        loadComponent: () => import('./features/manager/cassePeriferiche/pages/conti-cassa.component').then(m => m.ContiCassaComponent)
+        loadComponent: () => import('./features/manager/cassePeriferiche/pages/conti-cassa/conti-cassa.component').then(m => m.ContiCassaComponent)
       },
       {
         path: 'periferiche',
-        loadComponent: () => import('./features/manager/cassePeriferiche/pages/periferiche.component').then(m => m.PerifericheComponent)
+        loadComponent: () => import('./features/manager/cassePeriferiche/pages/periferiche/periferiche.component').then(m => m.PerifericheComponent)
       },
       {
         path: 'gestione-messaggi-host',
