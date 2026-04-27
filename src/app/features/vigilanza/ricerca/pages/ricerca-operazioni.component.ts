@@ -1,14 +1,15 @@
 import { Component, OnInit, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { 
-  DxDataGridModule, 
-  DxTextBoxModule, 
-  DxDateBoxModule, 
-  DxNumberBoxModule, 
+import {
+  DxDataGridModule,
+  DxTextBoxModule,
+  DxDateBoxModule,
+  DxNumberBoxModule,
   DxButtonModule,
   DxCheckBoxModule,
-  DxAutocompleteModule
+  DxSelectBoxModule,
+  DxPopupModule
 } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
@@ -32,7 +33,8 @@ import { RicercaOperazioniResponse } from '../domain/ricerca-operazioni.models';
     DxNumberBoxModule,
     DxButtonModule,
     DxCheckBoxModule,
-    DxAutocompleteModule
+    DxSelectBoxModule,
+    DxPopupModule
   ],
   templateUrl: './ricerca-operazioni.component.html',
   styleUrls: ['./ricerca-operazioni.component.css'],
@@ -49,6 +51,9 @@ export class RicercaOperazioniComponent implements OnInit, OnDestroy {
   currencyTypes = signal<CurrencyType[]>([]);
   stOperationsTypes = signal<StOperationType[]>([]);
   searchForm: FormGroup;
+
+  selectedOperation = signal<RicercaOperazioniResponse | null>(null);
+  isDetailPopupVisible = false;
 
   constructor(
     private ricercaOperazioniFacade: RicercaOperazioniFacade,
@@ -94,6 +99,33 @@ export class RicercaOperazioniComponent implements OnInit, OnDestroy {
       next: (data) => this.stOperationsTypes.set(data),
       error: (err) => console.error('Error loading operation types:', err)
     });
+  }
+
+  openViewPopup(data: RicercaOperazioniResponse): void {
+    this.selectedOperation.set(data);
+    this.isDetailPopupVisible = true;
+  }
+
+  closePopup(): void {
+    this.isDetailPopupVisible = false;
+    this.selectedOperation.set(null);
+  }
+
+  resetFilters(): void {
+    this.searchForm.reset({
+      trxCassa: '', trxLocalita: '', trxDataDal: null, trxDataAl: null,
+      trxReverse: null, trxCutId: '', trxOptId: '', trxDivope: '',
+      trxImpopeDA: null, trxImpopeA: null, arcAppName: '', arcForced: null
+    });
+  }
+
+  getStatoPillClass(stato: string): string {
+    if (!stato) return '';
+    const s = stato.toLowerCase();
+    if (s.includes('stor') || s.includes('revers')) return 'stato-pill--stornata';
+    if (s.includes('forz') || s.includes('vigil'))  return 'stato-pill--forzata';
+    if (s.includes('ok') || s.includes('complet'))  return 'stato-pill--ok';
+    return '';
   }
 
   /**
