@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-version-display',
   imports: [],
-  templateUrl: './version-display.html',
-  styleUrl: './version-display.css',
+  templateUrl: './version-display.component.html',
+  styleUrl: './version-display.component.css',
 })
 export class VersionDisplay {
   version: string = '1.0.0';

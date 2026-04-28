@@ -5,9 +5,9 @@ import { filter } from 'rxjs/operators';
 import { BreadcrumbItem } from '../../domain/breadcrumb-item';
 import { MenuItem } from '../../domain/menu-item';
 import { MenuService } from '../../services/menu.service';
-import { HeaderComponent } from '../../components/layaout/header/header';
-import { Sidebar } from '../../components/layaout/sidebar/sidebar';
-import { Breadcrumb } from '../../components/layaout/breadcrumb/breadcrumb';
+import { HeaderComponent } from '../layaout/header/header.component';
+import { Sidebar } from '../layaout/sidebar/sidebar.component';
+import { Breadcrumb } from '../layaout/breadcrumb/breadcrumb.component';
 import { Theme } from '../../services/theme';
 import { TranslocoService } from '@jsverse/transloco';
 

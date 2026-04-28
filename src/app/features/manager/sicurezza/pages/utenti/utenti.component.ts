@@ -14,12 +14,11 @@ import { ISTLanguageResponse } from '../../../../../core/domain/laguage.domain';
 import { Branch } from '../../../../../core/domain/branch.domain';
 import { ISTStatoEntitaResponse } from '../../../../../core/domain/stato-entita.domain';
 import { Router } from '@angular/router';
-import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-utenti',
   standalone: true,
-  imports: [CommonModule, DxDataGridModule, ReactiveFormsModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule, DxRadioGroupModule, TableUtentiComponent, ControlAssignComponent, TranslocoPipe],
+  imports: [CommonModule, DxDataGridModule, ReactiveFormsModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule, DxRadioGroupModule, TableUtentiComponent, ControlAssignComponent],
   templateUrl: './utenti.component.html',
   styleUrls: ['./utenti.component.css'],
 })
@@ -30,8 +29,8 @@ export class UtentiComponent implements OnInit {
   private readonly router = inject(Router);
 
   readonly filterItems = [
-    { value: 'activeBlocked', labelKey: 'utenti.filterActiveBlocked' },
-    { value: 'all',           labelKey: 'utenti.filterAll' },
+    { value: 'activeBlocked', label: 'Attivi / Bloccati' },
+    { value: 'all',           label: 'Tutti' },
   ];
   selectedFilter = signal<string>('activeBlocked');
 
