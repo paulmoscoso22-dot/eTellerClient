@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════
-   Gestione Comparenti ADE — Banca del Sempione Style
+   Tipi Device — Banca del Sempione Style
    Brand navy : #003366  |  Gold : #C5A059
    ══════════════════════════════════════════ */
 
@@ -94,18 +94,14 @@
   flex-shrink: 0;
 }
 
+.filter-control--md {
+  min-width: 120px;
+  max-width: 200px;
+}
+
 .filter-control--lg {
   min-width: 180px;
-  max-width: 240px;
-}
-
-.filter-control--date {
-  min-width: 120px;
-  max-width: 150px;
-}
-
-.filter-chk {
-  flex-shrink: 0;
+  max-width: 280px;
 }
 
 /* ── Uniform 28 px height ── */
@@ -119,10 +115,6 @@
   padding-top: 3px;
   padding-bottom: 3px;
   font-size: 13px;
-}
-
-:host ::ng-deep .card-toolbar .dx-checkbox {
-  font-size: 12px;
 }
 
 /* ── Toolbar buttons ── */
@@ -144,7 +136,8 @@
   border-color: #004080;
 }
 
-:host ::ng-deep .btn-reset.dx-button { height: 28px; }
+:host ::ng-deep .btn-reset.dx-button   { height: 28px; }
+:host ::ng-deep .btn-showall.dx-button { height: 28px; }
 
 :host ::ng-deep .btn-add.dx-button {
   height: 28px;
@@ -192,32 +185,10 @@
 }
 
 .grid-message--error svg { stroke: #dc2626; }
-.grid-message--loading { color: #374151; }
+.grid-message--loading   { color: #374151; }
 
 .spin-icon { animation: spin 0.9s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── Empty state ── */
-.grid-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 48px 24px;
-  color: #9ca3af;
-  font-size: 13px;
-  text-align: center;
-  flex: 1;
-}
-
-.grid-empty svg {
-  width: 32px;
-  height: 32px;
-  stroke: #d1d5db;
-}
-
-.grid-empty p { margin: 0; max-width: 380px; }
 
 /* ── Grid header ── */
 :host ::ng-deep .dx-datagrid-headers .dx-header-row td {
@@ -249,30 +220,6 @@
   font-weight: 600 !important;
 }
 
-/* ── Boolean badge ── */
-.bool-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bool-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 30px;
-  height: 17px;
-  padding: 0 6px;
-  border-radius: 3px;
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.bool-badge--yes { background: #dcfce7; color: #166534; }
-.bool-badge--no  { background: #f1f5f9; color: #94a3b8; }
-
 /* ── Action buttons ── */
 .actions-cell {
   display: flex;
@@ -303,26 +250,7 @@
 .action-btn--edit:hover     { background: rgba(0, 51, 102, 0.08); }
 .action-btn--edit:hover svg { stroke: #003366; }
 
-.action-btn--history:hover     { background: rgba(197, 160, 89, 0.12); }
-.action-btn--history:hover svg { stroke: #8a6d22; }
-
 /* ══ POPUP STYLES ══ */
-
-.popup-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 48px;
-  color: #374151;
-  font-size: 13px;
-}
-
-.popup-loading svg {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
 
 .popup-layout {
   display: flex;
@@ -353,22 +281,13 @@
 .popup-fields-grid {
   display: grid;
   gap: 12px 24px;
+  grid-template-columns: 1fr;
 }
-
-.popup-fields-grid--2col { grid-template-columns: 1fr 1fr; }
 
 .popup-field-group {
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-
-.popup-field-group--full {
-  grid-column: 1 / -1;
-}
-
-.popup-field-group--checkboxes {
-  justify-content: flex-start;
 }
 
 .popup-field-label {
@@ -382,14 +301,6 @@
 .req {
   color: #dc2626;
   font-weight: 700;
-}
-
-/* ── Checkbox stack ── */
-.checkbox-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding-top: 4px;
 }
 
 /* ── Save error ── */

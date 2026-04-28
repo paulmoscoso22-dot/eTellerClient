@@ -74,8 +74,6 @@ export class GestioneComparentiInsertComponent implements OnInit {
     if (this.insertForm.valid) {
       const formValue = this.insertForm.value;
       const request: InsertAraRequest = {
-        TraUser: '', // Default or fetch from a user service
-        TraStation: '', // Default or fetch from a config service
         AraRecdate: formValue.araRecdate,
         AraName: formValue.araName,
         AraBirthdate: formValue.araBirthdate,
@@ -91,7 +89,7 @@ export class GestioneComparentiInsertComponent implements OnInit {
       this.gestioneComparentiAdeService.insertAra(request).pipe(
         switchMap((response: any) => {
           const araId = response?.success ?? response;
-          return this.gestioneComparentiAdeService.postGetAppearerAllByAraId(araId);
+          return this.gestioneComparentiAdeService.getByAraId(araId);
         })
       ).subscribe({
         next: (newRow) => {

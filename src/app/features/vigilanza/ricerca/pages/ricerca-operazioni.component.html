@@ -27,7 +27,8 @@
             formControlName="trxDataDal"
             type="date"
             displayFormat="dd.MM.yyyy"
-            [showClearButton]="true">
+            [showClearButton]="true"
+            (onValueChanged)="onDateDalChanged($event)">
           </dx-date-box>
         </div>
 
@@ -37,7 +38,8 @@
             formControlName="trxDataAl"
             type="date"
             displayFormat="dd.MM.yyyy"
-            [showClearButton]="true">
+            [showClearButton]="true"
+            (onValueChanged)="onDateAlChanged($event)">
           </dx-date-box>
         </div>
 
@@ -46,7 +48,7 @@
           <dx-select-box
             formControlName="trxDivope"
             [dataSource]="currencies()"
-            displayExpr="curId"
+            displayExpr="curLondes"
             valueExpr="curId"
             [showClearButton]="true"
             placeholder="Tutte">
@@ -89,7 +91,7 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label">Filiale</label>
+          <label class="field-label">Località</label>
           <dx-select-box
             formControlName="trxLocalita"
             [dataSource]="branches()"
@@ -125,12 +127,11 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label">Comparente</label>
+          <label class="field-label">Nome Applicazione</label>
           <dx-text-box
             formControlName="arcAppName"
-            [showClearButton]="true"
-            valueChangeEvent="input"
-            placeholder="Nome comparente...">
+            placeholder="App name..."
+            [showClearButton]="true">
           </dx-text-box>
         </div>
 
@@ -157,12 +158,14 @@
 
         <div class="actions-group">
           <dx-button
+            class="btn-annulla"
             text="Annulla"
             icon="revert"
             stylingMode="outlined"
             (onClick)="resetFilters()">
           </dx-button>
           <dx-button
+            class="btn-search"
             text="Ricerca"
             type="default"
             stylingMode="contained"

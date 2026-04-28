@@ -128,8 +128,6 @@ export class GestioneComparentiAdeViewComponent implements OnInit {
 
   onDeleteAra(araId: number): void {
     const request: DeleteAraRequest = {
-      TraUser: '', // Default or fetch from a user service
-      TraStation: '', // Default or fetch from a config service
       AraId: araId
     };
 

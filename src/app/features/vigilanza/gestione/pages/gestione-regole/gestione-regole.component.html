@@ -1,17 +1,406 @@
-<div class="container">
-  <h1>Gestione Regole</h1>
+<div class="page-shell">
 
-  <!-- Search Form -->
-  <app-gestione-regole-filter
-    [isLoading]="isLoading()"
-    (searchEvent)="onSearch($event)"
-    (resetEvent)="onReset()"
-  ></app-gestione-regole-filter>
+  <!-- ── Main Card ── -->
+  <section class="card-section">
 
-  <app-gestione-regole-table
-    [rules]="rules()"
-    [isLoading]="isLoading()"
-    [error]="error()"
-  ></app-gestione-regole-table>
+    <div class="sempione-card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+      </svg>
+      <h2 class="card-title">Regole Vigilanza Antiriciclaggio</h2>
+    </div>
+    <div class="gold-divider"></div>
+
+    <!-- ── Filtri ── -->
+    <div class="card-toolbar" [formGroup]="filterForm">
+      <div class="toolbar-row">
+
+        <span class="filter-label">Tipo operazione:</span>
+        <dx-select-box
+          formControlName="arlOpTypeId"
+          [dataSource]="operationTypes()"
+          displayExpr="optDes"
+          valueExpr="optId"
+          [showClearButton]="true"
+          placeholder="Tutti..."
+          class="filter-control filter-control--lg">
+        </dx-select-box>
+
+        <span class="filter-label">Tipo divisa:</span>
+        <dx-select-box
+          formControlName="arlCurTypeId"
+          [dataSource]="currencyTypes()"
+          displayExpr="cutDes"
+          valueExpr="cutId"
+          [showClearButton]="true"
+          placeholder="Tutti..."
+          class="filter-control filter-control--md">
+        </dx-select-box>
+
+        <div class="toolbar-row-spacer"></div>
+
+        <div class="toolbar-actions">
+          <dx-button
+            class="btn-reset"
+            text="Reset"
+            stylingMode="outlined"
+            icon="revert"
+            (onClick)="resetFilters()">
+          </dx-button>
+          <dx-button
+            class="btn-showall"
+            text="Mostra tutti"
+            stylingMode="outlined"
+            icon="search"
+            [disabled]="isLoading()"
+            (onClick)="showAll()">
+          </dx-button>
+          <dx-button
+            class="btn-cerca"
+            text="Cerca"
+            type="default"
+            stylingMode="contained"
+            icon="search"
+            [disabled]="isLoading()"
+            (onClick)="search()">
+          </dx-button>
+          <dx-button
+            class="btn-add"
+            text="Aggiungi"
+            stylingMode="outlined"
+            icon="add"
+            (onClick)="openAddPopup()">
+          </dx-button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Griglia ── -->
+    <div class="card-body card-body--grid">
+
+      @if (error()) {
+        <div class="grid-message grid-message--error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          {{ error() }}
+        </div>
+      }
+
+      @if (isLoading()) {
+        <div class="grid-message grid-message--loading">
+          <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          </svg>
+          Caricamento in corso...
+        </div>
+      }
+
+      @if (!isLoading() && !error()) {
+        <dx-data-grid
+          [dataSource]="rules()"
+          [showBorders]="false"
+          [columnAutoWidth]="true"
+          [rowAlternationEnabled]="true"
+          [hoverStateEnabled]="true"
+          [height]="'100%'"
+          keyExpr="arlId">
+
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-paging [pageSize]="30"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 30, 50, 100]" [showInfo]="true"></dxo-pager>
+
+          <dxi-column dataField="optDes"       caption="Tipo oper."     alignment="left"  ></dxi-column>
+          <dxi-column dataField="cutDes"       caption="Tipo div."      alignment="left"   [width]="110"></dxi-column>
+          <dxi-column dataField="arlAcctId"    caption="Conto"          alignment="left"   [width]="90"></dxi-column>
+          <dxi-column dataField="arlAcctType"  caption="Cat. conto"     alignment="left"   [width]="100"></dxi-column>
+          <dxi-column dataField="arlLimit"     caption="Limite"         alignment="right"  [width]="130" dataType="number" format="#,##0.00"></dxi-column>
+          <dxi-column dataField="arlValStart"  caption="Inizio val."    alignment="center" [width]="105" dataType="date" format="dd.MM.yyyy"></dxi-column>
+          <dxi-column dataField="arlValEnd"    caption="Fine val."      alignment="center" [width]="105" dataType="date" format="dd.MM.yyyy"></dxi-column>
+          <dxi-column dataField="arlRecDate"   caption="Data rec."      alignment="center" [width]="105" dataType="date" format="dd.MM.yyyy"></dxi-column>
+          <dxi-column dataField="arlIsinternal" caption="Reg. interna"  alignment="center" [width]="95"  cellTemplate="boolTemplate"></dxi-column>
+          <dxi-column dataField="arlExclude"   caption="Reg. esclusa"   alignment="center" [width]="95"  cellTemplate="boolTemplate"></dxi-column>
+
+          <dxi-column
+            caption="Azioni"
+            [width]="80"
+            [allowSorting]="false"
+            [allowFiltering]="false"
+            alignment="center"
+            cellTemplate="actionsTemplate">
+          </dxi-column>
+
+          <div *dxTemplate="let cell of 'boolTemplate'" class="bool-cell">
+            @if (cell.value) {
+              <span class="bool-badge bool-badge--yes">Sì</span>
+            } @else {
+              <span class="bool-badge bool-badge--no">No</span>
+            }
+          </div>
+
+          <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
+            <button class="action-btn action-btn--edit" title="Modifica" (click)="openEditPopup(cell.data)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </button>
+            <button class="action-btn action-btn--history" title="Storico" (click)="openHistoryPopup(cell.data)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <dxo-load-panel [enabled]="false"></dxo-load-panel>
+
+        </dx-data-grid>
+      }
+
+      @if (!isLoading() && !error() && rules().length === 0) {
+        <div class="grid-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <p>Nessuna regola trovata. Impostare i filtri e premere <strong>Cerca</strong>, oppure <strong>Mostra tutti</strong> per visualizzare tutte le regole.</p>
+        </div>
+      }
+
+    </div>
+
+  </section>
+
 </div>
 
+<!-- ══ Popup Aggiungi / Modifica ══ -->
+<dx-popup
+  [(visible)]="isFormPopupVisible"
+  [showTitle]="true"
+  [title]="isEditMode() ? ('Modifica Regola — ID ' + selectedRuleId()) : 'Nuova Regola'"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [width]="'90%'"
+  [maxWidth]="720"
+  [height]="'auto'"
+  [maxHeight]="'92vh'"
+  (onHidden)="closeFormPopup()">
+
+  <div *dxTemplate="let data of 'content'">
+    <div class="popup-layout" [formGroup]="editForm">
+
+      <!-- ── Card 1: Classificazione ── -->
+      <section class="popup-card">
+        <h3 class="popup-card-title">Classificazione</h3>
+        <div class="popup-fields-grid popup-fields-grid--2col">
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Tipo operazione <span class="req">*</span></label>
+            <dx-select-box
+              formControlName="arlOpTypeId"
+              [dataSource]="operationTypes()"
+              displayExpr="optDes"
+              valueExpr="optId"
+              [showClearButton]="false"
+              placeholder="Selezionare...">
+            </dx-select-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Tipo divisa <span class="req">*</span></label>
+            <dx-select-box
+              formControlName="arlCurTypeId"
+              [dataSource]="currencyTypes()"
+              displayExpr="cutDes"
+              valueExpr="cutId"
+              [showClearButton]="false"
+              placeholder="Selezionare...">
+            </dx-select-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Inizio validità <span class="req">*</span></label>
+            <dx-date-box
+              formControlName="arlValStart"
+              type="date"
+              displayFormat="dd.MM.yyyy"
+              [showClearButton]="false">
+            </dx-date-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Fine validità <span class="req">*</span></label>
+            <dx-date-box
+              formControlName="arlValEnd"
+              type="date"
+              displayFormat="dd.MM.yyyy"
+              [showClearButton]="false">
+            </dx-date-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Conto</label>
+            <dx-text-box
+              formControlName="arlAcctId"
+              [maxLength]="10"
+              [showClearButton]="true">
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Categoria conto</label>
+            <dx-text-box
+              formControlName="arlAcctType"
+              [showClearButton]="true">
+            </dx-text-box>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Card 2: Limite e opzioni ── -->
+      <section class="popup-card">
+        <h3 class="popup-card-title">Limite e opzioni</h3>
+        <div class="popup-fields-grid popup-fields-grid--2col">
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Limite vigilanza <span class="req">*</span> (CHF)</label>
+            <dx-number-box
+              formControlName="arlLimit"
+              [min]="0"
+              [max]="999999999999"
+              format="#,##0.##"
+              [showClearButton]="false">
+            </dx-number-box>
+          </div>
+
+          <div class="popup-field-group popup-field-group--checkboxes">
+            <label class="popup-field-label">Opzioni</label>
+            <div class="checkbox-stack">
+              <dx-check-box formControlName="arlIsinternal" text="Regola interna"></dx-check-box>
+              <dx-check-box formControlName="arlExclude"   text="Escludi regola"></dx-check-box>
+            </div>
+          </div>
+
+        </div>
+
+        @if (saveError()) {
+          <div class="save-error-message">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            {{ saveError() }}
+          </div>
+        }
+      </section>
+
+      <!-- ── Action bar ── -->
+      <div class="popup-action-bar">
+        <div class="popup-actions-secondary"></div>
+        <div class="popup-actions-primary">
+          <dx-button
+            class="btn-action-close"
+            text="Annulla"
+            icon="close"
+            (onClick)="closeFormPopup()">
+          </dx-button>
+          <dx-button
+            class="btn-action-save"
+            [text]="isSaving() ? 'Salvataggio...' : 'Salva'"
+            type="default"
+            stylingMode="contained"
+            icon="save"
+            [disabled]="isSaving()"
+            (onClick)="save()">
+          </dx-button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</dx-popup>
+
+<!-- ══ Popup Storico ══ -->
+<dx-popup
+  [(visible)]="isHistoryPopupVisible"
+  [showTitle]="true"
+  [title]="'Storico Regola — ID ' + historyRuleId()"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="true"
+  [showCloseButton]="true"
+  [width]="'92%'"
+  [maxWidth]="900"
+  [height]="'auto'"
+  [maxHeight]="'85vh'"
+  (onHidden)="closeHistoryPopup()">
+
+  <div *dxTemplate="let data of 'content'">
+    <div class="popup-layout">
+
+      @if (isLoadingHistory()) {
+        <div class="grid-message grid-message--loading">
+          <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          </svg>
+          Caricamento storico...
+        </div>
+      }
+
+      @if (!isLoadingHistory()) {
+        <dx-data-grid
+          [dataSource]="historyRules()"
+          [showBorders]="false"
+          [columnAutoWidth]="true"
+          [rowAlternationEnabled]="true"
+          [height]="380"
+          noDataText="Nessuna voce di storico disponibile">
+
+          <dxo-paging [pageSize]="15"></dxo-paging>
+          <dxo-pager [showInfo]="true"></dxo-pager>
+
+          <dxi-column dataField="hisDate"      caption="Data modifica"  alignment="center" [width]="140" dataType="datetime" format="dd.MM.yyyy HH:mm"></dxi-column>
+          <dxi-column dataField="optDes"       caption="Tipo oper."     alignment="left"></dxi-column>
+          <dxi-column dataField="cutDes"       caption="Tipo div."      alignment="left"   [width]="100"></dxi-column>
+          <dxi-column dataField="arlAcctId"    caption="Conto"          alignment="left"   [width]="80"></dxi-column>
+          <dxi-column dataField="arlAcctType"  caption="Cat. conto"     alignment="left"   [width]="95"></dxi-column>
+          <dxi-column dataField="arlLimit"     caption="Limite"         alignment="right"  [width]="120" dataType="number" format="#,##0.00"></dxi-column>
+          <dxi-column dataField="arlValStart"  caption="Inizio val."    alignment="center" [width]="100" dataType="date" format="dd.MM.yyyy"></dxi-column>
+          <dxi-column dataField="arlValEnd"    caption="Fine val."      alignment="center" [width]="100" dataType="date" format="dd.MM.yyyy"></dxi-column>
+          <dxi-column dataField="arlIsinternal" caption="Reg. int."     alignment="center" [width]="80"  cellTemplate="histBoolTemplate"></dxi-column>
+          <dxi-column dataField="arlExclude"   caption="Esclusa"        alignment="center" [width]="75"  cellTemplate="histBoolTemplate"></dxi-column>
+
+          <div *dxTemplate="let cell of 'histBoolTemplate'" class="bool-cell">
+            @if (cell.value) {
+              <span class="bool-badge bool-badge--yes">Sì</span>
+            } @else {
+              <span class="bool-badge bool-badge--no">No</span>
+            }
+          </div>
+
+          <dxo-load-panel [enabled]="false"></dxo-load-panel>
+
+
+        </dx-data-grid>
+      }
+
+      <div class="popup-action-bar">
+        <div class="popup-actions-secondary"></div>
+        <div class="popup-actions-primary">
+          <dx-button
+            class="btn-action-close"
+            text="Chiudi"
+            icon="close"
+            (onClick)="closeHistoryPopup()">
+          </dx-button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</dx-popup>

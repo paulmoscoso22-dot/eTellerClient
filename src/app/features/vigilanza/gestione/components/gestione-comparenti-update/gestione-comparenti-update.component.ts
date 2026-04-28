@@ -93,13 +93,13 @@ export class GestioneComparentiUpdateComponent implements OnInit {
   }
 
   loadAppearerData(araId: number): void {
-    this.gestioneComparentiAdeService.postGetAppearerAllByAraId(araId).subscribe({
+    this.gestioneComparentiAdeService.getByAraId(araId).subscribe({
       next: (data: any) => {
         console.log('Appearer data loaded:', data);
         this.initialData = data;
         this.fillForm(data);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading appearer data', err);
       }
     });
@@ -132,8 +132,6 @@ export class GestioneComparentiUpdateComponent implements OnInit {
     if (this.updateForm.valid) {
       const formValue = this.updateForm.value;
       const request: UpdateAraRequest = {
-        TraUser: '',
-        TraStation: '',
         AraId: formValue.AraId,
         AraName: formValue.AraName,
         AraBirthdate: formValue.AraBirthdate,
@@ -143,7 +141,8 @@ export class GestioneComparentiUpdateComponent implements OnInit {
         AraDocexpdate: formValue.AraDocexpdate,
         AraRepresents: formValue.AraRepresents,
         AraAddress: formValue.AraAddress,
-        AraRecComplete: formValue.AraRecComplete
+        AraRecComplete: formValue.AraRecComplete,
+        AraIsupdated: formValue.AraIsupdated ?? false,
       };
       this.gestioneComparentiAdeService.updateAra(request).subscribe({
         next: (response) => {

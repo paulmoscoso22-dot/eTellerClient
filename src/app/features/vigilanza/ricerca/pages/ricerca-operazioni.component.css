@@ -9,7 +9,6 @@
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
-  background: #F5F7F9;
 }
 
 .page-shell {
@@ -17,9 +16,8 @@
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 16px;
+  overflow: hidden;
+  padding: 12px 16px 0;
   gap: 16px;
 }
 
@@ -94,10 +92,121 @@
 }
 
 /* ═══ FILTERS GRID ═══ */
-.filters-grid {
+.filter-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 6px 14px;
+}
+
+.filter-grid--5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.field-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.section-heading {
+  margin: 0 0 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #003366;
+}
+
+.section-divider {
+  height: 1px;
+  background: #E5E7EB;
+  margin: 20px 0;
+}
+
+/* ── Options + Actions row ── */
+.options-and-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.options-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+:host ::ng-deep .filter-check .dx-checkbox-text {
+  font-size: 12px;
+  color: #374151;
+}
+
+.actions-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Buttons ── */
+:host ::ng-deep .btn-search.dx-button-default.dx-button-mode-contained {
+  background-color: #003366;
+  border-color: #003366;
+  height: 30px;
+  font-weight: 600;
+}
+
+:host ::ng-deep .btn-search.dx-button-default.dx-button-mode-contained:hover {
+  background-color: #004080;
+  border-color: #004080;
+}
+
+:host ::ng-deep .btn-annulla.dx-button {
+  height: 30px;
+  border-color: rgba(0, 51, 102, 0.35);
+  color: #003366;
+}
+
+:host ::ng-deep .btn-annulla.dx-button:hover {
+  border-color: #003366;
+  background: rgba(0, 51, 102, 0.05);
+}
+
+/* ── Compact DevExtreme inputs ── */
+:host ::ng-deep .dx-texteditor {
+  height: 28px;
+}
+
+:host ::ng-deep .dx-texteditor-input {
+  min-height: unset;
+  height: 26px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 13px;
+}
+
+:host ::ng-deep .dx-texteditor-buttons-container {
+  height: 26px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1100px) {
+  .filter-grid--5 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .filter-grid--5 {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 1024px) {
