@@ -1,37 +1,19 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import {
   DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule,
   DxPopupModule, DxTextAreaModule, DxValidatorModule, DxNumberBoxModule,
   DxSelectBoxModule, DxTagBoxModule
 } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
-
-export interface IScheduledTask {
-  futId: string;
-  futFunname: string;
-  futDes: string;
-  futTimeout: number | null;
-  futScriptname: string;
-  futTrace: boolean;
-  futActive: boolean;
-  futOffline: boolean;
-  futAutatt: boolean;
-  futOnetimerun: boolean;
-  futPeriod: number | null;
-  futPeriodtyp: string;
-  futStart: string;
-  futEnd: string;
-  futLastrun: string | null;
-  futLastrunok: string | null;
-  futErrcount: number | null;
-  futDatmod: string | null;
-  futDatins: string | null;
-  futNamedll: string;
-  futClassname: string;
-  futHosval: boolean;
-}
+import { TabelleService } from '../../services/tabelle.service';
+import {
+  FunzioniScheduleResponse,
+  InsertFunzioneScheduleCommand,
+} from '../../models/FunzioneSchedule.models';
 
 @Component({
   selector: 'app-scheduled-tasks',
@@ -46,13 +28,17 @@ export interface IScheduledTask {
   styleUrls: ['./scheduled-tasks.component.css'],
 })
 export class ScheduledTasksComponent implements OnInit {
-  private fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
+  private readonly tabelleService = inject(TabelleService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  private tasks = signal<IScheduledTask[]>([]);
-  searchValue = signal<string>('');
-  popupMode = signal<'new' | 'view' | 'edit'>('new');
+  private readonly tasks = signal<FunzioniScheduleResponse[]>([]);
+  private readonly searchSubject = new Subject<string>();
+
+  readonly searchValue = signal<string>('');
+  readonly popupMode = signal<'new' | 'view' | 'edit'>('new');
   isDetailPopupVisible = false;
-  selectedFutId = signal<string | null>(null);
+  readonly selectedFutId = signal<string | null>(null);
 
   readonly periodTypes = [
     { id: 'D', des: 'Giorni' },
@@ -61,16 +47,7 @@ export class ScheduledTasksComponent implements OnInit {
     { id: 'R', des: 'Esecuzione singola' },
   ];
 
-  filteredTasks = computed(() => {
-    const q = this.searchValue().toLowerCase().trim();
-    const all = this.tasks();
-    if (!q) return all;
-    return all.filter(t =>
-      t.futId.toLowerCase().includes(q) ||
-      t.futFunname.toLowerCase().includes(q) ||
-      t.futDes.toLowerCase().includes(q)
-    );
-  });
+  readonly filteredTasks = computed(() => this.tasks());
 
   taskForm: FormGroup = this.fb.group({
     futId:         ['', Validators.required],
@@ -83,7 +60,6 @@ export class ScheduledTasksComponent implements OnInit {
     futOffline:    [false],
     futAutatt:     [false],
     futOnetimerun: [false],
-    // scheduling fields
     futNamedll:    [''],
     futClassname:  [''],
     futStart:      ['00:00:00'],
@@ -91,75 +67,144 @@ export class ScheduledTasksComponent implements OnInit {
     futPeriodtyp:  ['D'],
     futPeriod:     [null],
     futErrcount:   [null],
-    // non-scheduling fields
     futHosval:     [false],
+    futLoop:       [false],
   });
 
   get showScheduling(): boolean {
     return !!this.taskForm.get('futAutatt')?.value;
   }
 
-  ngOnInit(): void {
-    // TODO: load from backend service
-    this.tasks.set([
-      {
-        futId: 'TASK001', futFunname: 'AggiornamentoCambi', futDes: 'Aggiornamento tassi di cambio giornaliero',
-        futTimeout: 30000, futScriptname: 'update_rates.dll', futTrace: true, futActive: true,
-        futOffline: false, futAutatt: true, futOnetimerun: false,
-        futPeriod: 1, futPeriodtyp: 'D', futStart: '08:00:00', futEnd: '20:00:00',
-        futLastrun: '2024-01-15 08:00', futLastrunok: '2024-01-15 08:00',
-        futErrcount: 0, futDatmod: '2024-01-10', futDatins: '2023-06-01',
-        futNamedll: 'eTellerTasks.dll', futClassname: 'eTellerTasks.AggiornamentoCambi',
-        futHosval: false
-      },
-      {
-        futId: 'TASK002', futFunname: 'ReportGiornaliero', futDes: 'Generazione report di cassa giornaliero',
-        futTimeout: 60000, futScriptname: 'daily_report.dll', futTrace: false, futActive: true,
-        futOffline: false, futAutatt: true, futOnetimerun: false,
-        futPeriod: 1, futPeriodtyp: 'D', futStart: '23:00:00', futEnd: '23:59:00',
-        futLastrun: '2024-01-14 23:00', futLastrunok: '2024-01-14 23:00',
-        futErrcount: 0, futDatmod: '2024-01-10', futDatins: '2023-06-01',
-        futNamedll: 'eTellerReports.dll', futClassname: 'eTellerReports.DailyReport',
-        futHosval: false
-      },
-      {
-        futId: 'TASK003', futFunname: 'ValidazioneHost', futDes: 'Verifica connessione host bancario',
-        futTimeout: 5000, futScriptname: 'host_check.dll', futTrace: false, futActive: true,
-        futOffline: false, futAutatt: false, futOnetimerun: false,
-        futPeriod: null, futPeriodtyp: 'D', futStart: '00:00:00', futEnd: '24:00:00',
-        futLastrun: '2024-01-15 09:00', futLastrunok: '2024-01-15 09:00',
-        futErrcount: 2, futDatmod: '2024-01-10', futDatins: '2023-06-01',
-        futNamedll: '', futClassname: '', futHosval: true
-      }
-    ]);
+  constructor() {
+    this.searchSubject.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(term => this.tabelleService.getFunzioniSchedule({
+        nomeLike: term || null,
+        desLike:  term || null,
+      })),
+      takeUntilDestroyed(),
+    ).subscribe(data => this.tasks.set(data));
   }
+
+  ngOnInit(): void {
+    this.loadFunzioniSchedule();
+  }
+
+  private loadFunzioniSchedule(): void {
+    const term = this.searchValue();
+    this.tabelleService
+      .getFunzioniSchedule({ nomeLike: term || null, desLike: term || null })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(data => this.tasks.set(data));
+  }
+
+  // ── Validazione orari (replica logica C# FunzEschedule.aspx.cs) ──────────
+
+  private timeToSeconds(time: string): number {
+    const [h, m, s] = time.split(':').map(Number);
+    return h * 3600 + m * 60 + s;
+  }
+
+  private isTimeValid(time: string): boolean {
+    try {
+      const parts = time.split(':');
+      if (parts.length !== 3) return false;
+      const [h, m, s] = parts.map(Number);
+      if ([h, m, s].some(isNaN)) return false;
+      if (h < 0 || h > 24) return false;
+      if (m < 0 || m > 59) return false;
+      if (s < 0 || s > 59) return false;
+      if (h === 24 && (m !== 0 || s !== 0)) return false;
+      return true;
+    } catch { return false; }
+  }
+
+  private validateTimeRange(start: string, end: string): boolean {
+    try { return this.timeToSeconds(start) <= this.timeToSeconds(end); }
+    catch { return true; }
+  }
+
+  private validateForm(): boolean {
+    if (!this.taskForm.valid) {
+      notify('Compilare tutti i campi obbligatori', 'error', 3000);
+      return false;
+    }
+    if (this.showScheduling) {
+      const start = this.taskForm.get('futStart')?.value as string;
+      const end   = this.taskForm.get('futEnd')?.value as string;
+      if (start && !this.isTimeValid(start)) {
+        notify('Orario "Dalle" non valido — formato HH:MM:SS', 'error', 3000);
+        return false;
+      }
+      if (end && !this.isTimeValid(end)) {
+        notify('Orario "Alle" non valido — formato HH:MM:SS', 'error', 3000);
+        return false;
+      }
+      if (start && end && !this.validateTimeRange(start, end)) {
+        notify('"Dalle" deve essere precedente ad "Alle"', 'error', 3000);
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // ── Costruzione command ───────────────────────────────────────────────────
+
+  private buildCommand(): InsertFunzioneScheduleCommand {
+    const v = this.taskForm.getRawValue();
+    const isAuto = !!v.futAutatt;
+    return {
+      traUser:       '127',
+      traStation:    '',
+      futId:         v.futId,
+      futDes:        v.futDes,
+      futFunname:    v.futFunname,
+      futScriptname: v.futScriptname,
+      futTimeout:    v.futTimeout,
+      futAutatt:     isAuto,
+      futActive:     v.futActive  ?? true,
+      futOffline:    v.futOffline ?? false,
+      futTrace:      v.futTrace   ?? false,
+      futPeriodtyp:  isAuto ? (v.futPeriodtyp || null) : null,
+      futPeriod:     isAuto ? (v.futPeriod    ?? null) : null,
+      futStart:      isAuto ? (v.futStart     || null) : null,
+      futEnd:        isAuto ? (v.futEnd       || null) : null,
+      futNamedll:    '',
+      futClassname:  isAuto ? (v.futClassname || null) : null,
+      futErrcount:   isAuto ? (v.futErrcount  ?? null) : null,
+      futHosval:     isAuto ? null : (v.futHosval ?? null),
+    };
+  }
+
+  // ── Popup ─────────────────────────────────────────────────────────────────
 
   openNewPopup(): void {
     this.taskForm.reset({
       futTrace: false, futActive: true, futOffline: false,
       futAutatt: false, futOnetimerun: false, futHosval: false,
-      futStart: '00:00:00', futEnd: '24:00:00', futPeriodtyp: 'D'
+      futLoop: false, futStart: '00:00:00', futEnd: '24:00:00', futPeriodtyp: 'D'
     });
     this.selectedFutId.set(null);
     this.popupMode.set('new');
     this.isDetailPopupVisible = true;
   }
 
-  openViewPopup(data: IScheduledTask): void {
+  openViewPopup(data: FunzioniScheduleResponse): void {
     this.selectedFutId.set(data.futId);
     this.taskForm.patchValue(data);
     this.popupMode.set('view');
     this.isDetailPopupVisible = true;
   }
 
-  openEditPopup(data: IScheduledTask): void {
+  openEditPopup(data: FunzioniScheduleResponse): void {
     this.selectedFutId.set(data.futId);
     this.taskForm.patchValue(data);
     this.popupMode.set('edit');
     this.isDetailPopupVisible = true;
   }
 
-  onTableAction(action: string, data: IScheduledTask): void {
+  onTableAction(action: string, data: FunzioniScheduleResponse): void {
     switch (action) {
       case 'view':   this.openViewPopup(data); break;
       case 'edit':   this.openEditPopup(data); break;
@@ -167,60 +212,74 @@ export class ScheduledTasksComponent implements OnInit {
     }
   }
 
-  onDelete(data: IScheduledTask): void {
-    // TODO: call backend delete
-    this.tasks.update(list => list.filter(t => t.futId !== data.futId));
-    notify(`Task "${data.futId}" eliminato`, 'success', 3000);
+  // ── Azioni CRUD ───────────────────────────────────────────────────────────
+
+  onSubmit(): void {
+    if (!this.validateForm()) return;
+    const command = this.buildCommand();
+    this.tabelleService.insertFunzioneSchedule(command)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          notify(`Task "${command.futId}" creato con successo`, 'success', 3000);
+          this.closePopup();
+          this.loadFunzioniSchedule();
+        },
+        error: () => notify('Errore durante la creazione del task', 'error', 3000),
+      });
+  }
+
+  onUpdate(): void {
+    if (!this.validateForm()) return;
+    const command = this.buildCommand();
+    console.log('Update command:', command);
+    this.tabelleService.updateFunzioneSchedule(command)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          notify(`Task "${command.futId}" aggiornato con successo`, 'success', 3000);
+          this.closePopup();
+          this.loadFunzioniSchedule();
+        },
+        error: () => notify('Errore durante l\'aggiornamento del task', 'error', 3000),
+      });
+  }
+
+  onDelete(data: FunzioniScheduleResponse): void {
+    this.tabelleService.deleteFunzioneSchedule({ traUser: '127', traStation: '', futId: data.futId })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          notify(`Task "${data.futId}" eliminato`, 'success', 3000);
+          this.loadFunzioniSchedule();
+        },
+        error: () => notify('Errore durante l\'eliminazione del task', 'error', 3000),
+      });
   }
 
   onOneTimeRun(): void {
     const id = this.selectedFutId();
-    // TODO: call backend one-time run
-    notify(`Esecuzione singola avviata per "${id}"`, 'info', 3000);
+    if (!id) return;
+    this.tabelleService.scheduleOneTimeTask({ traUser: '127', traStation: '', futId: id })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => notify(`Esecuzione singola avviata per "${id}"`, 'info', 3000),
+        error: () => notify('Errore nell\'avvio dell\'esecuzione singola', 'error', 3000),
+      });
   }
 
   onResetErrors(): void {
     const id = this.selectedFutId();
-    this.tasks.update(list =>
-      list.map(t => t.futId === id ? { ...t, futErrcount: 0 } : t)
-    );
-    // TODO: call backend reset errors
-    notify(`Errori azzerati per "${id}"`, 'success', 3000);
-  }
-
-  onSubmit(): void {
-    if (!this.taskForm.valid) {
-      notify('Compilare tutti i campi obbligatori', 'error', 3000);
-      return;
-    }
-    const val = this.taskForm.getRawValue();
-    const newTask: IScheduledTask = {
-      ...val,
-      futOnetimerun: false,
-      futLastrun: null,
-      futLastrunok: null,
-      futErrcount: 0,
-      futDatmod: null,
-      futDatins: new Date().toISOString().slice(0, 10),
-    };
-    // TODO: call backend insert
-    this.tasks.update(list => [...list, newTask]);
-    notify('Task creato con successo', 'success', 3000);
-    this.closePopup();
-  }
-
-  onUpdate(): void {
-    if (!this.taskForm.valid) {
-      notify('Compilare tutti i campi obbligatori', 'error', 3000);
-      return;
-    }
-    const val = this.taskForm.getRawValue();
-    // TODO: call backend update
-    this.tasks.update(list =>
-      list.map(t => t.futId === val.futId ? { ...t, ...val } : t)
-    );
-    notify('Task aggiornato con successo', 'success', 3000);
-    this.closePopup();
+    if (!id) return;
+    this.tabelleService.resetFunctionError({ traUser: '127', traStation: '', futId: id })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          notify(`Errori azzerati per "${id}"`, 'success', 3000);
+          this.loadFunzioniSchedule();
+        },
+        error: () => notify('Errore durante il reset degli errori', 'error', 3000),
+      });
   }
 
   closePopup(): void {
@@ -228,18 +287,26 @@ export class ScheduledTasksComponent implements OnInit {
     this.taskForm.reset({
       futTrace: false, futActive: true, futOffline: false,
       futAutatt: false, futOnetimerun: false, futHosval: false,
-      futStart: '00:00:00', futEnd: '24:00:00', futPeriodtyp: 'D'
+      futLoop: false, futStart: '00:00:00', futEnd: '24:00:00', futPeriodtyp: 'D'
     });
     this.selectedFutId.set(null);
   }
 
+  // ── Ricerca ───────────────────────────────────────────────────────────────
+
   onSearchChanged(e: any): void {
-    this.searchValue.set(e.value ?? '');
+    const term = e.value ?? '';
+    this.searchValue.set(term);
+    this.searchSubject.next(term);
   }
 
-  getPeriodLabel(task: IScheduledTask): string {
+  // ── Helpers griglia ───────────────────────────────────────────────────────
+
+  getPeriodLabel(task: FunzioniScheduleResponse): string {
     if (!task.futAutatt) return '—';
     const type = this.periodTypes.find(p => p.id === task.futPeriodtyp);
-    return task.futPeriod ? `${task.futPeriod} ${type?.des ?? task.futPeriodtyp}` : (type?.des ?? '—');
+    return task.futPeriod
+      ? `${task.futPeriod} ${type?.des ?? task.futPeriodtyp}`
+      : (type?.des ?? '—');
   }
 }
