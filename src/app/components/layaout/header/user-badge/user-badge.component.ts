@@ -6,8 +6,8 @@ import { UserService } from '../../../../services/user.service';
   selector: 'app-user-badge',
   standalone: true,
   imports: [],
-  templateUrl: './user-badge.html',
-  styleUrl: './user-badge.scss',
+  templateUrl: './user-badge.component.html',
+  styleUrl: './user-badge.component.scss',
 })
 export class UserBadge {
   private user = signal<UserInfo | undefined>(undefined);

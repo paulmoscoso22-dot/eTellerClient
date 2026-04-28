@@ -8,8 +8,8 @@ import { MenuItem } from '../../../domain/menu-item';
   selector: 'app-sidebar',
   standalone: true,
   imports: [CommonModule, FormsModule, TranslocoPipe],
-  templateUrl: './sidebar.html',
-  styleUrl: './sidebar.css',
+  templateUrl: './sidebar.component.html',
+  styleUrl: './sidebar.component.css',
 })
 export class Sidebar implements OnInit, OnChanges {
   @Input() items: MenuItem[] = [];

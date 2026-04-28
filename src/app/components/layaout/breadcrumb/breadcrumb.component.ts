@@ -5,8 +5,8 @@ import { BreadcrumbItem } from '../../../domain/breadcrumb-item';
   selector: 'app-breadcrumb',
   standalone: true,
   imports: [],
-  templateUrl: './breadcrumb.html',
-  styleUrl: './breadcrumb.scss',
+  templateUrl: './breadcrumb.component.html',
+  styleUrl: './breadcrumb.component.scss',
 })
 export class Breadcrumb {
   @Input() items: BreadcrumbItem[] = [];

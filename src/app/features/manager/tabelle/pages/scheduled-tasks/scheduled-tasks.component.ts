@@ -155,7 +155,7 @@ export class ScheduledTasksComponent implements OnInit {
     const v = this.taskForm.getRawValue();
     const isAuto = !!v.futAutatt;
     return {
-      traUser:       '127',
+      traUser:       '',
       traStation:    '',
       futId:         v.futId,
       futDes:        v.futDes,
@@ -232,7 +232,6 @@ export class ScheduledTasksComponent implements OnInit {
   onUpdate(): void {
     if (!this.validateForm()) return;
     const command = this.buildCommand();
-    console.log('Update command:', command);
     this.tabelleService.updateFunzioneSchedule(command)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

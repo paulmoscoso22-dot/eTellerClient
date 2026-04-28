@@ -1,8 +1,8 @@
 import { Component, DestroyRef, EventEmitter, Output, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Logo } from './logo/logo';
-import { ApplicationName } from './application-name/application-name';
-import { UserBadge } from './user-badge/user-badge';
+import { Logo } from './logo/logo.component';
+import { ApplicationName } from './application-name/application-name.component';
+import { UserBadge } from './user-badge/user-badge.component';
 import { DxDropDownButtonModule, DxTooltipModule } from 'devextreme-angular';
 import { TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -13,8 +13,8 @@ import { CommonModule } from '@angular/common';
   selector: 'app-header',
   standalone: true,
   imports: [Logo, ApplicationName, UserBadge, RouterLink, DxDropDownButtonModule, DxTooltipModule, CommonModule],
-  templateUrl: './header.html',
-  styleUrl: './header.scss',
+  templateUrl: './header.component.html',
+  styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
   @Output() menuIconClicked = new EventEmitter<void>();

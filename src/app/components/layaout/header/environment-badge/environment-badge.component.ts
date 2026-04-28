@@ -5,8 +5,8 @@ import { environment } from '../../../../../environments/environment';
   selector: 'app-environment-badge',
   standalone: true,
   imports: [],
-  templateUrl: './environment-badge.html',
-  styleUrl: './environment-badge.scss',
+  templateUrl: './environment-badge.component.html',
+  styleUrl: './environment-badge.component.scss',
 })
 export class EnvironmentBadge {
   environment = environment;

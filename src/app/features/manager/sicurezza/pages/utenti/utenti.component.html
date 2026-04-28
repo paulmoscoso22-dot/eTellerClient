@@ -23,7 +23,7 @@
             <button class="segment-btn"
                     [class.active]="selectedFilter() === item.value"
                     (click)="onFilterChanged({ value: item.value })">
-              {{ item.labelKey | transloco }}
+              {{ item.label }}
             </button>
           }
         </div>
@@ -34,7 +34,7 @@
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
           <dx-text-box
-            [placeholder]="'utenti.searchPlaceholder' | transloco"
+            placeholder="Cerca utenti..."
             [showClearButton]="true"
             valueChangeEvent="input"
             class="toolbar-textbox"
@@ -45,7 +45,7 @@
         <div class="toolbar-actions">
           <dx-button
             class="btn-new"
-            [text]="'utenti.btnNew' | transloco"
+            text="Nuovo"
             type="default"
             stylingMode="contained"
             (onClick)="openNewUserPopup()">
@@ -81,9 +81,9 @@
 <dx-popup
   [(visible)]="isDetailPopupVisible"
   [showTitle]="true"
-  [title]="popupMode() === 'edit' ? (('utenti.popupEditTitle' | transloco) + ' — ' + selectedUserId())
-         : popupMode() === 'view' ? (('utenti.popupViewTitle' | transloco) + ' — ' + selectedUserId())
-         : ('utenti.btnNew' | transloco)"
+  [title]="popupMode() === 'edit' ? ('Modifica Utente — ' + selectedUserId())
+         : popupMode() === 'view' ? ('Dettaglio Utente — ' + selectedUserId())
+         : 'Nuovo Utente'"
   [dragEnabled]="true"
   [hideOnOutsideClick]="false"
   [showCloseButton]="true"
@@ -104,7 +104,7 @@
         <div class="popup-fields-grid">
 
           <div class="popup-field-group" [class.field-id-locked]="popupMode() === 'edit'">
-            <label class="popup-field-label">{{ 'utenti.fieldUsrId' | transloco }}</label>
+            <label class="popup-field-label">ID Utente</label>
             <dx-text-box
               formControlName="usrId"
               [readOnly]="popupMode() === 'edit' || popupMode() === 'view'">
@@ -115,7 +115,7 @@
           </div>
 
           <div class="popup-field-group">
-            <label class="popup-field-label">{{ 'utenti.fieldStatus' | transloco }}</label>
+            <label class="popup-field-label">Stato</label>
             <dx-select-box
               formControlName="usrStatus"
               [dataSource]="statiEntitaList"
@@ -129,7 +129,7 @@
           </div>
 
           <div class="popup-field-group">
-            <label class="popup-field-label">{{ 'utenti.fieldExtref' | transloco }}</label>
+            <label class="popup-field-label">Riferimento Esterno</label>
             <dx-text-box
               formControlName="usrExtref"
               [readOnly]="popupMode() === 'view'">
@@ -137,7 +137,7 @@
           </div>
 
           <div class="popup-field-group">
-            <label class="popup-field-label">{{ 'utenti.fieldHostId' | transloco }}</label>
+            <label class="popup-field-label">Host ID</label>
             <dx-text-box
               formControlName="usrHostId"
               [readOnly]="popupMode() === 'view'">
@@ -148,7 +148,7 @@
           </div>
 
           <div class="popup-field-group">
-            <label class="popup-field-label">{{ 'utenti.fieldBraId' | transloco }}</label>
+            <label class="popup-field-label">Filiale</label>
             <dx-select-box
               formControlName="usrBraId"
               [dataSource]="branchesList"
@@ -162,7 +162,7 @@
           </div>
 
           <div class="popup-field-group">
-            <label class="popup-field-label">{{ 'utenti.fieldLingua' | transloco }}</label>
+            <label class="popup-field-label">Lingua</label>
             <dx-select-box
               formControlName="usrLingua"
               [dataSource]="languagesList"
@@ -208,20 +208,20 @@
         <div class="popup-actions-secondary">
           @if (popupMode() !== 'new') {
             <dx-button class="btn-action-outline"
-                       [text]="'utenti.btnStorico' | transloco"
+                       text="Visualizza Storico"
                        icon="clock"
                        stylingMode="outlined"
                        (onClick)="onTrace()">
             </dx-button>
             <dx-button class="btn-action-outline"
-                       [text]="'utenti.btnPrintDetail' | transloco"
+                       text="Stampa Dettaglio"
                        icon="print"
                        stylingMode="outlined">
             </dx-button>
           }
           @if (popupMode() === 'edit') {
             <dx-button class="btn-action-danger"
-                       [text]="'utenti.btnResetPassword' | transloco"
+                       text="Reset Password"
                        icon="key"
                        (onClick)="openResetPasswordPopup()">
             </dx-button>
@@ -238,14 +238,14 @@
           }
           @if (popupMode() === 'new') {
             <dx-button class="btn-action-primary"
-                       [text]="'utenti.btnAdd' | transloco"
+                       text="Aggiungi"
                        icon="plus"
                        [useSubmitBehavior]="true">
             </dx-button>
           }
           @if (popupMode() === 'edit') {
             <dx-button class="btn-action-primary"
-                       [text]="'utenti.btnEdit' | transloco"
+                       text="Salva"
                        icon="save"
                        (onClick)="onUpdate()">
             </dx-button>
@@ -263,7 +263,7 @@
   [width]="400"
   [height]="260"
   [showTitle]="true"
-  [title]="'utenti.popupTitle' | transloco"
+  title="Reset Password"
   [dragEnabled]="false"
   [hideOnOutsideClick]="false"
   [(visible)]="isResetPasswordPopupVisible">
@@ -271,7 +271,7 @@
     <form [formGroup]="resetPasswordForm" (ngSubmit)="changePassword()">
       <div class="dx-fieldset">
         <div class="dx-field">
-          <div class="dx-field-label">{{ 'utenti.fieldPassword' | transloco }}</div>
+          <div class="dx-field-label">Nuova Password</div>
           <div class="dx-field-value">
             <dx-text-box formControlName="password" mode="password">
               <dx-validator>
@@ -281,7 +281,7 @@
           </div>
         </div>
         <div class="dx-field">
-          <div class="dx-field-label">{{ 'utenti.fieldConfirmPassword' | transloco }}</div>
+          <div class="dx-field-label">Conferma Password</div>
           <div class="dx-field-value">
             <dx-text-box formControlName="confirmPassword" mode="password">
               <dx-validator>
@@ -292,8 +292,8 @@
         </div>
       </div>
       <div class="popup-actions">
-        <dx-button [text]="'utenti.btnCancel' | transloco" type="normal" (onClick)="cancelResetPassword()"></dx-button>
-        <dx-button [text]="'utenti.btnChange' | transloco" type="default" [useSubmitBehavior]="true"></dx-button>
+        <dx-button text="Annulla" type="normal" (onClick)="cancelResetPassword()"></dx-button>
+        <dx-button text="Cambia" type="default" [useSubmitBehavior]="true"></dx-button>
       </div>
     </form>
   </div>

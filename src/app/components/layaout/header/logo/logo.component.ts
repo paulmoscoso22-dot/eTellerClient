@@ -5,8 +5,8 @@ import { Theme } from '../../../../services/theme';
   selector: 'app-logo',
   standalone: true,
   imports: [],
-  templateUrl: './logo.html',
-  styleUrl: './logo.css',
+  templateUrl: './logo.component.html',
+  styleUrl: './logo.component.css',
 })
 export class Logo {
 
