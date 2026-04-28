@@ -139,63 +139,63 @@ export const routes: Routes = [
       //Tabelle
       {
         path: 'categorie-conti',
-        loadComponent: () => import('./features/manager/tabelle/pages/categorie-conti.component').then(m => m.CategorieContiComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/categoriaConti/categorie-conti.component').then(m => m.CategorieContiComponent)
       },
       {
         path: 'causale-movimenti',
-        loadComponent: () => import('./features/manager/tabelle/pages/causale-movimenti.component').then(m => m.CausaleMovimentiComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/causale-movimenti/causale-movimenti.component').then(m => m.CausaleMovimentiComponent)
       },
       {
         path: 'force-trx',
-        loadComponent: () => import('./features/manager/tabelle/pages/force-trx.component').then(m => m.ForceTrxComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/force-trx/force-trx.component').then(m => m.ForceTrxComponent)
       },
       {
         path: 'funzioni-traccie',
-        loadComponent: () => import('./features/manager/tabelle/pages/funzioni-traccie.component').then(m => m.FunzioniTracceComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/funzioni-traccie/funzioni-traccie.component').then(m => m.FunzioniTracceComponent)
       },
       {
         path: 'gestione-errori',
-        loadComponent: () => import('./features/manager/tabelle/pages/gestione-errori.component').then(m => m.GestioneErroriComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/gestione-errori/gestione-errori.component').then(m => m.GestioneErroriComponent)
       },
       {
         path: 'livello-accesso-funzioni',
-        loadComponent: () => import('./features/manager/tabelle/pages/livello-accesso-funzioni.component').then(m => m.LivelloAccessoFunzioniComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/livello-accesso-funzioni/livello-accesso-funzioni.component').then(m => m.LivelloAccessoFunzioniComponent)
       },
       {
         path: 'nomi-tabelle',
-        loadComponent: () => import('./features/manager/tabelle/pages/nomi-tabelle.component').then(m => m.NomiTabelleComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/nomi-tabelle/nomi-tabelle.component').then(m => m.NomiTabelleComponent)
       },
       {
         path: 'scheduled-tasks',
-        loadComponent: () => import('./features/manager/tabelle/pages/scheduled-tasks.component').then(m => m.ScheduledTasksComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/scheduled-tasks/scheduled-tasks.component').then(m => m.ScheduledTasksComponent)
       },
       {
         path: 'servizi',
-        loadComponent: () => import('./features/manager/tabelle/pages/servizi.component').then(m => m.ServiziComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/servizi/servizi.component').then(m => m.ServiziComponent)
       },
       {
         path: 'stato-benefondo',
-        loadComponent: () => import('./features/manager/tabelle/pages/stato-benefondo.component').then(m => m.StatoBenefondoComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/stato-benefondo/stato-benefondo.component').then(m => m.StatoBenefondoComponent)
       },
       {
         path: 'stato-transazione',
-        loadComponent: () => import('./features/manager/tabelle/pages/stato-transazione.component').then(m => m.StatoTransazioneComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/stato-transazione/stato-transazione.component').then(m => m.StatoTransazioneComponent)
       },
       {
         path: 'tipo-conti',
-        loadComponent: () => import('./features/manager/tabelle/pages/tipo-conti.component').then(m => m.TipoContiComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/tipo-conti/tipo-conti.component').then(m => m.TipoContiComponent)
       },
       {
         path: 'tipo-device',
-        loadComponent: () => import('./features/manager/tabelle/pages/tipo-device.component').then(m => m.TipoDeviceComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/tipo-device/tipo-device.component').then(m => m.TipoDeviceComponent)
       },
       {
         path: 'tipo-operazione',
-        loadComponent: () => import('./features/manager/tabelle/pages/tipo-operazione.component').then(m => m.TipoOperazioneComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/tipo-operazione/tipo-operazione.component').then(m => m.TipoOperazioneComponent)
       },
       {
         path: 'regole-limiti-is107',
-        loadComponent: () => import('./features/manager/tabelle/pages/regole-limiti-is107.component').then(m => m.RegoleLimitiIs107Component)
+        loadComponent: () => import('./features/manager/tabelle/pages/regole-limiti-is107/regole-limiti-is107.component').then(m => m.RegoleLimitiIs107Component)
       },
       //Operazioni - cambi biglietti banca
       {
