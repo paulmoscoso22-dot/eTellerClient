@@ -6,6 +6,7 @@
 - Use standalone components and signals
 - Prefer DevExtreme components for UI
 - Avoid implementation details at this stage
+- for the errors use the interceptor
 
 ### Output (MANDATORY HANDOFF)
 Provide:
