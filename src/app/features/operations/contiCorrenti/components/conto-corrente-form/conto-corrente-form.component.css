@@ -1,6 +1,7 @@
 /* ══════════════════════════════════════════
    Conto Corrente Form — Banca del Sempione
    Brand navy : #003366  |  Gold : #C5A059
+   Background : #F5F7F9
    ══════════════════════════════════════════ */
 
 :host {
@@ -21,10 +22,15 @@
   overflow: hidden;
 }
 
-/* ── Op bar ── */
+/* ══════════════════════════════════════════
+   Op bar
+   ══════════════════════════════════════════ */
+
 .op-bar {
   flex: 0 0 auto;
-  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .op-badge {
@@ -34,6 +40,7 @@
   padding: 3px 12px 3px 8px;
   border-radius: 4px;
   font-size: 12px;
+  font-weight: 600;
   color: #fff;
 }
 
@@ -46,7 +53,31 @@
   flex-shrink: 0;
 }
 
-/* ── Two-column grid ── */
+/* Confirm button — primary navy (top right) */
+:host ::ng-deep .btn-confirm.dx-button {
+  background-color: #003366;
+  border-color: #003366;
+  color: #fff;
+  height: 32px;
+  margin-left: auto;
+}
+
+:host ::ng-deep .btn-confirm.dx-button:hover {
+  background-color: #004080;
+  border-color: #004080;
+}
+
+:host ::ng-deep .btn-confirm .dx-button-content {
+  padding: 0 28px;
+}
+
+:host ::ng-deep .btn-confirm .dx-icon {
+  color: #fff;
+}
+
+/* ══════════════════════════════════════════
+   Two-column grid
+   ══════════════════════════════════════════ */
 .two-col-grid {
   flex: 1 1 auto;
   display: grid;
@@ -63,7 +94,6 @@
 .two-col-grid::-webkit-scrollbar-track { background: transparent; }
 .two-col-grid::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
 
-/* ── Columns ── */
 .col-main,
 .col-side {
   display: flex;
@@ -71,29 +101,32 @@
   gap: 8px;
 }
 
-/* ── Card ── */
+/* ══════════════════════════════════════════
+   Card
+   ══════════════════════════════════════════ */
 .card-section {
   background: #fff;
   border: 1px solid #dce3ee;
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
+  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.07);
   flex-shrink: 0;
   overflow: hidden;
 }
 
 .card-fill { flex: 1 1 auto; }
 
-/* ── Card body ── */
 .card-body {
-  padding: 14px 16px 16px;
+  padding: 16px 18px 18px;
 }
 
-/* ── Form rows ── */
+/* ══════════════════════════════════════════
+   Form rows
+   ══════════════════════════════════════════ */
 .form-row {
   display: flex;
   align-items: center;
-  gap: 0 8px;
-  margin-bottom: 5px;
+  gap: 0 10px;
+  margin-bottom: 8px;
   min-height: 28px;
 }
 
@@ -127,14 +160,16 @@
   gap: 6px;
 }
 
-/* ── Field separator ── */
+/* Field separator */
 .field-sep {
   height: 1px;
-  background: #e5e7eb;
-  margin: 8px 0;
+  background: #e9ecf1;
+  margin: 10px 0;
 }
 
-/* ── Compact DevExtreme inputs ── */
+/* ══════════════════════════════════════════
+   Compact DevExtreme inputs
+   ══════════════════════════════════════════ */
 :host ::ng-deep .dx-texteditor {
   height: 28px;
 }
@@ -155,12 +190,14 @@
   height: 28px;
 }
 
-/* ── Display values ── */
+/* ══════════════════════════════════════════
+   Display values (read-only / computed)
+   ══════════════════════════════════════════ */
 .display-value {
   height: 28px;
   display: flex;
   align-items: center;
-  padding: 0 8px;
+  padding: 0 10px;
   background: #f5f6f8;
   border-radius: 4px;
   font-size: 13px;
@@ -169,18 +206,31 @@
   border: 1px solid #e9ecef;
 }
 
+/* System / certified data — slightly stronger visual */
+.display-value--sys {
+  background: #eef1f5;
+  color: #1f2937;
+  font-weight: 600;
+  border-color: #c8d3e0;
+  border-left: 3px solid #9aafc4;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Calculated totals — navy accent */
 .display-value--accent {
   background: #f0f4f8;
   color: #003366;
   font-weight: 700;
-  border-color: #d0daea;
+  border-color: #c8d8ea;
+  border-left: 3px solid #003366;
+  font-variant-numeric: tabular-nums;
 }
 
 /* System rate field */
 .sys-rate {
   width: 130px;
   flex-shrink: 0;
-  gap: 4px;
+  gap: 6px;
 }
 
 .sys-label {
@@ -192,27 +242,117 @@
   flex-shrink: 0;
 }
 
-/* ── Aggio inline radio groups ── */
-:host ::ng-deep .aggio-radio {
+/* ══════════════════════════════════════════
+   Aggio — segmented control + input addon
+   ══════════════════════════════════════════ */
+.aggio-row {
+  padding-top: 6px !important;
+  margin-top: 2px;
+}
+
+.aggio-row .form-lbl {
+  padding-top: 5px;
+}
+
+.aggio-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Aggio / Disaggio toggle */
+.seg-ctrl {
+  display: inline-flex;
+  border: 1px solid #c8d3e0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f5f6f8;
+  width: fit-content;
+}
+
+.seg-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px 18px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background 0.14s, color 0.14s;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.seg-btn + .seg-btn {
+  border-left: 1px solid #c8d3e0;
+}
+
+.seg-btn--active {
+  background: #003366;
+  color: #fff;
+}
+
+/* % / Importo addon + number input group */
+.aggio-input-group {
+  display: flex;
+  align-items: stretch;
+  height: 28px;
+  border: 1px solid #c8d3e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.addon-pills {
+  display: flex;
   flex-shrink: 0;
+  background: #f0f4f8;
+  border-right: 1px solid #c8d3e0;
 }
 
-:host ::ng-deep .aggio-radio .dx-radiogroup-horizontal {
-  gap: 10px;
+.addon-pill {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 11px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  transition: background 0.14s, color 0.14s;
+  line-height: 1;
 }
 
-:host ::ng-deep .aggio-radio .dx-item-content {
-  font-size: 12px;
-  color: #374151;
+.addon-pill + .addon-pill {
+  border-left: 1px solid #dce3ee;
 }
 
-/* ── AML row ── */
+.addon-pill--active {
+  background: #003366;
+  color: #fff;
+}
+
+:host ::ng-deep .aggio-numbox {
+  flex: 1;
+  min-width: 0;
+}
+
+:host ::ng-deep .aggio-numbox .dx-texteditor {
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  height: 26px !important;
+}
+
+/* ══════════════════════════════════════════
+   AML row
+   ══════════════════════════════════════════ */
 .aml-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 6px 8px;
+  padding: 7px 10px;
   background: #fff8e1;
   border-left: 3px solid #ffc107;
   border-radius: 4px;
@@ -221,7 +361,7 @@
 .aml-info {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
 }
 
 .aml-dot {
@@ -238,44 +378,31 @@
   color: #92400e;
 }
 
-/* ── Action bar ── */
-.action-bar {
+/* ══════════════════════════════════════════
+   Floating action bar (secondary actions)
+   ══════════════════════════════════════════ */
+.float-bar {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 8px 0;
-  background: #fff;
-  border-top: 1px solid #dce3ee;
-  box-shadow: 0 -2px 6px rgba(0, 51, 102, 0.06);
-}
-
-.actions-left,
-.actions-right {
-  display: flex;
+  justify-content: flex-start;
   gap: 6px;
+  padding: 6px 0 5px;
+  background: rgba(255, 255, 255, 0.96);
+  border-top: 1px solid #e4eaf2;
+  box-shadow: 0 -2px 8px rgba(0, 51, 102, 0.05);
 }
 
-/* Conferma button — primary navy */
-:host ::ng-deep .btn-confirm.dx-button {
-  background-color: #003366;
+:host ::ng-deep .btn-secondary.dx-button {
+  height: 28px;
+  border-color: #c8d3e0;
+  color: #374151;
+}
+
+:host ::ng-deep .btn-secondary.dx-button:hover {
   border-color: #003366;
-  color: #fff;
-  height: 32px;
-}
-
-:host ::ng-deep .btn-confirm.dx-button:hover {
-  background-color: #004080;
-  border-color: #004080;
-}
-
-:host ::ng-deep .btn-confirm .dx-button-content {
-  padding: 0 24px;
-}
-
-:host ::ng-deep .btn-confirm .dx-icon {
-  color: #fff;
+  color: #003366;
+  background: rgba(0, 51, 102, 0.04);
 }
 
 /* ── Responsive ── */

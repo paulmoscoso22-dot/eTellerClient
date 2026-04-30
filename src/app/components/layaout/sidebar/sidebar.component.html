@@ -4,7 +4,9 @@
   @if (showSearch) {
     @if (!isCollapsed) {
       <div class="search-wrap">
-        <i class="bi bi-search search-icon"></i>
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
         <input
           type="text"
           class="search-input"
@@ -13,80 +15,101 @@
           (ngModelChange)="searchQuery.set($event); onSearch()"
         />
         @if (searchQuery()) {
-          <button class="search-clear" (click)="searchQuery.set(''); onSearch()">×</button>
+          <button class="search-clear" (click)="searchQuery.set(''); onSearch()" title="Cancella">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
         }
       </div>
     } @else {
       <div class="search-collapsed">
-        <i class="bi bi-search"></i>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
       </div>
     }
   }
 
   <!-- ── Navigation ── -->
   <nav class="menu-nav">
-    @for (section of filteredItems(); track section.label) {
+    @for (section of filteredItems(); track section.label; let first = $first) {
 
-      <!-- Depth-0: section header / icon-mode divider -->
+      <!-- ── Level 0: Section header ── -->
       @if (!isCollapsed) {
-        <div class="section-header">{{ section.label | transloco }}</div>
+        <div class="section-header" [class.section-header--first]="first">
+          {{ section.label | transloco }}
+        </div>
       } @else {
         <div class="section-divider"></div>
       }
 
-      <!-- Depth-1: sub-categories (collapsible) -->
-      @for (item of (section.children ?? []); track item.label) {
-        <div [class]="getItemClass(item)">
+      <!-- ── Level 1: Groups ── -->
+      @for (group of (section.children ?? []); track group.label) {
+        <div class="nav-group">
 
-          <div class="menu-row"
-               [title]="isCollapsed ? (item.label | transloco) : ''"
-               (click)="onItemClick(item, [section, item])">
-            @if (item.icon) {
-              <i class="item-icon dx-icon-{{ item.icon }}"></i>
-            }
+          <div class="menu-row menu-row--l1"
+               [class.is-expanded]="group.isExpanded"
+               [class.parent-active]="hasActiveChild(group)"
+               [title]="isCollapsed ? (group.label | transloco) : ''"
+               (click)="onItemClick(group)">
+            <span class="item-icon" [innerHTML]="getIconHtml(group.icon)"></span>
             @if (!isCollapsed) {
-              <span class="item-label">{{ item.label | transloco }}</span>
-              @if (item.children?.length) {
-                <i class="chevron dx-icon-{{ item.isExpanded ? 'chevrondown' : 'chevronright' }}"></i>
+              <span class="item-label">{{ group.label | transloco }}</span>
+              @if (group.children?.length) {
+                <svg class="chevron" [class.chevron--open]="group.isExpanded"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
               }
             }
           </div>
 
-          <!-- Depth-2: leaf items or sub-sub-categories -->
-          @if (!isCollapsed && item.children?.length && item.isExpanded) {
+          <!-- ── Level 2: Sub-items ── -->
+          @if (!isCollapsed && group.children?.length && group.isExpanded) {
             <div class="sub-menu">
-              @for (child of item.children!; track child.label) {
-                <div [class]="getItemClass(child)">
 
-                  <div class="menu-row sub-row"
-                       (click)="onItemClick(child, [section, item, child])">
-                    @if (child.icon) {
-                      <i class="item-icon dx-icon-{{ child.icon }}"></i>
-                    }
-                    <span class="item-label">{{ child.label | transloco }}</span>
-                    @if (child.children?.length) {
-                      <i class="chevron dx-icon-{{ child.isExpanded ? 'chevrondown' : 'chevronright' }}"></i>
+              @for (item of group.children!; track item.label) {
+
+                @if (item.children?.length) {
+                  <!-- Level 2 sub-group (has children) -->
+                  <div class="nav-subgroup">
+                    <div class="menu-row menu-row--l2 menu-row--subgroup"
+                         [class.parent-active]="hasActiveChild(item)"
+                         (click)="onItemClick(item)">
+                      <span class="item-icon item-icon--sm" [innerHTML]="getIconHtml(item.icon)"></span>
+                      <span class="item-label">{{ item.label | transloco }}</span>
+                      <svg class="chevron" [class.chevron--open]="item.isExpanded"
+                           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="9 18 15 12 9 6"/>
+                      </svg>
+                    </div>
+
+                    <!-- ── Level 3: Deep leaves ── -->
+                    @if (item.children?.length && item.isExpanded) {
+                      <div class="sub-menu sub-menu--l3">
+                        @for (leaf of item.children!; track leaf.label) {
+                          <div class="menu-row menu-row--l3"
+                               [class.active]="isActive(leaf.url)"
+                               (click)="onItemClick(leaf)">
+                            <span class="item-icon item-icon--xs" [innerHTML]="getIconHtml(leaf.icon)"></span>
+                            <span class="item-label">{{ leaf.label | transloco }}</span>
+                          </div>
+                        }
+                      </div>
                     }
                   </div>
 
-                  <!-- Depth-3: deep leaf items -->
-                  @if (child.children?.length && child.isExpanded) {
-                    <div class="sub-menu sub-menu--deep">
-                      @for (leaf of child.children!; track leaf.label) {
-                        <div [class]="getItemClass(leaf)">
-                          <div class="menu-row leaf-row"
-                               (click)="onItemClick(leaf, [section, item, child, leaf])">
-                            @if (leaf.icon) {
-                              <i class="item-icon dx-icon-{{ leaf.icon }}"></i>
-                            }
-                            <span class="item-label">{{ leaf.label | transloco }}</span>
-                          </div>
-                        </div>
-                      }
-                    </div>
-                  }
+                } @else {
+                  <!-- Level 2 leaf item -->
+                  <div class="menu-row menu-row--l2"
+                       [class.active]="isActive(item.url)"
+                       (click)="onItemClick(item)">
+                    <span class="item-icon item-icon--sm" [innerHTML]="getIconHtml(item.icon)"></span>
+                    <span class="item-label">{{ item.label | transloco }}</span>
+                  </div>
+                }
 
-                </div>
               }
             </div>
           }

@@ -15,8 +15,7 @@
         [showSearch]="true"
         searchPlaceholder="Cerca nel menu..."
         [isCollapsed]="isSidebarCollapsed()"
-        (itemClick)="onMenuItemClick($event)"
-        (breadcrumbChanged)="onBreadcrumbChanged($event)">
+        (itemClick)="onMenuItemClick($event)">
       </app-sidebar>
     </div>
 
@@ -28,14 +27,6 @@
         </div>
       }
 
-      <!-- Breadcrumb -->
-      <div class="breadcrumb-row">
-        <app-breadcrumb
-          [items]="breadcrumbItems()"
-          [isDarkTheme]="isDarkTheme"
-          (itemClick)="onBreadcrumbItemClick($event)">
-        </app-breadcrumb>
-      </div>
 
       <!-- Contenuto pagina -->
       <div class="content-area">

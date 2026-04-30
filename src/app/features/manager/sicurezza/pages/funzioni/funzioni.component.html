@@ -1,198 +1,363 @@
 <div class="page-shell">
 
-  <!-- ══ Two-column grid ══ -->
-  <div class="two-col-grid">
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Funzioni di Sistema</h1>
+  </div>
 
-    <!-- ── Left column: Elenco + Dettaglio ── -->
-    <div class="col-main">
+  <!-- ══ Layout 2/3 + 1/3 ══ -->
+  <div class="content-grid">
 
-      <!-- Card: Elenco Funzioni -->
-      <section class="card-section card-fill">
-        <app-header-card title="Funzioni di Sistema" [count]="sysFunctions().length">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="8" y1="6" x2="21" y2="6"></line>
-            <line x1="8" y1="12" x2="21" y2="12"></line>
-            <line x1="8" y1="18" x2="21" y2="18"></line>
-            <line x1="3" y1="6" x2="3.01" y2="6"></line>
-            <line x1="3" y1="12" x2="3.01" y2="12"></line>
-            <line x1="3" y1="18" x2="3.01" y2="18"></line>
-          </svg>
-        </app-header-card>
-        <div class="card-body card-body--grid">
-          <app-table-funzioni
-            [dataSource]="sysFunctions()"
-            [pageSize]="12"
-            (selectionChanged)="onFunctionSelect($event)">
-          </app-table-funzioni>
+  <!-- ══ Card Elenco Funzioni (2/3) ══ -->
+  <section class="card-section card-main">
+
+    <div class="sempione-card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+      </svg>
+      <h2 class="card-title">Elenco Funzioni</h2>
+    </div>
+    <div class="gold-divider"></div>
+
+    <!-- ── Toolbar: filtri + azioni ── -->
+    <div class="card-toolbar">
+      <div class="toolbar-inner">
+
+        <div class="toolbar-filters">
+          <div class="toolbar-field toolbar-field--lg">
+            <label class="toolbar-lbl">Descrizione</label>
+            <dx-text-box
+              [value]="filterFunDescription()"
+              (onValueChanged)="filterFunDescription.set($event.value)"
+              placeholder="Cerca per descrizione..."
+              [showClearButton]="true">
+            </dx-text-box>
+          </div>
+          <div class="toolbar-field">
+            <label class="toolbar-lbl">Funzione</label>
+            <dx-text-box
+              [value]="filterFunName()"
+              (onValueChanged)="filterFunName.set($event.value)"
+              placeholder="Cerca per nome..."
+              [showClearButton]="true">
+            </dx-text-box>
+          </div>
         </div>
-      </section>
 
-      <!-- Card: Dettaglio Funzione -->
-      <section class="card-section">
-        <app-header-card title="Dettaglio Funzione" [count]="selectedFunId() ? 'ID ' + selectedFunId() : null">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"></path>
-          </svg>
-        </app-header-card>
-        <div class="card-body">
-
-          <div class="form-row">
-            <label class="form-lbl">Nome</label>
-            <div class="form-fld">
-              <dx-text-box
-                [value]="selectedFunName()"
-                (onValueChanged)="selectedFunName.set($event.value)">
-              </dx-text-box>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <label class="form-lbl">Host Code</label>
-            <div class="form-fld">
-              <dx-number-box
-                [value]="selectedFunHostcode()"
-                (onValueChanged)="selectedFunHostcode.set($event.value)">
-              </dx-number-box>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <span class="form-lbl"></span>
-            <div class="form-fld">
-              <dx-check-box
-                [value]="selectedOffline()"
-                (onValueChanged)="selectedOffline.set($event.value)"
-                text="Disponibile in modalità offline">
-              </dx-check-box>
-            </div>
-          </div>
-
-          <div class="form-row form-row--top">
-            <label class="form-lbl">Descrizione</label>
-            <div class="form-fld">
-              <dx-text-area
-                [value]="selectedFunDescription()"
-                (onValueChanged)="selectedFunDescription.set($event.value)"
-                [height]="66">
-              </dx-text-area>
-            </div>
-          </div>
-
+        <div class="toolbar-actions">
+          <dx-button
+            icon="search"
+            hint="Cerca"
+            stylingMode="outlined"
+            class="btn-outline"
+            (onClick)="onSearch()">
+          </dx-button>
+          <dx-button
+            icon="revert"
+            hint="Ripristina filtri"
+            stylingMode="outlined"
+            class="btn-outline"
+            (onClick)="resetFilters()">
+          </dx-button>
+          <dx-button
+            icon="print"
+            text="Stampa Utenti"
+            stylingMode="outlined"
+            class="btn-outline"
+            (onClick)="onPrintUsers()">
+          </dx-button>
+          <dx-button
+            icon="print"
+            text="Stampa Funzioni"
+            stylingMode="outlined"
+            class="btn-outline"
+            (onClick)="onPrintFunctions()">
+          </dx-button>
+          <dx-button
+            class="btn-new"
+            text="Nuovo"
+            type="default"
+            stylingMode="contained"
+            (onClick)="onAdd()">
+          </dx-button>
         </div>
-      </section>
 
+      </div>
     </div>
 
-    <!-- ── Right column: Ruoli + Utenti ── -->
-    <div class="col-side">
+    <!-- ── Grid ── -->
+    <div class="card-body card-body--grid">
+      <dx-data-grid
+        #funzioniGrid
+        [dataSource]="filteredFunctions()"
+        [showBorders]="false"
+        [columnAutoWidth]="true"
+        [rowAlternationEnabled]="true"
+        [hoverStateEnabled]="true"
+        [height]="'100%'"
+        [selection]="{ mode: 'single' }"
+        (onSelectionChanged)="onFunctionSelect($event)">
 
-      <!-- Card: Ruoli che utilizzano -->
-      <section class="card-section">
-        <app-header-card title="Ruoli che utilizzano">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-          </svg>
-        </app-header-card>
-        <div class="card-body card-body--grid">
-          <app-table-roles
-            [dataSource]="sysRoles()"
-            [pageSize]="5"
-            (selectionChanged)="onRoleSelect($event)">
-          </app-table-roles>
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager
+          [showInfo]="true"
+          infoText="{2} funzioni"
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[15, 30, 50]"
+          [showNavigationButtons]="true"
+          displayMode="full">
+        </dxo-pager>
+
+        <dxi-column dataField="funId"          caption="ID"          [width]="65"  alignment="center" dataType="number"></dxi-column>
+        <dxi-column dataField="funDescription" caption="Descrizione"               alignment="left"></dxi-column>
+        <dxi-column dataField="funName"        caption="Funzione"    [width]="180" alignment="left"></dxi-column>
+        <dxi-column dataField="offline"        caption="Offline"     [width]="80"  alignment="center" cellTemplate="offlineTemplate"></dxi-column>
+        <dxi-column dataField="funHostcode"    caption="Host Code"   [width]="100" alignment="center" dataType="number"></dxi-column>
+
+        <dxi-column
+          caption="Azioni"
+          [width]="105"
+          [allowSorting]="false"
+          [allowFiltering]="false"
+          alignment="center"
+          cellTemplate="azioniTemplate">
+        </dxi-column>
+
+        <div *dxTemplate="let cell of 'azioniTemplate'" class="azioni-cell">
+          <button class="action-btn action-btn--edit" title="Modifica" (click)="openEditPopup(cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--trace" title="Traccia" (click)="onTraceFromRow(cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 3v5h5"></path>
+              <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"></path>
+              <polyline points="12 7 12 12 15 15"></polyline>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--delete" title="Elimina" (click)="onDeleteFromRow(cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+              <path d="M10 11v6"></path><path d="M14 11v6"></path>
+              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+            </svg>
+          </button>
         </div>
-      </section>
 
-      <!-- Card: Utenti associati -->
-      <section class="card-section card-fill">
-        <app-header-card title="Utenti associati">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-        </app-header-card>
-        <div class="card-body card-body--grid">
-          <app-table-user-role
-            [dataSource]="usersRoleFunctions()"
-            [pageSize]="6"
-            (selectionChanged)="onUserSelect($event)">
-          </app-table-user-role>
+        <div *dxTemplate="let cell of 'offlineTemplate'" class="offline-cell">
+          <span class="offline-badge"
+            [class.offline-badge--yes]="cell.data.offline"
+            [class.offline-badge--no]="!cell.data.offline">
+            {{ cell.data.offline ? 'Sì' : 'No' }}
+          </span>
         </div>
-      </section>
 
+        <dxo-load-panel [enabled]="false"></dxo-load-panel>
+      </dx-data-grid>
     </div>
+
+  </section>
+
+  <!-- ══ Colonna destra: Ruoli + Utenti (1/3) ══ -->
+  <div class="cards-right">
+
+    <section class="card-section">
+      <div class="sempione-card-header">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+        <h2 class="card-title">Ruoli</h2>
+      </div>
+      <div class="gold-divider"></div>
+      <div class="card-body card-body--grid">
+        <app-table-roles
+          [dataSource]="sysRoles()"
+          [pageSize]="5"
+          (selectionChanged)="onRoleSelect($event)">
+        </app-table-roles>
+      </div>
+    </section>
+
+    <section class="card-section">
+      <div class="sempione-card-header">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <h2 class="card-title">Utenti associati</h2>
+      </div>
+      <div class="gold-divider"></div>
+      <div class="card-body card-body--grid">
+        <app-table-user-role
+          [dataSource]="usersRoleFunctions()"
+          [pageSize]="5"
+          (selectionChanged)="onUserSelect($event)">
+        </app-table-user-role>
+      </div>
+    </section>
 
   </div>
 
-  <!-- ── Action Bar ── -->
-  <div class="action-bar">
-    <div class="actions-primary">
-      <dx-button text="Aggiungi" icon="add" type="default" stylingMode="contained" (onClick)="onAdd()"></dx-button>
-      <dx-button text="Modifica" icon="edit" stylingMode="outlined" (onClick)="onEdit()"></dx-button>
-      <dx-button text="Cancella" icon="trash" type="danger" stylingMode="outlined" (onClick)="onDelete()"></dx-button>
-      <dx-button text="Traccia"  icon="chart" stylingMode="outlined" (onClick)="onTrace()"></dx-button>
-    </div>
-    <div class="actions-secondary">
-      <dx-button text="Stampa Funzioni" icon="print" stylingMode="outlined" (onClick)="onPrintFunctions()"></dx-button>
-      <dx-button text="Stampa Utenti"   icon="print" stylingMode="outlined" (onClick)="onPrintUsers()"></dx-button>
-      <dx-button text="Reset" icon="refresh" stylingMode="outlined" (onClick)="onReset()"></dx-button>
-    </div>
-  </div>
+  </div><!-- /content-grid -->
+
 
 </div>
 
-<!-- ── Popup: Aggiungi Funzione ── -->
+<!-- ══════════════════════════════════════
+     Popup: Dettaglio Funzione
+     ══════════════════════════════════════ -->
+<dx-popup
+  [visible]="showDetailPopup()"
+  [showTitle]="true"
+  [title]="(popupMode() === 'view' ? 'Dettaglio Funzione' : 'Modifica Funzione') + ' — ' + selectedFunName()"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="true"
+  [showCloseButton]="true"
+  [width]="520"
+  [height]="'auto'"
+  (onHiding)="showDetailPopup.set(false)">
+
+  <div class="popup-form">
+
+    <!-- ── View mode ── -->
+    @if (popupMode() === 'view') {
+      <div class="detail-grid">
+        <div class="detail-field">
+          <span class="detail-label">Nome</span>
+          <span class="detail-value">{{ selectedFunName() || '—' }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Host Code</span>
+          <span class="detail-value mono">{{ selectedFunHostcode() }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Offline</span>
+          <span class="detail-value">
+            <span class="offline-badge" [class.offline-badge--yes]="selectedOffline()">
+              {{ selectedOffline() ? 'Sì' : 'No' }}
+            </span>
+          </span>
+        </div>
+        <div class="detail-field detail-field--full">
+          <span class="detail-label">Descrizione</span>
+          <span class="detail-value">{{ selectedFunDescription() || '—' }}</span>
+        </div>
+      </div>
+      <div class="popup-actions">
+        <div class="popup-actions-left">
+          <dx-button text="Traccia" icon="chart" stylingMode="outlined" (onClick)="onTrace()"></dx-button>
+        </div>
+        <div class="popup-actions-right">
+          <dx-button text="Chiudi" stylingMode="outlined" (onClick)="showDetailPopup.set(false)"></dx-button>
+          <dx-button text="Modifica" icon="edit" type="default" stylingMode="contained" (onClick)="switchToEditMode()"></dx-button>
+        </div>
+      </div>
+    }
+
+    <!-- ── Edit mode ── -->
+    @if (popupMode() === 'edit') {
+      <div class="form-row">
+        <label class="form-lbl">Nome</label>
+        <div class="form-fld">
+          <dx-text-box [value]="selectedFunName()" (onValueChanged)="selectedFunName.set($event.value)"></dx-text-box>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-lbl">Host Code</label>
+        <div class="form-fld">
+          <dx-number-box [value]="selectedFunHostcode()" (onValueChanged)="selectedFunHostcode.set($event.value)"></dx-number-box>
+        </div>
+      </div>
+      <div class="form-row">
+        <span class="form-lbl"></span>
+        <div class="form-fld">
+          <dx-check-box [value]="selectedOffline()" (onValueChanged)="selectedOffline.set($event.value)" text="Disponibile in modalità offline"></dx-check-box>
+        </div>
+      </div>
+      <div class="form-row form-row--top">
+        <label class="form-lbl">Descrizione</label>
+        <div class="form-fld">
+          <dx-text-area [value]="selectedFunDescription()" (onValueChanged)="selectedFunDescription.set($event.value)" [height]="80"></dx-text-area>
+        </div>
+      </div>
+      <div class="popup-actions">
+        <div class="popup-actions-left">
+          <dx-button text="Traccia"  icon="chart" stylingMode="outlined" (onClick)="onTrace()"></dx-button>
+          <dx-button text="Cancella" icon="trash" type="danger" stylingMode="outlined" (onClick)="onDelete()"></dx-button>
+        </div>
+        <div class="popup-actions-right">
+          <dx-button text="Annulla" stylingMode="outlined" (onClick)="showDetailPopup.set(false)"></dx-button>
+          <dx-button text="Salva" type="default" stylingMode="contained" [disabled]="isLoading()" (onClick)="onSaveDetail()"></dx-button>
+        </div>
+      </div>
+    }
+
+  </div>
+</dx-popup>
+
+<!-- ══════════════════════════════════════
+     Popup: Aggiungi Funzione
+     ══════════════════════════════════════ -->
 <dx-popup
   [visible]="showAddPopup()"
   [showTitle]="true"
   title="NUOVA FUNZIONE"
-  [width]="440"
+  [width]="480"
   [height]="'auto'"
-  [wrapperAttr]="{ class: 'sempione-popup' }"
   (onHiding)="onCancelAdd()">
-  <form [formGroup]="addForm" class="popup-form">
 
+  <form [formGroup]="addForm" class="popup-form">
     <div class="form-row">
       <label class="form-lbl">Nome</label>
       <div class="form-fld">
-        <dx-text-box formControlName="funName" [isValid]="!(addForm.get('funName')?.invalid && addForm.get('funName')?.touched)"></dx-text-box>
+        <dx-text-box formControlName="funName"
+          [isValid]="!(addForm.get('funName')?.invalid && addForm.get('funName')?.touched)">
+        </dx-text-box>
         @if (addForm.get('funName')?.invalid && addForm.get('funName')?.touched) {
           <span class="field-error">Nome funzione richiesto</span>
         }
       </div>
     </div>
-
     <div class="form-row">
       <label class="form-lbl">Host Code</label>
       <div class="form-fld">
-        <dx-number-box formControlName="funHostcode" [isValid]="!(addForm.get('funHostcode')?.invalid && addForm.get('funHostcode')?.touched)"></dx-number-box>
+        <dx-number-box formControlName="funHostcode"
+          [isValid]="!(addForm.get('funHostcode')?.invalid && addForm.get('funHostcode')?.touched)">
+        </dx-number-box>
         @if (addForm.get('funHostcode')?.invalid && addForm.get('funHostcode')?.touched) {
           <span class="field-error">Host code richiesto</span>
         }
       </div>
     </div>
-
     <div class="form-row">
       <span class="form-lbl"></span>
       <div class="form-fld">
         <dx-check-box formControlName="offline" text="Offline"></dx-check-box>
       </div>
     </div>
-
     <div class="form-row form-row--top">
       <label class="form-lbl">Descrizione</label>
       <div class="form-fld">
         <dx-text-area formControlName="funDescription" [height]="80"></dx-text-area>
       </div>
     </div>
-
     <div class="popup-actions">
-      <dx-button text="Annulla" stylingMode="outlined" (onClick)="onCancelAdd()"></dx-button>
-      <dx-button text="Salva" type="default" stylingMode="contained" [disabled]="isLoading()" (onClick)="onSaveAdd()"></dx-button>
+      <div class="popup-actions-left"></div>
+      <div class="popup-actions-right">
+        <dx-button text="Annulla" stylingMode="outlined" (onClick)="onCancelAdd()"></dx-button>
+        <dx-button text="Salva" type="default" stylingMode="contained" [disabled]="isLoading()" (onClick)="onSaveAdd()"></dx-button>
+      </div>
     </div>
-
   </form>
 </dx-popup>
 

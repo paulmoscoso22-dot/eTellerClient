@@ -1,196 +1,379 @@
 <div class="page-shell">
 
-  <!-- ══ UPPER ROW: Gestione Ruoli + Utenti associati ══ -->
-  <div class="upper-row">
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Ruoli</h1>
+  </div>
 
-    <!-- ── Left: Gestione Ruoli (Main Card) ── -->
+  <!-- ══ Top Row: Gestione Ruoli (1/2) + Utenti associati (1/2) ══ -->
+  <div class="top-row">
+
+    <!-- ── Gestione Ruoli ── -->
     <section class="card-section">
 
-      <app-header-card title="Gestione Ruoli" [count]="filteredRoles().length + ' / ' + roles().length">
+      <div class="sempione-card-header">
         <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
         </svg>
-      </app-header-card>
+        <h2 class="card-title">Gestione Ruoli</h2>
+      </div>
+      <div class="gold-divider"></div>
 
-      <!-- Integrated Toolbar -->
-      <app-card-toolbar
-        [searchValue]="searchRoles()"
-        (searchValueChange)="searchRoles.set($event)"
-        searchPlaceholder="Cerca per nome o descrizione...">
-        <dx-button toolbar-actions
-          text="+ Nuovo Ruolo"
-          type="default"
-          stylingMode="contained"
-          class="btn-new"
-          (onClick)="onAggiungi()">
-        </dx-button>
-        <dx-button toolbar-actions
-          icon="print"
-          hint="Stampa lista ruoli"
-          stylingMode="outlined"
-          class="btn-outline"
-          (onClick)="onStampaLista()">
-        </dx-button>
-      </app-card-toolbar>
-
-      <!-- Roles Grid -->
-      <app-card-data-grid
-        [dataSource]="filteredRoles()"
-        keyExpr="roleId"
-        [columns]="roleColumns"
-        [pageSize]="8"
-        [paginationEnabled]="true"
-        (selectionChanged)="onRoleSelectionChanged($event)"
-        (rowEdit)="onRowEdit($event)"
-        (rowTrace)="onTraceRow($event)">
-      </app-card-data-grid>
-
-      <!-- Detail Form -->
-      <div class="card-body card-body--form">
-        <div class="form-row">
-          <label class="form-lbl">Nome</label>
-          <div class="form-fld">
-            <dx-text-box
-              [value]="selectedRoleName()"
-              (valueChange)="selectedRoleName.set($event)">
-            </dx-text-box>
+      <div class="card-toolbar">
+        <div class="toolbar-inner">
+          <div class="toolbar-filters">
+            <div class="toolbar-field toolbar-field--lg">
+              <label class="toolbar-lbl">Cerca</label>
+              <dx-text-box
+                [value]="searchRoles()"
+                (onValueChanged)="searchRoles.set($event.value)"
+                placeholder="Cerca per nome o descrizione..."
+                [showClearButton]="true">
+              </dx-text-box>
+            </div>
           </div>
-        </div>
-        <div class="form-row">
-          <label class="form-lbl">Descrizione</label>
-          <div class="form-fld">
-            <dx-text-box
-              [value]="selectedRoleDes() ?? ''"
-              (valueChange)="selectedRoleDes.set($event)">
-            </dx-text-box>
+          <div class="toolbar-actions">
+            <dx-button
+              icon="revert"
+              hint="Ripristina filtri"
+              stylingMode="outlined"
+              class="btn-outline"
+              (onClick)="resetFilters()">
+            </dx-button>
+            <dx-button
+              icon="print"
+              text="Stampa"
+              stylingMode="outlined"
+              class="btn-outline"
+              (onClick)="onStampaLista()">
+            </dx-button>
+            <dx-button
+              class="btn-new"
+              text="Nuovo"
+              type="default"
+              stylingMode="contained"
+              (onClick)="onAdd()">
+            </dx-button>
           </div>
         </div>
       </div>
 
+      <div class="card-body card-body--grid">
+        <dx-data-grid
+          [dataSource]="filteredRoles()"
+          keyExpr="roleId"
+          [showBorders]="false"
+          [columnAutoWidth]="true"
+          [rowAlternationEnabled]="true"
+          [hoverStateEnabled]="true"
+          [height]="'100%'"
+          [selection]="{ mode: 'single' }"
+          (onSelectionChanged)="onRoleSelectionChanged($event)">
+
+          <dxo-paging [pageSize]="8"></dxo-paging>
+          <dxo-pager
+            [showInfo]="true"
+            infoText="{2} ruoli"
+            [showPageSizeSelector]="true"
+            [allowedPageSizes]="[8, 15, 30]"
+            [showNavigationButtons]="true"
+            displayMode="full">
+          </dxo-pager>
+
+          <dxi-column dataField="roleId"   caption="ID"          [width]="60"  alignment="left"></dxi-column>
+          <dxi-column dataField="roleName" caption="Nome Ruolo"  [width]="180" alignment="left"></dxi-column>
+          <dxi-column dataField="roleDes"  caption="Descrizione"               alignment="left"></dxi-column>
+
+          <dxi-column
+            caption="Azioni"
+            [width]="80"
+            [allowSorting]="false"
+            [allowFiltering]="false"
+            alignment="center"
+            cellTemplate="azioniTemplate">
+          </dxi-column>
+
+          <div *dxTemplate="let cell of 'azioniTemplate'" class="azioni-cell">
+            <button class="action-btn action-btn--edit" title="Modifica" (click)="openEditPopup(cell.data)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </button>
+            <button class="action-btn action-btn--trace" title="Traccia" (click)="onTraceFromRow(cell.data)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 3v5h5"></path>
+                <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"></path>
+                <polyline points="12 7 12 12 15 15"></polyline>
+              </svg>
+            </button>
+            <button class="action-btn action-btn--delete" title="Elimina" (click)="onDeleteFromRow(cell.data)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                <path d="M10 11v6"></path><path d="M14 11v6"></path>
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+              </svg>
+            </button>
+          </div>
+
+          <dxo-load-panel [enabled]="false"></dxo-load-panel>
+        </dx-data-grid>
+      </div>
+
     </section>
 
-    <!-- ── Right: Utenti associati ── -->
+    <!-- ── Utenti associati ── -->
     <section class="card-section">
 
-      <app-header-card title="Utenti associati" [count]="usersByRole().length">
+      <div class="sempione-card-header">
         <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
           <circle cx="9" cy="7" r="4"></circle>
           <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
           <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
         </svg>
-      </app-header-card>
+        <h2 class="card-title">Utenti associati</h2>
+      </div>
+      <div class="gold-divider"></div>
 
-      <app-card-toolbar
-        [searchValue]="searchUsers()"
-        (searchValueChange)="searchUsers.set($event)"
-        searchPlaceholder="Cerca utente...">
-      </app-card-toolbar>
+      <div class="card-toolbar">
+        <div class="toolbar-inner">
+          <div class="toolbar-filters">
+            <div class="toolbar-field toolbar-field--lg">
+              <label class="toolbar-lbl">Cerca</label>
+              <dx-text-box
+                [value]="searchUsers()"
+                (onValueChanged)="searchUsers.set($event.value)"
+                placeholder="Cerca utente..."
+                [showClearButton]="true">
+              </dx-text-box>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <app-card-data-grid
-        [dataSource]="filteredUsersByRole()"
-        keyExpr="usrId"
-        [columns]="userColumns"
-        [pageSize]="10"
-        [paginationEnabled]="true"
-        [showEditAction]="false"
-        [showTraceAction]="false">
-      </app-card-data-grid>
+      <div class="card-body card-body--grid">
+        <dx-data-grid
+          [dataSource]="filteredUsersByRole()"
+          keyExpr="usrId"
+          [showBorders]="false"
+          [columnAutoWidth]="true"
+          [rowAlternationEnabled]="true"
+          [hoverStateEnabled]="true"
+          [height]="'100%'">
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager [showInfo]="true" [showPageSizeSelector]="false" [showNavigationButtons]="true"></dxo-pager>
+          <dxi-column dataField="usrId"     caption="User ID"     [width]="100" alignment="left"></dxi-column>
+          <dxi-column dataField="usrExtref" caption="Riferimento"               alignment="left"></dxi-column>
+          <dxi-column dataField="usrBraId"  caption="Filiale"     [width]="80"  alignment="left"></dxi-column>
+          <dxi-column dataField="usrStatus" caption="Stato"       [width]="90"  alignment="left"></dxi-column>
+          <dxo-load-panel [enabled]="false"></dxo-load-panel>
+        </dx-data-grid>
+      </div>
 
     </section>
 
   </div>
 
-  <!-- ══ LOWER ROW: Funzioni per Ruolo ══ -->
-  <div class="lower-row">
+  <!-- ══ Bottom Row: Funzioni per Ruolo (3/3) ══ -->
+  <div class="bottom-row">
     <section class="card-section">
 
-      <app-header-card title="Funzioni per Ruolo" [count]="functionsByRole().length">
+      <div class="sempione-card-header">
         <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="8" y1="6"  x2="21" y2="6"></line>
-          <line x1="8" y1="12" x2="21" y2="12"></line>
-          <line x1="8" y1="18" x2="21" y2="18"></line>
-          <line x1="3" y1="6"  x2="3.01" y2="6"></line>
-          <line x1="3" y1="12" x2="3.01" y2="12"></line>
-          <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          <line x1="8"  y1="6"  x2="21" y2="6"></line>
+          <line x1="8"  y1="12" x2="21" y2="12"></line>
+          <line x1="8"  y1="18" x2="21" y2="18"></line>
+          <line x1="3"  y1="6"  x2="3.01" y2="6"></line>
+          <line x1="3"  y1="12" x2="3.01" y2="12"></line>
+          <line x1="3"  y1="18" x2="3.01" y2="18"></line>
         </svg>
-      </app-header-card>
+        <h2 class="card-title">Funzioni per Ruolo</h2>
+      </div>
+      <div class="gold-divider"></div>
 
-      <!-- Function search toolbar -->
-      <app-card-toolbar [showSearch]="false">
-        <div class="toolbar-filter-wrap">
-          <label class="toolbar-lbl">Nome</label>
-          <dx-text-box
-            [value]="searchName() ?? ''"
-            (valueChange)="searchName.set($event)"
-            placeholder="Filtra per nome...">
-          </dx-text-box>
+      <div class="card-toolbar">
+        <div class="toolbar-inner">
+          <div class="toolbar-filters">
+            <div class="toolbar-field">
+              <label class="toolbar-lbl">Nome</label>
+              <dx-text-box
+                [value]="searchName() ?? ''"
+                (onValueChanged)="searchName.set($event.value)"
+                placeholder="Filtra per nome...">
+              </dx-text-box>
+            </div>
+            <div class="toolbar-field">
+              <label class="toolbar-lbl">Descrizione</label>
+              <dx-text-box
+                [value]="searchDes() ?? ''"
+                (onValueChanged)="searchDes.set($event.value)"
+                placeholder="Filtra per descrizione...">
+              </dx-text-box>
+            </div>
+          </div>
+          <div class="toolbar-actions">
+            <dx-button
+              icon="search"
+              text="Cerca"
+              type="default"
+              stylingMode="contained"
+              class="btn-new"
+              (onClick)="onCerca()">
+            </dx-button>
+          </div>
         </div>
-        <div class="toolbar-filter-wrap">
-          <label class="toolbar-lbl">Descrizione</label>
-          <dx-text-box
-            [value]="searchDes() ?? ''"
-            (valueChange)="searchDes.set($event)"
-            placeholder="Filtra per descrizione...">
-          </dx-text-box>
-        </div>
-        <dx-button toolbar-actions
-          text="Cerca"
-          icon="search"
-          type="default"
-          stylingMode="contained"
-          class="btn-cerca"
-          (onClick)="onCerca()">
-        </dx-button>
-      </app-card-toolbar>
+      </div>
 
-      <!-- Functions Grid -->
       <div class="card-body card-body--grid">
         <dx-data-grid
           [dataSource]="functionsByRole()"
           keyExpr="funId"
-          [selection]="{ mode: 'single' }"
           [showBorders]="false"
           [columnAutoWidth]="true"
           [rowAlternationEnabled]="true"
-          [hoverStateEnabled]="true">
+          [hoverStateEnabled]="true"
+          [height]="'100%'">
+          <dxo-paging [pageSize]="8"></dxo-paging>
+          <dxo-pager [showInfo]="true" [showPageSizeSelector]="false" [showNavigationButtons]="true"></dxo-pager>
+          <dxi-column dataField="funId"          caption="ID"              [width]="60"  alignment="left"></dxi-column>
+          <dxi-column dataField="funName"        caption="Nome Funzione"   [width]="200" alignment="left"></dxi-column>
+          <dxi-column dataField="accessLevel"    caption="Livello Accesso" [width]="220" cellTemplate="accessCell"></dxi-column>
+          <dxi-column dataField="funDescription" caption="Descrizione"                   alignment="left"></dxi-column>
 
-          <dxo-paging [pageSize]="8" [enabled]="true"></dxo-paging>
-          <dxo-pager [showInfo]="true" [showPageSizeSelector]="false"></dxo-pager>
+          <div *dxTemplate="let cell of 'accessCell'">
+            <dx-select-box
+              [dataSource]="funcAccTyp()"
+              valueExpr="fatId"
+              displayExpr="fatDes"
+              [value]="cell.value"
+              [readOnly]="false">
+            </dx-select-box>
+          </div>
 
-          <dxi-column dataField="funId"          caption="ID"              [width]="60"></dxi-column>
-          <dxi-column dataField="funName"        caption="Nome Funzione"   [width]="260"></dxi-column>
-          <dxi-column dataField="accessLevel"    caption="Livello Accesso" [width]="220" cellTemplate="accessCell">
-            <div *dxTemplate="let cell of 'accessCell'">
-              <dx-select-box
-                [dataSource]="funcAccTyp()"
-                valueExpr="fatId"
-                displayExpr="fatDes"
-                [value]="cell.value"
-                [readOnly]="false">
-              </dx-select-box>
-            </div>
-          </dxi-column>
-          <dxi-column dataField="funDescription" caption="Descrizione"></dxi-column>
-
+          <dxo-load-panel [enabled]="false"></dxo-load-panel>
         </dx-data-grid>
       </div>
 
     </section>
   </div>
 
-  <!-- ── Action Bar ── -->
-  <div class="action-bar">
-    <div class="actions-primary">
-      <dx-button text="Aggiungi" icon="add"   type="default" stylingMode="contained" class="btn-new"  (onClick)="onAggiungi()"></dx-button>
-      <dx-button text="Modifica" icon="edit"  stylingMode="outlined"                                  (onClick)="onModifica()"></dx-button>
-      <dx-button text="Cancella" icon="trash" type="danger"  stylingMode="outlined"                   (onClick)="onCancella()"></dx-button>
-      <dx-button text="Traccia"  icon="chart" stylingMode="outlined"                                  (onClick)="onTrace()"></dx-button>
-    </div>
-    <div class="actions-secondary">
-      <dx-button text="Stampa Utenti" icon="print"   stylingMode="outlined" (onClick)="onStampaUtenti()"></dx-button>
-      <dx-button text="Reset"         icon="refresh" stylingMode="outlined" (onClick)="onReset()"></dx-button>
-    </div>
-  </div>
-
 </div>
+
+<!-- ══════════════════════════════════════
+     Popup: Dettaglio / Modifica
+     ══════════════════════════════════════ -->
+<dx-popup
+  [visible]="showDetailPopup()"
+  [showTitle]="true"
+  [title]="(popupMode() === 'view' ? 'Dettaglio Ruolo' : 'Modifica Ruolo') + ' — ' + selectedRoleName()"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="true"
+  [showCloseButton]="true"
+  [width]="480"
+  [height]="'auto'"
+  (onHiding)="showDetailPopup.set(false)">
+
+  <div class="popup-form">
+
+    @if (popupMode() === 'view') {
+      <div class="detail-grid">
+        <div class="detail-field detail-field--full">
+          <span class="detail-label">ID</span>
+          <span class="detail-value mono">{{ selectedRoleId() || '—' }}</span>
+        </div>
+        <div class="detail-field detail-field--full">
+          <span class="detail-label">Nome Ruolo</span>
+          <span class="detail-value">{{ selectedRoleName() || '—' }}</span>
+        </div>
+        <div class="detail-field detail-field--full">
+          <span class="detail-label">Descrizione</span>
+          <span class="detail-value">{{ selectedRoleDes() || '—' }}</span>
+        </div>
+      </div>
+      <div class="popup-actions">
+        <div class="popup-actions-left">
+          <dx-button text="Traccia" icon="chart" stylingMode="outlined" (onClick)="onTrace()"></dx-button>
+        </div>
+        <div class="popup-actions-right">
+          <dx-button text="Chiudi"   stylingMode="outlined" (onClick)="showDetailPopup.set(false)"></dx-button>
+          <dx-button text="Modifica" icon="edit" type="default" stylingMode="contained" (onClick)="switchToEditMode()"></dx-button>
+        </div>
+      </div>
+    }
+
+    @if (popupMode() === 'edit') {
+      <div class="form-row">
+        <label class="form-lbl">Nome</label>
+        <div class="form-fld">
+          <dx-text-box [value]="selectedRoleName()" (onValueChanged)="selectedRoleName.set($event.value)"></dx-text-box>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-lbl">Descrizione</label>
+        <div class="form-fld">
+          <dx-text-box [value]="selectedRoleDes()" (onValueChanged)="selectedRoleDes.set($event.value)"></dx-text-box>
+        </div>
+      </div>
+      <div class="popup-actions">
+        <div class="popup-actions-left">
+          <dx-button text="Traccia"  icon="chart" stylingMode="outlined" (onClick)="onTrace()"></dx-button>
+          <dx-button text="Cancella" icon="trash" type="danger" stylingMode="outlined" (onClick)="onDelete()"></dx-button>
+        </div>
+        <div class="popup-actions-right">
+          <dx-button text="Annulla" stylingMode="outlined" (onClick)="showDetailPopup.set(false)"></dx-button>
+          <dx-button text="Salva" type="default" stylingMode="contained" [disabled]="isLoading()" (onClick)="onSaveDetail()"></dx-button>
+        </div>
+      </div>
+    }
+
+  </div>
+</dx-popup>
+
+<!-- ══════════════════════════════════════
+     Popup: Aggiungi Ruolo
+     ══════════════════════════════════════ -->
+<dx-popup
+  [visible]="showAddPopup()"
+  [showTitle]="true"
+  title="NUOVO RUOLO"
+  [width]="440"
+  [height]="'auto'"
+  (onHiding)="onCancelAdd()">
+
+  <form [formGroup]="addForm" class="popup-form">
+    <div class="form-row">
+      <label class="form-lbl">Nome</label>
+      <div class="form-fld">
+        <dx-text-box formControlName="roleName"
+          [isValid]="!(addForm.get('roleName')?.invalid && addForm.get('roleName')?.touched)">
+        </dx-text-box>
+        @if (addForm.get('roleName')?.invalid && addForm.get('roleName')?.touched) {
+          <span class="field-error">Nome richiesto</span>
+        }
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-lbl">Descrizione</label>
+      <div class="form-fld">
+        <dx-text-box formControlName="roleDes"></dx-text-box>
+      </div>
+    </div>
+    <div class="popup-actions">
+      <div class="popup-actions-left"></div>
+      <div class="popup-actions-right">
+        <dx-button text="Annulla" stylingMode="outlined" (onClick)="onCancelAdd()"></dx-button>
+        <dx-button text="Salva" type="default" stylingMode="contained" [disabled]="isLoading()" (onClick)="onSaveAdd()"></dx-button>
+      </div>
+    </div>
+  </form>
+</dx-popup>
+
+<!-- ── Toast ── -->
+<dx-toast
+  [(visible)]="toastVisible"
+  [type]="toastType()"
+  [message]="toastMessage()"
+  [displayTime]="3000">
+</dx-toast>

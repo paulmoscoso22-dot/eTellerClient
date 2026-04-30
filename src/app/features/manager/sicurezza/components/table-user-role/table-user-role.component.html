@@ -5,11 +5,19 @@
   [allowColumnReordering]="true"
   [allowColumnResizing]="true"
   columnResizingMode="nextColumn"
-  [paging]="{ pageSize: pageSize }"
   [selection]="{ mode: 'single' }"
   (onSelectionChanged)="selectionChanged.emit($event)">
 
-  <dxi-column dataField="usrExtref" caption="User"></dxi-column>
-  <dxi-column dataField="usrId" caption="User ID"></dxi-column>
+  <dxo-paging [pageSize]="pageSize"></dxo-paging>
+  <dxo-pager
+    [showInfo]="true"
+    infoText="{2} utenti"
+    [showPageSizeSelector]="false"
+    [showNavigationButtons]="true"
+    displayMode="full">
+  </dxo-pager>
+
+  <dxi-column dataField="usrExtref" caption="Utente"></dxi-column>
+  <dxi-column dataField="usrId"     caption="ID"    [width]="70" alignment="center"></dxi-column>
 
 </dx-data-grid>

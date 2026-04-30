@@ -1,6 +1,12 @@
 <div class="page-shell">
 
-  <section class="card-section">
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Personalizzazioni</h1>
+  </div>
+
+  <!-- ══ Card principale ══ -->
+  <section class="card-section card-main">
 
     <div class="sempione-card-header">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -14,62 +20,264 @@
         <line x1="9" y1="8" x2="15" y2="8"></line>
         <line x1="17" y1="16" x2="23" y2="16"></line>
       </svg>
-      <h2 class="card-title">Personalizzazioni</h2>
-      <span class="card-count">{{ personalisations().length }}</span>
+      <h2 class="card-title">Elenco Personalizzazioni</h2>
     </div>
     <div class="gold-divider"></div>
 
-    <!-- Data Grid -->
+    <!-- ── Toolbar: filtri + azioni ── -->
+    <div class="card-toolbar">
+      <div class="toolbar-inner">
+
+        <div class="toolbar-filters">
+          <div class="toolbar-field toolbar-field--lg">
+            <label class="toolbar-lbl">Descrizione</label>
+            <dx-text-box
+              [value]="filterParDes()"
+              (onValueChanged)="filterParDes.set($event.value)"
+              placeholder="Cerca per descrizione..."
+              [showClearButton]="true">
+            </dx-text-box>
+          </div>
+          <div class="toolbar-field">
+            <label class="toolbar-lbl">ID</label>
+            <dx-text-box
+              [value]="filterParId()"
+              (onValueChanged)="filterParId.set($event.value)"
+              placeholder="Cerca per ID..."
+              [showClearButton]="true">
+            </dx-text-box>
+          </div>
+        </div>
+
+        <div class="toolbar-actions">
+          <dx-button
+            icon="search"
+            hint="Cerca"
+            stylingMode="outlined"
+            class="btn-outline"
+            (onClick)="onSearch()">
+          </dx-button>
+          <dx-button
+            icon="revert"
+            hint="Ripristina filtri"
+            stylingMode="outlined"
+            class="btn-outline"
+            (onClick)="resetFilters()">
+          </dx-button>
+          <dx-button
+            icon="print"
+            text="Stampa"
+            stylingMode="outlined"
+            class="btn-outline"
+            (onClick)="onPrint()">
+          </dx-button>
+          <dx-button
+            class="btn-new"
+            text="Nuovo"
+            type="default"
+            stylingMode="contained"
+            (onClick)="onAdd()">
+          </dx-button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Grid ── -->
     <div class="card-body card-body--grid">
       <dx-data-grid
-        [dataSource]="personalisations()"
-        keyExpr="parId"
-        [selection]="{ mode: 'single' }"
+        #personalizzazioniGrid
+        [dataSource]="filteredPersonalisations()"
         [showBorders]="false"
         [columnAutoWidth]="true"
         [rowAlternationEnabled]="true"
         [hoverStateEnabled]="true"
-        [allowColumnResizing]="true"
-        (onSelectionChanged)="onSelectionChanged($event)">
+        [height]="'100%'"
+        [selection]="{ mode: 'single' }"
+        (onSelectionChanged)="onRowSelect($event)">
 
-        <dxo-search-panel [visible]="true" placeholder="Cerca..." [width]="200"></dxo-search-panel>
-        <dxo-paging [pageSize]="14" [enabled]="true"></dxo-paging>
-        <dxo-pager [showInfo]="true" [showPageSizeSelector]="false"></dxo-pager>
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager
+          [showInfo]="true"
+          infoText="{2} personalizzazioni"
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[15, 30, 50]"
+          [showNavigationButtons]="true"
+          displayMode="full">
+        </dxo-pager>
 
-        <dxi-column dataField="parId"    caption="ID"          [width]="200"></dxi-column>
-        <dxi-column dataField="parDes"   caption="Descrizione" [width]="400"></dxi-column>
-        <dxi-column dataField="parValue" caption="Valore"></dxi-column>
+        <dxi-column dataField="parId"    caption="ID"          [width]="220" alignment="left"></dxi-column>
+        <dxi-column dataField="parDes"   caption="Descrizione"               alignment="left"></dxi-column>
+        <dxi-column dataField="parValue" caption="Valore"      [width]="180" alignment="left"></dxi-column>
+
+        <dxi-column
+          caption="Azioni"
+          [width]="80"
+          [allowSorting]="false"
+          [allowFiltering]="false"
+          alignment="center"
+          cellTemplate="azioniTemplate">
+        </dxi-column>
+
+        <div *dxTemplate="let cell of 'azioniTemplate'" class="azioni-cell">
+          <button class="action-btn action-btn--edit" title="Modifica" (click)="openEditPopup(cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--trace" title="Traccia" (click)="onTraceFromRow(cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 3v5h5"></path>
+              <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"></path>
+              <polyline points="12 7 12 12 15 15"></polyline>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--delete" title="Elimina" (click)="onDeleteFromRow(cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+              <path d="M10 11v6"></path><path d="M14 11v6"></path>
+              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+            </svg>
+          </button>
+        </div>
+
+        <dxo-load-panel [enabled]="false"></dxo-load-panel>
       </dx-data-grid>
-    </div>
-
-    <!-- Edit Form -->
-    <div class="card-body card-body--form">
-      <form [formGroup]="form" (ngSubmit)="onSave()">
-        <div class="form-row form-row--top">
-          <label class="form-lbl">Descrizione</label>
-          <div class="form-fld">
-            <dx-text-area formControlName="parDes" placeholder="Inserisci descrizione" [height]="66"></dx-text-area>
-          </div>
-        </div>
-        <div class="form-row">
-          <label class="form-lbl">Valore</label>
-          <div class="form-fld">
-            <dx-text-box formControlName="parValue" placeholder="Inserisci valore"></dx-text-box>
-          </div>
-        </div>
-      </form>
     </div>
 
   </section>
 
-  <!-- Action Bar -->
-  <div class="action-bar">
-    <div class="actions-primary">
-      <dx-button text="Salva" icon="save" type="default" stylingMode="contained" class="btn-new" (onClick)="onSave()"></dx-button>
-    </div>
-    <div class="actions-secondary">
-      <dx-button text="Traccia" icon="chart" stylingMode="outlined" (onClick)="onTrace()"></dx-button>
-    </div>
-  </div>
-
 </div>
+
+<!-- ══════════════════════════════════════
+     Popup: Dettaglio / Modifica
+     ══════════════════════════════════════ -->
+<dx-popup
+  [visible]="showDetailPopup()"
+  [showTitle]="true"
+  [title]="(popupMode() === 'view' ? 'Dettaglio Personalizzazione' : 'Modifica Personalizzazione') + ' — ' + selectedParId()"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="true"
+  [showCloseButton]="true"
+  [width]="520"
+  [height]="'auto'"
+  (onHiding)="showDetailPopup.set(false)">
+
+  <div class="popup-form">
+
+    <!-- ── View mode ── -->
+    @if (popupMode() === 'view') {
+      <div class="detail-grid">
+        <div class="detail-field detail-field--full">
+          <span class="detail-label">ID</span>
+          <span class="detail-value mono">{{ selectedParId() || '—' }}</span>
+        </div>
+        <div class="detail-field detail-field--full">
+          <span class="detail-label">Descrizione</span>
+          <span class="detail-value">{{ selectedParDes() || '—' }}</span>
+        </div>
+        <div class="detail-field detail-field--full">
+          <span class="detail-label">Valore</span>
+          <span class="detail-value mono">{{ selectedParValue() || '—' }}</span>
+        </div>
+      </div>
+      <div class="popup-actions">
+        <div class="popup-actions-left">
+          <dx-button text="Traccia" icon="chart" stylingMode="outlined" (onClick)="onTrace()"></dx-button>
+        </div>
+        <div class="popup-actions-right">
+          <dx-button text="Chiudi" stylingMode="outlined" (onClick)="showDetailPopup.set(false)"></dx-button>
+          <dx-button text="Modifica" icon="edit" type="default" stylingMode="contained" (onClick)="switchToEditMode()"></dx-button>
+        </div>
+      </div>
+    }
+
+    <!-- ── Edit mode ── -->
+    @if (popupMode() === 'edit') {
+      <div class="form-row">
+        <label class="form-lbl">ID</label>
+        <div class="form-fld">
+          <dx-text-box [value]="selectedParId()" (onValueChanged)="selectedParId.set($event.value)"></dx-text-box>
+        </div>
+      </div>
+      <div class="form-row form-row--top">
+        <label class="form-lbl">Descrizione</label>
+        <div class="form-fld">
+          <dx-text-area [value]="selectedParDes()" (onValueChanged)="selectedParDes.set($event.value)" [height]="80"></dx-text-area>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-lbl">Valore</label>
+        <div class="form-fld">
+          <dx-text-box [value]="selectedParValue()" (onValueChanged)="selectedParValue.set($event.value)"></dx-text-box>
+        </div>
+      </div>
+      <div class="popup-actions">
+        <div class="popup-actions-left">
+          <dx-button text="Traccia"  icon="chart" stylingMode="outlined" (onClick)="onTrace()"></dx-button>
+          <dx-button text="Cancella" icon="trash" type="danger" stylingMode="outlined" (onClick)="onDelete()"></dx-button>
+        </div>
+        <div class="popup-actions-right">
+          <dx-button text="Annulla" stylingMode="outlined" (onClick)="showDetailPopup.set(false)"></dx-button>
+          <dx-button text="Salva" type="default" stylingMode="contained" [disabled]="isLoading()" (onClick)="onSaveDetail()"></dx-button>
+        </div>
+      </div>
+    }
+
+  </div>
+</dx-popup>
+
+<!-- ══════════════════════════════════════
+     Popup: Aggiungi Personalizzazione
+     ══════════════════════════════════════ -->
+<dx-popup
+  [visible]="showAddPopup()"
+  [showTitle]="true"
+  title="NUOVA PERSONALIZZAZIONE"
+  [width]="480"
+  [height]="'auto'"
+  (onHiding)="onCancelAdd()">
+
+  <form [formGroup]="addForm" class="popup-form">
+    <div class="form-row">
+      <label class="form-lbl">ID</label>
+      <div class="form-fld">
+        <dx-text-box formControlName="parId"
+          [isValid]="!(addForm.get('parId')?.invalid && addForm.get('parId')?.touched)">
+        </dx-text-box>
+        @if (addForm.get('parId')?.invalid && addForm.get('parId')?.touched) {
+          <span class="field-error">ID richiesto</span>
+        }
+      </div>
+    </div>
+    <div class="form-row form-row--top">
+      <label class="form-lbl">Descrizione</label>
+      <div class="form-fld">
+        <dx-text-area formControlName="parDes" [height]="80"></dx-text-area>
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-lbl">Valore</label>
+      <div class="form-fld">
+        <dx-text-box formControlName="parValue"></dx-text-box>
+      </div>
+    </div>
+    <div class="popup-actions">
+      <div class="popup-actions-left"></div>
+      <div class="popup-actions-right">
+        <dx-button text="Annulla" stylingMode="outlined" (onClick)="onCancelAdd()"></dx-button>
+        <dx-button text="Salva" type="default" stylingMode="contained" [disabled]="isLoading()" (onClick)="onSaveAdd()"></dx-button>
+      </div>
+    </div>
+  </form>
+</dx-popup>
+
+<!-- ── Toast ── -->
+<dx-toast
+  [(visible)]="toastVisible"
+  [type]="toastType()"
+  [message]="toastMessage()"
+  [displayTime]="3000">
+</dx-toast>
