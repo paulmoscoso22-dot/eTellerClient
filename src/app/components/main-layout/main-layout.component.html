@@ -18,16 +18,7 @@
         (itemClick)="onMenuItemClick($event)">
       </app-sidebar>
     </div>
-
     <main class="main-content">
-      <!-- Titolo pagina — allineato con il breadcrumb -->
-      @if (pageTitle()) {
-        <div class="page-title-row">
-          <h1 class="page-title">{{ pageTitle() }}</h1>
-        </div>
-      }
-
-
       <!-- Contenuto pagina -->
       <div class="content-area">
         <router-outlet></router-outlet>

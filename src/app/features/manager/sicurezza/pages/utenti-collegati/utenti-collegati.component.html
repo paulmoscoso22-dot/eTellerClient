@@ -1,6 +1,12 @@
 <div class="page-shell">
 
-  <section class="card-section">
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Utenti Collegati</h1>
+  </div>
+
+  <!-- ══ Card principale ══ -->
+  <section class="card-section card-main">
 
     <div class="sempione-card-header">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -9,49 +15,124 @@
         <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
         <line x1="12" y1="20" x2="12.01" y2="20"></line>
       </svg>
-      <h2 class="card-title">Utenti Collegati</h2>
+      <h2 class="card-title">Elenco Utenti Collegati</h2>
     </div>
     <div class="gold-divider"></div>
 
+    <!-- ── Toolbar ── -->
+    <div class="card-toolbar">
+      <div class="toolbar-inner">
+
+        <div class="toolbar-filters">
+          <div class="toolbar-field toolbar-field--lg">
+            <label class="toolbar-lbl">Cerca</label>
+            <dx-text-box
+              [value]="searchText()"
+              (onValueChanged)="searchText.set($event.value)"
+              placeholder="Cerca per User ID o Client ID..."
+              [showClearButton]="true">
+            </dx-text-box>
+          </div>
+        </div>
+
+        <div class="toolbar-actions">
+          <dx-button
+            icon="search"
+            hint="Cerca"
+            stylingMode="outlined"
+            class="btn-outline">
+          </dx-button>
+          <dx-button
+            icon="refresh"
+            text="Aggiorna"
+            stylingMode="outlined"
+            class="btn-outline"
+            (onClick)="onRefresh()">
+          </dx-button>
+          <dx-button
+            icon="remove"
+            text="Forza Uscita"
+            type="danger"
+            stylingMode="outlined"
+            class="btn-danger"
+            [disabled]="!selectedUsrCliId() || isLoading()"
+            (onClick)="forzaUscita()">
+          </dx-button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Grid ── -->
     <div class="card-body card-body--grid">
       <dx-data-grid
-        [dataSource]="userUseClient$ | async"
+        [dataSource]="filteredUsers()"
+        keyExpr="usrCliId"
         [showBorders]="false"
         [allowColumnResizing]="true"
         [columnAutoWidth]="true"
         [hoverStateEnabled]="true"
         [rowAlternationEnabled]="true"
-        keyExpr="usrCliId"
+        [height]="'100%'"
+        [selection]="{ mode: 'single' }"
         (onSelectionChanged)="onSelectionChanged($event)">
 
-        <dxo-selection mode="single"></dxo-selection>
-        <dxo-search-panel [visible]="true" placeholder="Cerca utente..." [width]="220"></dxo-search-panel>
-        <dxo-paging [pageSize]="14"></dxo-paging>
-        <dxo-pager [showPageSizeSelector]="false" [showInfo]="true"></dxo-pager>
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager
+          [showInfo]="true"
+          infoText="{2} utenti collegati"
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[15, 30, 50]"
+          [showNavigationButtons]="true"
+          displayMode="full">
+        </dxo-pager>
 
-        <dxi-column dataField="usrCliId" caption="ID"            [visible]="false"></dxi-column>
-        <dxi-column dataField="cliId"    caption="Client ID"></dxi-column>
-        <dxi-column dataField="usrId"    caption="User ID"></dxi-column>
-        <dxi-column dataField="dataIn"   caption="Data Accesso"  dataType="datetime" format="dd/MM/yyyy HH:mm:ss"></dxi-column>
-        <dxi-column dataField="dataOut"  caption="Data Uscita"   dataType="datetime" format="dd/MM/yyyy HH:mm:ss"></dxi-column>
-        <dxi-column dataField="forced"   caption="Forzato"       dataType="boolean"  [width]="90"></dxi-column>
+        <dxi-column dataField="usrCliId" caption="ID"           [visible]="false"></dxi-column>
+        <dxi-column dataField="cliId"    caption="Client ID"    [width]="120" alignment="left"></dxi-column>
+        <dxi-column dataField="usrId"    caption="User ID"      [width]="140" alignment="left"></dxi-column>
+        <dxi-column dataField="dataIn"   caption="Data Accesso" dataType="datetime" format="dd/MM/yyyy HH:mm:ss" alignment="left"></dxi-column>
+        <dxi-column dataField="dataOut"  caption="Data Uscita"  dataType="datetime" format="dd/MM/yyyy HH:mm:ss" alignment="left"></dxi-column>
+        <dxi-column dataField="forced"   caption="Forzato"      [width]="90"  alignment="center" cellTemplate="forcedTemplate"></dxi-column>
 
+        <dxi-column
+          caption="Azioni"
+          [width]="70"
+          [allowSorting]="false"
+          [allowFiltering]="false"
+          alignment="center"
+          cellTemplate="azioniTemplate">
+        </dxi-column>
+
+        <div *dxTemplate="let cell of 'forcedTemplate'" class="badge-cell">
+          <span class="status-badge"
+            [class.status-badge--yes]="cell.data.forced"
+            [class.status-badge--no]="!cell.data.forced">
+            {{ cell.data.forced ? 'Sì' : 'No' }}
+          </span>
+        </div>
+
+        <div *dxTemplate="let cell of 'azioniTemplate'" class="azioni-cell">
+          <button class="action-btn action-btn--force" title="Forza Uscita" (click)="forzaUscitaFromRow(cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+
+        <dxo-load-panel [enabled]="false"></dxo-load-panel>
       </dx-data-grid>
     </div>
 
   </section>
 
-  <div class="action-bar">
-    <div class="actions-primary">
-      <dx-button
-        text="Forza Uscita"
-        icon="remove"
-        type="danger"
-        stylingMode="contained"
-        [disabled]="!selectedUsrCliId()"
-        (onClick)="forzaUscita()">
-      </dx-button>
-    </div>
-  </div>
-
 </div>
+
+<!-- ── Toast ── -->
+<dx-toast
+  [(visible)]="toastVisible"
+  [type]="toastType()"
+  [message]="toastMessage()"
+  [displayTime]="3000">
+</dx-toast>
