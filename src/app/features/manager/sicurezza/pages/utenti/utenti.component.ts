@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule, DxRadioGroupModule } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { ManagerService } from '../../services/sicurezza.service';
 import { ISysUsersActiveAndBlockedResponse, GetUsersByUserIdRequest, InsertUserResponse, IUpdateUserRequest } from '../../models/utenti.models';
 import { ISysRoleResonse, GetRoleByUsrIdRequest, IGetRoleNotForUsrIdRquest } from '../../models/ruoli.models';
@@ -18,7 +19,10 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-utenti',
   standalone: true,
-  imports: [CommonModule, DxDataGridModule, ReactiveFormsModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule, DxRadioGroupModule, TableUtentiComponent, ControlAssignComponent],
+  imports: [CommonModule, ReactiveFormsModule, TranslocoPipe,
+    DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule,
+    DxSelectBoxModule, DxValidatorModule, DxPopupModule, DxRadioGroupModule,
+    TableUtentiComponent, ControlAssignComponent],
   templateUrl: './utenti.component.html',
   styleUrls: ['./utenti.component.css'],
 })

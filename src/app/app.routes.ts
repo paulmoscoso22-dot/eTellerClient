@@ -108,7 +108,7 @@ export const routes: Routes = [
       {
         path: 'trace',
         loadComponent: () => import('./features/manager/informazioni/pages/trace/trace.component').then(m => m.TraceComponent),
-        data: { titleKey: 'trace.title' }
+        data: { titleKey: 'title' }
       },
       {
         path: 'log-sched-task',

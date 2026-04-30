@@ -1,7 +1,12 @@
 <div class="page-shell">
 
-  <!-- ── Main Card: Gestione Utenti ── -->
-  <section class="card-section">
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Gestione Utenti</h1>
+  </div>
+
+  <!-- ══ Card principale ══ -->
+  <section class="card-section card-main">
 
     <div class="sempione-card-header">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -10,39 +15,46 @@
         <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
       </svg>
-      <h2 class="card-title">Gestione Utenti</h2>
+      <h2 class="card-title">Elenco Utenti</h2>
     </div>
     <div class="gold-divider"></div>
 
-    <!-- Toolbar: filtro | ricerca | azioni -->
+    <!-- ── Toolbar ── -->
     <div class="card-toolbar">
       <div class="toolbar-inner">
 
-        <div class="segmented-control" role="group">
-          @for (item of filterItems; track item.value) {
-            <button class="segment-btn"
-                    [class.active]="selectedFilter() === item.value"
-                    (click)="onFilterChanged({ value: item.value })">
-              {{ item.label }}
-            </button>
-          }
-        </div>
-
-        <div class="toolbar-search-wrap">
-          <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <dx-text-box
-            placeholder="Cerca utenti..."
-            [showClearButton]="true"
-            valueChangeEvent="input"
-            class="toolbar-textbox"
-            (onValueChanged)="onSearchChanged($event)">
-          </dx-text-box>
+        <div class="toolbar-filters">
+          <div class="toolbar-field">
+            <label class="toolbar-lbl">Stato</label>
+            <div class="segmented-control" role="group">
+              @for (item of filterItems; track item.value) {
+                <button class="segment-btn"
+                        [class.active]="selectedFilter() === item.value"
+                        (click)="onFilterChanged({ value: item.value })">
+                  {{ item.label }}
+                </button>
+              }
+            </div>
+          </div>
+          <div class="toolbar-field toolbar-field--lg">
+            <label class="toolbar-lbl">Cerca</label>
+            <dx-text-box
+              placeholder="Cerca utenti..."
+              [showClearButton]="true"
+              valueChangeEvent="input"
+              (onValueChanged)="onSearchChanged($event)">
+            </dx-text-box>
+          </div>
         </div>
 
         <div class="toolbar-actions">
+          <dx-button
+            icon="print"
+            hint="Stampa lista utenti"
+            stylingMode="outlined"
+            class="btn-outline"
+            (onClick)="onStampaLista()">
+          </dx-button>
           <dx-button
             class="btn-new"
             text="Nuovo"
@@ -50,19 +62,12 @@
             stylingMode="contained"
             (onClick)="openNewUserPopup()">
           </dx-button>
-        <dx-button
-          icon="print"
-          hint="Stampa lista utenti"
-          stylingMode="outlined"
-          class="btn-outline"
-          (onClick)="onStampaLista()">
-        </dx-button>
         </div>
 
       </div>
     </div>
 
-    <!-- Griglia utenti -->
+    <!-- ── Griglia utenti ── -->
     <div class="card-body card-body--grid">
       <app-table-utenti
         [users$]="users$"
@@ -77,7 +82,9 @@
 
 </div>
 
-<!-- ── Popup Dettaglio / Form utente ── -->
+<!-- ══════════════════════════════════════
+     Popup: Dettaglio / Form Utente
+     ══════════════════════════════════════ -->
 <dx-popup
   [(visible)]="isDetailPopupVisible"
   [showTitle]="true"
@@ -95,16 +102,23 @@
   <div *dxTemplate="let data of 'content'">
     <form [formGroup]="userForm"
           (ngSubmit)="onSubmit()"
-          class="popup-layout"
+          class="popup-form"
           [class.popup-view-mode]="popupMode() === 'view'">
 
-      <!-- ── Card 1: Informazioni Profilo ── -->
-      <section class="popup-card">
-        <h3 class="popup-card-title">Informazioni Profilo</h3>
+      <!-- ── Sezione 1: Informazioni Profilo ── -->
+      <div class="popup-section">
+        <div class="popup-section-header">
+          <svg class="popup-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span class="popup-section-title">Informazioni Profilo</span>
+        </div>
+        <div class="popup-section-divider"></div>
         <div class="popup-fields-grid">
 
           <div class="popup-field-group" [class.field-id-locked]="popupMode() === 'edit'">
-            <label class="popup-field-label">ID Utente</label>
+            <label class="form-lbl">ID Utente</label>
             <dx-text-box
               formControlName="usrId"
               [readOnly]="popupMode() === 'edit' || popupMode() === 'view'">
@@ -115,7 +129,7 @@
           </div>
 
           <div class="popup-field-group">
-            <label class="popup-field-label">Stato</label>
+            <label class="form-lbl">Stato</label>
             <dx-select-box
               formControlName="usrStatus"
               [dataSource]="statiEntitaList"
@@ -129,7 +143,7 @@
           </div>
 
           <div class="popup-field-group">
-            <label class="popup-field-label">Riferimento Esterno</label>
+            <label class="form-lbl">Riferimento Esterno</label>
             <dx-text-box
               formControlName="usrExtref"
               [readOnly]="popupMode() === 'view'">
@@ -137,7 +151,7 @@
           </div>
 
           <div class="popup-field-group">
-            <label class="popup-field-label">Host ID</label>
+            <label class="form-lbl">Host ID</label>
             <dx-text-box
               formControlName="usrHostId"
               [readOnly]="popupMode() === 'view'">
@@ -148,7 +162,7 @@
           </div>
 
           <div class="popup-field-group">
-            <label class="popup-field-label">Filiale</label>
+            <label class="form-lbl">Filiale</label>
             <dx-select-box
               formControlName="usrBraId"
               [dataSource]="branchesList"
@@ -162,7 +176,7 @@
           </div>
 
           <div class="popup-field-group">
-            <label class="popup-field-label">Lingua</label>
+            <label class="form-lbl">Lingua</label>
             <dx-select-box
               formControlName="usrLingua"
               [dataSource]="languagesList"
@@ -176,113 +190,169 @@
           </div>
 
         </div>
-      </section>
+      </div>
 
-      <!-- ── Card 2: Gestione Ruoli ── -->
-      <section class="popup-card">
-        <h3 class="popup-card-title">Gestione Ruoli</h3>
+      <!-- ── Sezione 2: Gestione Ruoli ── -->
+      <div class="popup-section">
+        <div class="popup-section-header">
+          <svg class="popup-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <span class="popup-section-title">Gestione Ruoli</span>
+        </div>
+        <div class="popup-section-divider"></div>
+        <div class="popup-section-body">
+          @if (popupMode() === 'view') {
+            <dx-data-grid
+              [dataSource]="assignedRoles()"
+              [showBorders]="false"
+              keyExpr="roleId"
+              [height]="'auto'"
+              [columnAutoWidth]="true"
+              [allowColumnResizing]="true"
+              [hoverStateEnabled]="true"
+              [rowAlternationEnabled]="true">
+              <dxo-paging [pageSize]="5"></dxo-paging>
+              <dxo-pager
+                [showInfo]="true"
+                infoText="{2} ruoli"
+                [showPageSizeSelector]="false"
+                [showNavigationButtons]="true"
+                displayMode="full">
+              </dxo-pager>
+              <dxi-column dataField="roleName" caption="Ruolo"></dxi-column>
+              <dxo-load-panel [enabled]="false"></dxo-load-panel>
+            </dx-data-grid>
+          } @else {
+            <app-control-assign
+              [assignedRoles]="assignedRoles"
+              [possibleRoles]="possibleRoles"
+              [disabled]="false"
+              (rolesChanged)="onRolesChanged($event)">
+            </app-control-assign>
+          }
+        </div>
+      </div>
 
-        @if (popupMode() === 'view') {
-          <dx-data-grid
-            [dataSource]="assignedRoles()"
-            [showBorders]="true"
-            keyExpr="roleId"
-            [height]="200"
-            [columnAutoWidth]="true">
-            <dxi-column dataField="roleName" caption="Ruoli Assegnati"></dxi-column>
-          </dx-data-grid>
-        } @else {
-          <app-control-assign
-            [assignedRoles]="assignedRoles"
-            [possibleRoles]="possibleRoles"
-            [disabled]="false"
-            (rolesChanged)="onRolesChanged($event)">
-          </app-control-assign>
-        }
-
-      </section>
-
-      <!-- ── Action Bar sticky ── -->
-      <div class="popup-action-bar">
-
-        <div class="popup-actions-secondary">
+      <!-- ── Barra Azioni ── -->
+      <div class="popup-actions">
+        <div class="popup-actions-left">
           @if (popupMode() !== 'new') {
-            <dx-button class="btn-action-outline"
-                       text="Visualizza Storico"
-                       icon="clock"
-                       stylingMode="outlined"
-                       (onClick)="onTrace()">
+            <dx-button
+              [text]="'utenti.actionStorico' | transloco"
+              icon="clock"
+              stylingMode="outlined"
+              class="btn-outline"
+              (onClick)="onTrace()">
             </dx-button>
-            <dx-button class="btn-action-outline"
-                       text="Stampa Dettaglio"
-                       icon="print"
-                       stylingMode="outlined">
+            <dx-button
+              [text]="'utenti.actionPrint' | transloco"
+              icon="print"
+              stylingMode="outlined"
+              class="btn-outline">
             </dx-button>
           }
           @if (popupMode() === 'edit') {
-            <dx-button class="btn-action-danger"
-                       text="Reset Password"
-                       icon="key"
-                       (onClick)="openResetPasswordPopup()">
+            <dx-button
+              [text]="'utenti.actionResetPwd' | transloco"
+              icon="key"
+              type="danger"
+              stylingMode="outlined"
+              class="btn-danger"
+              (onClick)="openResetPasswordPopup()">
             </dx-button>
           }
         </div>
-
-        <div class="popup-actions-primary">
+        <div class="popup-actions-right">
           @if (popupMode() === 'view') {
-            <dx-button class="btn-action-close"
-                       text="Chiudi"
-                       icon="close"
-                       (onClick)="onClear()">
+            <dx-button
+              text="Chiudi"
+              stylingMode="outlined"
+              class="btn-outline"
+              (onClick)="onClear()">
+            </dx-button>
+            <dx-button
+              text="Modifica"
+              icon="edit"
+              type="default"
+              stylingMode="contained"
+              class="btn-new"
+              (onClick)="openEditPopup({ usrId: selectedUserId() })">
             </dx-button>
           }
           @if (popupMode() === 'new') {
-            <dx-button class="btn-action-primary"
-                       text="Aggiungi"
-                       icon="plus"
-                       [useSubmitBehavior]="true">
+            <dx-button
+              text="Annulla"
+              stylingMode="outlined"
+              class="btn-outline"
+              (onClick)="onClear()">
+            </dx-button>
+            <dx-button
+              text="Aggiungi"
+              icon="plus"
+              type="default"
+              stylingMode="contained"
+              class="btn-new"
+              [useSubmitBehavior]="true">
             </dx-button>
           }
           @if (popupMode() === 'edit') {
-            <dx-button class="btn-action-primary"
-                       text="Salva"
-                       icon="save"
-                       (onClick)="onUpdate()">
+            <dx-button
+              text="Annulla"
+              stylingMode="outlined"
+              class="btn-outline"
+              (onClick)="onClear()">
+            </dx-button>
+            <dx-button
+              text="Salva"
+              icon="save"
+              type="default"
+              stylingMode="contained"
+              class="btn-new"
+              (onClick)="onUpdate()">
             </dx-button>
           }
         </div>
-
       </div>
 
     </form>
   </div>
 </dx-popup>
 
-<!-- ── Popup Reset Password ── -->
+<!-- ══════════════════════════════════════
+     Popup: Reset Password
+     ══════════════════════════════════════ -->
 <dx-popup
   [width]="400"
-  [height]="260"
+  [height]="'auto'"
   [showTitle]="true"
   title="Reset Password"
   [dragEnabled]="false"
   [hideOnOutsideClick]="false"
   [(visible)]="isResetPasswordPopupVisible">
   <div *dxTemplate="let data of 'content'">
-    <form [formGroup]="resetPasswordForm" (ngSubmit)="changePassword()">
-      <div class="dx-fieldset">
-        <div class="dx-field">
-          <div class="dx-field-label">Nuova Password</div>
-          <div class="dx-field-value">
+    <form [formGroup]="resetPasswordForm" (ngSubmit)="changePassword()" class="popup-form">
+
+      <div class="popup-section">
+        <div class="popup-section-header">
+          <svg class="popup-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span class="popup-section-title">Nuova Password</span>
+        </div>
+        <div class="popup-section-divider"></div>
+        <div class="popup-fields-grid popup-fields-grid--single">
+          <div class="popup-field-group">
+            <label class="form-lbl">Password</label>
             <dx-text-box formControlName="password" mode="password">
               <dx-validator>
                 <dxi-validation-rule type="required"></dxi-validation-rule>
               </dx-validator>
             </dx-text-box>
           </div>
-        </div>
-        <div class="dx-field">
-          <div class="dx-field-label">Conferma Password</div>
-          <div class="dx-field-value">
+          <div class="popup-field-group">
+            <label class="form-lbl">Conferma Password</label>
             <dx-text-box formControlName="confirmPassword" mode="password">
               <dx-validator>
                 <dxi-validation-rule type="required"></dxi-validation-rule>
@@ -291,10 +361,15 @@
           </div>
         </div>
       </div>
+
       <div class="popup-actions">
-        <dx-button text="Annulla" type="normal" (onClick)="cancelResetPassword()"></dx-button>
-        <dx-button text="Cambia" type="default" [useSubmitBehavior]="true"></dx-button>
+        <div class="popup-actions-left"></div>
+        <div class="popup-actions-right">
+          <dx-button text="Annulla" stylingMode="outlined" class="btn-outline" (onClick)="cancelResetPassword()"></dx-button>
+          <dx-button text="Cambia" type="default" stylingMode="contained" class="btn-new" [useSubmitBehavior]="true"></dx-button>
+        </div>
       </div>
+
     </form>
   </div>
 </dx-popup>

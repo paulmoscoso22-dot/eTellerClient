@@ -1,5 +1,10 @@
 <div class="page-shell">
 
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Operazioni in Attesa di Benefondo</h1>
+  </div>
+
   <!-- ── Main Card ── -->
   <section class="card-section">
 
@@ -8,43 +13,44 @@
         <circle cx="12" cy="12" r="10"></circle>
         <polyline points="12 6 12 12 16 14"></polyline>
       </svg>
-      <h2 class="card-title">Operazioni in Attesa di Benefondo</h2>
+      <h2 class="card-title">Attesa Benefondo</h2>
     </div>
     <div class="gold-divider"></div>
 
     <!-- ── Filtri ── -->
     <div class="card-toolbar" [formGroup]="searchForm">
-      <div class="toolbar-row">
+      <div class="toolbar-inner">
 
-        <span class="filter-label">Data:</span>
-        <dx-date-box
-          formControlName="trxData"
-          type="date"
-          displayFormat="dd.MM.yyyy"
-          [showClearButton]="false"
-          class="filter-control filter-control--date">
-        </dx-date-box>
-
-        <span class="filter-label">Cassa:</span>
-        <dx-text-box
-          formControlName="trxCassa"
-          [showClearButton]="true"
-          placeholder="ID cassa..."
-          class="filter-control filter-control--sm">
-        </dx-text-box>
-
-        <div class="toolbar-row-spacer"></div>
+        <div class="toolbar-filters">
+          <div class="toolbar-field toolbar-field--sm">
+            <label class="toolbar-lbl">Data</label>
+            <dx-date-box
+              formControlName="trxData"
+              type="date"
+              displayFormat="dd.MM.yyyy"
+              [showClearButton]="false">
+            </dx-date-box>
+          </div>
+          <div class="toolbar-field toolbar-field--sm">
+            <label class="toolbar-lbl">Cassa</label>
+            <dx-text-box
+              formControlName="trxCassa"
+              [showClearButton]="true"
+              placeholder="ID cassa...">
+            </dx-text-box>
+          </div>
+        </div>
 
         <div class="toolbar-actions">
           <dx-button
-            class="btn-reset"
-            text="Reset"
+            class="btn-outline"
+            hint="Reset filtri"
             stylingMode="outlined"
             icon="revert"
             (onClick)="resetFilters()">
           </dx-button>
           <dx-button
-            class="btn-stampa"
+            class="btn-outline"
             hint="Stampa"
             stylingMode="outlined"
             icon="print"
@@ -52,7 +58,7 @@
             (onClick)="print()">
           </dx-button>
           <dx-button
-            class="btn-cerca"
+            class="btn-new"
             text="Visualizza"
             type="default"
             stylingMode="contained"
@@ -125,7 +131,7 @@
             <span class="div-badge">{{ cell.value }}</span>
           </div>
 
-          <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
+          <div *dxTemplate="let cell of 'actionsTemplate'" class="azioni-cell">
             <button class="action-btn action-btn--view" title="Visualizza dettaglio" (click)="openViewPopup(cell.data)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -157,7 +163,7 @@
 
 <!-- ── Popup Dettaglio ── -->
 <dx-popup
-  [(visible)]="isDetailPopupVisible"
+  [visible]="showDetailPopup()"
   [showTitle]="true"
   [title]="'Dettaglio — Nop ' + (selectedOperation()?.trxId ?? '')"
   [dragEnabled]="true"
@@ -167,128 +173,112 @@
   [maxWidth]="760"
   [height]="'auto'"
   [maxHeight]="'88vh'"
-  (onHidden)="closePopup()">
+  (onHiding)="closePopup()">
 
-  <div *dxTemplate="let data of 'content'">
+  <div class="popup-form">
     @if (selectedOperation(); as op) {
-      <div class="popup-layout popup-view-mode">
 
-        <!-- ── Card 1: Transazione ── -->
-        <section class="popup-card">
-          <h3 class="popup-card-title">Transazione</h3>
-          <div class="popup-fields-grid popup-fields-grid--3col">
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Nop</label>
-              <div class="popup-field-value">{{ op.trxId }}</div>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Data</label>
-              <div class="popup-field-value">{{ op.trxDatope }}</div>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Stato BEF</label>
-              <div class="popup-field-value">
-                <span class="bef-pill">{{ getBefStatusLabel(op.trxBefstatus) }}</span>
-              </div>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Cassa</label>
-              <div class="popup-field-value mono">{{ op.trxCassa }}</div>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Utente</label>
-              <div class="popup-field-value">{{ op.trxUsrId }}</div>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Tipo Operazione</label>
-              <div class="popup-field-value">{{ op.trxOptId }}</div>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- ── Card 2: Importi ── -->
-        <section class="popup-card">
-          <h3 class="popup-card-title">Importi</h3>
-          <div class="popup-fields-grid popup-fields-grid--3col">
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Divisa Op.</label>
-              <div class="popup-field-value">
-                <span class="div-badge">{{ op.trxDivope }}</span>
-              </div>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Importo Op.</label>
-              <div class="popup-field-value amount">{{ op.trxImpope | number:'1.2-2' }}</div>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Cambio</label>
-              <div class="popup-field-value mono">{{ op.trxExcrat | number:'1.4-4' }}</div>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Divisa CTP</label>
-              <div class="popup-field-value">
-                <span class="div-badge">{{ op.trxDivctp }}</span>
-              </div>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Importo CTP</label>
-              <div class="popup-field-value amount">{{ op.trxImpctp | number:'1.2-2' }}</div>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Host Trace</label>
-              <div class="popup-field-value mono">{{ op.trxBefhost || '—' }}</div>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- ── Card 3: Note ── -->
-        <section class="popup-card">
-          <h3 class="popup-card-title">Note</h3>
-          <div class="popup-fields-grid popup-fields-grid--1col">
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Commento</label>
-              <div class="popup-field-value">{{ op.trxText1 || '—' }}</div>
-            </div>
-
-            @if (op.trxText2) {
-              <div class="popup-field-group">
-                <label class="popup-field-label">Testo 2</label>
-                <div class="popup-field-value">{{ op.trxText2 }}</div>
-              </div>
-            }
-
-          </div>
-        </section>
-
-        <!-- ── Action bar ── -->
-        <div class="popup-action-bar">
-          <div class="popup-actions-secondary"></div>
-          <div class="popup-actions-primary">
-            <dx-button
-              class="btn-action-close"
-              text="Chiudi"
-              icon="close"
-              (onClick)="closePopup()">
-            </dx-button>
-          </div>
+      <!-- ── Sezione: Transazione ── -->
+      <h4 class="detail-section-title">Transazione</h4>
+      <div class="detail-grid detail-grid--3col">
+        <div class="detail-field">
+          <span class="detail-label">Nop</span>
+          <span class="detail-value">{{ op.trxId }}</span>
         </div>
-
+        <div class="detail-field">
+          <span class="detail-label">Data</span>
+          <span class="detail-value">{{ op.trxDatope }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Stato BEF</span>
+          <span class="detail-value">
+            <span class="bef-pill">{{ getBefStatusLabel(op.trxBefstatus) }}</span>
+          </span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Cassa</span>
+          <span class="detail-value mono">{{ op.trxCassa }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Utente</span>
+          <span class="detail-value">{{ op.trxUsrId }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Tipo Operazione</span>
+          <span class="detail-value">{{ op.trxOptId }}</span>
+        </div>
       </div>
+
+      <!-- ── Sezione: Importi ── -->
+      <h4 class="detail-section-title">Importi</h4>
+      <div class="detail-grid detail-grid--3col">
+        <div class="detail-field">
+          <span class="detail-label">Divisa Op.</span>
+          <span class="detail-value">
+            <span class="div-badge">{{ op.trxDivope }}</span>
+          </span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Importo Op.</span>
+          <span class="detail-value">{{ op.trxImpope | number:'1.2-2' }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Cambio</span>
+          <span class="detail-value mono">{{ op.trxExcrat | number:'1.4-4' }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Divisa CTP</span>
+          <span class="detail-value">
+            <span class="div-badge">{{ op.trxDivctp }}</span>
+          </span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Importo CTP</span>
+          <span class="detail-value">{{ op.trxImpctp | number:'1.2-2' }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-label">Host Trace</span>
+          <span class="detail-value mono">{{ op.trxBefhost || '—' }}</span>
+        </div>
+      </div>
+
+      <!-- ── Sezione: Note ── -->
+      <h4 class="detail-section-title">Note</h4>
+      <div class="detail-grid detail-grid--1col">
+        <div class="detail-field">
+          <span class="detail-label">Commento</span>
+          <span class="detail-value">{{ op.trxText1 || '—' }}</span>
+        </div>
+        @if (op.trxText2) {
+          <div class="detail-field">
+            <span class="detail-label">Testo 2</span>
+            <span class="detail-value">{{ op.trxText2 }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- ── Azioni ── -->
+      <div class="popup-actions">
+        <div class="popup-actions-left"></div>
+        <div class="popup-actions-right">
+          <dx-button
+            text="Chiudi"
+            icon="close"
+            stylingMode="outlined"
+            (onClick)="closePopup()">
+          </dx-button>
+        </div>
+      </div>
+
     }
   </div>
 </dx-popup>
+
+<!-- ── Toast ── -->
+<dx-toast
+  [visible]="toastVisible()"
+  [type]="toastType()"
+  [message]="toastMessage()"
+  [displayTime]="3000"
+  (onHidden)="toastVisible.set(false)">
+</dx-toast>
