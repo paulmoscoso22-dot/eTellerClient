@@ -14,11 +14,29 @@
 .page-shell {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
+  flex: 1;
   min-height: 0;
-  overflow: hidden;
   padding: 12px 16px 0;
   gap: 10px;
+  overflow: hidden;
+}
+
+/* ── Titolo pagina esterno ── */
+.page-header-row {
+  margin: -12px -16px 0;
+  padding: 7px 20px;
+  background: #f1f5f9;
+  border-bottom: 1px solid rgba(0, 51, 102, 0.25);
+  flex-shrink: 0;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(0, 51, 102, 0.75);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 /* ── Card shell ── */
@@ -31,13 +49,13 @@
   background: #fff;
   border: 1px solid #dce3ee;
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.12);
 }
 
 /* ── Sempione Card Header ── */
 .sempione-card-header {
   background: #003366;
-  padding: 8px 12px;
+  padding: 8px 14px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -51,60 +69,71 @@
 }
 
 .card-icon {
-  width: 15px;
-  height: 15px;
-  color: #fff;
-  opacity: 0.9;
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.85);
   flex-shrink: 0;
 }
 
 .card-title {
   margin: 0;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   color: #fff;
   flex: 1;
 }
 
 /* ── Card Toolbar ── */
 .card-toolbar {
-  background: #f0f4f8;
+  background: rgba(237, 242, 247, 0.5);
   border-bottom: 1px solid #dce3ee;
   padding: 7px 12px;
   flex-shrink: 0;
 }
 
-.toolbar-row {
+.toolbar-inner {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
 }
 
-.toolbar-row-spacer { flex: 1; }
+.toolbar-filters {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  align-items: flex-end;
+  min-width: 0;
+}
 
-/* ── Filter labels & controls ── */
-.filter-label {
-  font-size: 11px;
+.toolbar-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.toolbar-field--sm { flex: 0 0 130px; }
+
+.toolbar-lbl {
+  font-size: 10px;
   font-weight: 600;
-  color: #374151;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
   white-space: nowrap;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
   flex-shrink: 0;
 }
 
-.filter-control--date {
-  min-width: 130px;
-  max-width: 150px;
-}
-
-.filter-control--sm {
-  min-width: 90px;
-  max-width: 120px;
-}
-
-/* ── Uniform 28 px height ── */
+/* ── Toolbar DX controls ── */
 :host ::ng-deep .card-toolbar .dx-texteditor {
   height: 28px;
 }
@@ -114,39 +143,37 @@
   height: 26px;
   padding-top: 3px;
   padding-bottom: 3px;
-  font-size: 13px;
+  font-size: 12.5px;
 }
 
-/* ── Toolbar buttons ── */
-.toolbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
+:host ::ng-deep .card-toolbar .dx-texteditor-buttons-container {
+  height: 26px;
 }
 
-:host ::ng-deep .btn-cerca.dx-button-default.dx-button-mode-contained {
+:host ::ng-deep .card-toolbar .dx-button {
+  height: 28px;
+}
+
+/* Bottone Visualizza: navy */
+:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained {
   background-color: #003366;
   border-color: #003366;
   height: 28px;
 }
 
-:host ::ng-deep .btn-cerca.dx-button-default.dx-button-mode-contained:hover {
+:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained:hover {
   background-color: #004080;
   border-color: #004080;
 }
 
-:host ::ng-deep .btn-reset.dx-button {
-  height: 28px;
-}
-
-:host ::ng-deep .btn-stampa.dx-button {
-  height: 28px;
-  border-color: rgba(0, 51, 102, 0.35);
+/* Bottoni outline */
+:host ::ng-deep .btn-outline.dx-button.dx-button-mode-outlined {
+  border-color: rgba(0, 51, 102, 0.4);
   color: #003366;
+  height: 28px;
 }
 
-:host ::ng-deep .btn-stampa.dx-button:hover:not(.dx-state-disabled) {
+:host ::ng-deep .btn-outline.dx-button.dx-button-mode-outlined:hover {
   border-color: #003366;
   background: rgba(0, 51, 102, 0.05);
 }
@@ -215,28 +242,40 @@
 
 .grid-empty p { margin: 0; max-width: 340px; }
 
-/* ── Grid header ── */
+/* ══════════════════════════════════════════
+   DX Grid — Header Colonne
+   ══════════════════════════════════════════ */
 :host ::ng-deep .dx-datagrid-headers .dx-header-row td {
-  background-color: #f8fafd !important;
-  color: #374151 !important;
+  background-color: #EDF2F7 !important;
+  color: #003366 !important;
   font-size: 10px !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  border-bottom: 2px solid #003366 !important;
+  letter-spacing: 0.06em !important;
+  border-bottom: 2px solid rgba(0, 51, 102, 0.75) !important;
+  transition: background-color 0.15s !important;
 }
 
-/* ── Compact rows ── */
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td:hover {
+  background-color: #e3eaf3 !important;
+}
+
+/* ══════════════════════════════════════════
+   DX Grid — Righe
+   ══════════════════════════════════════════ */
 :host ::ng-deep .dx-data-row > td {
-  padding: 5px 10px !important;
+  padding: 7px 10px !important;
   font-size: 12px !important;
+  color: #334155 !important;
   vertical-align: middle !important;
 }
 
-:host ::ng-deep .dx-data-row.dx-row-alt > td { background-color: #f8fafc !important; }
+:host ::ng-deep .dx-data-row.dx-row-alt > td {
+  background-color: #f9fafb !important;
+}
 
 :host ::ng-deep .dx-data-row.dx-state-hover > td {
-  background-color: rgba(0, 51, 102, 0.04) !important;
+  background-color: rgba(0, 51, 102, 0.03) !important;
 }
 
 :host ::ng-deep .dx-selection.dx-data-row > td {
@@ -268,12 +307,14 @@
   color: #1e40af;
 }
 
-/* ── Action buttons ── */
-.actions-cell {
+/* ══════════════════════════════════════════
+   Colonna Azioni
+   ══════════════════════════════════════════ */
+.azioni-cell {
   display: flex;
-  gap: 2px;
   align-items: center;
   justify-content: center;
+  gap: 2px;
 }
 
 .action-btn {
@@ -285,79 +326,195 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.14s ease;
+  transition: background 0.14s;
 }
 
 .action-btn svg {
   width: 13px;
   height: 13px;
-  stroke: #9ca3af;
-  transition: stroke 0.14s ease;
+  transition: stroke 0.14s;
 }
+
+.action-btn--view svg { stroke: #94a3b8; }
 
 .action-btn--view:hover { background: rgba(0, 51, 102, 0.08); }
 .action-btn--view:hover svg { stroke: #003366; }
 
-/* ══ POPUP STYLES ══ */
-
-.popup-layout {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding-bottom: 64px;
-}
-
-.popup-card {
+/* ══════════════════════════════════════════
+   Pager — Sticky + Sempione
+   ══════════════════════════════════════════ */
+:host ::ng-deep .dx-datagrid-pager {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
   background: #fff;
-  border: 1px solid #e4e8ed;
-  border-radius: 8px;
-  padding: 16px 20px 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border-top: 1px solid #e5e7eb !important;
+  padding: 5px 10px !important;
 }
 
-.popup-card-title {
-  margin: 0 0 14px 0;
-  padding-bottom: 10px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #003366;
-  border-bottom: 2px solid #dce3ee;
+:host ::ng-deep .dx-datagrid-pager .dx-pager {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap;
+  gap: 4px;
+  width: 100%;
 }
 
-.popup-fields-grid {
-  display: grid;
-  gap: 12px 24px;
+:host ::ng-deep .dx-datagrid-pager .dx-info {
+  order: -1 !important;
+  margin-right: auto !important;
+  font-size: 11px !important;
+  color: #6b7280 !important;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
-.popup-fields-grid--3col { grid-template-columns: 1fr 1fr 1fr; }
-.popup-fields-grid--1col { grid-template-columns: 1fr; }
+:host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page {
+  min-width: 28px !important;
+  height: 28px !important;
+  line-height: normal !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  color: #374151 !important;
+  border: 1px solid #dce3ee !important;
+  background: transparent !important;
+  margin: 0 1px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
 
-.popup-field-group {
+:host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page:hover {
+  background: rgba(197, 160, 89, 0.08) !important;
+  color: #7a5c1e !important;
+  border-color: rgba(197, 160, 89, 0.5) !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page.dx-selection {
+  background: #003366 !important;
+  color: #fff !important;
+  border-color: #003366 !important;
+  font-weight: 700 !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button {
+  width: 28px !important;
+  height: 28px !important;
+  line-height: normal !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  border-radius: 6px !important;
+  border: 1px solid transparent !important;
+  transition: background 0.15s, color 0.15s;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button > *,
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button::before,
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button::after {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button:hover {
+  background: rgba(0, 51, 102, 0.06) !important;
+  color: #003366 !important;
+  border-color: #dce3ee !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button.dx-button-disable {
+  opacity: 0.35;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-page-size {
+  font-size: 12px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  padding: 0 10px !important;
+  border-radius: 6px !important;
+  border: 1px solid #dce3ee !important;
+  color: #374151 !important;
+  background: transparent !important;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-page-size:hover {
+  background: rgba(197, 160, 89, 0.08) !important;
+  color: #7a5c1e !important;
+  border-color: rgba(197, 160, 89, 0.5) !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-page-size.dx-selection {
+  background: rgba(0, 51, 102, 0.09) !important;
+  color: #003366 !important;
+  font-weight: 700 !important;
+  border-color: rgba(0, 51, 102, 0.3) !important;
+}
+
+/* ══════════════════════════════════════════
+   Popup — Layout
+   ══════════════════════════════════════════ */
+.popup-form {
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0;
 }
 
-.popup-field-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: #666;
+/* ── Section title ── */
+.detail-section-title {
+  margin: 16px 0 10px;
+  padding-bottom: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.popup-field-value {
-  font-size: 14px;
-  font-weight: 600;
   color: #003366;
-  padding: 2px 0;
-  min-height: 22px;
+  border-bottom: 2px solid rgba(0, 51, 102, 0.15);
 }
 
-.popup-field-value.mono { font-family: monospace; }
-.popup-field-value.amount { font-variant-numeric: tabular-nums; }
+.detail-section-title:first-child { margin-top: 0; }
+
+/* ── Detail grid ── */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 20px;
+  margin-bottom: 4px;
+}
+
+.detail-grid--3col { grid-template-columns: 1fr 1fr 1fr; }
+.detail-grid--1col { grid-template-columns: 1fr; }
+
+.detail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.detail-field--full { grid-column: 1 / -1; }
+
+.detail-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #003366;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.detail-value {
+  font-size: 13px;
+  color: #1e293b;
+  line-height: 1.4;
+}
+
+.detail-value.mono { font-family: monospace; }
 
 /* ── BEF status pill ── */
 .bef-pill {
@@ -373,25 +530,25 @@
 }
 
 /* ── Popup action bar ── */
-.popup-action-bar {
-  position: sticky;
-  bottom: 0;
+.popup-actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 10px 0;
-  background: #fff;
-  border-top: 1px solid #e4e8ed;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.07);
-  z-index: 10;
-}
-
-.popup-actions-secondary,
-.popup-actions-primary {
-  display: flex;
   gap: 8px;
-  align-items: center;
+  padding-top: 12px;
+  margin-top: 16px;
+  border-top: 1px solid #e4e8ed;
 }
 
-:host ::ng-deep .btn-action-close.dx-button { height: 36px; }
+.popup-actions-left  { display: flex; gap: 6px; }
+.popup-actions-right { display: flex; gap: 6px; }
+
+:host ::ng-deep .popup-actions-right .dx-button.dx-button-default.dx-button-mode-contained {
+  background-color: #003366;
+  border-color: #003366;
+}
+
+:host ::ng-deep .popup-actions-right .dx-button.dx-button-default.dx-button-mode-contained:hover {
+  background-color: #004080;
+  border-color: #004080;
+}

@@ -7,6 +7,8 @@ import {
   DxDateBoxModule,
   DxButtonModule,
   DxPopupModule,
+  DxToastModule,
+  DxTemplateModule,
 } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
@@ -25,6 +27,8 @@ import { TransactionStatus } from '../../../../archivi/report/domain/transaction
     DxDateBoxModule,
     DxButtonModule,
     DxPopupModule,
+    DxToastModule,
+    DxTemplateModule,
   ],
   templateUrl: './attesa-benefondo.component.html',
   styleUrls: ['./attesa-benefondo.component.css'],
@@ -38,7 +42,10 @@ export class VigilanzaAttesaBenefondoComponent implements OnDestroy {
   isLoading = signal(false);
   error = signal<string | null>(null);
   selectedOperation = signal<GetTransactionWaitingForBefResponse | null>(null);
-  isDetailPopupVisible = false;
+  showDetailPopup = signal(false);
+  toastVisible = signal(false);
+  toastMessage = signal('');
+  toastType = signal<'success' | 'error' | 'warning' | 'info'>('success');
 
   searchForm: FormGroup = this.fb.group({
     trxData: [new Date()],
@@ -87,11 +94,11 @@ export class VigilanzaAttesaBenefondoComponent implements OnDestroy {
 
   openViewPopup(row: GetTransactionWaitingForBefResponse): void {
     this.selectedOperation.set(row);
-    this.isDetailPopupVisible = true;
+    this.showDetailPopup.set(true);
   }
 
   closePopup(): void {
-    this.isDetailPopupVisible = false;
+    this.showDetailPopup.set(false);
     this.selectedOperation.set(null);
   }
 

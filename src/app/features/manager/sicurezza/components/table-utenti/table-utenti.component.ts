@@ -36,7 +36,7 @@ export class TableUtentiComponent {
   statiEntita  = signal<ISTStatoEntitaResponse[]>([]);
   branches     = signal<Branch[]>([]);
   languages    = signal<ISTLanguageResponse[]>([]);
-  moreActions  = signal<{ id: string; text: string }[]>([]);
+  moreActions  = signal<{ id: string; text: string; icon: string }[]>([]);
 
   constructor() {
     this.coreService.allStatiEntita$
@@ -57,9 +57,9 @@ export class TableUtentiComponent {
 
   private buildMoreActions(): void {
     this.moreActions.set([
-      { id: 'resetPwd', text: this.transloco.translate('utenti.actionResetPwd') },
-      { id: 'storico',  text: this.transloco.translate('utenti.actionStorico') },
-      { id: 'print',    text: this.transloco.translate('utenti.actionPrint') },
+      { id: 'resetPwd', text: this.transloco.translate('utenti.actionResetPwd'), icon: 'key'   },
+      { id: 'storico',  text: this.transloco.translate('utenti.actionStorico'),  icon: 'clock' },
+      { id: 'print',    text: this.transloco.translate('utenti.actionPrint'),    icon: 'print' },
     ]);
   }
 

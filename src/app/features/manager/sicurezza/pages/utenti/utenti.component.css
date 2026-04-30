@@ -1,6 +1,6 @@
 /* ══════════════════════════════════════════
-   Gestione Utenti — Banca del Sempione Style
-   Brand navy : #003366  |  Gold : #C5A059
+   Gestione Utenti — Banca del Sempione
+   Navy #003366  |  Gold #C5A059
    ══════════════════════════════════════════ */
 
 :host {
@@ -14,78 +14,80 @@
 .page-shell {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
+  flex: 1;
   min-height: 0;
-  overflow: hidden;
   padding: 12px 16px 0;
   gap: 10px;
+  overflow: hidden;
 }
 
-/* ── Card shell ── */
-.card-section {
-  display: flex;
-  flex-direction: column;
+/* ── Titolo pagina esterno ── */
+.page-header-row {
+  margin: -12px -16px 0;
+  padding: 7px 20px;
+  background: #f1f5f9;
+  border-bottom: 1px solid rgba(0, 51, 102, 0.25);
+  flex-shrink: 0;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(0, 51, 102, 0.75);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════════
+   Card
+   ══════════════════════════════════════════ */
+.card-main {
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
+}
+
+.card-section {
   background: #fff;
   border: 1px solid #dce3ee;
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.12);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ── Sempione Card Header ── */
+/* ── Card Header Navy ── */
 .sempione-card-header {
   background: #003366;
-  padding: 8px 12px;
+  padding: 8px 14px;
   display: flex;
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
 }
 
-.gold-divider {
-  height: 2px;
-  background: #C5A059;
-  flex-shrink: 0;
-}
-
 .card-icon {
-  width: 15px;
-  height: 15px;
-  color: #fff;
-  opacity: 0.9;
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.85);
   flex-shrink: 0;
 }
 
 .card-title {
   margin: 0;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   color: #fff;
   flex: 1;
 }
 
-/* ── Card Toolbar ── */
-.card-toolbar {
-  background: #f0f4f8;
-  border-bottom: 1px solid #dce3ee;
-  padding: 7px 12px;
-  flex-shrink: 0;
-}
-
-.toolbar-inner {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.toolbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.gold-divider {
+  height: 2px;
+  background: #C5A059;
   flex-shrink: 0;
 }
 
@@ -99,6 +101,55 @@
   overflow: hidden;
 }
 
+/* ══════════════════════════════════════════
+   Card Toolbar
+   ══════════════════════════════════════════ */
+.card-toolbar {
+  background: rgba(237, 242, 247, 0.5);
+  border-bottom: 1px solid #dce3ee;
+  padding: 7px 12px;
+  flex-shrink: 0;
+}
+
+.toolbar-inner {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.toolbar-filters {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  align-items: flex-end;
+  min-width: 0;
+}
+
+.toolbar-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.toolbar-field--lg { flex: 2; }
+
+.toolbar-lbl {
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
 /* ── Segmented Control ── */
 .segmented-control {
   display: inline-flex;
@@ -106,12 +157,13 @@
   border-radius: 6px;
   overflow: hidden;
   flex-shrink: 0;
+  height: 28px;
 }
 
 .segment-btn {
   height: 28px;
   padding: 0 14px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 500;
   border: none;
   background: transparent;
@@ -134,40 +186,7 @@
   background: rgba(0, 51, 102, 0.08);
 }
 
-/* ── Search (flex approach, identical to Ruoli) ── */
-.toolbar-search-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  min-width: 0;
-}
-
-.toolbar-search-icon {
-  width: 14px;
-  height: 14px;
-  color: #6b7280;
-  flex-shrink: 0;
-}
-
-.toolbar-textbox {
-  flex: 1;
-  min-width: 0;
-}
-
-/* ── Bottone Nuovo ── */
-:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained {
-  background-color: #003366;
-  border-color: #003366;
-  height: 28px;
-}
-
-:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained:hover {
-  background-color: #004080;
-  border-color: #004080;
-}
-
-/* ── Bottone Stampa: outline ── */
+/* Bottone Outline */
 :host ::ng-deep .btn-outline.dx-button.dx-button-mode-outlined {
   border-color: rgba(0, 51, 102, 0.4);
   color: #003366;
@@ -179,7 +198,31 @@
   background: rgba(0, 51, 102, 0.05);
 }
 
-/* ── Altezza uniforme toolbar ── */
+/* Bottone Nuovo */
+:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained {
+  background-color: #003366;
+  border-color: #003366;
+  height: 28px;
+}
+
+:host ::ng-deep .btn-new.dx-button-default.dx-button-mode-contained:hover {
+  background-color: #004080;
+  border-color: #004080;
+}
+
+/* Bottone Danger */
+:host ::ng-deep .btn-danger.dx-button.dx-button-danger.dx-button-mode-outlined {
+  border-color: rgba(220, 38, 38, 0.45);
+  color: #dc2626;
+  height: 28px;
+}
+
+:host ::ng-deep .btn-danger.dx-button.dx-button-danger.dx-button-mode-outlined:hover {
+  border-color: #dc2626;
+  background: rgba(220, 38, 38, 0.05);
+}
+
+/* ── DX inputs scoped alla toolbar ── */
 :host ::ng-deep .card-toolbar .dx-texteditor {
   height: 28px;
 }
@@ -189,57 +232,313 @@
   height: 26px;
   padding-top: 3px;
   padding-bottom: 3px;
-  font-size: 13px;
+  font-size: 12.5px;
 }
 
-/* ══ POPUP STYLES (unchanged) ══ */
+:host ::ng-deep .card-toolbar .dx-texteditor-buttons-container {
+  height: 26px;
+}
 
-.popup-layout {
+:host ::ng-deep .card-toolbar .dx-button {
+  height: 28px;
+}
+
+/* ══════════════════════════════════════════
+   DX Grid — Header Colonne
+   ══════════════════════════════════════════ */
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td {
+  background-color: #EDF2F7 !important;
+  color: #003366 !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  border-bottom: 2px solid rgba(0, 51, 102, 0.75) !important;
+  transition: background-color 0.15s !important;
+}
+
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td:hover {
+  background-color: #e3eaf3 !important;
+}
+
+/* ══════════════════════════════════════════
+   DX Grid — Righe
+   ══════════════════════════════════════════ */
+:host ::ng-deep .dx-data-row > td {
+  padding: 7px 10px !important;
+  font-size: 12px !important;
+  color: #334155 !important;
+  vertical-align: middle !important;
+}
+
+:host ::ng-deep .dx-data-row.dx-row-alt > td {
+  background-color: #f9fafb !important;
+}
+
+:host ::ng-deep .dx-data-row.dx-state-hover > td {
+  background-color: rgba(0, 51, 102, 0.03) !important;
+}
+
+:host ::ng-deep .dx-selection.dx-data-row > td {
+  background-color: rgba(0, 51, 102, 0.10) !important;
+  color: #003366 !important;
+  font-weight: 600 !important;
+}
+
+/* ══════════════════════════════════════════
+   Pager — Sticky + Sempione
+   ══════════════════════════════════════════ */
+:host ::ng-deep .dx-datagrid-pager {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  background: #fff;
+  border-top: 1px solid #e5e7eb !important;
+  padding: 5px 10px !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-pager {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap;
+  gap: 4px;
+  width: 100%;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-info {
+  order: -1 !important;
+  margin-right: auto !important;
+  font-size: 11px !important;
+  color: #6b7280 !important;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page {
+  min-width: 28px !important;
+  height: 28px !important;
+  line-height: normal !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  color: #374151 !important;
+  border: 1px solid #dce3ee !important;
+  background: transparent !important;
+  margin: 0 1px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page:hover {
+  background: rgba(197, 160, 89, 0.08) !important;
+  color: #7a5c1e !important;
+  border-color: rgba(197, 160, 89, 0.5) !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page.dx-selection {
+  background: #003366 !important;
+  color: #fff !important;
+  border-color: #003366 !important;
+  font-weight: 700 !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button {
+  width: 28px !important;
+  height: 28px !important;
+  line-height: normal !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  border-radius: 6px !important;
+  border: 1px solid transparent !important;
+  transition: background 0.15s, color 0.15s;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button > *,
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button::before,
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button::after {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button:hover {
+  background: rgba(0, 51, 102, 0.06) !important;
+  color: #003366 !important;
+  border-color: #dce3ee !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button.dx-button-disable {
+  opacity: 0.35;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-page-size {
+  font-size: 12px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  padding: 0 10px !important;
+  border-radius: 6px !important;
+  border: 1px solid #dce3ee !important;
+  color: #374151 !important;
+  background: transparent !important;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-page-size:hover {
+  background: rgba(197, 160, 89, 0.08) !important;
+  color: #7a5c1e !important;
+  border-color: rgba(197, 160, 89, 0.5) !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-page-size.dx-selection {
+  background: rgba(0, 51, 102, 0.09) !important;
+  color: #003366 !important;
+  font-weight: 700 !important;
+  border-color: rgba(0, 51, 102, 0.3) !important;
+}
+
+/* ══════════════════════════════════════════
+   Popup — Form
+   ══════════════════════════════════════════ */
+.popup-form {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  padding-bottom: 64px;
+  padding-bottom: 4px;
 }
 
-.popup-card {
+/* ── Sezioni del popup ── */
+.popup-section {
   background: #fff;
-  border: 1px solid #e4e8ed;
+  border: 1px solid #dce3ee;
   border-radius: 8px;
-  padding: 16px 20px 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.12);
+  overflow: hidden;
 }
 
-.popup-card-title {
-  margin: 0 0 14px 0;
-  padding-bottom: 10px;
+.popup-section-header {
+  background: #003366;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.popup-section-icon {
+  width: 13px;
+  height: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  flex-shrink: 0;
+}
+
+.popup-section-title {
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 600;
   text-transform: uppercase;
-  color: #003366;
-  border-bottom: 2px solid #dce3ee;
+  letter-spacing: 0.06em;
+  color: #fff;
 }
 
+.popup-section-divider {
+  height: 2px;
+  background: #C5A059;
+}
+
+/* ── Grid 3 colonne per i campi profilo ── */
 .popup-fields-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px 24px;
+  gap: 10px 20px;
+  padding: 14px 16px;
 }
 
 .popup-field-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
-.popup-field-label {
-  font-size: 11px;
+.popup-fields-grid--single {
+  grid-template-columns: 1fr;
+}
+
+.popup-section-body {
+  padding: 12px 16px;
+}
+
+/* ── Labels dei campi (shared con form-row) ── */
+.form-lbl {
+  font-size: 10px;
   font-weight: 600;
-  color: #666;
+  color: #6b7280;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
+/* ── Barra azioni popup ── */
+.popup-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0 2px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.popup-actions-left,
+.popup-actions-right {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* ── Bottoni popup (stessa altezza della toolbar principale) ── */
+:host ::ng-deep .popup-actions .btn-outline.dx-button.dx-button-mode-outlined {
+  height: 28px;
+}
+
+:host ::ng-deep .popup-actions .btn-new.dx-button-default.dx-button-mode-contained {
+  height: 28px;
+}
+
+:host ::ng-deep .popup-actions .btn-danger.dx-button.dx-button-danger.dx-button-mode-outlined {
+  height: 28px;
+}
+
+/* ══════════════════════════════════════════
+   Grid nel popup — override sticky pager
+   ══════════════════════════════════════════ */
+:host ::ng-deep .popup-section .dx-datagrid-pager {
+  position: static !important;
+  border-top: 1px solid #e5e7eb !important;
+  padding: 5px 10px !important;
+  background: #fff;
+}
+
+:host ::ng-deep .popup-section .dx-datagrid-pager .dx-pager {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap;
+  gap: 4px;
+  width: 100%;
+}
+
+:host ::ng-deep .popup-section .dx-datagrid-pager .dx-info {
+  order: -1 !important;
+  margin-right: auto !important;
+  font-size: 11px !important;
+  color: #6b7280 !important;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ── Readonly view mode ── */
 :host ::ng-deep .field-id-locked .dx-texteditor {
   background-color: #f5f6f8 !important;
 }
@@ -251,7 +550,7 @@
 }
 
 :host ::ng-deep .popup-view-mode .dx-texteditor.dx-state-readonly .dx-texteditor-input {
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-weight: 600 !important;
   color: #003366 !important;
   padding-left: 2px !important;
@@ -262,85 +561,15 @@
   pointer-events: none;
 }
 
-.popup-action-bar {
-  position: sticky;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 0;
-  background: #fff;
-  border-top: 1px solid #e4e8ed;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.07);
-  z-index: 10;
+/* ══════════════════════════════════════════
+   Responsive
+   ══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .toolbar-filters { flex-wrap: wrap; }
+  .popup-fields-grid { grid-template-columns: 1fr 1fr; }
 }
 
-.popup-actions-secondary,
-.popup-actions-primary {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-:host ::ng-deep .btn-action-primary.dx-button {
-  background-color: #2d6a4f;
-  border-color: #2d6a4f;
-  height: 36px;
-}
-
-:host ::ng-deep .btn-action-primary.dx-button:hover {
-  background-color: #1b4332;
-  border-color: #1b4332;
-}
-
-:host ::ng-deep .btn-action-outline.dx-button {
-  background: transparent;
-  border: 1.5px solid #003366;
-  height: 36px;
-  color: #003366;
-}
-
-:host ::ng-deep .btn-action-outline.dx-button:hover {
-  background: rgba(0, 51, 102, 0.06);
-}
-
-:host ::ng-deep .btn-action-danger.dx-button {
-  background: transparent;
-  border: 1.5px solid #dc2626;
-  height: 36px;
-  color: #dc2626;
-}
-
-:host ::ng-deep .btn-action-danger.dx-button:hover {
-  background: #fef2f2;
-}
-
-.popup-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-@media (max-width: 680px) {
-  .toolbar-inner {
-    flex-wrap: wrap;
-    height: auto;
-  }
-
-  .search-input-wrapper {
-    flex: 1 1 180px;
-    min-width: 0;
-    max-width: unset;
-  }
-
-  .popup-fields-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .popup-action-bar {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
+@media (max-width: 600px) {
+  .popup-fields-grid { grid-template-columns: 1fr; }
+  .popup-actions { flex-wrap: wrap; }
 }
