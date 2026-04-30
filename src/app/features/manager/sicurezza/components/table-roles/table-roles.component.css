@@ -1,1 +1,119 @@
 .table-roles { width: 100%; }
+
+/* ── Grid Header ── */
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td {
+  background-color: #EDF2F7 !important;
+  color: #003366 !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  border-bottom: 2px solid rgba(0, 51, 102, 0.75) !important;
+  transition: background-color 0.15s !important;
+}
+
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td:hover {
+  background-color: #e3eaf3 !important;
+}
+
+/* ── Grid Righe ── */
+:host ::ng-deep .dx-data-row > td {
+  padding: 7px 10px !important;
+  font-size: 12px !important;
+  color: #334155 !important;
+  vertical-align: middle !important;
+}
+
+:host ::ng-deep .dx-data-row.dx-row-alt > td {
+  background-color: #f9fafb !important;
+}
+
+:host ::ng-deep .dx-data-row.dx-state-hover > td {
+  background-color: rgba(0, 51, 102, 0.03) !important;
+}
+
+:host ::ng-deep .dx-selection.dx-data-row > td {
+  background-color: rgba(0, 51, 102, 0.10) !important;
+  color: #003366 !important;
+  font-weight: 600 !important;
+}
+
+/* ── Pager ── */
+:host ::ng-deep .dx-datagrid-pager {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  background: #fff;
+  border-top: 1px solid #e5e7eb !important;
+  padding: 5px 10px !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-pager {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap;
+  gap: 4px;
+  width: 100%;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-info {
+  order: -1 !important;
+  margin-right: auto !important;
+  font-size: 11px !important;
+  color: #6b7280 !important;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page {
+  min-width: 28px !important;
+  height: 28px !important;
+  line-height: normal !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  color: #374151 !important;
+  border: 1px solid #dce3ee !important;
+  background: transparent !important;
+  margin: 0 1px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page:hover {
+  background: rgba(197, 160, 89, 0.08) !important;
+  color: #7a5c1e !important;
+  border-color: rgba(197, 160, 89, 0.5) !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page.dx-selection {
+  background: #003366 !important;
+  color: #fff !important;
+  border-color: #003366 !important;
+  font-weight: 700 !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button {
+  width: 28px !important;
+  height: 28px !important;
+  line-height: normal !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  border-radius: 6px !important;
+  border: 1px solid transparent !important;
+  transition: background 0.15s, color 0.15s;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button:hover {
+  background: rgba(0, 51, 102, 0.06) !important;
+  color: #003366 !important;
+  border-color: #dce3ee !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button.dx-button-disable {
+  opacity: 0.35;
+}

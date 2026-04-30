@@ -9,8 +9,7 @@ import {
   DxDateBoxModule,
   DxTextAreaModule,
   DxPopupModule,
-  DxDropDownButtonModule,
-  DxRadioGroupModule
+  DxDropDownButtonModule
 } from 'devextreme-angular';
 import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
 import { RicercaContoTable } from '../ricerca-conto-table/ricerca-conto-table';
@@ -31,7 +30,6 @@ export type ContoCorrenteMode = 'versamento' | 'prelevamento';
     DxTextAreaModule,
     DxPopupModule,
     DxDropDownButtonModule,
-    DxRadioGroupModule,
     HeaderCardComponent,
     RicercaContoTable
   ],
@@ -47,16 +45,6 @@ export class ContoCorrenteFormComponent {
   appearerVisible     = signal(false);
 
   currencies: string[] = ['CHF', 'EUR', 'USD', 'GBP', 'JPY'];
-
-  aggioModeOptions = [
-    { value: 0, text: '%' },
-    { value: 1, text: 'Importo' }
-  ];
-
-  aggioTipoOptions = [
-    { value: 0, text: 'Aggio' },
-    { value: 1, text: 'Disaggio' }
-  ];
 
   altreAzioniItems = [
     { id: 'carica',      text: 'Carica',        icon: 'upload' },
@@ -106,6 +94,9 @@ export class ContoCorrenteFormComponent {
   get pageTitle(): string {
     return this.mode === 'versamento' ? 'Versamento' : 'Prelevamento';
   }
+
+  setAggioTipo(v: number): void { this.formData.aggioTipo = v; this.recalculate(); }
+  setAggioMode(v: number): void { this.formData.aggioMode = v; this.recalculate(); }
 
   showCambio():   void { this.cambioVisible.set(true);   }
   showAppearer(): void { this.appearerVisible.set(true); }

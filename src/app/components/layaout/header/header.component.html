@@ -2,11 +2,13 @@
   <i class="bi bi-list list-icon" (click)="onMenuIconClicked()"></i>
   <div class="logo-sep"></div>
   <app-logo></app-logo>
-  <app-application-name></app-application-name>
-
   <div class="header-spacer"></div>
 
   <app-user-badge (clicked)="onUserBadgeClick()"></app-user-badge>
+
+  <div class="logo-sep"></div>
+
+  <span class="header-eteller">eTeller</span>
 
   <div class="logo-sep"></div>
 
@@ -19,7 +21,7 @@
       [class.status-pill--offline]="!isOnline()"
       [attr.aria-label]="statusAriaLabel"
       role="status">
-      {{ isOnline() ? 'ONLINE' : 'NON ONLINE' }}
+      {{ isOnline() ? 'ONLINE' : 'OFFLINE' }}
     </span>
     <span class="status-timestamp">{{ relativeTime() }}</span>
   </div>

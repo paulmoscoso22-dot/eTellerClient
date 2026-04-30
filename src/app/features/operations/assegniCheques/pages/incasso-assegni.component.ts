@@ -2,8 +2,8 @@ import { Component, signal } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import {
   DxTextBoxModule, DxNumberBoxModule, DxSelectBoxModule, DxCheckBoxModule,
-  DxDateBoxModule, DxTextAreaModule, DxButtonModule, DxRadioGroupModule,
-  DxPopupModule, DxDropDownButtonModule
+  DxDateBoxModule, DxTextAreaModule, DxButtonModule, DxDropDownButtonModule,
+  DxPopupModule
 } from 'devextreme-angular';
 import { HeaderCardComponent } from '../../../../components/header-card/header-card.component';
 
@@ -15,8 +15,8 @@ const round05 = (v: number) => Math.round(v * 20) / 20;
   imports: [
     CommonModule, DatePipe, DecimalPipe,
     DxTextBoxModule, DxNumberBoxModule, DxSelectBoxModule, DxCheckBoxModule,
-    DxDateBoxModule, DxTextAreaModule, DxButtonModule, DxRadioGroupModule,
-    DxPopupModule, DxDropDownButtonModule,
+    DxDateBoxModule, DxTextAreaModule, DxButtonModule, DxDropDownButtonModule,
+    DxPopupModule,
     HeaderCardComponent
   ],
   templateUrl: './incasso-assegni.component.html',
@@ -30,11 +30,6 @@ export class IncassoAssegniComponent {
   appearerVisible = signal(false);
 
   currencies: string[] = ['CHF', 'EUR', 'USD', 'GBP', 'JPY'];
-
-  commissioniModeOptions = [
-    { value: 0, text: '%' },
-    { value: 1, text: 'Importo' }
-  ];
 
   altreAzioniItems = [
     { id: 'carica',   text: 'Carica',   icon: 'upload'   },
@@ -111,6 +106,11 @@ export class IncassoAssegniComponent {
     const cambio = this.formData.cambio ?? ctvRate ?? 1;
     this.formData.importoOperazione   = cambio ? round05(tot / cambio) : null;
     this.formData.controvaloreChfOpe  = tot || null;
+  }
+
+  setCommissioniMode(v: number): void {
+    this.formData.commissioniMode = v;
+    this.calculate();
   }
 
   showCambio():    void { this.cambioVisible.set(true);    }

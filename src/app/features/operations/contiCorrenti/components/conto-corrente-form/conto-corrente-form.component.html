@@ -68,7 +68,7 @@
           <div class="form-row">
             <label class="form-lbl">Saldo</label>
             <div class="form-fld">
-              <div class="display-value">
+              <div class="display-value display-value--sys">
                 {{ formData.saldo != null ? (formData.saldo | number:'1.2-2') : '—' }}
               </div>
             </div>
@@ -188,32 +188,49 @@
             <dx-check-box [(value)]="formData.cbForceChange"></dx-check-box>
           </div>
 
-          <div class="form-row">
+          <!-- ── Aggio / Disaggio ── -->
+          <div class="form-row form-row--top aggio-row">
             <label class="form-lbl">Aggio</label>
-            <div class="form-fld form-fld--row">
-              <dx-radio-group
-                [(value)]="formData.aggioMode"
-                [dataSource]="aggioModeOptions"
-                displayExpr="text"
-                valueExpr="value"
-                layout="horizontal"
-                class="aggio-radio"
-                (onValueChanged)="recalculate()">
-              </dx-radio-group>
-              <dx-radio-group
-                [(value)]="formData.aggioTipo"
-                [dataSource]="aggioTipoOptions"
-                displayExpr="text"
-                valueExpr="value"
-                layout="horizontal"
-                class="aggio-radio">
-              </dx-radio-group>
-              <dx-number-box
-                [(value)]="formData.aggio"
-                format="#,##0.0000"
-                style="flex:1; min-width:0"
-                (onValueChanged)="recalculate()">
-              </dx-number-box>
+            <div class="form-fld">
+              <div class="aggio-block">
+
+                <!-- Segmented: Aggio vs Disaggio -->
+                <div class="seg-ctrl" role="group" aria-label="Tipo aggio">
+                  <button class="seg-btn" type="button"
+                          [class.seg-btn--active]="formData.aggioTipo === 0"
+                          (click)="setAggioTipo(0)">
+                    Aggio
+                  </button>
+                  <button class="seg-btn" type="button"
+                          [class.seg-btn--active]="formData.aggioTipo === 1"
+                          (click)="setAggioTipo(1)">
+                    Disaggio
+                  </button>
+                </div>
+
+                <!-- Input group: % / Importo addon + valore -->
+                <div class="aggio-input-group">
+                  <div class="addon-pills">
+                    <button class="addon-pill" type="button"
+                            [class.addon-pill--active]="formData.aggioMode === 0"
+                            (click)="setAggioMode(0)">
+                      %
+                    </button>
+                    <button class="addon-pill" type="button"
+                            [class.addon-pill--active]="formData.aggioMode === 1"
+                            (click)="setAggioMode(1)">
+                      Imp.
+                    </button>
+                  </div>
+                  <dx-number-box
+                    [(value)]="formData.aggio"
+                    format="#,##0.0000"
+                    class="aggio-numbox"
+                    (onValueChanged)="recalculate()">
+                  </dx-number-box>
+                </div>
+
+              </div>
             </div>
           </div>
 
@@ -279,7 +296,9 @@
           <div class="form-row">
             <label class="form-lbl">Data operazione</label>
             <div class="form-fld">
-              <div class="display-value">{{ formData.dataOperazione | date:'dd/MM/yyyy' }}</div>
+              <div class="display-value display-value--sys">
+                {{ formData.dataOperazione | date:'dd/MM/yyyy' }}
+              </div>
             </div>
           </div>
 
@@ -313,27 +332,22 @@
 
   </div>
 
-  <!-- ── Action Bar ── -->
-  <div class="action-bar">
-    <div class="actions-left">
-      <dx-button text="Indietro" icon="arrowleft" stylingMode="outlined" (onClick)="indietro()"></dx-button>
-      <dx-button text="Annulla"  icon="remove"    stylingMode="outlined" (onClick)="annulla()"></dx-button>
-      <dx-button text="Modifica" icon="edit"      stylingMode="outlined" (onClick)="modifica()"></dx-button>
-    </div>
-
+  <!-- ── Floating Action Bar ── -->
+  <div class="float-bar">
+    <dx-button text="Indietro" icon="arrowleft" stylingMode="outlined" class="btn-secondary" (onClick)="indietro()"></dx-button>
+    <dx-button text="Annulla"  icon="remove"    stylingMode="outlined" class="btn-secondary" (onClick)="annulla()"></dx-button>
+    <dx-button text="Modifica" icon="edit"      stylingMode="outlined" class="btn-secondary" (onClick)="modifica()"></dx-button>
+    <dx-drop-down-button
+      text="Altre azioni"
+      icon="overflow"
+      stylingMode="outlined"
+      class="btn-secondary"
+      [items]="altreAzioniItems"
+      keyExpr="id"
+      displayExpr="text"
+      (onItemClick)="onAltreAzioniClick($event)">
+    </dx-drop-down-button>
     <dx-button text="Conferma" icon="check" class="btn-confirm" (onClick)="conferma()"></dx-button>
-
-    <div class="actions-right">
-      <dx-drop-down-button
-        text="Altre azioni"
-        icon="overflow"
-        stylingMode="outlined"
-        [items]="altreAzioniItems"
-        keyExpr="id"
-        displayExpr="text"
-        (onItemClick)="onAltreAzioniClick($event)">
-      </dx-drop-down-button>
-    </div>
   </div>
 
 </div>

@@ -300,15 +300,11 @@
 
   </div>
 
-  <!-- ── Action Bar ── -->
-  <div class="action-bar">
-    <div class="actions-left">
-      <dx-button text="Annulla" icon="remove" stylingMode="outlined" (onClick)="annulla()"></dx-button>
-    </div>
+  <!-- ── Float bar ── -->
+  <div class="float-bar">
+    <dx-button text="Annulla" icon="remove" stylingMode="outlined" class="btn-secondary" (onClick)="annulla()"></dx-button>
+    <dx-button text="Stampa"  icon="print"  stylingMode="outlined" class="btn-secondary" (onClick)="stampa()"></dx-button>
     <dx-button text="Conferma" icon="check" class="btn-confirm" (onClick)="conferma()"></dx-button>
-    <div class="actions-right">
-      <dx-button text="Stampa" icon="print" stylingMode="outlined" (onClick)="stampa()"></dx-button>
-    </div>
   </div>
 
 </div>

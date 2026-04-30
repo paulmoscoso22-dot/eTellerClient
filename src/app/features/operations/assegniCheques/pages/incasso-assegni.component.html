@@ -150,22 +150,27 @@
 
           <div class="form-row">
             <label class="form-lbl">Commissioni</label>
-            <div class="form-fld form-fld--row">
-              <dx-radio-group
-                [(value)]="formData.commissioniMode"
-                [dataSource]="commissioniModeOptions"
-                displayExpr="text"
-                valueExpr="value"
-                layout="horizontal"
-                class="comm-radio"
-                (onValueChanged)="calculate()">
-              </dx-radio-group>
-              <dx-number-box
-                [(value)]="formData.tassoCommissioni"
-                format="#,##0.0000"
-                style="flex:1; min-width:0"
-                (onValueChanged)="calculate()">
-              </dx-number-box>
+            <div class="form-fld">
+              <div class="aggio-input-group">
+                <div class="addon-pills">
+                  <button class="addon-pill" type="button"
+                          [class.addon-pill--active]="formData.commissioniMode === 0"
+                          (click)="setCommissioniMode(0)">
+                    %
+                  </button>
+                  <button class="addon-pill" type="button"
+                          [class.addon-pill--active]="formData.commissioniMode === 1"
+                          (click)="setCommissioniMode(1)">
+                    Imp.
+                  </button>
+                </div>
+                <dx-number-box
+                  [(value)]="formData.tassoCommissioni"
+                  format="#,##0.0000"
+                  class="comm-numbox"
+                  (onValueChanged)="calculate()">
+                </dx-number-box>
+              </div>
             </div>
           </div>
 
@@ -334,27 +339,22 @@
 
   </div>
 
-  <!-- ── Action Bar ── -->
-  <div class="action-bar">
-    <div class="actions-left">
-      <dx-button text="Indietro" icon="arrowleft" stylingMode="outlined" (onClick)="indietro()"></dx-button>
-      <dx-button text="Annulla"  icon="remove"    stylingMode="outlined" (onClick)="annulla()"></dx-button>
-      <dx-button text="Modifica" icon="edit"      stylingMode="outlined" (onClick)="modifica()"></dx-button>
-    </div>
-
+  <!-- ── Float bar ── -->
+  <div class="float-bar">
+    <dx-button text="Indietro" icon="arrowleft" stylingMode="outlined" class="btn-secondary" (onClick)="indietro()"></dx-button>
+    <dx-button text="Annulla"  icon="remove"    stylingMode="outlined" class="btn-secondary" (onClick)="annulla()"></dx-button>
+    <dx-button text="Modifica" icon="edit"      stylingMode="outlined" class="btn-secondary" (onClick)="modifica()"></dx-button>
+    <dx-drop-down-button
+      text="Altre azioni"
+      icon="overflow"
+      stylingMode="outlined"
+      class="btn-secondary"
+      [items]="altreAzioniItems"
+      keyExpr="id"
+      displayExpr="text"
+      (onItemClick)="onAltreAzioniClick($event)">
+    </dx-drop-down-button>
     <dx-button text="Conferma" icon="check" class="btn-confirm" (onClick)="conferma()"></dx-button>
-
-    <div class="actions-right">
-      <dx-drop-down-button
-        text="Altre azioni"
-        icon="overflow"
-        stylingMode="outlined"
-        [items]="altreAzioniItems"
-        keyExpr="id"
-        displayExpr="text"
-        (onItemClick)="onAltreAzioniClick($event)">
-      </dx-drop-down-button>
-    </div>
   </div>
 
 </div>
