@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiService } from '../../../../services/api.service';
-import { GetTraceAllRequest, GetTraceByIdRequest, TraceResponse, TraceWithFunctionResponse, GetTraceWithFunctionRequest, StTracefunctionResponse, SysUsersActiveAndBlockedResponse, ClientResponse, GetTabellaServVarcharRequest, GetTabellaServVarcharByIdRequest, TabellaServVarcharResponse } from '../models/informazioni.models';
+import { GetTraceAllRequest, GetTraceByIdRequest, TraceResponse, StTracefunctionResponse, SysUsersActiveAndBlockedResponse, GetTabellaServVarcharRequest, GetTabellaServVarcharByIdRequest, TabellaServVarcharResponse } from '../models/informazioni.models';
+import { ClientResponse } from '../../../../core/domain/client.domain';
 
 @Injectable({
   providedIn: 'root'

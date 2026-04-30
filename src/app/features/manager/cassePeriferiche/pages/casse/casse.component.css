@@ -1,0 +1,26 @@
+/* Styles for Casse page component */
+:host { display: block; padding: 12px 16px; box-sizing: border-box; }
+.page-shell { min-height: 0; }
+.card-section { background: var(--card-bg, #fff); border-radius: 6px; padding: 12px; box-shadow: var(--card-shadow, none); }
+.sempione-card-header { display:flex; align-items:center; gap:12px; }
+.card-icon { width:24px; height:24px; flex-shrink:0; }
+.card-title { font-size:1.25rem; margin:0; }
+.gold-divider { height:1px; background:var(--divider, #eee); margin:8px 0 12px; }
+.card-toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.toolbar-inner { display:flex; align-items:center; gap:12px; width:100%; justify-content:space-between; }
+.toolbar-search-wrap { display:flex; align-items:center; gap:8px; }
+.toolbar-search-icon { width:18px; height:18px; flex-shrink:0; color:var(--text-muted, #888); }
+.toolbar-textbox { width:360px; max-width:100%; }
+.toolbar-actions { display:flex; align-items:center; gap:8px; }
+.btn-new ::ng-deep .dx-icon { font-size:14px; width:14px; height:14px; }
+.card-body { display:block; }
+.popup-layout { display:flex; flex-direction:column; gap:12px; }
+
+.btn-action-danger ::ng-deep .dx-button { color: #c0392b; border-color: #c0392b; }
+.btn-action-danger ::ng-deep .dx-button:hover { background-color: #c0392b; color: #fff; }
+
+/* Minimal responsive tweaks */
+@media (max-width: 800px) {
+  .toolbar-textbox { width:100%; }
+  .card-section { padding:8px; }
+}

@@ -1,0 +1,8 @@
+/* Conti Cassa styles (moved into contiCassa folder) */
+
+/* Reuse existing styles from parent file. Keep compact to avoid duplicates. */
+
+:host { display:flex; flex-direction:column; min-height:0; }
+.page-shell { padding:12px 16px 0; }
+
+/* Note: full styles are kept in the original file moved here to maintain visuals. */

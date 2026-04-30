@@ -1,0 +1,5 @@
+/* Periferiche styles (moved into periferiche folder) */
+:host { display:flex; flex-direction:column; min-height:0; }
+.page-shell { padding:12px 16px 0; }
+
+/* Keep full styles in original file if needed; minimal duplication here. */

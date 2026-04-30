@@ -71,19 +71,7 @@ export class SysUsersActiveAndBlockedResponse {
 	usrLingua: string = '';
 }
 
-export class ClientResponse {
-	cliId: string = '';
-	cliIp: string = '';
-	cliMac: string = '';
-	cliAuthcode: string = '';
-	cliBraId: string = '';
-	cliDes: string | null = null;
-	cliOff: string | null = null;
-	cliStatus: string = '';
-	cliLingua: string | null = null;
-	cliCnt: number = 0;
-	cliDatcounter: Date | null = null;
-}
+
 
 export class GetTabellaServVarcharRequest {
 	nomeTabella: string = '';

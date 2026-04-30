@@ -14,7 +14,8 @@ import { ButtonRicercaComponent } from '../../../../../components/buttons/search
 import { LabelSecondaryComponent } from '../../../../../components/labels/label-secondary/label-secondary.component';
 import { TraceDetaillComponent } from '../../components/trace-detaill-component/trace-detaill.component';
 import { InformazioniService } from '../../services/informazioni.service';
-import { GetTraceAllRequest, TraceResponse, TraceWithFunctionResponse, GetTraceWithFunctionRequest, StTracefunctionResponse, SysUsersActiveAndBlockedResponse, ClientResponse, GetTabellaServVarcharRequest, TabellaServVarcharResponse, GetTraceByIdRequest } from '../../models/informazioni.models';
+import { GetTraceAllRequest, TraceResponse, TraceWithFunctionResponse, GetTraceWithFunctionRequest, StTracefunctionResponse, SysUsersActiveAndBlockedResponse, GetTabellaServVarcharRequest, TabellaServVarcharResponse, GetTraceByIdRequest } from '../../models/informazioni.models';
+import { ClientResponse } from '../../../../../core/domain/client.domain';
 
 @Component({
   selector: 'app-trace',

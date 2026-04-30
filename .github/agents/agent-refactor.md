@@ -7,6 +7,9 @@
 - Ensure reactive approach (RxJS/signals)
 - Merge or split responsibilities if needed
 - Ensure no overengineering
+- not use any new libraries or frameworks
+- factorize code to be more modular and reusable
+- usa clean code principles
 
 ### Output (MANDATORY HANDOFF)
 
