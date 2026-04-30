@@ -64,7 +64,6 @@ export class PerifericheComponent implements OnInit {
     C01: 'Cassa Zurigo 1',
   };
 
-  // In edit mode: Tipo and Località are locked when device is already in use
   typeLocaLocked = computed(() =>
     this.popupMode() === 'view' ||
     (this.popupMode() === 'edit' && (this.selectedDevice()?.inUso ?? false))
@@ -213,6 +212,25 @@ export class PerifericheComponent implements OnInit {
     // TODO: call backend delete
     this.devices.update(list => list.filter(d => d.devId !== dev.devId));
     notify(`Device "${dev.devName}" eliminato`, 'success', 3000);
+    this.closePopup();
+  }
+
+  onSave(): void {
+    if (this.popupMode() === 'new') {
+      this.onSubmit();
+    } else {
+      this.onUpdate();
+    }
+  }
+
+  onRelease(): void {
+    const dev = this.selectedDevice();
+    if (!dev) return;
+    // TODO: call backend release
+    this.devices.update(list => list.map(d =>
+      d.devId === dev.devId ? { ...d, inUso: false, cassaIds: [] } : d
+    ));
+    notify(`Device "${dev.devName}" rilasciato con successo`, 'success', 3000);
     this.closePopup();
   }
 

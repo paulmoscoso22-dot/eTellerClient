@@ -34,6 +34,7 @@
           <dx-button
             class="btn-new"
             text="Nuovo"
+            icon="plus"
             type="default"
             stylingMode="contained"
             (onClick)="openNewPopup()">
@@ -94,11 +95,8 @@
         </div>
 
         <div *dxTemplate="let cell of 'inUsoTemplate'" class="bool-cell">
-          @if (cell.value) {
-            <span class="bool-pill bool-pill--yes">&#x2713;</span>
-          } @else {
-            <span class="bool-pill bool-pill--no">&mdash;</span>
-          }
+          <span *ngIf="cell.value" class="bool-pill bool-pill--yes">&#x2713;</span>
+          <span *ngIf="!cell.value" class="bool-pill bool-pill--no">&mdash;</span>
         </div>
 
         <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
@@ -115,12 +113,9 @@
             </svg>
           </button>
         </div>
-
       </dx-data-grid>
     </div>
-
   </section>
-
 </div>
 
 <!-- ── Popup Dettaglio Cassa ── -->
@@ -166,7 +161,7 @@
             <label class="popup-field-label">Stato *</label>
             <dx-select-box
               formControlName="cliStatus"
-              [dataSource]="statiList"
+              [dataSource]="statiList()"
               displayExpr="steDes"
               valueExpr="steId"
               [readOnly]="popupMode() === 'view'">
@@ -180,7 +175,7 @@
             <label class="popup-field-label">Lingua *</label>
             <dx-select-box
               formControlName="cliLingua"
-              [dataSource]="languagesList"
+              [dataSource]="languagesList()"
               displayExpr="lanDes"
               valueExpr="lanId"
               [readOnly]="popupMode() === 'view'">
@@ -194,10 +189,11 @@
             <label class="popup-field-label">Filiale *</label>
             <dx-select-box
               formControlName="cliBraId"
-              [dataSource]="branchesList"
+              [dataSource]="branchesList()"
               displayExpr="braDes"
               valueExpr="braId"
-              [readOnly]="popupMode() === 'view'">
+              [readOnly]="popupMode() === 'view'"
+              (onValueChanged)="popupMode() !== 'view' && onBranchChanged($event.value)">
               <dx-validator>
                 <dxi-validation-rule type="required"></dxi-validation-rule>
               </dx-validator>
@@ -273,69 +269,17 @@
         <h3 class="popup-card-title">Periferiche Assegnate</h3>
 
         <div class="dual-list-container">
-
-          <!-- Disponibili -->
-          <div class="dual-list-panel">
-            <div class="dual-list-header">Disponibili</div>
-            <ul class="dual-list-items">
-              @for (dev of popupAvailable(); track dev.devId) {
-                <li class="dual-list-item"
-                    [class.dual-list-item--selected]="isAvailSelected(dev.devId)"
-                    (click)="popupMode() !== 'view' && toggleAvailSelection(dev.devId)">
-                  <span class="dev-type-badge">{{ dev.devType }}</span>
-                  {{ dev.devName }}
-                </li>
-              }
-              @if (popupAvailable().length === 0) {
-                <li class="dual-list-empty">Nessuna periferica disponibile</li>
-              }
-            </ul>
-          </div>
-
-          <!-- Transfer buttons -->
-          <div class="dual-list-controls">
-            <button class="transfer-btn"
-                    title="Aggiungi selezionati"
-                    [disabled]="popupMode() === 'view'"
-                    (click)="addDevices()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
-            <button class="transfer-btn"
-                    title="Rimuovi selezionati"
-                    [disabled]="popupMode() === 'view'"
-                    (click)="removeDevices()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-            </button>
-          </div>
-
-          <!-- Assegnate -->
-          <div class="dual-list-panel">
-            <div class="dual-list-header dual-list-header--assigned">Assegnate</div>
-            <ul class="dual-list-items">
-              @for (dev of popupAssigned(); track dev.devId) {
-                <li class="dual-list-item"
-                    [class.dual-list-item--selected]="isAssignSelected(dev.devId)"
-                    (click)="popupMode() !== 'view' && toggleAssignSelection(dev.devId)">
-                  <span class="dev-type-badge dev-type-badge--assigned">{{ dev.devType }}</span>
-                  {{ dev.devName }}
-                </li>
-              }
-              @if (popupAssigned().length === 0) {
-                <li class="dual-list-empty">Nessuna periferica assegnata</li>
-              }
-            </ul>
-          </div>
-
+          <app-control-assign
+            [assignedRoles]="assignedRolesForControl"
+            [possibleRoles]="possibleRolesForControl"
+            [disabled]="popupMode() === 'view'"
+            (rolesChanged)="onRolesChanged($event)">
+          </app-control-assign>
         </div>
       </section>
 
       <!-- ── Card 4: Informazioni di Sistema (view/edit only) ── -->
-      @if (popupMode() !== 'new') {
-        <section class="popup-card popup-card--system">
+      <section *ngIf="popupMode() !== 'new'" class="popup-card popup-card--system">
           <h3 class="popup-card-title">Informazioni di Sistema</h3>
           <div class="popup-fields-grid popup-fields-grid--3col">
 
@@ -356,48 +300,48 @@
 
           </div>
         </section>
-      }
 
       <!-- ── Action Bar sticky ── -->
       <div class="popup-action-bar">
 
         <div class="popup-actions-secondary">
-          @if (popupMode() !== 'new') {
-            <dx-button
-              class="btn-action-outline"
-              text="Storico"
-              icon="clock"
-              stylingMode="outlined"
-              (onClick)="onTrace()">
-            </dx-button>
-          }
+          <dx-button *ngIf="popupMode() !== 'new'"
+            class="btn-action-outline"
+            text="Storico"
+            icon="clock"
+            stylingMode="outlined"
+            (onClick)="onTrace()">
+          </dx-button>
         </div>
 
         <div class="popup-actions-primary">
-          @if (popupMode() === 'view') {
+          <dx-button *ngIf="popupMode() === 'view'"
+            class="btn-action-close"
+            text="Chiudi"
+            icon="close"
+            (onClick)="closePopup()">
+          </dx-button>
+          <dx-button *ngIf="popupMode() === 'new'"
+            class="btn-action-primary"
+            text="Aggiungi"
+            icon="plus"
+            (onClick)="onSubmit()">
+          </dx-button>
+          <ng-container *ngIf="popupMode() === 'edit'">
             <dx-button
-              class="btn-action-close"
-              text="Chiudi"
-              icon="close"
-              (onClick)="closePopup()">
+              class="btn-action-danger"
+              text="Elimina"
+              icon="trash"
+              stylingMode="outlined"
+              (onClick)="onDelete()">
             </dx-button>
-          }
-          @if (popupMode() === 'new') {
-            <dx-button
-              class="btn-action-primary"
-              text="Aggiungi"
-              icon="plus"
-              (onClick)="onSubmit()">
-            </dx-button>
-          }
-          @if (popupMode() === 'edit') {
             <dx-button
               class="btn-action-primary"
               text="Salva"
               icon="save"
               (onClick)="onUpdate()">
             </dx-button>
-          }
+          </ng-container>
         </div>
 
       </div>

@@ -258,38 +258,38 @@
             </dx-button>
           }
           @if (popupMode() !== 'new' && selectedDevice()?.inUso) {
-            <span class="inuso-warning">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-              </svg>
-              Device in uso — eliminazione non disponibile
-            </span>
+            <dx-button
+              class="btn-action-outline"
+              text="Rilascia"
+              icon="unlock"
+              stylingMode="outlined"
+              (onClick)="onRelease()">
+            </dx-button>
           }
         </div>
 
         <div class="popup-actions-primary">
-          @if (popupMode() === 'view') {
+          @if (popupMode() !== 'view') {
             <dx-button
-              class="btn-action-close"
-              text="Chiudi"
-              icon="close"
+              class="btn-cancel"
+              text="Annulla"
+              stylingMode="outlined"
               (onClick)="closePopup()">
             </dx-button>
-          }
-          @if (popupMode() === 'new') {
             <dx-button
-              class="btn-action-primary"
-              text="Aggiungi"
-              icon="plus"
-              (onClick)="onSubmit()">
-            </dx-button>
-          }
-          @if (popupMode() === 'edit') {
-            <dx-button
-              class="btn-action-primary"
+              class="btn-save"
               text="Salva"
-              icon="save"
-              (onClick)="onUpdate()">
+              type="default"
+              stylingMode="contained"
+              [useSubmitBehavior]="false"
+              (onClick)="onSave()">
+            </dx-button>
+          } @else {
+            <dx-button
+              class="btn-cancel"
+              text="Chiudi"
+              stylingMode="outlined"
+              (onClick)="closePopup()">
             </dx-button>
           }
         </div>
@@ -298,4 +298,5 @@
 
     </form>
   </div>
+
 </dx-popup>
