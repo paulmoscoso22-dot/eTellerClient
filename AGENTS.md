@@ -13,6 +13,7 @@ Angular 21, TypeScript, RxJS, DevExtreme
 - Prefer signals per stato locale quando possibile
 - Usa services per logica e API calls
 - Mantieni componenti piccoli e riutilizzabili
+- per la struttura dei file fai riferimento al file .github/instructions/strutturePage.md
 
 ## State & RxJS
 - Prefer async pipe nei template
@@ -29,3 +30,4 @@ Angular 21, TypeScript, RxJS, DevExtreme
 - PascalCase per componenti e servizi
 - camelCase per variabili e metodi
 - file Angular in kebab-case
+
