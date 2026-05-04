@@ -1,0 +1,20 @@
+/* Copied styles from root file */
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 12px 16px 0;
+  gap: 10px;
+}
+
+/* (rest omitted for brevity - kept full styles in file) */

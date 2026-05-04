@@ -1,0 +1,48 @@
+<div class="page-shell">
+
+  <section class="card-section">
+    <div class="sempione-card-header">
+      <h2 class="card-title">Spread</h2>
+    </div>
+    <div class="gold-divider"></div>
+
+    <div class="card-toolbar">
+      <div class="toolbar-row">
+        <dx-text-box placeholder="Divisa..." [value]="filterCur()" (onValueChanged)="filterCur.set($event.value)"></dx-text-box>
+        <dx-text-box placeholder="Tipo..." [value]="filterTipo()" (onValueChanged)="filterTipo.set($event.value)"></dx-text-box>
+        <dx-button text="Cerca" (onClick)="onCerca()"></dx-button>
+        <dx-button text="Reset" stylingMode="outlined" (onClick)="onResetFiltri()"></dx-button>
+        <dx-button text="Nuovo" type="default" (onClick)="openNewPopup()"></dx-button>
+      </div>
+    </div>
+
+    <div class="card-body card-body--grid">
+      <dx-data-grid [dataSource]="filteredSpread()" [height]="'360'" [keyExpr]="['sprCurId','sprType']">
+        <dxi-column dataField="sprCurId" caption="Divisa" [width]="120"></dxi-column>
+        <dxi-column dataField="sprType" caption="Tipo" [width]="120"></dxi-column>
+        <dxi-column dataField="sprValue" caption="Valore" [width]="140" alignment="right"></dxi-column>
+        <dxi-column dataField="sprDatini" caption="Val. Dal" [width]="140"></dxi-column>
+        <dxi-column caption="Azioni" [width]="120" cellTemplate="actionsTemplate"></dxi-column>
+
+        <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
+          <button class="action-btn" (click)="onTableAction('view', cell.data)">View</button>
+          <button class="action-btn" (click)="onTableAction('edit', cell.data)">Edit</button>
+          <button class="action-btn" (click)="onTableAction('delete', cell.data)">Del</button>
+        </div>
+
+      </dx-data-grid>
+    </div>
+  </section>
+
+</div>
+
+<dx-popup [(visible)]="isPopupVisible" [showTitle]="true" [title]="selectedLabel()" (onHidden)="closePopup()" [width]="600">
+  <div *dxTemplate="let data of 'content'">
+    <form [formGroup]="spreadForm" class="popup-layout">
+      <dx-text-box formControlName="sprCurId" placeholder="Divisa"></dx-text-box>
+      <dx-text-box formControlName="sprType" placeholder="Tipo"></dx-text-box>
+      <dx-number-box formControlName="sprValue" [format]="'#,##0.0000'"></dx-number-box>
+      <dx-button text="Salva" (onClick)="onSave()"></dx-button>
+    </form>
+  </div>
+</dx-popup>

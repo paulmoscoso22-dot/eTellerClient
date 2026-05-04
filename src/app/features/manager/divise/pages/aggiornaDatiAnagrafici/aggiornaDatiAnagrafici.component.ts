@@ -6,17 +6,12 @@ import {
   DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule
 } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
+import { DiviseService } from '../../services/divise.service';
+import { Router } from '@angular/router';
+import { IDivisaAnagrafica, UpdateDivisaRequest } from '../../models/divisa.models';
+import { UserService } from '../../../../../services/user.service';
 
-export interface IDivisaAnagrafica {
-  curId: string;
-  curCutId: string;
-  curShodes: string;
-  curLondes: string;
-  curMinamn: number;
-  curTolrat: number;
-  curFinezza: string;
-  curModdat: string | null;
-}
+export type { IDivisaAnagrafica } from '../../models/divisa.models';
 
 @Component({
   selector: 'app-aggiorna-dati-anagrafici',
@@ -26,11 +21,13 @@ export interface IDivisaAnagrafica {
     DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
     DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule
   ],
-  templateUrl: './aggiorna-dati-anagrafici.component.html',
-  styleUrls: ['./aggiorna-dati-anagrafici.component.css'],
+  templateUrl: './aggiornaDatiAnagrafici.component.html',
+  styleUrls: ['./aggiornaDatiAnagrafici.component.css'],
 })
 export class AggiornaDAtiAnagraficiComponent implements OnInit {
   private fb = inject(FormBuilder);
+  private diviseService = inject(DiviseService);
+  private router = inject(Router);
 
   private divise = signal<IDivisaAnagrafica[]>([]);
 
@@ -40,6 +37,7 @@ export class AggiornaDAtiAnagraficiComponent implements OnInit {
   popupMode = signal<'view' | 'edit'>('view');
   isDetailPopupVisible = false;
   selectedLabel = signal<string>('');
+  isLoading = signal<boolean>(false);
 
   readonly tipoOptions = [
     { id: 'BB', des: 'Biglietti Banca' },
@@ -71,45 +69,22 @@ export class AggiornaDAtiAnagraficiComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    // TODO: load from backend service
-    this.divise.set([
-      {
-        curId: 'EUR', curCutId: 'BB', curShodes: 'EUR/BB',
-        curLondes: 'Euro Biglietti Banca',
-        curMinamn: 1, curTolrat: 0.5, curFinezza: '',
-        curModdat: '2024-01-15 09:00:00'
+    this.loadDivise();
+  }
+
+  private loadDivise(): void {
+    this.isLoading.set(true);
+    this.diviseService.getAll().subscribe({
+      next: (data) => {
+        this.divise.set(data);
+        this.isLoading.set(false);
       },
-      {
-        curId: 'EUR', curCutId: 'MM', curShodes: 'EUR/MM',
-        curLondes: 'Euro Monete e Metalli',
-        curMinamn: 1, curTolrat: 1.0, curFinezza: '999',
-        curModdat: '2024-01-15 09:00:00'
-      },
-      {
-        curId: 'USD', curCutId: 'BB', curShodes: 'USD/BB',
-        curLondes: 'Dollaro USA Biglietti Banca',
-        curMinamn: 1, curTolrat: 0.75, curFinezza: '',
-        curModdat: '2024-01-15 09:00:00'
-      },
-      {
-        curId: 'GBP', curCutId: 'BB', curShodes: 'GBP/BB',
-        curLondes: 'Sterlina Britannica Biglietti Banca',
-        curMinamn: 1, curTolrat: 0.5, curFinezza: '',
-        curModdat: '2024-01-15 09:00:00'
-      },
-      {
-        curId: 'CHF', curCutId: 'BB', curShodes: 'CHF/BB',
-        curLondes: 'Franco Svizzero Biglietti Banca',
-        curMinamn: 1, curTolrat: 0.5, curFinezza: '',
-        curModdat: '2024-01-15 09:00:00'
-      },
-      {
-        curId: 'XAU', curCutId: 'MM', curShodes: 'XAU/MM',
-        curLondes: 'Oro - Metallo Prezioso',
-        curMinamn: 1, curTolrat: 2.0, curFinezza: '999.9',
-        curModdat: '2024-01-15 09:00:00'
-      },
-    ]);
+      error: (err) => {
+        console.error('Errore caricamento divise:', err);
+        notify('Errore nel caricamento delle divise', 'error', 3000);
+        this.isLoading.set(false);
+      }
+    });
   }
 
   onCerca(): void {
@@ -149,19 +124,47 @@ export class AggiornaDAtiAnagraficiComponent implements OnInit {
       return;
     }
     const val = this.divisaForm.getRawValue() as IDivisaAnagrafica;
-    // TODO: call backend update
-    this.divise.update(list => list.map(d =>
-      d.curId === val.curId && d.curCutId === val.curCutId
-        ? { ...d, curMinamn: val.curMinamn, curTolrat: val.curTolrat, curFinezza: val.curFinezza, curModdat: new Date().toISOString() }
-        : d
-    ));
-    notify(`Divisa "${val.curId}" aggiornata con successo`, 'success', 3000);
-    this.closePopup();
+
+    const request: UpdateDivisaRequest = {
+      curId:      val.curId,
+      curCutId:   val.curCutId,
+      curMinamn:  val.curMinamn,
+      curFinezza: val.curFinezza ?? '',
+      curTolrat:  val.curTolrat,
+      traUser:    'SYSTEM',
+      traStation: 'WEB'
+    };
+
+    this.isLoading.set(true);
+    this.diviseService.update(request).subscribe({
+      next: (updated) => {
+        this.divise.update(list => list.map(d =>
+          d.curId === updated.curId && d.curCutId === updated.curCutId ? updated : d
+        ));
+        notify(`Divisa "${val.curId}" aggiornata con successo`, 'success', 3000);
+        this.isLoading.set(false);
+        this.closePopup();
+      },
+      error: (err) => {
+        console.error('Errore aggiornamento divisa:', err);
+        notify('Errore durante l\'aggiornamento della divisa', 'error', 3000);
+        this.isLoading.set(false);
+      }
+    });
   }
 
   onTrace(): void {
     const val = this.divisaForm.getRawValue();
-    notify(`Storico: CURRENCY_${val.curId}_${val.curCutId}`, 'info', 3000);
+    const key = `${val.curId}_${val.curCutId}`;
+    //this.router.navigate(['/trace'], { queryParams: { key } });
+
+     this.router.navigate(['/trace'], {
+      queryParams: {
+        ENTNAME: 'CURRENCY',
+        traEntCode: key
+      }
+    });
+
   }
 
   closePopup(): void {

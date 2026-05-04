@@ -23,8 +23,8 @@ export interface ICoppiaDivise {
     DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
     DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule
   ],
-  templateUrl: './coppie-divise.component.html',
-  styleUrls: ['./coppie-divise.component.css'],
+  templateUrl: './coppieDivise.component.html',
+  styleUrls: ['./coppieDivise.component.css'],
 })
 export class CoppieDiviseComponent implements OnInit {
   private fb = inject(FormBuilder);

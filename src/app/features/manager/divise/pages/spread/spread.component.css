@@ -1,0 +1,3 @@
+/* minimal spread styles */
+:host { display:block; }
+.card-section { padding:12px; }

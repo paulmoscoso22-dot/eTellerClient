@@ -117,23 +117,23 @@ export const routes: Routes = [
       //divise
       {
         path: 'aggiorna-dati-anagrafici',
-        loadComponent: () => import('./features/manager/divise/pages/aggiorna-dati-anagrafici.component').then(m => m.AggiornaDAtiAnagraficiComponent)
+        loadComponent: () => import('./features/manager/divise/pages/aggiornaDatiAnagrafici/aggiornaDatiAnagrafici.component').then(m => m.AggiornaDAtiAnagraficiComponent)
       },
       {
         path: 'coppie-divise',
-        loadComponent: () => import('./features/manager/divise/pages/coppie-divise.component').then(m => m.CoppieDiviseComponent)
+        loadComponent: () => import('./features/manager/divise/pages/coppieDivise/coppieDivise.component').then(m => m.CoppieDiviseComponent)
       },
       {
         path: 'corsi',
-        loadComponent: () => import('./features/manager/divise/pages/corsi.component').then(m => m.CorsiComponent)
+        loadComponent: () => import('./features/manager/divise/pages/corsi/corsi.component').then(m => m.CorsiComponent)
       },
       {
         path: 'dati-anagrafici',
-        loadComponent: () => import('./features/manager/divise/pages/dati-anagrafici.component').then(m => m.DatiAnagraficiComponent)
+        loadComponent: () => import('./features/manager/divise/pages/datiAnagrafici/datiAnagrafici.component').then(m => m.DatiAnagraficiComponent)
       },
       {
         path: 'spread',
-        loadComponent: () => import('./features/manager/divise/pages/spread.component').then(m => m.SpreadComponent)
+        loadComponent: () => import('./features/manager/divise/pages/spread/spread.component').then(m => m.SpreadComponent)
       },
       //Tabelle
       {

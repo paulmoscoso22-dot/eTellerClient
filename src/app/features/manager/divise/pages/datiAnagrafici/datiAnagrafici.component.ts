@@ -25,8 +25,8 @@ export interface IDivisaAnagrafica {
     DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
     DxValidatorModule, DxNumberBoxModule
   ],
-  templateUrl: './dati-anagrafici.component.html',
-  styleUrls: ['./dati-anagrafici.component.css'],
+  templateUrl: './datiAnagrafici.component.html',
+  styleUrls: ['./datiAnagrafici.component.css'],
 })
 export class DatiAnagraficiComponent implements OnInit {
   private fb = inject(FormBuilder);
