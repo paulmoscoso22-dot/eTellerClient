@@ -7,10 +7,11 @@ import {
 } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import { DiviseService } from '../../services/divise.service';
+import { Router } from '@angular/router';
 import { IDivisaAnagrafica, UpdateDivisaRequest } from '../../models/divisa.models';
 import { UserService } from '../../../../../services/user.service';
 
-export { IDivisaAnagrafica } from '../../models/divisa.models';
+export type { IDivisaAnagrafica } from '../../models/divisa.models';
 
 @Component({
   selector: 'app-aggiorna-dati-anagrafici',
@@ -26,6 +27,7 @@ export { IDivisaAnagrafica } from '../../models/divisa.models';
 export class AggiornaDAtiAnagraficiComponent implements OnInit {
   private fb = inject(FormBuilder);
   private diviseService = inject(DiviseService);
+  private router = inject(Router);
 
   private divise = signal<IDivisaAnagrafica[]>([]);
 
@@ -83,19 +85,6 @@ export class AggiornaDAtiAnagraficiComponent implements OnInit {
         this.isLoading.set(false);
       }
     });
-  }
-        curId: 'CHF', curCutId: 'BB', curShodes: 'CHF/BB',
-        curLondes: 'Franco Svizzero Biglietti Banca',
-        curMinamn: 1, curTolrat: 0.5, curFinezza: '',
-        curModdat: '2024-01-15 09:00:00'
-      },
-      {
-        curId: 'XAU', curCutId: 'MM', curShodes: 'XAU/MM',
-        curLondes: 'Oro - Metallo Prezioso',
-        curMinamn: 1, curTolrat: 2.0, curFinezza: '999.9',
-        curModdat: '2024-01-15 09:00:00'
-      },
-    ]);
   }
 
   onCerca(): void {
@@ -166,7 +155,16 @@ export class AggiornaDAtiAnagraficiComponent implements OnInit {
 
   onTrace(): void {
     const val = this.divisaForm.getRawValue();
-    notify(`Storico: CURRENCY_${val.curId}_${val.curCutId}`, 'info', 3000);
+    const key = `${val.curId}_${val.curCutId}`;
+    //this.router.navigate(['/trace'], { queryParams: { key } });
+
+     this.router.navigate(['/trace'], {
+      queryParams: {
+        ENTNAME: 'CURRENCY',
+        traEntCode: key
+      }
+    });
+
   }
 
   closePopup(): void {

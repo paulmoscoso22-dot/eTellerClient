@@ -50,7 +50,7 @@ export class InformazioniService {
    * Retrieve active and blocked users from the API and update internal observable.
    */
   postGetActiveAndBlockedUsers(): Observable<SysUsersActiveAndBlockedResponse[]> {
-    const url = `/User/GetActiveAndBlockedUsers`;
+    const url = `/Manager/User/GetActiveAndBlockedUsers`;
     return this.api.post<SysUsersActiveAndBlockedResponse[]>(url, {}).pipe(
       tap((res: SysUsersActiveAndBlockedResponse[]) => this._activeBlockedUsers.next(res))
     );
