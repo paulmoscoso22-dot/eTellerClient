@@ -1,0 +1,4 @@
+/* minimal styling for datiAnagrafici page */
+:host { display:block; }
+.card-section { padding: 12px; }
+.card-title { font-size: 18px; }
