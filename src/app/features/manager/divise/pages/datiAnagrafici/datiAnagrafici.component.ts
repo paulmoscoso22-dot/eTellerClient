@@ -6,16 +6,8 @@ import {
   DxValidatorModule, DxNumberBoxModule
 } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
-
-export interface IDivisaAnagrafica {
-  curId: string;
-  curCutId: string;
-  curShodes: string;
-  curLondes: string;
-  curMinamn: number;
-  curHostcod: string;
-  curModdat: string | null;
-}
+import { IDivisaAnagraficaResponse, IDivisaAnagraficaRequest, UpdateDivisaRequest } from '../../models/divisa.models';
+import { DiviseService } from '../../services/divise.service';
 
 @Component({
   selector: 'app-dati-anagrafici',
@@ -30,8 +22,9 @@ export interface IDivisaAnagrafica {
 })
 export class DatiAnagraficiComponent implements OnInit {
   private fb = inject(FormBuilder);
+  private diviseService = inject(DiviseService);
 
-  private divise = signal<IDivisaAnagrafica[]>([]);
+  private divise = signal<IDivisaAnagraficaResponse[]>([]);
 
   filterCodice      = signal<string>('');
   filterDescrizione = signal<string>('');
@@ -58,53 +51,28 @@ export class DatiAnagraficiComponent implements OnInit {
     curShodes:  [''],
     curLondes:  [''],
     curMinamn:  [null, [Validators.required, Validators.min(0), Validators.max(10000000)]],
+    curTolrat:  [null],
+    curFinezza: [''],
     curHostcod: [''],
     curModdat:  [''],
   });
 
   ngOnInit(): void {
-    // TODO: load from backend service
-    this.divise.set([
-      {
-        curId: 'EUR', curCutId: 'BB', curShodes: 'EUR/BB',
-        curLondes: 'Euro Biglietti Banca',
-        curMinamn: 1, curHostcod: 'EURBB', curModdat: '2024-01-15 09:00:00'
-      },
-      {
-        curId: 'EUR', curCutId: 'MM', curShodes: 'EUR/MM',
-        curLondes: 'Euro Monete e Metalli',
-        curMinamn: 1, curHostcod: 'EURMM', curModdat: '2024-01-15 09:00:00'
-      },
-      {
-        curId: 'USD', curCutId: 'BB', curShodes: 'USD/BB',
-        curLondes: 'Dollaro USA Biglietti Banca',
-        curMinamn: 1, curHostcod: 'USDBB', curModdat: '2024-01-15 09:00:00'
-      },
-      {
-        curId: 'GBP', curCutId: 'BB', curShodes: 'GBP/BB',
-        curLondes: 'Sterlina Britannica Biglietti Banca',
-        curMinamn: 1, curHostcod: 'GBPBB', curModdat: '2024-01-15 09:00:00'
-      },
-      {
-        curId: 'CHF', curCutId: 'BB', curShodes: 'CHF/BB',
-        curLondes: 'Franco Svizzero Biglietti Banca',
-        curMinamn: 1, curHostcod: 'CHFBB', curModdat: '2024-01-15 09:00:00'
-      },
-      {
-        curId: 'JPY', curCutId: 'BB', curShodes: 'JPY/BB',
-        curLondes: 'Yen Giapponese Biglietti Banca',
-        curMinamn: 100, curHostcod: 'JPYBB', curModdat: '2024-01-15 09:00:00'
-      },
-      {
-        curId: 'XAU', curCutId: 'MM', curShodes: 'XAU/MM',
-        curLondes: 'Oro Metallo Prezioso',
-        curMinamn: 1, curHostcod: 'XAUMM', curModdat: '2024-01-15 09:00:00'
-      },
-    ]);
+    this.diviseService.getAll({ curId: null, curLondes: null }).subscribe({
+      next: data => this.divise.set(data),
+      error: () => {}
+    });
   }
 
   onCerca(): void {
-    notify('Ricerca applicata', 'info', 1500);
+    const request: IDivisaAnagraficaRequest = {
+      curId: this.filterCodice().trim() || null,
+      curLondes: this.filterDescrizione().trim() || null,
+    };
+    this.diviseService.getAll(request).subscribe({
+      next: data => this.divise.set(data),
+      error: () => {}
+    });
   }
 
   onResetFiltri(): void {
@@ -112,21 +80,21 @@ export class DatiAnagraficiComponent implements OnInit {
     this.filterDescrizione.set('');
   }
 
-  openViewPopup(data: IDivisaAnagrafica): void {
+  openViewPopup(data: IDivisaAnagraficaResponse): void {
     this.selectedLabel.set(`${data.curId} — ${data.curShodes}`);
     this.divisaForm.patchValue(data);
     this.popupMode.set('view');
     this.isDetailPopupVisible = true;
   }
 
-  openEditPopup(data: IDivisaAnagrafica): void {
+  openEditPopup(data: IDivisaAnagraficaResponse): void {
     this.selectedLabel.set(`${data.curId} — ${data.curShodes}`);
     this.divisaForm.patchValue(data);
     this.popupMode.set('edit');
     this.isDetailPopupVisible = true;
   }
 
-  onTableAction(action: string, data: IDivisaAnagrafica): void {
+  onTableAction(action: string, data: IDivisaAnagraficaResponse): void {
     switch (action) {
       case 'view': this.openViewPopup(data); break;
       case 'edit': this.openEditPopup(data); break;
@@ -138,15 +106,28 @@ export class DatiAnagraficiComponent implements OnInit {
       notify('Compilare tutti i campi obbligatori con valori validi', 'error', 3000);
       return;
     }
-    const val = this.divisaForm.getRawValue() as IDivisaAnagrafica;
-    // TODO: call backend update
-    this.divise.update(list => list.map(d =>
-      d.curId === val.curId && d.curCutId === val.curCutId
-        ? { ...d, curMinamn: val.curMinamn, curHostcod: val.curHostcod, curModdat: new Date().toISOString() }
-        : d
-    ));
-    notify(`Divisa "${val.curId}" aggiornata con successo`, 'success', 3000);
-    this.closePopup();
+    const val = this.divisaForm.getRawValue() as IDivisaAnagraficaResponse;
+    const request: UpdateDivisaRequest = {
+      curId:      val.curId,
+      curCutId:   val.curCutId,
+      curMinamn:  val.curMinamn,
+      curFinezza: val.curFinezza ?? '',
+      curTolrat:  val.curTolrat,
+      traUser:    'SYSTEM',
+      traStation: 'WEB',
+    };
+    this.diviseService.update(request).subscribe({
+      next: (updated) => {
+        this.divise.update(list => list.map(d =>
+          d.curId === updated.curId && d.curCutId === updated.curCutId ? updated : d
+        ));
+        notify(`Divisa "${val.curId}" aggiornata con successo`, 'success', 3000);
+        this.closePopup();
+      },
+      error: () => {
+        notify('Errore durante l\'aggiornamento della divisa', 'error', 3000);
+      }
+    });
   }
 
   closePopup(): void {

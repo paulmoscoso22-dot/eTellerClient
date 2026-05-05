@@ -8,6 +8,6 @@ export class CorsiService {
   private api = inject(ApiService);
 
   getAll(request: ICorsiRequest): Observable<ICorsoResponse[]> {
-    return this.api.post<ICorso[]>('/Corsi/GetAll', request);
+    return this.api.post<ICorsoResponse[]>('/Corsi/GetAll', request);
   }
 }
