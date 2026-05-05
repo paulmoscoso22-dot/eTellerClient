@@ -4,8 +4,8 @@ import { ApiService } from '../../../../services/api.service';
 import {
   ICurrencyCouple,
   ICurrencyDv,
-  InsertCurrencyCoupleRequest,
-  UpdateCurrencyCoupleRequest
+  IInsertCurrencyCoupleRequest,
+  IUpdateCurrencyCoupleRequest
 } from '../models/divisa.models';
 
 @Injectable({ providedIn: 'root' })
@@ -26,11 +26,11 @@ export class CoppieDiviseService {
     return this.api.post<ICurrencyDv[]>('/Currency/GetAllCurrencies', {});
   }
 
-  insert(request: InsertCurrencyCoupleRequest): Observable<ICurrencyCouple> {
+  insert(request: IInsertCurrencyCoupleRequest): Observable<ICurrencyCouple> {
     return this.api.post<ICurrencyCouple>('/CurrencyCouple/Insert', request);
   }
 
-  update(request: UpdateCurrencyCoupleRequest): Observable<ICurrencyCouple> {
+  update(request: IUpdateCurrencyCoupleRequest): Observable<ICurrencyCouple> {
     return this.api.put<ICurrencyCouple>('/CurrencyCouple/Update', request);
   }
 

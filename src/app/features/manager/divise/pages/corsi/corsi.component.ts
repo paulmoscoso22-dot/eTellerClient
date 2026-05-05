@@ -24,7 +24,7 @@ export class CorsiComponent implements OnInit {
   private fb = inject(FormBuilder);
   private corsiService = inject(CorsiService);
 
-  private corsi = signal<ICorso[]>([]);
+  private corsi = signal<ICorsoResponse[]>([]);
   isLoading = signal<boolean>(false);
 
   // Filtri barra di ricerca
@@ -128,14 +128,14 @@ export class CorsiComponent implements OnInit {
     this.filterDateAl.set(null);
   }
 
-  openViewPopup(data: ICorso): void {
+  openViewPopup(data: ICorsoResponse): void {
     this.selectedLabel.set(`${data.cprCurId1}/${data.cprCurId2} ${data.cprCutId} — ${data.cprValdat}`);
     this.corsoForm.patchValue(data);
     this.popupMode.set('view');
     this.isDetailPopupVisible = true;
   }
 
-  openEditPopup(data: ICorso): void {
+  openEditPopup(data: ICorsoResponse): void {
     this.selectedLabel.set(`${data.cprCurId1}/${data.cprCurId2} ${data.cprCutId} — ${data.cprValdat}`);
     this.corsoForm.patchValue(data);
     this.popupMode.set('edit');
@@ -149,7 +149,7 @@ export class CorsiComponent implements OnInit {
     this.isDetailPopupVisible = true;
   }
 
-  onTableAction(action: string, data: ICorso): void {
+  onTableAction(action: string, data: ICorsoResponse): void {
     switch (action) {
       case 'view':   this.openViewPopup(data); break;
       case 'edit':   this.openEditPopup(data); break;
@@ -157,7 +157,7 @@ export class CorsiComponent implements OnInit {
     }
   }
 
-  onDelete(data: ICorso): void {
+  onDelete(data: ICorsoResponse): void {
     // TODO: call backend delete
     this.corsi.update(list => list.filter(c =>
       !(c.cprCurId1 === data.cprCurId1 && c.cprCurId2 === data.cprCurId2 &&
@@ -171,7 +171,7 @@ export class CorsiComponent implements OnInit {
       notify('Compilare tutti i campi obbligatori', 'error', 3000);
       return;
     }
-    const val = this.corsoForm.getRawValue() as ICorso;
+    const val = this.corsoForm.getRawValue() as ICorsoResponse;
     // TODO: call backend insert
     this.corsi.update(list => [...list, { ...val, cprDatreg: new Date().toISOString(), curModdat: null }]);
     notify('Corso creato con successo', 'success', 3000);
@@ -183,7 +183,7 @@ export class CorsiComponent implements OnInit {
       notify('Compilare tutti i campi obbligatori', 'error', 3000);
       return;
     }
-    const val = this.corsoForm.getRawValue() as ICorso;
+    const val = this.corsoForm.getRawValue() as ICorsoResponse;
     // TODO: call backend update
     this.corsi.update(list => list.map(c =>
       c.cprCurId1 === val.cprCurId1 && c.cprCurId2 === val.cprCurId2 &&

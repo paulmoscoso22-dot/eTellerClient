@@ -1,14 +1,22 @@
-export interface IDivisaAnagrafica {
+export interface IDivisaAnagraficaResponse {
   curId: string;
   curCutId: string;
-  curShodes: string;
   curLondes: string;
+  curShodes: string;
   curMinamn: number;
+  curHostcod: string | null;
   curTolrat: number;
   curFinezza: string;
   curModdat: string | null;
 }
 
+export interface IDivisaAnagraficaRequest {
+  curId: string | null;
+  curLondes: string | null;
+}
+
+// Compatibility alias used across components
+export type IDivisaAnagrafica = IDivisaAnagraficaResponse;
 export interface UpdateDivisaRequest {
   curId: string;
   curCutId: string;
@@ -35,7 +43,7 @@ export interface ICurrencyDv {
   curLondes: string;
 }
 
-export interface InsertCurrencyCoupleRequest {
+export interface IInsertCurrencyCoupleRequest {
   cucCur1: string;
   cucCur2: string;
   cucLondes: string | null;
@@ -46,7 +54,7 @@ export interface InsertCurrencyCoupleRequest {
   traStation: string;
 }
 
-export interface UpdateCurrencyCoupleRequest {
+export interface IUpdateCurrencyCoupleRequest {
   cucCur1: string;
   cucCur2: string;
   cucLondes: string | null;
