@@ -18,3 +18,41 @@ export interface UpdateDivisaRequest {
   traUser: string;
   traStation: string;
 }
+
+export interface ICurrencyCouple {
+  cucCur1: string;
+  cucCur2: string;
+  cucLondes: string | null;
+  cucShodes: string | null;
+  cucSize: number | null;
+  cucExcdir: string | null;
+}
+
+export interface ICurrencyDv {
+  curId: string;
+  curCutId: string;
+  curShodes: string;
+  curLondes: string;
+}
+
+export interface InsertCurrencyCoupleRequest {
+  cucCur1: string;
+  cucCur2: string;
+  cucLondes: string | null;
+  cucShodes: string | null;
+  cucSize: number | null;
+  cucExcdir: string | null;
+  traUser: string;
+  traStation: string;
+}
+
+export interface UpdateCurrencyCoupleRequest {
+  cucCur1: string;
+  cucCur2: string;
+  cucLondes: string | null;
+  cucShodes: string | null;
+  cucSize: number | null;
+  cucExcdir: string | null;
+  traUser: string;
+  traStation: string;
+}
