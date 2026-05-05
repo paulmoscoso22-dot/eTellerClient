@@ -14,6 +14,7 @@ export interface UserInfoResponse {
   email: string;
   initials: string;
   avatarUrl?: string;
+  station?: string;
 }
 
 
@@ -46,6 +47,8 @@ export class UserService {
 
   private mapToUserInfo(response: UserInfoResponse): UserInfo {
     return {
+      userId: response.userId,
+      station: response.station,
       firstName: response.firstName,
       lastName: response.lastName,
       email: response.email,
@@ -55,6 +58,8 @@ export class UserService {
 
   private getDefaultUser(): UserInfo {
     return {
+      userId: '',
+      station: '',
       firstName: 'Mario',
       lastName: 'Rossi',
       email: 'mario.rossi@example.com'

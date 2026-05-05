@@ -155,16 +155,9 @@ export class AggiornaDAtiAnagraficiComponent implements OnInit {
 
   onTrace(): void {
     const val = this.divisaForm.getRawValue();
-    const key = `${val.curId}_${val.curCutId}`;
-    //this.router.navigate(['/trace'], { queryParams: { key } });
-
-     this.router.navigate(['/trace'], {
-      queryParams: {
-        ENTNAME: 'CURRENCY',
-        traEntCode: key
-      }
+    this.router.navigate(['/trace'], {
+      queryParams: { traTabNam: 'CURRENCY', traEntCode: `${val.curId}_${val.curCutId}` }
     });
-
   }
 
   closePopup(): void {

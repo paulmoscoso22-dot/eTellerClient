@@ -151,7 +151,9 @@
             <label class="popup-field-label">Divisa 1</label>
             <dx-select-box
               formControlName="cucCur1"
-              [dataSource]="currencies"
+              [dataSource]="currencies()"
+              [valueExpr]="'curId'"
+              [displayExpr]="'curShodes'"
               [readOnly]="popupMode() !== 'new'"
               placeholder="Seleziona...">
               <dx-validator>
@@ -164,7 +166,9 @@
             <label class="popup-field-label">Divisa 2</label>
             <dx-select-box
               formControlName="cucCur2"
-              [dataSource]="currencies"
+              [dataSource]="currencies()"
+              [valueExpr]="'curId'"
+              [displayExpr]="'curShodes'"
               [readOnly]="popupMode() !== 'new'"
               placeholder="Seleziona...">
               <dx-validator>
@@ -222,7 +226,16 @@
 
       <!-- ── Action Bar sticky ── -->
       <div class="popup-action-bar">
-        <div class="popup-actions-secondary"></div>
+        <div class="popup-actions-secondary">
+          @if (popupMode() !== 'new') {
+            <dx-button
+              class="btn-action-secondary"
+              text="Storico"
+              icon="clock"
+              (onClick)="onTrace()">
+            </dx-button>
+          }
+        </div>
         <div class="popup-actions-primary">
           @if (popupMode() === 'view') {
             <dx-button
@@ -237,7 +250,7 @@
               class="btn-action-primary"
               text="Aggiungi"
               icon="plus"
-              (onClick)="onSubmit()">
+              (onClick)="onInsert()">
             </dx-button>
           }
           @if (popupMode() === 'edit') {

@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, DestroyRef } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
@@ -6,14 +7,11 @@ import {
   DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule
 } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
-
-export interface ICoppiaDivise {
-  cucCur1: string;
-  cucCur2: string;
-  cucLondes: string;
-  cucShodes: string;
-  cucSize: number;
-}
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
+import { CoppieDiviseService } from '../../services/coppie-divise.service';
+import { UserService } from '../../../../../services/user.service';
+import { ICurrencyCouple, ICurrencyDv } from '../../models/divisa.models';
 
 @Component({
   selector: 'app-coppie-divise',
@@ -27,18 +25,19 @@ export interface ICoppiaDivise {
   styleUrls: ['./coppieDivise.component.css'],
 })
 export class CoppieDiviseComponent implements OnInit {
-  private fb = inject(FormBuilder);
+  private fb          = inject(FormBuilder);
+  private service     = inject(CoppieDiviseService);
+  private userService = inject(UserService);
+  private router      = inject(Router);
+  private destroyRef  = inject(DestroyRef);
 
-  private coppie = signal<ICoppiaDivise[]>([]);
-  searchValue = signal<string>('');
-  popupMode = signal<'new' | 'view' | 'edit'>('new');
+  private coppie       = signal<ICurrencyCouple[]>([]);
+  currencies           = signal<ICurrencyDv[]>([]);
+  searchValue          = signal<string>('');
+  popupMode            = signal<'new' | 'view' | 'edit'>('new');
   isDetailPopupVisible = false;
-  selectedLabel = signal<string>('');
-
-  readonly currencies = [
-    'CHF', 'EUR', 'USD', 'GBP', 'JPY', 'CAD', 'AUD',
-    'SEK', 'NOK', 'DKK', 'SGD', 'HKD', 'CNY', 'PLN', 'CZK'
-  ];
+  isLoading            = signal<boolean>(false);
+  selectedLabel        = signal<string>('');
 
   readonly taglioOptions = [1, 100];
 
@@ -49,10 +48,12 @@ export class CoppieDiviseComponent implements OnInit {
     return all.filter(c =>
       c.cucCur1.toLowerCase().includes(q) ||
       c.cucCur2.toLowerCase().includes(q) ||
-      c.cucLondes.toLowerCase().includes(q) ||
-      c.cucShodes.toLowerCase().includes(q)
+      (c.cucLondes ?? '').toLowerCase().includes(q) ||
+      (c.cucShodes ?? '').toLowerCase().includes(q)
     );
   });
+
+  currencyIds = computed(() => this.currencies().map(c => c.curId));
 
   coppiaForm: FormGroup = this.fb.group({
     cucCur1:   ['', Validators.required],
@@ -60,17 +61,26 @@ export class CoppieDiviseComponent implements OnInit {
     cucLondes: ['', Validators.required],
     cucShodes: ['', Validators.required],
     cucSize:   [1,  Validators.required],
+    cucExcdir: [null],
   });
 
   ngOnInit(): void {
-    // TODO: load from backend service
-    this.coppie.set([
-      { cucCur1: 'CHF', cucCur2: 'EUR', cucLondes: 'Franco Svizzero / Euro',           cucShodes: 'CHF/EUR', cucSize: 1   },
-      { cucCur1: 'CHF', cucCur2: 'USD', cucLondes: 'Franco Svizzero / Dollaro USA',    cucShodes: 'CHF/USD', cucSize: 1   },
-      { cucCur1: 'CHF', cucCur2: 'GBP', cucLondes: 'Franco Svizzero / Sterlina',       cucShodes: 'CHF/GBP', cucSize: 1   },
-      { cucCur1: 'EUR', cucCur2: 'USD', cucLondes: 'Euro / Dollaro USA',               cucShodes: 'EUR/USD', cucSize: 1   },
-      { cucCur1: 'CHF', cucCur2: 'JPY', cucLondes: 'Franco Svizzero / Yen Giapponese', cucShodes: 'CHF/JPY', cucSize: 100 },
-    ]);
+    this.loadData();
+  }
+
+  private loadData(): void {
+    this.isLoading.set(true);
+    this.service.getAll().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: data => { this.coppie.set(data); this.isLoading.set(false); },
+      error: () => { notify('Errore caricamento coppie divise', 'error', 3000); this.isLoading.set(false); }
+    });
+    this.service.getCurrenciesDV().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: data => {
+        console.log('Currencies DV:', data);
+        this.currencies.set(data);
+      },
+      error: () => notify('Errore caricamento divise', 'error', 3000)
+    });
   }
 
   openNewPopup(): void {
@@ -80,21 +90,21 @@ export class CoppieDiviseComponent implements OnInit {
     this.isDetailPopupVisible = true;
   }
 
-  openViewPopup(data: ICoppiaDivise): void {
+  openViewPopup(data: ICurrencyCouple): void {
     this.selectedLabel.set(`${data.cucCur1} / ${data.cucCur2}`);
     this.coppiaForm.patchValue(data);
     this.popupMode.set('view');
     this.isDetailPopupVisible = true;
   }
 
-  openEditPopup(data: ICoppiaDivise): void {
+  openEditPopup(data: ICurrencyCouple): void {
     this.selectedLabel.set(`${data.cucCur1} / ${data.cucCur2}`);
     this.coppiaForm.patchValue(data);
     this.popupMode.set('edit');
     this.isDetailPopupVisible = true;
   }
 
-  onTableAction(action: string, data: ICoppiaDivise): void {
+  onTableAction(action: string, data: ICurrencyCouple): void {
     switch (action) {
       case 'view':   this.openViewPopup(data); break;
       case 'edit':   this.openEditPopup(data); break;
@@ -102,47 +112,64 @@ export class CoppieDiviseComponent implements OnInit {
     }
   }
 
-  onDelete(data: ICoppiaDivise): void {
-    // TODO: call backend delete
-    this.coppie.update(list =>
-      list.filter(c => !(c.cucCur1 === data.cucCur1 && c.cucCur2 === data.cucCur2))
-    );
-    notify(`Coppia "${data.cucCur1}/${data.cucCur2}" eliminata`, 'success', 3000);
+  async onDelete(data: ICurrencyCouple): Promise<void> {
+    const user = await firstValueFrom(this.userService.getCurrentUser());
+    this.isLoading.set(true);
+    this.service.delete(data.cucCur1, data.cucCur2, user.userId ?? '', user.station ?? '')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.coppie.update(list => list.filter(c => !(c.cucCur1 === data.cucCur1 && c.cucCur2 === data.cucCur2)));
+          notify(`Coppia "${data.cucCur1}/${data.cucCur2}" eliminata`, 'success', 3000);
+          this.isLoading.set(false);
+        },
+        error: () => { notify('Errore durante la cancellazione', 'error', 3000); this.isLoading.set(false); }
+      });
   }
 
-  onSubmit(): void {
-    if (!this.coppiaForm.valid) {
-      notify('Compilare tutti i campi obbligatori', 'error', 3000);
-      return;
-    }
-    const val = this.coppiaForm.getRawValue() as ICoppiaDivise;
-    const exists = this.coppie().some(
-      c => c.cucCur1 === val.cucCur1 && c.cucCur2 === val.cucCur2
-    );
-    if (exists) {
-      notify('La coppia di divise esiste già', 'error', 3000);
-      return;
-    }
-    // TODO: call backend insert
-    this.coppie.update(list => [...list, val]);
-    notify('Coppia creata con successo', 'success', 3000);
-    this.closePopup();
+  async onInsert(): Promise<void> {
+    if (!this.coppiaForm.valid) { notify('Compilare tutti i campi obbligatori', 'error', 3000); return; }
+    const val  = this.coppiaForm.getRawValue();
+    const user = await firstValueFrom(this.userService.getCurrentUser());
+    this.isLoading.set(true);
+    this.service.insert({ ...val, traUser: user.userId ?? '', traStation: user.station ?? '' })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: created => {
+          this.coppie.update(list => [...list, created]);
+          notify('Coppia creata con successo', 'success', 3000);
+          this.isLoading.set(false);
+          this.closePopup();
+        },
+        error: () => { notify('Errore durante la creazione', 'error', 3000); this.isLoading.set(false); }
+      });
   }
 
-  onUpdate(): void {
-    if (!this.coppiaForm.valid) {
-      notify('Compilare tutti i campi obbligatori', 'error', 3000);
-      return;
-    }
-    const val = this.coppiaForm.getRawValue() as ICoppiaDivise;
-    // TODO: call backend update
-    this.coppie.update(list =>
-      list.map(c =>
-        c.cucCur1 === val.cucCur1 && c.cucCur2 === val.cucCur2 ? { ...c, ...val } : c
-      )
-    );
-    notify('Coppia aggiornata con successo', 'success', 3000);
-    this.closePopup();
+  async onUpdate(): Promise<void> {
+    if (!this.coppiaForm.valid) { notify('Compilare tutti i campi obbligatori', 'error', 3000); return; }
+    const val  = this.coppiaForm.getRawValue();
+    const user = await firstValueFrom(this.userService.getCurrentUser());
+    this.isLoading.set(true);
+    this.service.update({ ...val, traUser: user.userId ?? '', traStation: user.station ?? '' })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: updated => {
+          this.coppie.update(list => list.map(c =>
+            c.cucCur1 === updated.cucCur1 && c.cucCur2 === updated.cucCur2 ? updated : c
+          ));
+          notify('Coppia aggiornata con successo', 'success', 3000);
+          this.isLoading.set(false);
+          this.closePopup();
+        },
+        error: () => { notify('Errore durante l\'aggiornamento', 'error', 3000); this.isLoading.set(false); }
+      });
+  }
+
+  onTrace(): void {
+    const val = this.coppiaForm.getRawValue();
+    this.router.navigate(['/trace'], {
+      queryParams: { traTabNam: 'CURRENCY_COUPLE', traEntCode: `${val.cucCur1}_${val.cucCur2}` }
+    });
   }
 
   closePopup(): void {
