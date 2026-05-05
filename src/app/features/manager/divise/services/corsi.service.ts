@@ -1,13 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../../../../services/api.service';
-import { ICorso, CorsiRequest } from '../models/divisa.models';
+import { ICorsoResponse, ICorsiRequest } from '../models/corso.models';
 
 @Injectable({ providedIn: 'root' })
 export class CorsiService {
   private api = inject(ApiService);
 
-  getAll(request: CorsiRequest): Observable<ICorso[]> {
+  getAll(request: ICorsiRequest): Observable<ICorsoResponse[]> {
     return this.api.post<ICorso[]>('/Corsi/GetAll', request);
   }
 }

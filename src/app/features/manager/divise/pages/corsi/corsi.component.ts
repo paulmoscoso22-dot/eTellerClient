@@ -7,7 +7,7 @@ import {
 } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import { CorsiService } from '../../services/corsi.service';
-import { ICorso, CorsiRequest } from '../../models/divisa.models';
+import { ICorsoResponse, ICorsiRequest } from '../../models/corso.models';
 
 @Component({
   selector: 'app-corsi',
@@ -100,7 +100,7 @@ export class CorsiComponent implements OnInit {
   onCerca(): void {
     const dal = this.filterDateDal();
     const al  = this.filterDateAl();
-    const request: CorsiRequest = {
+    const request: ICorsiRequest = {
       curId:     this.filterCodice()      || null,
       curLondes: this.filterDescrizione() || null,
       curCutId:  this.filterTipo()        || null,

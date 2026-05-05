@@ -8,6 +8,30 @@
 - service for the method post get use subject behaviour
 - the mehtod ngOnInit only call a methods
 
+## 📐 Convenzioni Naming Interfacce TypeScript
+
+### Prefisso obbligatorio `I`
+**Tutte** le interfacce TypeScript devono iniziare con la lettera `I` maiuscola.
+
+| ❌ Vietato | ✅ Corretto |
+|---|---|
+| `CorsiRequest` | `ICorsiRequest` |
+| `DivisaResponse` | `IDivisaResponse` |
+| `CurrencyCouple` | `ICurrencyCouple` |
+
+### Suffisso per tipo di interfaccia
+- Interfacce che rappresentano **dati ricevuti dall'API** → suffisso `Response` → es. `ICorsoResponse`
+- Interfacce che rappresentano **dati inviati all'API** → suffisso `Request` → es. `ICorsiRequest`
+
+### File dedicato per feature
+Ogni area funzionale deve avere il proprio file `<feature>.models.ts` nella cartella `models/`.
+Non inserire mai interfacce di una feature in un file `models/` di un'altra feature.
+
+| ❌ Vietato | ✅ Corretto |
+|---|---|
+| `ICorso`, `CorsiRequest` in `divisa.models.ts` | `ICorsoResponse`, `ICorsiRequest` in `corso.models.ts` |
+| Interfacce miste di feature diverse nello stesso file | Un file per feature: `divisa.models.ts`, `corso.models.ts`, ... |
+
 ## 📁 Architettura Progetto (Folder Structure)
 Ogni nuova funzionalità deve seguire rigorosamente la struttura a cartelle esistente in `src/app/`:
 
