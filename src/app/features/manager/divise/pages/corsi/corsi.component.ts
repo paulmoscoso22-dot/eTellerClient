@@ -6,19 +6,8 @@ import {
   DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule, DxDateBoxModule
 } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
-
-export interface ICorso {
-  cprCurId1: string;
-  cprCurId2: string;
-  cprCutId: string;
-  curHostcod: string;
-  cprRateBuy: number | null;
-  cprRateSell: number | null;
-  cprValdat: string;
-  cprDatreg: string | null;
-  curLondes: string;
-  curModdat: string | null;
-}
+import { CorsiService } from '../../services/corsi.service';
+import { ICorso, CorsiRequest } from '../../models/divisa.models';
 
 @Component({
   selector: 'app-corsi',
@@ -33,8 +22,10 @@ export interface ICorso {
 })
 export class CorsiComponent implements OnInit {
   private fb = inject(FormBuilder);
+  private corsiService = inject(CorsiService);
 
   private corsi = signal<ICorso[]>([]);
+  isLoading = signal<boolean>(false);
 
   // Filtri barra di ricerca
   filterCodice      = signal<string>('');
@@ -70,8 +61,8 @@ export class CorsiComponent implements OnInit {
     return this.corsi().filter(c => {
       if (q && !c.cprCurId1.toLowerCase().includes(q) &&
                !c.cprCurId2.toLowerCase().includes(q) &&
-               !c.curHostcod.toLowerCase().includes(q)) return false;
-      if (qDes && !c.curLondes.toLowerCase().includes(qDes)) return false;
+               !(c.curHostcod ?? '').toLowerCase().includes(q)) return false;
+      if (qDes && !(c.curLondes ?? '').toLowerCase().includes(qDes)) return false;
       if (tipo && c.cprCutId !== tipo) return false;
       if (dal) {
         const rowDate = new Date(c.cprValdat);
@@ -99,38 +90,34 @@ export class CorsiComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    // TODO: load from backend service
-    this.corsi.set([
-      {
-        cprCurId1: 'EUR', cprCurId2: 'CHF', cprCutId: 'BB', curHostcod: 'EURCHF',
-        cprRateBuy: 0.9512, cprRateSell: 0.9648, cprValdat: '2024-01-15 09:00:00',
-        cprDatreg: '2024-01-15 08:55:00', curLondes: 'Euro / Franco Svizzero',
-        curModdat: '2024-01-15 09:00:00'
-      },
-      {
-        cprCurId1: 'USD', cprCurId2: 'CHF', cprCutId: 'BB', curHostcod: 'USDCHF',
-        cprRateBuy: 0.8734, cprRateSell: 0.8856, cprValdat: '2024-01-15 09:00:00',
-        cprDatreg: '2024-01-15 08:55:00', curLondes: 'Dollaro USA / Franco Svizzero',
-        curModdat: '2024-01-15 09:00:00'
-      },
-      {
-        cprCurId1: 'GBP', cprCurId2: 'CHF', cprCutId: 'BB', curHostcod: 'GBPCHF',
-        cprRateBuy: 1.1021, cprRateSell: 1.1187, cprValdat: '2024-01-15 09:00:00',
-        cprDatreg: '2024-01-15 08:55:00', curLondes: 'Sterlina / Franco Svizzero',
-        curModdat: '2024-01-15 09:00:00'
-      },
-      {
-        cprCurId1: 'EUR', cprCurId2: 'CHF', cprCutId: 'MM', curHostcod: 'EURCHFM',
-        cprRateBuy: 0.9480, cprRateSell: 0.9620, cprValdat: '2024-01-15 09:00:00',
-        cprDatreg: '2024-01-15 08:55:00', curLondes: 'Euro / Franco Svizzero (Monete)',
-        curModdat: '2024-01-15 09:00:00'
-      },
-    ]);
+    this.loadCorsi();
+  }
+
+  private loadCorsi(): void {
+    this.onCerca();
   }
 
   onCerca(): void {
-    // Con i computed signal il filtro è già reattivo; il bottone serve per UX
-    notify('Ricerca applicata', 'info', 1500);
+    const dal = this.filterDateDal();
+    const al  = this.filterDateAl();
+    const request: CorsiRequest = {
+      curId:     this.filterCodice()      || null,
+      curLondes: this.filterDescrizione() || null,
+      curCutId:  this.filterTipo()        || null,
+      dateFrom:  dal ? dal.toISOString()  : '1900-01-01',
+      dateTo:    al  ? al.toISOString()   : '2500-01-01',
+    };
+    this.isLoading.set(true);
+    this.corsiService.getAll(request).subscribe({
+      next: data => {
+        this.corsi.set(data);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        notify('Errore nel caricamento dei corsi', 'error', 3000);
+        this.isLoading.set(false);
+      }
+    });
   }
 
   onResetFiltri(): void {

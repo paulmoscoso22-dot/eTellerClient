@@ -1,5 +1,15 @@
-## 🧠 Agent 1 — Angular Expert (Design Phase)
+---
+name: agent-angular-expert
+description: Progetta la soluzione Angular per il requisito ricevuto dall'orchestratore, seguendo le best practice di Angular 21 e le linee guida del progetto.
+argument-hint: Una funzionalità o un problema tecnico da coordinare tra frontend e backend.
+model: GPT-5 mini (copilot)
+applyTo: "*
+---*"
+tools: [vscode, execute, read, agent, edit, search, web, 'github/*']
+---
 
+
+## 🧠 Agent 1 — Angular Expert (Design Phase)
 
 
 ### Responsibility
