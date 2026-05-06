@@ -1,5 +1,10 @@
 <div class="page-shell">
 
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Gestione Regole Vigilanza</h1>
+  </div>
+
   <!-- ── Main Card ── -->
   <section class="card-section">
 
@@ -11,64 +16,67 @@
     </div>
     <div class="gold-divider"></div>
 
-    <!-- ── Filtri ── -->
+    <!-- ── Toolbar ── -->
     <div class="card-toolbar" [formGroup]="filterForm">
-      <div class="toolbar-row">
+      <div class="toolbar-inner">
 
-        <span class="filter-label">Tipo operazione:</span>
-        <dx-select-box
-          formControlName="arlOpTypeId"
-          [dataSource]="operationTypes()"
-          displayExpr="optDes"
-          valueExpr="optId"
-          [showClearButton]="true"
-          placeholder="Tutti..."
-          class="filter-control filter-control--lg">
-        </dx-select-box>
+        <div class="toolbar-filters">
+          <div class="toolbar-field toolbar-field--lg">
+            <label class="toolbar-lbl">Tipo operazione</label>
+            <dx-select-box
+              formControlName="arlOpTypeId"
+              [dataSource]="operationTypes()"
+              displayExpr="optDes"
+              valueExpr="optId"
+              [showClearButton]="true"
+              placeholder="Tutti..."
+              labelMode="hidden">
+            </dx-select-box>
+          </div>
 
-        <span class="filter-label">Tipo divisa:</span>
-        <dx-select-box
-          formControlName="arlCurTypeId"
-          [dataSource]="currencyTypes()"
-          displayExpr="cutDes"
-          valueExpr="cutId"
-          [showClearButton]="true"
-          placeholder="Tutti..."
-          class="filter-control filter-control--md">
-        </dx-select-box>
-
-        <div class="toolbar-row-spacer"></div>
+          <div class="toolbar-field">
+            <label class="toolbar-lbl">Tipo divisa</label>
+            <dx-select-box
+              formControlName="arlCurTypeId"
+              [dataSource]="currencyTypes()"
+              displayExpr="cutDes"
+              valueExpr="cutId"
+              [showClearButton]="true"
+              placeholder="Tutti..."
+              labelMode="hidden">
+            </dx-select-box>
+          </div>
+        </div>
 
         <div class="toolbar-actions">
           <dx-button
-            class="btn-reset"
-            text="Reset"
-            stylingMode="outlined"
-            icon="revert"
-            (onClick)="resetFilters()">
-          </dx-button>
-          <dx-button
-            class="btn-showall"
-            text="Mostra tutti"
-            stylingMode="outlined"
             icon="search"
-            [disabled]="isLoading()"
-            (onClick)="showAll()">
-          </dx-button>
-          <dx-button
-            class="btn-cerca"
-            text="Cerca"
-            type="default"
+            hint="Cerca"
             stylingMode="contained"
-            icon="search"
+            class="btn-fin-primary action-shadow"
             [disabled]="isLoading()"
             (onClick)="search()">
           </dx-button>
           <dx-button
-            class="btn-add"
-            text="Aggiungi"
+            icon="revert"
+            hint="Ripristina filtri"
             stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="resetFilters()">
+          </dx-button>
+          <dx-button
+            icon="search"
+            text="Mostra tutti"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            [disabled]="isLoading()"
+            (onClick)="showAll()">
+          </dx-button>
+          <dx-button
             icon="add"
+            text="Aggiungi"
+            stylingMode="contained"
+            class="btn-fin-primary"
             (onClick)="openAddPopup()">
           </dx-button>
         </div>
@@ -103,7 +111,7 @@
         <dx-data-grid
           [dataSource]="rules()"
           [showBorders]="false"
-          [columnAutoWidth]="true"
+          [columnAutoWidth]="false"
           [rowAlternationEnabled]="true"
           [hoverStateEnabled]="true"
           [height]="'100%'"
@@ -111,18 +119,24 @@
 
           <dxo-selection mode="single"></dxo-selection>
           <dxo-paging [pageSize]="30"></dxo-paging>
-          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 30, 50, 100]" [showInfo]="true"></dxo-pager>
+          <dxo-pager
+            [showPageSizeSelector]="true"
+            [allowedPageSizes]="[20, 30, 50, 100]"
+            [showInfo]="true"
+            [showNavigationButtons]="true"
+            displayMode="full">
+          </dxo-pager>
 
-          <dxi-column dataField="optDes"       caption="Tipo oper."     alignment="left"  ></dxi-column>
-          <dxi-column dataField="cutDes"       caption="Tipo div."      alignment="left"   [width]="110"></dxi-column>
-          <dxi-column dataField="arlAcctId"    caption="Conto"          alignment="left"   [width]="90"></dxi-column>
-          <dxi-column dataField="arlAcctType"  caption="Cat. conto"     alignment="left"   [width]="100"></dxi-column>
-          <dxi-column dataField="arlLimit"     caption="Limite"         alignment="right"  [width]="130" dataType="number" format="#,##0.00"></dxi-column>
-          <dxi-column dataField="arlValStart"  caption="Inizio val."    alignment="center" [width]="105" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="arlValEnd"    caption="Fine val."      alignment="center" [width]="105" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="arlRecDate"   caption="Data rec."      alignment="center" [width]="105" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="arlIsinternal" caption="Reg. interna"  alignment="center" [width]="95"  cellTemplate="boolTemplate"></dxi-column>
-          <dxi-column dataField="arlExclude"   caption="Reg. esclusa"   alignment="center" [width]="95"  cellTemplate="boolTemplate"></dxi-column>
+          <dxi-column dataField="optDes"        caption="Tipo oper."     alignment="left"></dxi-column>
+          <dxi-column dataField="cutDes"        caption="Tipo div."      alignment="left"   [width]="110"></dxi-column>
+          <dxi-column dataField="arlAcctId"     caption="Conto"          alignment="left"   [width]="90"></dxi-column>
+          <dxi-column dataField="arlAcctType"   caption="Cat. conto"     alignment="left"   [width]="100"></dxi-column>
+          <dxi-column dataField="arlLimit"      caption="Limite"         alignment="right"  [width]="130" dataType="number" format="#,##0.00"></dxi-column>
+          <dxi-column dataField="arlValStart"   caption="Inizio val."    alignment="center" [width]="105" dataType="date" format="dd.MM.yyyy"></dxi-column>
+          <dxi-column dataField="arlValEnd"     caption="Fine val."      alignment="center" [width]="105" dataType="date" format="dd.MM.yyyy"></dxi-column>
+          <dxi-column dataField="arlRecDate"    caption="Data rec."      alignment="center" [width]="105" dataType="date" format="dd.MM.yyyy"></dxi-column>
+          <dxi-column dataField="arlIsinternal" caption="Reg. interna"   alignment="center" [width]="95"  cellTemplate="boolTemplate"></dxi-column>
+          <dxi-column dataField="arlExclude"    caption="Reg. esclusa"   alignment="center" [width]="95"  cellTemplate="boolTemplate"></dxi-column>
 
           <dxi-column
             caption="Azioni"
@@ -206,7 +220,8 @@
               displayExpr="optDes"
               valueExpr="optId"
               [showClearButton]="false"
-              placeholder="Selezionare...">
+              placeholder="Selezionare..."
+              labelMode="hidden">
             </dx-select-box>
           </div>
 
@@ -218,7 +233,8 @@
               displayExpr="cutDes"
               valueExpr="cutId"
               [showClearButton]="false"
-              placeholder="Selezionare...">
+              placeholder="Selezionare..."
+              labelMode="hidden">
             </dx-select-box>
           </div>
 
@@ -228,7 +244,8 @@
               formControlName="arlValStart"
               type="date"
               displayFormat="dd.MM.yyyy"
-              [showClearButton]="false">
+              [showClearButton]="false"
+              labelMode="hidden">
             </dx-date-box>
           </div>
 
@@ -238,7 +255,8 @@
               formControlName="arlValEnd"
               type="date"
               displayFormat="dd.MM.yyyy"
-              [showClearButton]="false">
+              [showClearButton]="false"
+              labelMode="hidden">
             </dx-date-box>
           </div>
 
@@ -247,7 +265,8 @@
             <dx-text-box
               formControlName="arlAcctId"
               [maxLength]="10"
-              [showClearButton]="true">
+              [showClearButton]="true"
+              labelMode="hidden">
             </dx-text-box>
           </div>
 
@@ -255,7 +274,8 @@
             <label class="popup-field-label">Categoria conto</label>
             <dx-text-box
               formControlName="arlAcctType"
-              [showClearButton]="true">
+              [showClearButton]="true"
+              labelMode="hidden">
             </dx-text-box>
           </div>
 
@@ -274,11 +294,12 @@
               [min]="0"
               [max]="999999999999"
               format="#,##0.##"
-              [showClearButton]="false">
+              [showClearButton]="false"
+              labelMode="hidden">
             </dx-number-box>
           </div>
 
-          <div class="popup-field-group popup-field-group--checkboxes">
+          <div class="popup-field-group">
             <label class="popup-field-label">Opzioni</label>
             <div class="checkbox-stack">
               <dx-check-box formControlName="arlIsinternal" text="Regola interna"></dx-check-box>
@@ -302,20 +323,21 @@
 
       <!-- ── Action bar ── -->
       <div class="popup-action-bar">
-        <div class="popup-actions-secondary"></div>
-        <div class="popup-actions-primary">
+        <div class="popup-actions-secondary">
           <dx-button
-            class="btn-action-close"
             text="Annulla"
             icon="close"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
             (onClick)="closeFormPopup()">
           </dx-button>
+        </div>
+        <div class="popup-actions-primary">
           <dx-button
-            class="btn-action-save"
             [text]="isSaving() ? 'Salvataggio...' : 'Salva'"
-            type="default"
-            stylingMode="contained"
             icon="save"
+            stylingMode="contained"
+            class="btn-fin-primary"
             [disabled]="isSaving()"
             (onClick)="save()">
           </dx-button>
@@ -353,49 +375,52 @@
       }
 
       @if (!isLoadingHistory()) {
-        <dx-data-grid
-          [dataSource]="historyRules()"
-          [showBorders]="false"
-          [columnAutoWidth]="true"
-          [rowAlternationEnabled]="true"
-          [height]="380"
-          noDataText="Nessuna voce di storico disponibile">
+        <section class="popup-card">
+          <h3 class="popup-card-title">Storico modifiche</h3>
+          <dx-data-grid
+            [dataSource]="historyRules()"
+            [showBorders]="false"
+            [columnAutoWidth]="false"
+            [rowAlternationEnabled]="true"
+            [height]="380"
+            noDataText="Nessuna voce di storico disponibile">
 
-          <dxo-paging [pageSize]="15"></dxo-paging>
-          <dxo-pager [showInfo]="true"></dxo-pager>
+            <dxo-paging [pageSize]="15"></dxo-paging>
+            <dxo-pager [showInfo]="true" [showNavigationButtons]="true" displayMode="full"></dxo-pager>
 
-          <dxi-column dataField="hisDate"      caption="Data modifica"  alignment="center" [width]="140" dataType="datetime" format="dd.MM.yyyy HH:mm"></dxi-column>
-          <dxi-column dataField="optDes"       caption="Tipo oper."     alignment="left"></dxi-column>
-          <dxi-column dataField="cutDes"       caption="Tipo div."      alignment="left"   [width]="100"></dxi-column>
-          <dxi-column dataField="arlAcctId"    caption="Conto"          alignment="left"   [width]="80"></dxi-column>
-          <dxi-column dataField="arlAcctType"  caption="Cat. conto"     alignment="left"   [width]="95"></dxi-column>
-          <dxi-column dataField="arlLimit"     caption="Limite"         alignment="right"  [width]="120" dataType="number" format="#,##0.00"></dxi-column>
-          <dxi-column dataField="arlValStart"  caption="Inizio val."    alignment="center" [width]="100" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="arlValEnd"    caption="Fine val."      alignment="center" [width]="100" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="arlIsinternal" caption="Reg. int."     alignment="center" [width]="80"  cellTemplate="histBoolTemplate"></dxi-column>
-          <dxi-column dataField="arlExclude"   caption="Esclusa"        alignment="center" [width]="75"  cellTemplate="histBoolTemplate"></dxi-column>
+            <dxi-column dataField="hisDate"       caption="Data modifica"  alignment="center" [width]="140" dataType="datetime" format="dd.MM.yyyy HH:mm"></dxi-column>
+            <dxi-column dataField="optDes"        caption="Tipo oper."     alignment="left"></dxi-column>
+            <dxi-column dataField="cutDes"        caption="Tipo div."      alignment="left"   [width]="100"></dxi-column>
+            <dxi-column dataField="arlAcctId"     caption="Conto"          alignment="left"   [width]="80"></dxi-column>
+            <dxi-column dataField="arlAcctType"   caption="Cat. conto"     alignment="left"   [width]="95"></dxi-column>
+            <dxi-column dataField="arlLimit"      caption="Limite"         alignment="right"  [width]="120" dataType="number" format="#,##0.00"></dxi-column>
+            <dxi-column dataField="arlValStart"   caption="Inizio val."    alignment="center" [width]="100" dataType="date" format="dd.MM.yyyy"></dxi-column>
+            <dxi-column dataField="arlValEnd"     caption="Fine val."      alignment="center" [width]="100" dataType="date" format="dd.MM.yyyy"></dxi-column>
+            <dxi-column dataField="arlIsinternal" caption="Reg. int."      alignment="center" [width]="80"  cellTemplate="histBoolTemplate"></dxi-column>
+            <dxi-column dataField="arlExclude"    caption="Esclusa"        alignment="center" [width]="75"  cellTemplate="histBoolTemplate"></dxi-column>
 
-          <div *dxTemplate="let cell of 'histBoolTemplate'" class="bool-cell">
-            @if (cell.value) {
-              <span class="bool-badge bool-badge--yes">Sì</span>
-            } @else {
-              <span class="bool-badge bool-badge--no">No</span>
-            }
-          </div>
+            <div *dxTemplate="let cell of 'histBoolTemplate'" class="bool-cell">
+              @if (cell.value) {
+                <span class="bool-badge bool-badge--yes">Sì</span>
+              } @else {
+                <span class="bool-badge bool-badge--no">No</span>
+              }
+            </div>
 
-          <dxo-load-panel [enabled]="false"></dxo-load-panel>
+            <dxo-load-panel [enabled]="false"></dxo-load-panel>
 
-
-        </dx-data-grid>
+          </dx-data-grid>
+        </section>
       }
 
       <div class="popup-action-bar">
         <div class="popup-actions-secondary"></div>
         <div class="popup-actions-primary">
           <dx-button
-            class="btn-action-close"
             text="Chiudi"
             icon="close"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
             (onClick)="closeHistoryPopup()">
           </dx-button>
         </div>

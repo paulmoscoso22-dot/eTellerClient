@@ -129,6 +129,12 @@ export class CasseComponent implements OnInit {
     this.filterSearch.set(e.value ?? '');
   }
 
+  onSearch(): void { /* il filtro è già live via filterSearch */ }
+
+  resetSearch(): void {
+    this.filterSearch.set('');
+  }
+
   getBraDes(braId: string): string {
     return this.branchesList().find(b => b.braId === braId)?.braDes ?? braId;
   }
@@ -139,6 +145,14 @@ export class CasseComponent implements OnInit {
 
   getLinguaDes(lanId: string): string {
     return this.languagesList().find(l => l.lanId === lanId)?.lanDes ?? lanId;
+  }
+
+  getStatusClass(value: string): string {
+    const des = (this.getStatusDes(value) ?? '').toLowerCase();
+    if (value === 'A' || des.includes('attiv')) return 'status-pill--active';
+    if (value === 'I' || des.includes('inattiv') || des.includes('non attiv')) return 'status-pill--inactive';
+    if (value === 'S' || des.includes('sosp')) return 'status-pill--suspended';
+    return '';
   }
 
   // ── Dual list device management ──────────────────────────────
@@ -331,7 +345,12 @@ export class CasseComponent implements OnInit {
   closePopup(): void {
     this.isDetailPopupVisible = false;
     this.cassaForm.reset();
+    this.cassaForm.markAsPristine();
+    this.cassaForm.markAsUntouched();
     this.selectedLabel.set('');
     this.popupAssigned.set([]);
+    this.assignedRolesForControl.set([]);
+    this.possibleRolesForControl.set([]);
+    this.allDevices.set([]);
   }
 }

@@ -1,16 +1,14 @@
 <div class="control-assign-container" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 20px; width: 100%; align-items: stretch; justify-content: space-between;">
   <div style="flex: 1 1 250px;">
-    <!-- <h3>Ruoli Assegnati</h3> -->
-    <dx-data-grid 
-      [dataSource]="assignedRoles()" 
-      [showBorders]="true" 
-      height="250"
+    <dx-data-grid
+      [dataSource]="assignedRoles()"
+      [showBorders]="true"
+      height="180"
       keyExpr="roleId"
+      noDataText="Nessuna periferica assegnata"
       [(selectedRowKeys)]="selectedAssignedRoleKeys">
       <dxo-selection mode="single"></dxo-selection>
-      <!-- <dxi-column dataField="roleId" caption="ID"></dxi-column> -->
-      <dxi-column dataField="roleName" caption="Ruoli Assegnati"></dxi-column>
-      <!-- <dxi-column dataField="roleDes" caption="Descrizione"></dxi-column> -->
+      <dxi-column dataField="roleName" caption="Periferiche Assegnate"></dxi-column>
     </dx-data-grid>
   </div>
 
@@ -20,17 +18,15 @@
   </div>
 
   <div id="ruoliPossibili" style="flex: 1 1 250px;">
-    <!-- <h3>Ruoli Possibili</h3> -->
-    <dx-data-grid 
-      [dataSource]="possibleRoles()" 
-      [showBorders]="true" 
-      height="250"
+    <dx-data-grid
+      [dataSource]="possibleRoles()"
+      [showBorders]="true"
+      height="180"
       keyExpr="roleId"
+      noDataText="Nessuna periferica disponibile"
       [(selectedRowKeys)]="selectedPossibleRoleKeys">
       <dxo-selection mode="single"></dxo-selection>
-      <!-- <dxi-column dataField="roleId" caption="ID"></dxi-column> -->
-      <dxi-column dataField="roleName" caption="Ruoli Possibili"></dxi-column>
-      <!-- <dxi-column dataField="roleDes" caption="Descrizione"></dxi-column> -->
+      <dxi-column dataField="roleName" caption="Periferiche Disponibili"></dxi-column>
     </dx-data-grid>
   </div>
 </div>

@@ -287,7 +287,7 @@
   z-index: 10;
   background: #fff;
   border-top: 1px solid #e5e7eb !important;
-  padding: 5px 10px !important;
+  padding: 2px 10px !important;
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-pager {
@@ -301,21 +301,21 @@
 :host ::ng-deep .dx-datagrid-pager .dx-info {
   order: -1 !important;
   margin-right: auto !important;
-  font-size: 11px !important;
+  font-size: 10px !important;
   color: #6b7280 !important;
   font-weight: 500;
   white-space: nowrap;
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page {
-  min-width: 28px !important;
-  height: 28px !important;
+  min-width: 22px !important;
+  height: 22px !important;
   line-height: normal !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  border-radius: 6px !important;
-  font-size: 12px !important;
+  border-radius: 5px !important;
+  font-size: 11px !important;
   font-weight: 500;
   color: #374151 !important;
   border: 1px solid #dce3ee !important;
@@ -338,14 +338,14 @@
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-navigate-button {
-  width: 28px !important;
-  height: 28px !important;
+  width: 22px !important;
+  height: 22px !important;
   line-height: normal !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   vertical-align: middle !important;
-  border-radius: 6px !important;
+  border-radius: 5px !important;
   border: 1px solid transparent !important;
   transition: background 0.15s, color 0.15s;
 }
@@ -371,11 +371,11 @@
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-page-size {
-  font-size: 12px !important;
-  height: 28px !important;
-  line-height: 28px !important;
-  padding: 0 10px !important;
-  border-radius: 6px !important;
+  font-size: 11px !important;
+  height: 22px !important;
+  line-height: 22px !important;
+  padding: 0 8px !important;
+  border-radius: 5px !important;
   border: 1px solid #dce3ee !important;
   color: #374151 !important;
   background: transparent !important;

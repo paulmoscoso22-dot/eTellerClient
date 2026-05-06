@@ -1,5 +1,10 @@
 <div class="page-shell">
 
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Periferiche</h1>
+  </div>
+
   <!-- ── Main Card: Periferiche ── -->
   <section class="card-section">
 
@@ -16,21 +21,34 @@
     <div class="card-toolbar">
       <div class="toolbar-inner">
 
-        <div class="toolbar-search-wrap">
-          <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <dx-text-box
-            placeholder="Cerca per nome, tipo, indirizzo o località..."
-            [showClearButton]="true"
-            valueChangeEvent="input"
-            class="toolbar-textbox"
-            (onValueChanged)="onSearchChanged($event)">
-          </dx-text-box>
+        <div class="toolbar-filters">
+          <div class="toolbar-field toolbar-field--lg">
+            <label class="toolbar-lbl">Cerca</label>
+            <dx-text-box
+              [value]="filterSearch()"
+              placeholder="Cerca per nome, tipo, indirizzo o località..."
+              [showClearButton]="true"
+              valueChangeEvent="input"
+              (onValueChanged)="onSearchChanged($event)">
+            </dx-text-box>
+          </div>
         </div>
 
         <div class="toolbar-actions">
+          <dx-button
+            icon="search"
+            hint="Cerca"
+            stylingMode="outlined"
+            class="btn-outline"
+            (onClick)="onSearch()">
+          </dx-button>
+          <dx-button
+            icon="revert"
+            hint="Ripristina ricerca"
+            stylingMode="outlined"
+            class="btn-outline"
+            (onClick)="resetSearch()">
+          </dx-button>
           <dx-button
             class="btn-new"
             text="Nuovo"
@@ -56,7 +74,14 @@
 
         <dxo-selection mode="single"></dxo-selection>
         <dxo-paging [pageSize]="20"></dxo-paging>
-        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
+        <dxo-pager
+          [showInfo]="true"
+          infoText="{2} periferiche"
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[20, 50, 100]"
+          [showNavigationButtons]="true"
+          displayMode="full">
+        </dxo-pager>
 
         <dxi-column dataField="devName"      caption="Nome Device"  alignment="left"></dxi-column>
         <dxi-column dataField="devType"      caption="Tipo"         [width]="120" alignment="center" cellTemplate="tipoTemplate"></dxi-column>
@@ -239,27 +264,27 @@
       <div class="popup-action-bar">
 
         <div class="popup-actions-secondary">
-          @if (popupMode() !== 'new') {
+          @if (popupMode() === 'edit' && !selectedDevice()?.inUso) {
             <dx-button
-              class="btn-action-outline"
-              text="Storico"
-              icon="clock"
-              stylingMode="outlined"
-              (onClick)="onTrace()">
-            </dx-button>
-          }
-          @if (popupMode() !== 'new' && !selectedDevice()?.inUso) {
-            <dx-button
-              class="btn-action-danger"
+              class="btn-fin-danger"
               text="Elimina"
               icon="trash"
               stylingMode="outlined"
               (onClick)="onDelete()">
             </dx-button>
           }
-          @if (popupMode() !== 'new' && selectedDevice()?.inUso) {
+          @if (popupMode() !== 'new') {
             <dx-button
-              class="btn-action-outline"
+              class="btn-fin-secondary"
+              text="Storico"
+              icon="clock"
+              stylingMode="outlined"
+              (onClick)="onTrace()">
+            </dx-button>
+          }
+          @if (popupMode() === 'edit' && selectedDevice()?.inUso) {
+            <dx-button
+              class="btn-fin-secondary"
               text="Rilascia"
               icon="unlock"
               stylingMode="outlined"
@@ -269,27 +294,20 @@
         </div>
 
         <div class="popup-actions-primary">
+          <dx-button
+            [text]="popupMode() === 'view' ? 'Chiudi' : 'Annulla'"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="closePopup()">
+          </dx-button>
           @if (popupMode() !== 'view') {
             <dx-button
-              class="btn-cancel"
-              text="Annulla"
-              stylingMode="outlined"
-              (onClick)="closePopup()">
-            </dx-button>
-            <dx-button
-              class="btn-save"
-              text="Salva"
-              type="default"
+              class="btn-fin-primary"
+              [text]="popupMode() === 'new' ? 'Crea Periferica' : 'Salva Modifiche'"
+              [icon]="popupMode() === 'new' ? 'plus' : 'save'"
               stylingMode="contained"
               [useSubmitBehavior]="false"
               (onClick)="onSave()">
-            </dx-button>
-          } @else {
-            <dx-button
-              class="btn-cancel"
-              text="Chiudi"
-              stylingMode="outlined"
-              (onClick)="closePopup()">
             </dx-button>
           }
         </div>

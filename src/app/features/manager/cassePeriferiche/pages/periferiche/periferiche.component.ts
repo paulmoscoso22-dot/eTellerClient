@@ -110,6 +110,9 @@ export class PerifericheComponent implements OnInit {
     return cassaIds.length;
   }
 
+  resetSearch(): void { this.filterSearch.set(''); }
+  onSearch(): void { /* la ricerca è live, nessuna azione aggiuntiva */ }
+
   onSearchChanged(e: { value?: string }): void {
     this.filterSearch.set(e.value ?? '');
   }

@@ -182,6 +182,8 @@ export class ContiCassaComponent implements OnInit {
   onFilterAccIdChanged(e: { value?: string }):         void { this.filterAccId.set(e.value   ?? ''); }
   onFilterDesChanged(e: { value?: string }):           void { this.filterDes.set(e.value     ?? ''); }
 
+  onSearch(): void {}
+
   resetFilters(): void {
     this.filterCassa.set('');
     this.filterActId.set('');

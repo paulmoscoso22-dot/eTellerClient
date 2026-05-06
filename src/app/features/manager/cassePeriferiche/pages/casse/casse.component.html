@@ -1,6 +1,11 @@
 <div class="page-shell">
 
-  <!-- ── Main Card: Casse ── -->
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Casse</h1>
+  </div>
+
+  <!-- ── Card Main ── -->
   <section class="card-section">
 
     <div class="sempione-card-header">
@@ -8,34 +13,44 @@
         <rect x="2" y="4" width="20" height="16" rx="2"></rect>
         <path d="M12 8v8M8 12h8"></path>
       </svg>
-      <h2 class="card-title">Casse e Periferiche</h2>
+      <h2 class="card-title">Elenco Casse</h2>
     </div>
     <div class="gold-divider"></div>
 
-    <!-- Toolbar -->
+    <!-- ── Toolbar ── -->
     <div class="card-toolbar">
       <div class="toolbar-inner">
 
-        <div class="toolbar-search-wrap">
-          <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <dx-text-box
-            placeholder="Cerca per ID, IP, MAC o descrizione..."
-            [showClearButton]="true"
-            valueChangeEvent="input"
-            class="toolbar-textbox"
-            (onValueChanged)="onSearchChanged($event)">
-          </dx-text-box>
+        <div class="toolbar-filters">
+          <div class="toolbar-field toolbar-field--search">
+            <dx-text-box
+              [value]="filterSearch()"
+              placeholder="Cerca per ID, IP, MAC o descrizione..."
+              [showClearButton]="true"
+              valueChangeEvent="input"
+              (onValueChanged)="onSearchChanged($event)">
+            </dx-text-box>
+          </div>
         </div>
 
         <div class="toolbar-actions">
           <dx-button
-            class="btn-new"
-            text="Nuovo"
-            icon="plus"
-            type="default"
+            icon="search"
+            hint="Cerca"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="onSearch()">
+          </dx-button>
+          <dx-button
+            icon="revert"
+            hint="Ripristina ricerca"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="resetSearch()">
+          </dx-button>
+          <dx-button
+            class="btn-fin-primary action-shadow"
+            text="Nuova Cassa"
             stylingMode="contained"
             (onClick)="openNewPopup()">
           </dx-button>
@@ -44,11 +59,13 @@
       </div>
     </div>
 
-    <!-- Griglia -->
+    <!-- ── Grid ── -->
     <div class="card-body card-body--grid">
       <dx-data-grid
         [dataSource]="filteredCasse()"
         [showBorders]="false"
+        [showColumnLines]="false"
+        [showRowLines]="true"
         [columnAutoWidth]="true"
         [rowAlternationEnabled]="true"
         [hoverStateEnabled]="true"
@@ -57,15 +74,22 @@
 
         <dxo-selection mode="single"></dxo-selection>
         <dxo-paging [pageSize]="20"></dxo-paging>
-        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
+        <dxo-pager
+          [showInfo]="true"
+          infoText="{2} casse"
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[20, 50, 100]"
+          [showNavigationButtons]="true"
+          displayMode="full">
+        </dxo-pager>
 
-        <dxi-column dataField="cliId"     caption="ID"          [width]="80"  alignment="left"></dxi-column>
+        <dxi-column dataField="cliId"     caption="ID"           [width]="80"  alignment="left"></dxi-column>
         <dxi-column dataField="cliIp"     caption="Indirizzo IP" [width]="140" alignment="left"></dxi-column>
-        <dxi-column dataField="cliBraId"  caption="Filiale"     [width]="160" alignment="left"   cellTemplate="filialeTemplate"></dxi-column>
-        <dxi-column dataField="cliLingua" caption="Lingua"      [width]="90"  alignment="center" cellTemplate="linguaTemplate"></dxi-column>
-        <dxi-column dataField="cliStatus" caption="Stato"       [width]="100" alignment="center" cellTemplate="statusTemplate"></dxi-column>
-        <dxi-column dataField="inUso"     caption="In Uso"      [width]="80"  alignment="center" [allowSorting]="false" cellTemplate="inUsoTemplate"></dxi-column>
-        <dxi-column dataField="cliCnt"    caption="N° Oper."    [width]="90"  alignment="right"></dxi-column>
+        <dxi-column dataField="cliBraId"  caption="Filiale"                    alignment="left"   cellTemplate="filialeTemplate"></dxi-column>
+        <dxi-column dataField="cliLingua" caption="Lingua"       [width]="90"  alignment="center" cellTemplate="linguaTemplate"></dxi-column>
+        <dxi-column dataField="cliStatus" caption="Stato"        [width]="100" alignment="center" cellTemplate="statusTemplate"></dxi-column>
+        <dxi-column dataField="inUso"     caption="In Uso"       [width]="80"  alignment="center" [allowSorting]="false" cellTemplate="inUsoTemplate"></dxi-column>
+        <dxi-column dataField="cliCnt"    caption="N° Oper."     [width]="90"  alignment="right"></dxi-column>
         <dxi-column dataField="cliDes"    caption="Descrizione"               alignment="left"></dxi-column>
 
         <dxi-column
@@ -86,17 +110,17 @@
         </div>
 
         <div *dxTemplate="let cell of 'statusTemplate'" class="status-cell">
-          <span class="status-pill"
-            [class.status-pill--active]="cell.value === 'A'"
-            [class.status-pill--inactive]="cell.value === 'I'"
-            [class.status-pill--suspended]="cell.value === 'S'">
+          <span class="status-pill" [ngClass]="getStatusClass(cell.value)">
             {{ getStatusDes(cell.value) }}
           </span>
         </div>
 
         <div *dxTemplate="let cell of 'inUsoTemplate'" class="bool-cell">
-          <span *ngIf="cell.value" class="bool-pill bool-pill--yes">&#x2713;</span>
-          <span *ngIf="!cell.value" class="bool-pill bool-pill--no">&mdash;</span>
+          <span class="bool-badge"
+            [class.bool-badge--yes]="cell.value"
+            [class.bool-badge--no]="!cell.value">
+            {{ cell.value ? 'Sì' : 'No' }}
+          </span>
         </div>
 
         <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
@@ -113,12 +137,17 @@
             </svg>
           </button>
         </div>
+
+        <dxo-load-panel [enabled]="false"></dxo-load-panel>
       </dx-data-grid>
     </div>
+
   </section>
 </div>
 
-<!-- ── Popup Dettaglio Cassa ── -->
+<!-- ══════════════════════════════════════
+     Popup: Dettaglio / Modifica / Nuova Cassa
+     ══════════════════════════════════════ -->
 <dx-popup
   [(visible)]="isDetailPopupVisible"
   [showTitle]="true"
@@ -142,9 +171,9 @@
       <!-- ── Card 1: Identificazione ── -->
       <section class="popup-card">
         <h3 class="popup-card-title">Identificazione</h3>
-        <div class="popup-fields-grid popup-fields-grid--3col">
+        <div class="popup-fields-grid popup-fields-grid--4col">
 
-          <div class="popup-field-group" [class.field-id-locked]="popupMode() !== 'new'">
+          <div class="popup-field-group field-cliid" [class.field-id-locked]="popupMode() !== 'new'">
             <label class="popup-field-label">ID Cassa *</label>
             <dx-text-box
               formControlName="cliId"
@@ -157,7 +186,7 @@
             </dx-text-box>
           </div>
 
-          <div class="popup-field-group">
+          <div class="popup-field-group" [class.field-id-locked]="popupMode() === 'view'">
             <label class="popup-field-label">Stato *</label>
             <dx-select-box
               formControlName="cliStatus"
@@ -171,7 +200,7 @@
             </dx-select-box>
           </div>
 
-          <div class="popup-field-group">
+          <div class="popup-field-group" [class.field-id-locked]="popupMode() === 'view'">
             <label class="popup-field-label">Lingua *</label>
             <dx-select-box
               formControlName="cliLingua"
@@ -185,7 +214,16 @@
             </dx-select-box>
           </div>
 
-          <div class="popup-field-group">
+          <div class="popup-field-group" [class.field-id-locked]="popupMode() === 'view'">
+            <label class="popup-field-label">Ufficio</label>
+            <dx-text-box
+              formControlName="cliOff"
+              [readOnly]="popupMode() === 'view'"
+              placeholder="Codice ufficio">
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group popup-col-span-half" [class.field-id-locked]="popupMode() === 'view'">
             <label class="popup-field-label">Filiale *</label>
             <dx-select-box
               formControlName="cliBraId"
@@ -200,15 +238,6 @@
             </dx-select-box>
           </div>
 
-          <div class="popup-field-group">
-            <label class="popup-field-label">Ufficio</label>
-            <dx-text-box
-              formControlName="cliOff"
-              [readOnly]="popupMode() === 'view'"
-              placeholder="Codice ufficio">
-            </dx-text-box>
-          </div>
-
         </div>
       </section>
 
@@ -217,7 +246,7 @@
         <h3 class="popup-card-title">Configurazione Rete</h3>
         <div class="popup-fields-grid popup-fields-grid--2col">
 
-          <div class="popup-field-group">
+          <div class="popup-field-group field-ip" [class.field-id-locked]="popupMode() === 'view'">
             <label class="popup-field-label">Indirizzo IP *</label>
             <dx-text-box
               formControlName="cliIp"
@@ -234,7 +263,7 @@
             </dx-text-box>
           </div>
 
-          <div class="popup-field-group">
+          <div class="popup-field-group" [class.field-id-locked]="popupMode() === 'view'">
             <label class="popup-field-label">Indirizzo MAC *</label>
             <dx-text-box
               formControlName="cliMac"
@@ -251,7 +280,7 @@
             </dx-text-box>
           </div>
 
-          <div class="popup-field-group popup-col-span-2">
+          <div class="popup-field-group popup-col-span-2" [class.field-id-locked]="popupMode() === 'view'">
             <label class="popup-field-label">Descrizione</label>
             <dx-text-area
               formControlName="cliDes"
@@ -264,84 +293,85 @@
         </div>
       </section>
 
-      <!-- ── Card 3: Periferiche ── -->
+      <!-- ── Card 3: Periferiche Assegnate ── -->
       <section class="popup-card">
         <h3 class="popup-card-title">Periferiche Assegnate</h3>
-
-        <div class="dual-list-container">
-          <app-control-assign
-            [assignedRoles]="assignedRolesForControl"
-            [possibleRoles]="possibleRolesForControl"
-            [disabled]="popupMode() === 'view'"
-            (rolesChanged)="onRolesChanged($event)">
-          </app-control-assign>
-        </div>
+        <app-control-assign
+          [assignedRoles]="assignedRolesForControl"
+          [possibleRoles]="possibleRolesForControl"
+          [disabled]="popupMode() === 'view'"
+          (rolesChanged)="onRolesChanged($event)">
+        </app-control-assign>
       </section>
 
       <!-- ── Card 4: Informazioni di Sistema (view/edit only) ── -->
       <section *ngIf="popupMode() !== 'new'" class="popup-card popup-card--system">
-          <h3 class="popup-card-title">Informazioni di Sistema</h3>
-          <div class="popup-fields-grid popup-fields-grid--3col">
+        <h3 class="popup-card-title">Informazioni di Sistema</h3>
+        <div class="popup-fields-grid popup-fields-grid--3col">
 
-            <div class="popup-field-group">
-              <label class="popup-field-label">N° Operazioni</label>
-              <dx-text-box formControlName="cliCnt" [readOnly]="true"></dx-text-box>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Ultimo Reset Counter</label>
-              <dx-text-box formControlName="cliDatcounter" [readOnly]="true"></dx-text-box>
-            </div>
-
-            <div class="popup-field-group popup-flag-group">
-              <label class="popup-field-label">In Uso</label>
-              <dx-check-box formControlName="inUso" [readOnly]="true"></dx-check-box>
-            </div>
-
+          <div class="popup-field-group field-id-locked field-cnt">
+            <label class="popup-field-label">N° Operazioni</label>
+            <dx-text-box formControlName="cliCnt" [readOnly]="true"></dx-text-box>
           </div>
-        </section>
 
-      <!-- ── Action Bar sticky ── -->
+          <div class="popup-field-group field-id-locked">
+            <label class="popup-field-label">Ultimo Reset Counter</label>
+            <dx-text-box formControlName="cliDatcounter" [readOnly]="true"></dx-text-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">In Uso</label>
+            <ng-container *ngIf="popupMode() === 'view'; else checkboxTpl">
+              <div class="bool-cell">
+                <span class="bool-badge"
+                  [class.bool-badge--yes]="cassaForm.get('inUso')?.value"
+                  [class.bool-badge--no]="!cassaForm.get('inUso')?.value">
+                  {{ cassaForm.get('inUso')?.value ? 'Sì' : 'No' }}
+                </span>
+              </div>
+            </ng-container>
+            <ng-template #checkboxTpl>
+              <dx-check-box formControlName="inUso" [readOnly]="true"></dx-check-box>
+            </ng-template>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Action Bar ── -->
       <div class="popup-action-bar">
 
         <div class="popup-actions-secondary">
+          <dx-button *ngIf="popupMode() === 'edit'"
+            text="Elimina"
+            icon="trash"
+            stylingMode="outlined"
+            class="btn-fin-danger"
+            (onClick)="onDelete()">
+          </dx-button>
           <dx-button *ngIf="popupMode() !== 'new'"
-            class="btn-action-outline"
             text="Storico"
             icon="clock"
             stylingMode="outlined"
+            class="btn-fin-secondary"
             (onClick)="onTrace()">
           </dx-button>
         </div>
 
         <div class="popup-actions-primary">
-          <dx-button *ngIf="popupMode() === 'view'"
-            class="btn-action-close"
-            text="Chiudi"
-            icon="close"
+          <dx-button
+            [text]="popupMode() === 'new' ? 'Annulla' : 'Chiudi'"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
             (onClick)="closePopup()">
           </dx-button>
-          <dx-button *ngIf="popupMode() === 'new'"
-            class="btn-action-primary"
-            text="Aggiungi"
-            icon="plus"
-            (onClick)="onSubmit()">
+          <dx-button *ngIf="popupMode() !== 'view'"
+            [text]="popupMode() === 'new' ? 'Crea Cassa' : 'Salva Modifiche'"
+            [icon]="popupMode() === 'new' ? 'plus' : 'save'"
+            stylingMode="contained"
+            class="btn-fin-primary"
+            (onClick)="popupMode() === 'new' ? onSubmit() : onUpdate()">
           </dx-button>
-          <ng-container *ngIf="popupMode() === 'edit'">
-            <dx-button
-              class="btn-action-danger"
-              text="Elimina"
-              icon="trash"
-              stylingMode="outlined"
-              (onClick)="onDelete()">
-            </dx-button>
-            <dx-button
-              class="btn-action-primary"
-              text="Salva"
-              icon="save"
-              (onClick)="onUpdate()">
-            </dx-button>
-          </ng-container>
         </div>
 
       </div>
@@ -349,3 +379,4 @@
     </form>
   </div>
 </dx-popup>
+

@@ -1,9 +1,13 @@
 /* ══════════════════════════════════════════
-   Gestione Regole — Banca del Sempione Style
-   Brand navy : #003366  |  Gold : #C5A059
+   Gestione Regole — Banca del Sempione
+   Navy #003366  |  Gold #C5A059
    ══════════════════════════════════════════ */
 
 :host {
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --color-text-primary:   #1e293b;
+  --color-text-secondary: #64748b;
+  --color-text-muted:     #94a3b8;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -14,34 +18,71 @@
 .page-shell {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
+  flex: 1;
   min-height: 0;
-  overflow: hidden;
   padding: 12px 16px 0;
   gap: 10px;
+  overflow: hidden;
 }
 
-/* ── Card shell ── */
+/* ── Titolo pagina esterno ── */
+.page-header-row {
+  margin: -12px -16px 0;
+  padding: 7px 20px;
+  background: #f1f5f9;
+  border-bottom: 1px solid rgba(0, 51, 102, 0.25);
+  flex-shrink: 0;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(0, 51, 102, 0.75);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════════
+   Card Base
+   ══════════════════════════════════════════ */
 .card-section {
+  background: #fff;
+  border: 1px solid #dce3ee;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.10);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
-  overflow: hidden;
-  background: #fff;
-  border: 1px solid #dce3ee;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
 }
 
-/* ── Sempione Card Header ── */
+/* ── Card Header Navy ── */
 .sempione-card-header {
   background: #003366;
-  padding: 8px 12px;
+  padding: 8px 14px;
   display: flex;
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+}
+
+.card-icon {
+  width: 18px;
+  height: 18px;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  flex: 1;
 }
 
 .gold-divider {
@@ -50,106 +91,54 @@
   flex-shrink: 0;
 }
 
-.card-icon {
-  width: 15px;
-  height: 15px;
-  color: #fff;
-  opacity: 0.9;
-  flex-shrink: 0;
-}
-
-.card-title {
-  margin: 0;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: #fff;
-  flex: 1;
-}
-
-/* ── Card Toolbar ── */
+/* ══════════════════════════════════════════
+   Card Toolbar — Filtri inline
+   ══════════════════════════════════════════ */
 .card-toolbar {
-  background: #f0f4f8;
-  border-bottom: 1px solid #dce3ee;
-  padding: 7px 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f5f9;
   flex-shrink: 0;
 }
 
-.toolbar-row {
+.toolbar-inner {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: flex-end;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
-.toolbar-row-spacer { flex: 1; }
+.toolbar-filters {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  align-items: flex-end;
+  min-width: 0;
+  flex-wrap: wrap;
+}
 
-/* ── Filter labels & controls ── */
-.filter-label {
+.toolbar-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 140px;
+  flex: 1;
+}
+
+.toolbar-field--lg { flex: 2; min-width: 180px; }
+
+.toolbar-lbl {
+  font-family: var(--font-ui);
   font-size: 11px;
-  font-weight: 600;
-  color: #374151;
-  white-space: nowrap;
-  flex-shrink: 0;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  letter-spacing: 0;
 }
 
-.filter-control--lg {
-  min-width: 200px;
-  max-width: 260px;
-}
-
-.filter-control--md {
-  min-width: 130px;
-  max-width: 180px;
-}
-
-/* ── Uniform 28 px height ── */
-:host ::ng-deep .card-toolbar .dx-texteditor {
-  height: 28px;
-}
-
-:host ::ng-deep .card-toolbar .dx-texteditor-input {
-  min-height: unset;
-  height: 26px;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  font-size: 13px;
-}
-
-/* ── Toolbar buttons ── */
 .toolbar-actions {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: flex-end;
+  gap: 6px;
   flex-shrink: 0;
-}
-
-:host ::ng-deep .btn-cerca.dx-button-default.dx-button-mode-contained {
-  background-color: #003366;
-  border-color: #003366;
-  height: 28px;
-}
-
-:host ::ng-deep .btn-cerca.dx-button-default.dx-button-mode-contained:hover {
-  background-color: #004080;
-  border-color: #004080;
-}
-
-:host ::ng-deep .btn-reset.dx-button,
-:host ::ng-deep .btn-showall.dx-button {
-  height: 28px;
-}
-
-:host ::ng-deep .btn-add.dx-button {
-  height: 28px;
-  border-color: #C5A059;
-  color: #8a6d22;
-}
-
-:host ::ng-deep .btn-add.dx-button:hover:not(.dx-state-disabled) {
-  border-color: #a8882e;
-  background: rgba(197, 160, 89, 0.08);
 }
 
 /* ── Card Body ── */
@@ -159,10 +148,128 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
-/* ── Grid messages ── */
+/* ══════════════════════════════════════════
+   DX Inputs — toolbar
+   ══════════════════════════════════════════ */
+:host ::ng-deep .card-toolbar .dx-texteditor                    { height: 28px; border-radius: 6px; }
+:host ::ng-deep .card-toolbar .dx-texteditor-input              { min-height: unset; height: 26px; padding-top: 3px; padding-bottom: 3px; font-size: 13px; }
+:host ::ng-deep .card-toolbar .dx-texteditor-input::placeholder  { font-size: 11px; font-style: italic; color: #b0b7c3; }
+:host ::ng-deep .card-toolbar .dx-texteditor-buttons-container   { height: 26px; }
+:host ::ng-deep .card-toolbar .dx-button                        { height: 28px; }
+
+:host ::ng-deep .card-toolbar .dx-texteditor.dx-state-focused {
+  border-color: #003366 !important;
+  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.08) !important;
+}
+:host ::ng-deep .card-toolbar .dx-texteditor.dx-state-focused .dx-texteditor-container {
+  border-color: #003366 !important;
+}
+
+/* ══════════════════════════════════════════
+   Sistema Utility Bottoni — btn-fin-*
+   ══════════════════════════════════════════ */
+
+/* ── Primary: Navy filled ── */
+:host ::ng-deep .btn-fin-primary.dx-button,
+::ng-deep .btn-fin-primary.dx-button {
+  background-color: #003366 !important;
+  border-color: #003366 !important;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+:host ::ng-deep .btn-fin-primary.dx-button:hover,
+::ng-deep .btn-fin-primary.dx-button:hover {
+  background-color: #004080 !important;
+  border-color: #004080 !important;
+}
+:host ::ng-deep .btn-fin-primary .dx-button-text,
+:host ::ng-deep .btn-fin-primary .dx-icon,
+::ng-deep .btn-fin-primary .dx-button-text,
+::ng-deep .btn-fin-primary .dx-icon { color: #ffffff !important; }
+
+/* ── Secondary: light border, dark text ── */
+:host ::ng-deep .btn-fin-secondary.dx-button,
+::ng-deep .btn-fin-secondary.dx-button {
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+  border-radius: 6px;
+  background: transparent !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+:host ::ng-deep .btn-fin-secondary.dx-button:hover,
+::ng-deep .btn-fin-secondary.dx-button:hover {
+  border-color: #94a3b8 !important;
+  background: rgba(15, 23, 42, 0.04) !important;
+}
+:host ::ng-deep .btn-fin-secondary .dx-button-text,
+:host ::ng-deep .btn-fin-secondary .dx-icon,
+::ng-deep .btn-fin-secondary .dx-button-text,
+::ng-deep .btn-fin-secondary .dx-icon { color: #1e293b !important; }
+
+/* ── action-shadow: ombra morbida Navy ── */
+:host ::ng-deep .action-shadow.dx-button,
+::ng-deep .action-shadow.dx-button {
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.15) !important;
+}
+
+/* ══════════════════════════════════════════
+   DX Grid — Header Colonne
+   ══════════════════════════════════════════ */
+:host ::ng-deep .dx-datagrid-headers {
+  border-bottom: 2px solid rgba(0, 51, 102, 0.65) !important;
+}
+
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td {
+  background-color: #EDF2F7 !important;
+  color: #003366 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.02em !important;
+  border-bottom: none !important;
+  transition: background-color 0.15s !important;
+}
+
+:host ::ng-deep .dx-datagrid-headers .dx-header-row td:hover {
+  background-color: #e3eaf3 !important;
+}
+
+/* ══════════════════════════════════════════
+   DX Grid — Righe
+   ══════════════════════════════════════════ */
+:host ::ng-deep .dx-data-row > td {
+  padding: 8px 10px !important;
+  font-family: var(--font-ui) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: var(--color-text-primary) !important;
+  vertical-align: middle !important;
+  line-height: 1.45 !important;
+}
+
+:host ::ng-deep .dx-datagrid .dx-row > td {
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+:host ::ng-deep .dx-data-row.dx-row-alt > td {
+  background-color: #f9fafb !important;
+}
+
+:host ::ng-deep .dx-data-row.dx-state-hover > td {
+  background-color: rgba(0, 51, 102, 0.025) !important;
+}
+
+:host ::ng-deep .dx-selection.dx-data-row > td {
+  background-color: rgba(0, 51, 102, 0.10) !important;
+  color: #003366 !important;
+  font-weight: 600 !important;
+}
+
+/* ══════════════════════════════════════════
+   Messaggi griglia
+   ══════════════════════════════════════════ */
 .grid-message {
   display: flex;
   align-items: center;
@@ -172,11 +279,7 @@
   font-size: 13px;
 }
 
-.grid-message svg {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
+.grid-message svg { width: 18px; height: 18px; flex-shrink: 0; }
 
 .grid-message--error {
   color: #991b1b;
@@ -185,16 +288,12 @@
   border-radius: 6px;
   margin: 12px;
 }
-
 .grid-message--error svg { stroke: #dc2626; }
-
 .grid-message--loading { color: #374151; }
 
 .spin-icon { animation: spin 0.9s linear infinite; }
-
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── Empty state ── */
 .grid-empty {
   display: flex;
   flex-direction: column;
@@ -207,46 +306,12 @@
   text-align: center;
   flex: 1;
 }
-
-.grid-empty svg {
-  width: 32px;
-  height: 32px;
-  stroke: #d1d5db;
-}
-
+.grid-empty svg { width: 32px; height: 32px; stroke: #d1d5db; }
 .grid-empty p { margin: 0; max-width: 380px; }
 
-/* ── Grid header ── */
-:host ::ng-deep .dx-datagrid-headers .dx-header-row td {
-  background-color: #f8fafd !important;
-  color: #374151 !important;
-  font-size: 10px !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  border-bottom: 2px solid #003366 !important;
-}
-
-/* ── Compact rows ── */
-:host ::ng-deep .dx-data-row > td {
-  padding: 5px 10px !important;
-  font-size: 12px !important;
-  vertical-align: middle !important;
-}
-
-:host ::ng-deep .dx-data-row.dx-row-alt > td { background-color: #f8fafc !important; }
-
-:host ::ng-deep .dx-data-row.dx-state-hover > td {
-  background-color: rgba(0, 51, 102, 0.04) !important;
-}
-
-:host ::ng-deep .dx-selection.dx-data-row > td {
-  background-color: rgba(0, 51, 102, 0.10) !important;
-  color: #003366 !important;
-  font-weight: 600 !important;
-}
-
-/* ── Boolean badge ── */
+/* ══════════════════════════════════════════
+   Badge booleano
+   ══════════════════════════════════════════ */
 .bool-cell {
   display: flex;
   align-items: center;
@@ -258,26 +323,21 @@
   align-items: center;
   justify-content: center;
   min-width: 30px;
-  height: 17px;
-  padding: 0 6px;
-  border-radius: 3px;
-  font-size: 9px;
+  height: 18px;
+  padding: 0 7px;
+  border-radius: 10px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
-.bool-badge--yes {
-  background: #dcfce7;
-  color: #166534;
-}
+.bool-badge--yes { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+.bool-badge--no  { background: #f1f5f9; color: #94a3b8; border: 1px solid #e2e8f0; }
 
-.bool-badge--no {
-  background: #f1f5f9;
-  color: #94a3b8;
-}
-
-/* ── Action buttons ── */
+/* ══════════════════════════════════════════
+   Colonna Azioni
+   ══════════════════════════════════════════ */
 .actions-cell {
   display: flex;
   gap: 2px;
@@ -294,74 +354,200 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.14s ease;
+  transition: background 0.14s;
 }
 
 .action-btn svg {
   width: 13px;
   height: 13px;
-  stroke: #9ca3af;
-  transition: stroke 0.14s ease;
+  stroke: #94a3b8;
+  transition: stroke 0.14s;
 }
 
 .action-btn--edit:hover     { background: rgba(0, 51, 102, 0.08); }
 .action-btn--edit:hover svg { stroke: #003366; }
 
-.action-btn--history:hover     { background: rgba(197, 160, 89, 0.12); }
-.action-btn--history:hover svg { stroke: #8a6d22; }
+.action-btn--history:hover     { background: rgba(0, 51, 102, 0.08); }
+.action-btn--history:hover svg { stroke: #003366; }
 
-/* ══ POPUP STYLES ══ */
+/* ══════════════════════════════════════════
+   Pager — Sticky + Sempione
+   ══════════════════════════════════════════ */
+:host ::ng-deep .dx-datagrid-pager {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  background: #fff;
+  border-top: 1px solid #e5e7eb !important;
+  padding: 2px 10px !important;
+}
 
+:host ::ng-deep .dx-datagrid-pager .dx-pager {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap;
+  gap: 4px;
+  width: 100%;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-info {
+  order: -1 !important;
+  margin-right: auto !important;
+  font-size: 10px !important;
+  color: #6b7280 !important;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page {
+  min-width: 22px !important;
+  height: 22px !important;
+  line-height: normal !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 5px !important;
+  font-size: 11px !important;
+  font-weight: 500;
+  color: #374151 !important;
+  border: 1px solid #dce3ee !important;
+  background: transparent !important;
+  margin: 0 1px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page:hover {
+  background: rgba(0, 51, 102, 0.06) !important;
+  color: #003366 !important;
+  border-color: rgba(0, 51, 102, 0.3) !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page.dx-selection {
+  background: #003366 !important;
+  color: #fff !important;
+  border-color: #003366 !important;
+  font-weight: 700 !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button {
+  width: 22px !important;
+  height: 22px !important;
+  line-height: normal !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  border-radius: 5px !important;
+  border: 1px solid transparent !important;
+  transition: background 0.15s, color 0.15s;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button > *,
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button::before,
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button::after {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button:hover {
+  background: rgba(0, 51, 102, 0.06) !important;
+  color: #003366 !important;
+  border-color: #dce3ee !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-navigate-button.dx-button-disable {
+  opacity: 0.35;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-page-size {
+  font-size: 11px !important;
+  height: 22px !important;
+  line-height: 22px !important;
+  padding: 0 8px !important;
+  border-radius: 5px !important;
+  border: 1px solid #dce3ee !important;
+  color: #374151 !important;
+  background: transparent !important;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-page-size:hover {
+  background: rgba(0, 51, 102, 0.06) !important;
+  color: #003366 !important;
+  border-color: rgba(0, 51, 102, 0.3) !important;
+}
+
+:host ::ng-deep .dx-datagrid-pager .dx-page-size.dx-selection {
+  background: rgba(0, 51, 102, 0.09) !important;
+  color: #003366 !important;
+  font-weight: 700 !important;
+  border-color: rgba(0, 51, 102, 0.3) !important;
+}
+
+/* ══════════════════════════════════════════
+   Popup — pattern funzioni
+   ══════════════════════════════════════════ */
 .popup-layout {
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding-bottom: 64px;
+  gap: 16px;
+  background: #f8fafc;
 }
 
 .popup-card {
   background: #fff;
-  border: 1px solid #e4e8ed;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
-  padding: 16px 20px 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  padding: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.04);
 }
 
 .popup-card-title {
-  margin: 0 0 14px 0;
-  padding-bottom: 10px;
-  font-size: 11px;
+  background: #f1f5f9;
+  margin: -16px -16px 14px -16px;
+  padding: 9px 16px 9px 13px;
+  font-family: var(--font-ui);
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.06em;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: #003366;
-  border-bottom: 2px solid #dce3ee;
+  border-left: 3px solid #003366;
+  border-radius: 8px 8px 0 0;
 }
 
-.popup-fields-grid {
-  display: grid;
-  gap: 12px 24px;
-}
-
+.popup-fields-grid       { display: grid; gap: 10px 14px; }
 .popup-fields-grid--2col { grid-template-columns: 1fr 1fr; }
 
 .popup-field-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
 .popup-field-label {
+  font-family: var(--font-ui);
   font-size: 11px;
-  font-weight: 600;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  letter-spacing: 0;
+  line-height: 1.2;
 }
 
-.req {
-  color: #dc2626;
-  font-weight: 700;
+.req { color: #dc2626; font-weight: 700; }
+
+/* ── Tipografia input popup ── */
+::ng-deep .popup-layout .dx-texteditor-input {
+  font-family: var(--font-ui) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: var(--color-text-primary) !important;
+  line-height: 1.45 !important;
 }
 
 /* ── Checkbox stack ── */
@@ -385,45 +571,33 @@
   color: #991b1b;
   font-size: 12px;
 }
+.save-error-message svg { width: 16px; height: 16px; stroke: #dc2626; flex-shrink: 0; }
 
-.save-error-message svg {
-  width: 16px;
-  height: 16px;
-  stroke: #dc2626;
-  flex-shrink: 0;
-}
-
-/* ── Popup action bar ── */
+/* ══════════════════════════════════════════
+   Popup Action Bar
+   ══════════════════════════════════════════ */
 .popup-action-bar {
-  position: sticky;
-  bottom: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 10px 0;
-  background: #fff;
-  border-top: 1px solid #e4e8ed;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.07);
-  z-index: 10;
-}
-
-.popup-actions-secondary,
-.popup-actions-primary {
-  display: flex;
   gap: 8px;
-  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
 }
 
-:host ::ng-deep .btn-action-close.dx-button { height: 36px; }
+.popup-actions-secondary { display: flex; gap: 6px; }
+.popup-actions-primary   { display: flex; gap: 6px; }
 
-:host ::ng-deep .btn-action-save.dx-button-default.dx-button-mode-contained {
-  background-color: #003366;
-  border-color: #003366;
-  height: 36px;
+::ng-deep .popup-actions-primary .btn-fin-primary.dx-button {
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.18) !important;
+}
+::ng-deep .popup-actions-primary .btn-fin-primary.dx-button:hover {
+  box-shadow: 0 6px 16px rgba(0, 51, 102, 0.24) !important;
 }
 
-:host ::ng-deep .btn-action-save.dx-button-default.dx-button-mode-contained:hover {
-  background-color: #004080;
-  border-color: #004080;
+/* ══════════════════════════════════════════
+   Responsive
+   ══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .toolbar-filters { flex-wrap: wrap; }
 }

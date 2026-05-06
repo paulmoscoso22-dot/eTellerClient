@@ -54,34 +54,33 @@
             icon="search"
             hint="Cerca"
             stylingMode="outlined"
-            class="btn-outline"
+            class="btn-fin-secondary"
             (onClick)="onSearch()">
           </dx-button>
           <dx-button
             icon="revert"
             hint="Ripristina filtri"
             stylingMode="outlined"
-            class="btn-outline"
+            class="btn-fin-secondary"
             (onClick)="resetFilters()">
           </dx-button>
           <dx-button
             icon="print"
             text="Stampa Utenti"
             stylingMode="outlined"
-            class="btn-outline"
+            class="btn-fin-secondary"
             (onClick)="onPrintUsers()">
           </dx-button>
           <dx-button
             icon="print"
             text="Stampa Funzioni"
             stylingMode="outlined"
-            class="btn-outline"
+            class="btn-fin-secondary"
             (onClick)="onPrintFunctions()">
           </dx-button>
           <dx-button
-            class="btn-new"
+            class="btn-fin-primary action-shadow"
             text="Nuovo"
-            type="default"
             stylingMode="contained"
             (onClick)="onAdd()">
           </dx-button>
@@ -210,94 +209,127 @@
 </div>
 
 <!-- ══════════════════════════════════════
-     Popup: Dettaglio Funzione
+     Popup: Dettaglio / Modifica Funzione
      ══════════════════════════════════════ -->
 <dx-popup
   [visible]="showDetailPopup()"
   [showTitle]="true"
   [title]="(popupMode() === 'view' ? 'Dettaglio Funzione' : 'Modifica Funzione') + ' — ' + selectedFunName()"
   [dragEnabled]="true"
-  [hideOnOutsideClick]="true"
+  [hideOnOutsideClick]="false"
   [showCloseButton]="true"
-  [width]="520"
+  [width]="'90%'"
+  [maxWidth]="560"
   [height]="'auto'"
+  [maxHeight]="'90vh'"
   (onHiding)="showDetailPopup.set(false)">
 
-  <div class="popup-form">
+  <div *dxTemplate="let data of 'content'">
+    <div class="popup-layout" [class.popup-view-mode]="popupMode() === 'view'">
 
-    <!-- ── View mode ── -->
-    @if (popupMode() === 'view') {
-      <div class="detail-grid">
-        <div class="detail-field">
-          <span class="detail-label">Nome</span>
-          <span class="detail-value">{{ selectedFunName() || '—' }}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Host Code</span>
-          <span class="detail-value mono">{{ selectedFunHostcode() }}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Offline</span>
-          <span class="detail-value">
-            <span class="offline-badge" [class.offline-badge--yes]="selectedOffline()">
-              {{ selectedOffline() ? 'Sì' : 'No' }}
-            </span>
-          </span>
-        </div>
-        <div class="detail-field detail-field--full">
-          <span class="detail-label">Descrizione</span>
-          <span class="detail-value">{{ selectedFunDescription() || '—' }}</span>
-        </div>
-      </div>
-      <div class="popup-actions">
-        <div class="popup-actions-left">
-          <dx-button text="Traccia" icon="chart" stylingMode="outlined" (onClick)="onTrace()"></dx-button>
-        </div>
-        <div class="popup-actions-right">
-          <dx-button text="Chiudi" stylingMode="outlined" (onClick)="showDetailPopup.set(false)"></dx-button>
-          <dx-button text="Modifica" icon="edit" type="default" stylingMode="contained" (onClick)="switchToEditMode()"></dx-button>
-        </div>
-      </div>
-    }
+      <section class="popup-card">
+        <h3 class="popup-card-title">Dettaglio Funzione</h3>
+        <div class="popup-fields-grid popup-fields-grid--2col">
 
-    <!-- ── Edit mode ── -->
-    @if (popupMode() === 'edit') {
-      <div class="form-row">
-        <label class="form-lbl">Nome</label>
-        <div class="form-fld">
-          <dx-text-box [value]="selectedFunName()" (onValueChanged)="selectedFunName.set($event.value)"></dx-text-box>
-        </div>
-      </div>
-      <div class="form-row">
-        <label class="form-lbl">Host Code</label>
-        <div class="form-fld">
-          <dx-number-box [value]="selectedFunHostcode()" (onValueChanged)="selectedFunHostcode.set($event.value)"></dx-number-box>
-        </div>
-      </div>
-      <div class="form-row">
-        <span class="form-lbl"></span>
-        <div class="form-fld">
-          <dx-check-box [value]="selectedOffline()" (onValueChanged)="selectedOffline.set($event.value)" text="Disponibile in modalità offline"></dx-check-box>
-        </div>
-      </div>
-      <div class="form-row form-row--top">
-        <label class="form-lbl">Descrizione</label>
-        <div class="form-fld">
-          <dx-text-area [value]="selectedFunDescription()" (onValueChanged)="selectedFunDescription.set($event.value)" [height]="80"></dx-text-area>
-        </div>
-      </div>
-      <div class="popup-actions">
-        <div class="popup-actions-left">
-          <dx-button text="Traccia"  icon="chart" stylingMode="outlined" (onClick)="onTrace()"></dx-button>
-          <dx-button text="Cancella" icon="trash" type="danger" stylingMode="outlined" (onClick)="onDelete()"></dx-button>
-        </div>
-        <div class="popup-actions-right">
-          <dx-button text="Annulla" stylingMode="outlined" (onClick)="showDetailPopup.set(false)"></dx-button>
-          <dx-button text="Salva" type="default" stylingMode="contained" [disabled]="isLoading()" (onClick)="onSaveDetail()"></dx-button>
-        </div>
-      </div>
-    }
+          <div class="popup-field-group popup-col-span-2">
+            <label class="popup-field-label">Nome</label>
+            <dx-text-box
+              [value]="selectedFunName()"
+              [readOnly]="popupMode() === 'view'"
+              (onValueChanged)="popupMode() === 'edit' && selectedFunName.set($event.value)">
+            </dx-text-box>
+          </div>
 
+          <div class="popup-field-group">
+            <label class="popup-field-label">Host Code</label>
+            <dx-number-box
+              [value]="selectedFunHostcode()"
+              [readOnly]="popupMode() === 'view'"
+              (onValueChanged)="popupMode() === 'edit' && selectedFunHostcode.set($event.value)">
+            </dx-number-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Offline</label>
+            @if (popupMode() === 'view') {
+              <div class="offline-badge-cell">
+                <span class="offline-badge"
+                  [class.offline-badge--yes]="selectedOffline()"
+                  [class.offline-badge--no]="!selectedOffline()">
+                  {{ selectedOffline() ? 'Sì' : 'No' }}
+                </span>
+              </div>
+            } @else {
+              <dx-check-box
+                [value]="selectedOffline()"
+                (onValueChanged)="selectedOffline.set($event.value)"
+                text="Disponibile in modalità offline">
+              </dx-check-box>
+            }
+          </div>
+
+          <div class="popup-field-group popup-col-span-2">
+            <label class="popup-field-label">Descrizione</label>
+            <dx-text-area
+              [value]="selectedFunDescription()"
+              [readOnly]="popupMode() === 'view'"
+              [height]="80"
+              (onValueChanged)="popupMode() === 'edit' && selectedFunDescription.set($event.value)">
+            </dx-text-area>
+          </div>
+
+        </div>
+      </section>
+
+      <div class="popup-action-bar">
+        <div class="popup-actions-secondary">
+          @if (popupMode() === 'edit') {
+            <dx-button
+              text="Cancella"
+              icon="trash"
+              stylingMode="outlined"
+              class="btn-fin-danger"
+              (onClick)="onDelete()">
+            </dx-button>
+          }
+          <dx-button
+            text="Traccia"
+            icon="chart"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="onTrace()">
+          </dx-button>
+        </div>
+        <div class="popup-actions-primary">
+          <dx-button
+            [text]="popupMode() === 'view' ? 'Chiudi' : 'Annulla'"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="showDetailPopup.set(false)">
+          </dx-button>
+          @if (popupMode() === 'view') {
+            <dx-button
+              text="Modifica"
+              icon="edit"
+              stylingMode="contained"
+              class="btn-fin-primary"
+              (onClick)="switchToEditMode()">
+            </dx-button>
+          }
+          @if (popupMode() === 'edit') {
+            <dx-button
+              text="Salva Modifiche"
+              icon="save"
+              stylingMode="contained"
+              class="btn-fin-primary"
+              [disabled]="isLoading()"
+              (onClick)="onSaveDetail()">
+            </dx-button>
+          }
+        </div>
+      </div>
+
+    </div>
   </div>
 </dx-popup>
 
@@ -307,54 +339,81 @@
 <dx-popup
   [visible]="showAddPopup()"
   [showTitle]="true"
-  title="NUOVA FUNZIONE"
-  [width]="480"
+  title="Nuova Funzione"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [width]="'90%'"
+  [maxWidth]="560"
   [height]="'auto'"
+  [maxHeight]="'90vh'"
   (onHiding)="onCancelAdd()">
 
-  <form [formGroup]="addForm" class="popup-form">
-    <div class="form-row">
-      <label class="form-lbl">Nome</label>
-      <div class="form-fld">
-        <dx-text-box formControlName="funName"
-          [isValid]="!(addForm.get('funName')?.invalid && addForm.get('funName')?.touched)">
-        </dx-text-box>
-        @if (addForm.get('funName')?.invalid && addForm.get('funName')?.touched) {
-          <span class="field-error">Nome funzione richiesto</span>
-        }
+  <div *dxTemplate="let data of 'content'">
+    <form [formGroup]="addForm" class="popup-layout">
+
+      <section class="popup-card">
+        <h3 class="popup-card-title">Nuova Funzione</h3>
+        <div class="popup-fields-grid popup-fields-grid--2col">
+
+          <div class="popup-field-group popup-col-span-2">
+            <label class="popup-field-label">Nome *</label>
+            <dx-text-box
+              formControlName="funName"
+              placeholder="Nome della funzione"
+              [isValid]="!(addForm.get('funName')?.invalid && addForm.get('funName')?.touched)">
+            </dx-text-box>
+            @if (addForm.get('funName')?.invalid && addForm.get('funName')?.touched) {
+              <span class="field-error">Nome funzione richiesto</span>
+            }
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Host Code</label>
+            <dx-number-box
+              formControlName="funHostcode"
+              [isValid]="!(addForm.get('funHostcode')?.invalid && addForm.get('funHostcode')?.touched)">
+            </dx-number-box>
+            @if (addForm.get('funHostcode')?.invalid && addForm.get('funHostcode')?.touched) {
+              <span class="field-error">Host code richiesto</span>
+            }
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Offline</label>
+            <dx-check-box formControlName="offline" text="Disponibile in modalità offline"></dx-check-box>
+          </div>
+
+          <div class="popup-field-group popup-col-span-2">
+            <label class="popup-field-label">Descrizione</label>
+            <dx-text-area formControlName="funDescription" [height]="80"></dx-text-area>
+          </div>
+
+        </div>
+      </section>
+
+      <div class="popup-action-bar">
+        <div class="popup-actions-secondary"></div>
+        <div class="popup-actions-primary">
+          <dx-button
+            text="Annulla"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="onCancelAdd()">
+          </dx-button>
+          <dx-button
+            text="Crea Funzione"
+            icon="plus"
+            stylingMode="contained"
+            class="btn-fin-primary"
+            [disabled]="isLoading()"
+            (onClick)="onSaveAdd()">
+          </dx-button>
+        </div>
       </div>
-    </div>
-    <div class="form-row">
-      <label class="form-lbl">Host Code</label>
-      <div class="form-fld">
-        <dx-number-box formControlName="funHostcode"
-          [isValid]="!(addForm.get('funHostcode')?.invalid && addForm.get('funHostcode')?.touched)">
-        </dx-number-box>
-        @if (addForm.get('funHostcode')?.invalid && addForm.get('funHostcode')?.touched) {
-          <span class="field-error">Host code richiesto</span>
-        }
-      </div>
-    </div>
-    <div class="form-row">
-      <span class="form-lbl"></span>
-      <div class="form-fld">
-        <dx-check-box formControlName="offline" text="Offline"></dx-check-box>
-      </div>
-    </div>
-    <div class="form-row form-row--top">
-      <label class="form-lbl">Descrizione</label>
-      <div class="form-fld">
-        <dx-text-area formControlName="funDescription" [height]="80"></dx-text-area>
-      </div>
-    </div>
-    <div class="popup-actions">
-      <div class="popup-actions-left"></div>
-      <div class="popup-actions-right">
-        <dx-button text="Annulla" stylingMode="outlined" (onClick)="onCancelAdd()"></dx-button>
-        <dx-button text="Salva" type="default" stylingMode="contained" [disabled]="isLoading()" (onClick)="onSaveAdd()"></dx-button>
-      </div>
-    </div>
-  </form>
+
+    </form>
+  </div>
 </dx-popup>
 
 <!-- ── Toast ── -->
