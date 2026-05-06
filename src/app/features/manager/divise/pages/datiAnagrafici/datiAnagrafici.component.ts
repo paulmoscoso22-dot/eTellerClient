@@ -58,6 +58,10 @@ export class DatiAnagraficiComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.loadDivise();
+  }
+
+  private loadDivise(): void {
     this.diviseService.getAll({ curId: null, curLondes: null }).subscribe({
       next: data => this.divise.set(data),
       error: () => {}

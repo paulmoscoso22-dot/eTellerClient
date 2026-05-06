@@ -6,8 +6,8 @@ import { RicercaFacade } from '../services/ricerca.facade';
 import { Service } from '../../../../core/services/service';
 import { Currency } from '../../../../core/domain/currency.domain';
 import { Branch } from '../../../../core/domain/branch.domain';
-import { CurrencyType } from '../../../../core/domain/currencyType.domain';
-import { StOperationType } from '../../../../core/domain/stOperationType.domain';
+import { ICurrencyType } from '../../../../core/domain/currencyType.domain';
+import { IStOperationType } from '../../../../core/domain/stOperationType.domain';
 import { 
   GiornaleAntiriciclaggioTransaction,
   GetTransactionWithFiltersForGiornaleAntiriciclaggioResponse
@@ -35,8 +35,8 @@ export class RicercaComponent implements OnInit, OnDestroy {
   error = signal<string | null>(null);
   currencies = signal<Currency[]>([]);
   branches = signal<Branch[]>([]);
-  currencyTypes = signal<CurrencyType[]>([]);
-  stOperationsTypes = signal<StOperationType[]>([]);
+  currencyTypes = signal<ICurrencyType[]>([]);
+  stOperationsTypes = signal<IStOperationType[]>([]);
 
   constructor(
     private ricercaFacade: RicercaFacade,

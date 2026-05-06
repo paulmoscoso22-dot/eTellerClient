@@ -20,8 +20,8 @@ import {
   AntiRecRuleUpsert,
 } from '../../services/gestione-regole.service';
 import { Service } from '../../../../../core/services/service';
-import { StOperationType } from '../../../../../core/domain/stOperationType.domain';
-import { CurrencyType } from '../../../../../core/domain/currencyType.domain';
+import { IStOperationType } from '../../../../../core/domain/stOperationType.domain';
+import { ICurrencyType } from '../../../../../core/domain/currencyType.domain';
 
 @Component({
   selector: 'app-gestione-regole',
@@ -53,8 +53,8 @@ export class GestioneRegoleComponent implements OnDestroy {
   isLoading = signal(false);
   error = signal<string | null>(null);
 
-  operationTypes = signal<StOperationType[]>([]);
-  currencyTypes = signal<CurrencyType[]>([]);
+  operationTypes = signal<IStOperationType[]>([]);
+  currencyTypes = signal<ICurrencyType[]>([]);
 
   filterForm: FormGroup = this.fb.group({
     arlOpTypeId: [''],

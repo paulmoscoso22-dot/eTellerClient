@@ -1,4 +1,4 @@
-import { Component, signal, DestroyRef, inject } from '@angular/core';
+import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -9,10 +9,12 @@ import {
   DxSelectBoxModule,
 } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BookingRcService, BookingRcItem, BookingRcUpsert, AccountType } from '../../services/booking-rc.service';
+import notify from 'devextreme/ui/notify';
+import { BookingRcService } from '../../services/booking-rc.service';
+import { IBookingRcItemResponse, IBookingRcUpsertRequest, IAccountTypeResponse } from '../../models/booking-rc.models';
 import { Service } from '../../../../../core/services/service';
-import { StOperationType } from '../../../../../core/domain/stOperationType.domain';
-import { CurrencyType } from '../../../../../core/domain/currencyType.domain';
+import { IStOperationType } from '../../../../../core/domain/stOperationType.domain';
+import { ICurrencyType } from '../../../../../core/domain/currencyType.domain';
 
 @Component({
   selector: 'app-causale-movimenti',
@@ -29,19 +31,19 @@ import { CurrencyType } from '../../../../../core/domain/currencyType.domain';
   templateUrl: './causale-movimenti.component.html',
   styleUrls: ['./causale-movimenti.component.css'],
 })
-export class CausaleMovimentiComponent {
+export class CausaleMovimentiComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
   private readonly bookingRcService = inject(BookingRcService);
   private readonly coreService = inject(Service);
 
-  items = signal<BookingRcItem[]>([]);
+  items = signal<IBookingRcItemResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
 
-  operationTypes = signal<StOperationType[]>([]);
-  currencyTypes = signal<CurrencyType[]>([]);
-  accountTypes = signal<AccountType[]>([]);
+  operationTypes = signal<IStOperationType[]>([]);
+  currencyTypes = signal<ICurrencyType[]>([]);
+  accountTypes = signal<IAccountTypeResponse[]>([]);
 
   filterForm: FormGroup = this.fb.group({
     brcCutId: [null],
@@ -66,15 +68,28 @@ export class CausaleMovimentiComponent {
     brcText2: [''],
   });
 
-  constructor() {
+  constructor() {}
+
+  ngOnInit(): void {
+    this.loadCurrencyTypes();
+    this.loadOperationTypes();
+    this.loadAccountTypes();
+    this.showAll();
+  }
+
+  private loadCurrencyTypes(): void {
     this.coreService.getCurrencyTypes()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(data => this.currencyTypes.set(data));
+  }
 
+  private loadOperationTypes(): void {
     this.coreService.getStOperationsType()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(data => this.operationTypes.set(data));
+  }
 
+  private loadAccountTypes(): void {
     this.bookingRcService.getAccountTypes()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(data => this.accountTypes.set(data));
@@ -115,7 +130,7 @@ export class CausaleMovimentiComponent {
     this.isFormPopupVisible = true;
   }
 
-  openEditPopup(item: BookingRcItem): void {
+  openEditPopup(item: IBookingRcItemResponse): void {
     this.isEditMode.set(true);
     this.selectedKey.set({ cutId: item.brcCutId, optId: item.brcOptId, actId: item.brcActId });
     this.saveError.set(null);
@@ -136,21 +151,45 @@ export class CausaleMovimentiComponent {
   }
 
   save(): void {
+    if (!this.validateSaveForm()) return;
+
+    const payload = this.buildPayload();
+    const isEdit = this.isEditMode();
+    const label = `${payload.brcCutId} / ${payload.brcOptId} / ${payload.brcActId}`;
+
+    this.isSaving.set(true);
+    this.saveError.set(null);
+
+    const obs = isEdit
+      ? this.bookingRcService.update(payload)
+      : this.bookingRcService.insert(payload);
+
+    obs.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (result: boolean) => this.handleSaveResult(result, isEdit, label),
+      error: (err: any) => this.handleSaveError(err),
+    });
+  }
+
+  private validateSaveForm(): boolean {
     const v = this.editForm.value;
     if (!v.brcCutId || !v.brcOptId || !v.brcActId) {
       this.saveError.set('Selezionare Tipo divisa, Tipo operazione e Genere conto');
-      return;
+      return false;
     }
     if (!v.brcCodcau?.trim()) {
       this.saveError.set('Il campo Codice causale è obbligatorio');
-      return;
+      return false;
     }
     if (!v.brcCodcausto?.trim()) {
       this.saveError.set('Il campo Codice causale storno è obbligatorio');
-      return;
+      return false;
     }
+    return true;
+  }
 
-    const payload: BookingRcUpsert = {
+  private buildPayload(): IBookingRcUpsertRequest {
+    const v = this.editForm.value;
+    return {
       brcCutId: v.brcCutId,
       brcOptId: v.brcOptId,
       brcActId: v.brcActId,
@@ -158,30 +197,35 @@ export class CausaleMovimentiComponent {
       brcCodcausto: v.brcCodcausto.trim(),
       brcText1: v.brcText1?.trim() ?? '',
       brcText2: v.brcText2?.trim() ?? '',
+      traUser: '',
+      traStation: '',
     };
+  }
 
-    this.isSaving.set(true);
-    this.saveError.set(null);
+  private handleSaveResult(result: boolean, isEdit: boolean, label: string): void {
+    this.isSaving.set(false);
+    if (result) {
+      this.isFormPopupVisible = false;
+      notify(
+        isEdit
+          ? `Causale "${label}" aggiornata con successo`
+          : `Causale "${label}" inserita con successo`,
+        'success',
+        3000
+      );
+      this.search();
+    } else {
+      const msg = 'Operazione non riuscita. La combinazione di chiavi potrebbe essere già presente.';
+      notify(msg, 'error', 4000);
+      this.saveError.set(msg);
+    }
+  }
 
-    const obs = this.isEditMode()
-      ? this.bookingRcService.update(payload)
-      : this.bookingRcService.insert(payload);
-
-    obs.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (result: boolean) => {
-        this.isSaving.set(false);
-        if (result) {
-          this.isFormPopupVisible = false;
-          this.search();
-        } else {
-          this.saveError.set('Operazione non riuscita. La combinazione di chiavi potrebbe essere già presente.');
-        }
-      },
-      error: (err: any) => {
-        this.isSaving.set(false);
-        this.saveError.set(err.message || 'Errore durante il salvataggio');
-      }
-    });
+  private handleSaveError(err: any): void {
+    this.isSaving.set(false);
+    const msg = err.message || 'Errore durante il salvataggio';
+    notify(msg, 'error', 4000);
+    this.saveError.set(msg);
   }
 
   selectedKeyLabel(): string {
