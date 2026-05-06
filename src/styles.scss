@@ -13,6 +13,40 @@
     --page-content-height: calc(100vh - var(--header-height) - var(--breadcrumb-height) - 4rem);
 }
 
+/* =============================================================================
+   Sempione — SVG icon sizing (uniforma le icone in tutta l'app)
+   - `card-icon`: header/main card icons
+   - `toolbar-search-icon`, `popup-section-icon`, `casse-empty-icon`: piccoli iconi UI
+   - `spin-icon`: icona di caricamento
+   - azioni e template: icone di azione nelle celle
+   ============================================================================= */
+
+.card-icon {
+    width: 24px !important;
+    height: 24px !important;
+    flex-shrink: 0;
+}
+
+.toolbar-search-icon,
+.popup-section-icon,
+.casse-empty-icon {
+    width: 16px !important;
+    height: 16px !important;
+    flex-shrink: 0;
+}
+
+.spin-icon {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.actions-cell svg,
+.action-btn svg {
+    width: 16px !important;
+    height: 16px !important;
+}
+
+
 /* Reset user agent stylesheet defaults */
 // *, *::before, *::after {
 //     box-sizing: border-box;
