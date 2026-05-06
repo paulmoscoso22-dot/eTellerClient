@@ -1,3 +1,317 @@
-<div class="container">
-  <h1>Gestione Errori</h1>
+<div class="page-shell">
+
+  <!-- ── Main Card ── -->
+  <section class="card-section">
+
+    <div class="sempione-card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <h2 class="card-title">Gestione Errori (ST_ERRORCODE)</h2>
+    </div>
+    <div class="gold-divider"></div>
+
+    <!-- ── Filtri ── -->
+    <div class="card-toolbar" [formGroup]="filterForm">
+      <div class="toolbar-row">
+
+        <span class="filter-label">Codice:</span>
+        <dx-text-box
+          formControlName="errId"
+          [showClearButton]="true"
+          placeholder="Filtro codice..."
+          class="filter-control filter-control--sm">
+        </dx-text-box>
+
+        <span class="filter-label">Descrizione IT:</span>
+        <dx-text-box
+          formControlName="testoLike"
+          [showClearButton]="true"
+          placeholder="Filtro descrizione..."
+          class="filter-control filter-control--md">
+        </dx-text-box>
+
+        <div class="toolbar-row-spacer"></div>
+
+        <div class="toolbar-actions">
+          <dx-button
+            class="btn-reset"
+            text="Reset"
+            stylingMode="outlined"
+            icon="revert"
+            (onClick)="resetFilters()">
+          </dx-button>
+          <dx-button
+            class="btn-showall"
+            text="Mostra tutti"
+            stylingMode="outlined"
+            icon="checklist"
+            [disabled]="isLoading()"
+            (onClick)="showAll()">
+          </dx-button>
+          <dx-button
+            class="btn-cerca"
+            text="Cerca"
+            type="default"
+            stylingMode="contained"
+            icon="search"
+            [disabled]="isLoading()"
+            (onClick)="search()">
+          </dx-button>
+          <dx-button
+            class="btn-add"
+            text="Aggiungi"
+            stylingMode="outlined"
+            icon="add"
+            (onClick)="openAddPopup()">
+          </dx-button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Griglia ── -->
+    <div class="card-body card-body--grid">
+
+      @if (error()) {
+        <div class="grid-message grid-message--error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          {{ error() }}
+        </div>
+      }
+
+      @if (isLoading()) {
+        <div class="grid-message grid-message--loading">
+          <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          </svg>
+          Caricamento in corso...
+        </div>
+      }
+
+      @if (!isLoading() && !error()) {
+        <dx-data-grid
+          [dataSource]="items()"
+          [showBorders]="false"
+          [columnAutoWidth]="true"
+          [rowAlternationEnabled]="true"
+          [hoverStateEnabled]="true"
+          [height]="'100%'"
+          noDataText="Nessun risultato trovato.">
+
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-paging [pageSize]="30"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 30, 50, 100]" [showInfo]="true"></dxo-pager>
+
+          <dxi-column dataField="errId"     caption="CODICE"      alignment="left" [width]="130"></dxi-column>
+          <dxi-column dataField="errTyp"    caption="T"            alignment="center" [width]="60"></dxi-column>
+          <dxi-column dataField="errDescIt" caption="DESCRIZIONE"  alignment="left"></dxi-column>
+
+          <dxi-column
+            caption="Azioni"
+            [width]="130"
+            [allowSorting]="false"
+            [allowFiltering]="false"
+            alignment="center"
+            cellTemplate="actionsTemplate">
+          </dxi-column>
+
+          <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
+            <button class="action-btn action-btn--edit" title="Modifica" (click)="openEditPopup(cell.data)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </button>
+            <button class="action-btn action-btn--delete" title="Cancella" (click)="requestDelete(cell.data)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                <path d="M10 11v6"></path><path d="M14 11v6"></path>
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+              </svg>
+            </button>
+            <button class="action-btn action-btn--trace" title="Traccia" (click)="openTrace(cell.data)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <dxo-load-panel [enabled]="false"></dxo-load-panel>
+
+        </dx-data-grid>
+      }
+
+    </div>
+
+  </section>
+
 </div>
+
+<!-- ══ Popup Aggiungi / Modifica ══ -->
+<dx-popup
+  [(visible)]="isFormPopupVisible"
+  [showTitle]="true"
+  [title]="isEditMode() ? 'Modifica Errore' : 'Nuovo Errore'"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [width]="'90%'"
+  [maxWidth]="700"
+  [height]="'auto'"
+  [maxHeight]="'92vh'"
+  (onHidden)="closeFormPopup()">
+
+  <div *dxTemplate="let data of 'content'">
+    <div class="popup-layout" [formGroup]="editForm">
+
+      <section class="popup-card">
+        <div class="popup-fields-grid popup-fields-grid--2col">
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Codice Errore <span class="req">*</span></label>
+            <dx-text-box
+              formControlName="errId"
+              [maxLength]="25"
+              [showClearButton]="!isEditMode()"
+              placeholder="Max 25 caratteri...">
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Tipo</label>
+            <dx-select-box
+              formControlName="errTyp"
+              [items]="errTypOptions"
+              displayExpr="label"
+              valueExpr="id"
+              [showClearButton]="true"
+              placeholder="Seleziona tipo...">
+            </dx-select-box>
+          </div>
+
+          <div class="popup-field-group popup-field-group--full">
+            <label class="popup-field-label">Descrizione IT <span class="req">*</span></label>
+            <dx-text-box
+              formControlName="errDescIt"
+              [showClearButton]="true"
+              placeholder="Descrizione in italiano...">
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Descrizione EN</label>
+            <dx-text-box
+              formControlName="errDescEn"
+              [showClearButton]="true"
+              placeholder="Description in English...">
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Descrizione FR</label>
+            <dx-text-box
+              formControlName="errDescFr"
+              [showClearButton]="true"
+              placeholder="Description en Français...">
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Descrizione DE</label>
+            <dx-text-box
+              formControlName="errDescDe"
+              [showClearButton]="true"
+              placeholder="Beschreibung auf Deutsch...">
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group popup-field-group--full popup-field-group--flags">
+            <dx-check-box formControlName="errCanFlag" text="Cancellabile"></dx-check-box>
+            <dx-check-box formControlName="errConFlag" text="Confermabile"></dx-check-box>
+            <dx-check-box formControlName="errForFlag" text="Force Code abilitato"></dx-check-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Force Code</label>
+            <dx-select-box
+              formControlName="errFocId"
+              [items]="forceCodes()"
+              displayExpr="focDes"
+              valueExpr="focId"
+              [showClearButton]="true"
+              [disabled]="!isFocIdEnabled"
+              placeholder="Seleziona force code...">
+            </dx-select-box>
+          </div>
+
+          <div class="popup-field-group popup-field-group--full">
+            <label class="popup-field-label">Soluzione suggerita</label>
+            <dx-text-area
+              formControlName="errDesSol"
+              [height]="80"
+              placeholder="Descrizione della soluzione suggerita...">
+            </dx-text-area>
+          </div>
+
+        </div>
+      </section>
+
+      @if (saveError()) {
+        <div class="popup-error">{{ saveError() }}</div>
+      }
+
+      <div class="popup-actions">
+        <dx-button
+          text="Annulla"
+          stylingMode="outlined"
+          icon="close"
+          (onClick)="closeFormPopup()">
+        </dx-button>
+        <dx-button
+          [text]="isEditMode() ? 'Aggiorna' : 'Inserisci'"
+          type="default"
+          stylingMode="contained"
+          icon="save"
+          [disabled]="isSaving()"
+          (onClick)="save()">
+        </dx-button>
+      </div>
+
+    </div>
+  </div>
+
+</dx-popup>
+
+<!-- ══ Popup Conferma Cancellazione ══ -->
+<dx-popup
+  [(visible)]="isConfirmDeleteVisible"
+  [showTitle]="true"
+  title="Conferma Cancellazione"
+  [dragEnabled]="false"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [width]="400"
+  [height]="'auto'"
+  (onHidden)="cancelDelete()">
+
+  <div *dxTemplate="let data of 'content'">
+    <div class="popup-confirm">
+      <p>Eliminare l'errore <strong>{{ itemToDelete()?.errId }}</strong>?</p>
+      <p class="popup-confirm-sub">Questa operazione non può essere annullata.</p>
+      <div class="popup-actions">
+        <dx-button text="Annulla" stylingMode="outlined" icon="close" (onClick)="cancelDelete()"></dx-button>
+        <dx-button text="Elimina" type="danger" stylingMode="contained" icon="trash" (onClick)="confirmDelete()"></dx-button>
+      </div>
+    </div>
+  </div>
+
+</dx-popup>
