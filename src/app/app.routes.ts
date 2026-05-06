@@ -150,7 +150,7 @@ export const routes: Routes = [
       },
       {
         path: 'funzioni-traccie',
-        loadComponent: () => import('./features/manager/tabelle/pages/funzioni-traccie/funzioni-traccie.component').then(m => m.FunzioniTracceComponent)
+        loadComponent: () => import('./features/manager/tabelle/pages/funzioni-traccie/funzioni-traccie.component').then(m => m.FunzioniTraccieComponent)
       },
       {
         path: 'gestione-errori',

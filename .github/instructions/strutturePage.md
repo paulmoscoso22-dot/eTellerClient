@@ -211,6 +211,54 @@ Le funzionalità sono raggruppate in `features/`. Ogni feature deve contenere:
 - **Zoneless**: Scrivi codice compatibile con il futuro cambio a zoneless (evita logiche dipendenti da `zone.js`).
 - **Styles**: Usa Tailwind CSS all'interno del file `.html` o classi SCSS locali nel file `.css` della pagina.
 
+---
+
+### Regola Migrazione Pulsanti da ASPX
+
+Prima di implementare qualsiasi pagina Angular, **leggere obbligatoriamente il file `.aspx` e il relativo `.aspx.cs`** della pagina equivalente nel progetto `eTeller2022`. Identificare **tutti i pulsanti** presenti e mapparne il comportamento nella nuova pagina.
+
+#### Pulsanti tipici da migrare
+
+| Pulsante ASPX | Equivalente Angular | Note |
+|---|---|---|
+| `ButtonSearch` / `ButtonVisualizza` | `btn-cerca` in toolbar | Esegue `search()` |
+| `ButtonADD` / `Aggiungi` | `btn-add` in toolbar + popup insert | Apre popup in modalità inserimento |
+| `ButtonMod` / `Modifica` | `action-btn--edit` in griglia | Apre popup in modalità modifica |
+| `ButtonTRACE` / `Traccia` | `action-btn--trace` in griglia | Naviga a `/trace` con `ENTNAME` + `traEntCode` |
+| `ButtonClear` / `Reset Form` | `btn-reset` in toolbar | Esegue `resetFilters()` |
+| `ButtonDEL` / `Elimina` | `action-btn--delete` in griglia | Esegue `delete()` con confirm |
+
+#### Pulsante Traccia — pattern obbligatorio
+
+Ogni pagina che nel vecchio ASPX aveva `ButtonTRACE` **deve** includere il pulsante Traccia nella colonna azioni della griglia:
+
+```typescript
+// Nel component TS — iniettare Router
+private readonly router = inject(Router);
+
+openTrace(item: IXxxItemResponse): void {
+  this.router.navigate(['/trace'], {
+    queryParams: {
+      ENTNAME: NOME_TABELLA,   // es. 'ST_TRACE_FUNCTION'
+      traEntCode: item.id,
+    }
+  });
+}
+```
+
+```html
+<!-- Nella colonna azioni della griglia -->
+<button class="action-btn action-btn--trace" title="Traccia" (click)="openTrace(cell.data)">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="10"></circle>
+    <polyline points="12 6 12 12 16 14"></polyline>
+  </svg>
+</button>
+```
+
+> ❌ **Vietato** migrare una pagina senza aver verificato tutti i pulsanti del `.aspx` originale.
+
+
 
 
 
