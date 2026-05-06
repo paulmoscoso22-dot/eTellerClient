@@ -12,8 +12,8 @@ import {
 
 import { Currency } from '../../../../../core/domain/currency.domain';
 import { Branch } from '../../../../../core/domain/branch.domain';
-import { CurrencyType } from '../../../../../core/domain/currencyType.domain';
-import { StOperationType } from '../../../../../core/domain/stOperationType.domain';
+import { ICurrencyType } from '../../../../../core/domain/currencyType.domain';
+import { IStOperationType } from '../../../../../core/domain/stOperationType.domain';
 
 @Component({
   selector: 'app-ricerca-filter',
@@ -36,8 +36,8 @@ export class RicercaFilterComponent {
 
   @Input() currencies = signal<Currency[]>([]);
   @Input() branches = signal<Branch[]>([]);
-  @Input() currencyTypes = signal<CurrencyType[]>([]);
-  @Input() stOperationsTypes = signal<StOperationType[]>([]);
+  @Input() currencyTypes = signal<ICurrencyType[]>([]);
+  @Input() stOperationsTypes = signal<IStOperationType[]>([]);
   @Input() isLoading = signal(false);
 
   @Output() searchClick = new EventEmitter<any>();

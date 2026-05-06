@@ -4,8 +4,8 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Currency } from '../domain/currency.domain';
 import { Branch, IGetBranchByIdRequest } from '../domain/branch.domain';
-import { CurrencyType } from '../domain/currencyType.domain';
-import { StOperationType } from '../domain/stOperationType.domain';
+import { ICurrencyType } from '../domain/currencyType.domain';
+import { IStOperationType } from '../domain/stOperationType.domain';
 import { IGetLanguageByIdRequest, ISTLanguageResponse } from '../domain/laguage.domain';
 import { environment } from '../../../environments/environment';
 import { IGetStatoEntitaByIdRequest, ISTStatoEntitaResponse } from '../domain/stato-entita.domain';
@@ -64,12 +64,12 @@ export class Service {
     return this.http.post<Currency[]>(`${environment.apiUrl}/Currency`, {});
   }
   
-  getCurrencyTypes(): Observable<CurrencyType[]> {
-    return this.http.post<CurrencyType[]>(`${environment.apiUrl}/CurrencyType/GetCurrencyTypes`, {});
+  getCurrencyTypes(): Observable<ICurrencyType[]> {
+    return this.http.post<ICurrencyType[]>(`${environment.apiUrl}/CurrencyType/GetCurrencyTypes`, {});
   }
   
-  getStOperationsType(): Observable<StOperationType[]> {
-    return this.http.post<StOperationType[]>(`${environment.apiUrl}/StOperation/GetStOperations`, {});
+  getStOperationsType(): Observable<IStOperationType[]> {
+    return this.http.post<IStOperationType[]>(`${environment.apiUrl}/StOperation/GetStOperations`, {});
   }
   
   // #region Branch

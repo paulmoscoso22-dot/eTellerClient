@@ -1,4 +1,4 @@
-export interface CurrencyType {
+export interface ICurrencyType {
   cutId: string;
   cutDes: string;
 }

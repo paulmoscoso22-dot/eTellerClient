@@ -1,49 +1,26 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../../../../services/api.service';
-
-export interface AccountType {
-  actId: string;
-  actDes: string;
-}
-
-export interface BookingRcItem {
-  brcCutId: string;
-  brcOptId: string;
-  brcActId: string;
-  brcCodcau: string;
-  brcCodcausto: string;
-  brcText1: string;
-  brcText2: string;
-}
-
-export interface BookingRcUpsert {
-  brcCutId: string;
-  brcOptId: string;
-  brcActId: string;
-  brcCodcau: string;
-  brcCodcausto: string;
-  brcText1: string;
-  brcText2: string;
-}
+import { IAccountTypeResponse, IBookingRcGetAllRequest, IBookingRcItemResponse, IBookingRcUpsertRequest } from '../models/booking-rc.models';
 
 @Injectable({ providedIn: 'root' })
 export class BookingRcService {
   private readonly api = inject(ApiService);
 
-  getAll(brcCutId: string, brcOptId: string, brcActId: string): Observable<BookingRcItem[]> {
-    return this.api.post<BookingRcItem[]>('Manager/GetBookingRc', { brcCutId, brcOptId, brcActId });
+  getAll(brcCutId: string, brcOptId: string, brcActId: string): Observable<IBookingRcItemResponse[]> {
+    const body: IBookingRcGetAllRequest = { brcCutId, brcOptId, brcActId };
+    return this.api.post<IBookingRcItemResponse[]>('manager/BookingRc/GetBookingRc', body);
   }
 
-  getAccountTypes(): Observable<AccountType[]> {
-    return this.api.post<AccountType[]>('Manager/GetAccountTypes', {});
+  getAccountTypes(): Observable<IAccountTypeResponse[]> {
+    return this.api.post<IAccountTypeResponse[]>('manager/BookingRc/GetAccountTypes', {});
   }
 
-  insert(body: BookingRcUpsert): Observable<boolean> {
-    return this.api.post<boolean>('Manager/InsertBookingRc', body);
+  insert(item: IBookingRcUpsertRequest): Observable<boolean> {
+    return this.api.post<boolean>('manager/BookingRc/InsertBookingRc', item);
   }
 
-  update(body: BookingRcUpsert): Observable<boolean> {
-    return this.api.post<boolean>('Manager/UpdateBookingRc', body);
+  update(item: IBookingRcUpsertRequest): Observable<boolean> {
+    return this.api.post<boolean>('manager/BookingRc/UpdateBookingRc', item);
   }
 }

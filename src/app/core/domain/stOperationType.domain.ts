@@ -1,4 +1,4 @@
-export interface StOperationType {
+export interface IStOperationType {
   optId: string;
   optDes: string;
 }

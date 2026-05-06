@@ -17,8 +17,8 @@ import { RicercaOperazioniFacade } from '../services/ricerca-operazioni.facade';
 import { Service } from '../../../../core/services/service';
 import { Currency } from '../../../../core/domain/currency.domain';
 import { Branch } from '../../../../core/domain/branch.domain';
-import { CurrencyType } from '../../../../core/domain/currencyType.domain';
-import { StOperationType } from '../../../../core/domain/stOperationType.domain';
+import { ICurrencyType } from '../../../../core/domain/currencyType.domain';
+import { IStOperationType } from '../../../../core/domain/stOperationType.domain';
 import { RicercaOperazioniResponse } from '../domain/ricerca-operazioni.models';
 
 @Component({
@@ -48,8 +48,8 @@ export class RicercaOperazioniComponent implements OnInit, OnDestroy {
   error = signal<string | null>(null);
   currencies = signal<Currency[]>([]);
   branches = signal<Branch[]>([]);
-  currencyTypes = signal<CurrencyType[]>([]);
-  stOperationsTypes = signal<StOperationType[]>([]);
+  currencyTypes = signal<ICurrencyType[]>([]);
+  stOperationsTypes = signal<IStOperationType[]>([]);
   searchForm: FormGroup;
 
   selectedOperation = signal<RicercaOperazioniResponse | null>(null);
