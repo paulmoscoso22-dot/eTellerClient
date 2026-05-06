@@ -4,6 +4,10 @@
    ══════════════════════════════════════════ */
 
 :host {
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --color-text-primary:   #1e293b;
+  --color-text-secondary: #64748b;
+  --color-text-muted:     #94a3b8;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -46,19 +50,10 @@
   background: #fff;
   border: 1px solid #dce3ee;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.10);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-}
-
-/* Card 1: Filtri — altezza fissa (non cresce) */
-.card-section--filters {
-  flex-shrink: 0;
-}
-
-/* Card 2: Risultati — occupa tutto lo spazio restante */
-.card-section--results {
   flex: 1 1 auto;
   min-height: 0;
 }
@@ -80,64 +75,74 @@
 }
 
 .card-icon {
-  width: 14px;
-  height: 14px;
-  color: rgba(255, 255, 255, 0.85);
+  width: 18px;
+  height: 18px;
+  color: #ffffff;
   flex-shrink: 0;
 }
 
 .card-title {
   margin: 0;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   color: #fff;
+  flex: 1;
 }
 
 /* ══════════════════════════════════════════
-   Card 1 — Corpo Filtri
+   Card Toolbar — Filtri inline
    ══════════════════════════════════════════ */
-.filter-body {
-  padding: 14px 16px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.card-toolbar {
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-shrink: 0;
 }
 
-.filter-fields {
+.toolbar-inner {
   display: flex;
-  gap: 12px;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.filter-field {
+.toolbar-filters {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  gap: 10px;
   flex: 1;
-  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.toolbar-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 140px;
+}
+
+.toolbar-field--lg {
+  flex: 1;
+  min-width: 180px;
 }
 
 .toolbar-lbl {
-  font-size: 12px;
-  font-weight: 600;
-  color: #374151;
-  letter-spacing: 0.02em;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  letter-spacing: 0;
 }
 
-.toolbar-input {
-  width: 100%;
-}
-
-/* Bottoni a destra in fondo alla card filtri */
-.filter-footer {
+.toolbar-actions {
   display: flex;
-  justify-content: flex-end;
   gap: 6px;
+  align-items: flex-end;
+  flex-shrink: 0;
 }
 
 /* ══════════════════════════════════════════
-   Card 2 — Corpo Griglia
+   Card Body — Griglia
    ══════════════════════════════════════════ */
 .card-body--grid {
   padding: 0;
@@ -145,49 +150,106 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 /* ══════════════════════════════════════════
    DX Inputs
    ══════════════════════════════════════════ */
-:host ::ng-deep .toolbar-input .dx-texteditor {
-  height: 28px;
+:host ::ng-deep .card-toolbar .dx-texteditor                    { height: 28px; border-radius: 6px; }
+:host ::ng-deep .card-toolbar .dx-texteditor-input              { min-height: unset; height: 26px; padding-top: 3px; padding-bottom: 3px; font-size: 13px; }
+:host ::ng-deep .card-toolbar .dx-texteditor-input::placeholder  { font-size: 11px; font-style: italic; color: #b0b7c3; }
+:host ::ng-deep .card-toolbar .dx-texteditor-buttons-container   { height: 26px; }
+:host ::ng-deep .dx-button                                       { height: 28px; }
+
+:host ::ng-deep .card-toolbar .dx-texteditor.dx-state-focused {
+  border-color: #003366 !important;
+  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.08) !important;
+}
+:host ::ng-deep .card-toolbar .dx-texteditor.dx-state-focused .dx-texteditor-container {
+  border-color: #003366 !important;
 }
 
-:host ::ng-deep .toolbar-input .dx-texteditor-input {
-  min-height: unset;
-  height: 26px;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  font-size: 12.5px;
-}
+/* ══════════════════════════════════════════
+   Sistema Utility Bottoni — btn-fin-*
+   ══════════════════════════════════════════ */
 
-:host ::ng-deep .toolbar-input .dx-texteditor-input::placeholder {
-  font-size: 11px;
-  font-style: italic;
-  color: #b0b7c3;
+/* ── Primary: Navy filled ── */
+:host ::ng-deep .btn-fin-primary.dx-button,
+::ng-deep .btn-fin-primary.dx-button {
+  background-color: #003366 !important;
+  border-color: #003366 !important;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
-
-:host ::ng-deep .toolbar-input .dx-texteditor-buttons-container {
-  height: 26px;
+:host ::ng-deep .btn-fin-primary.dx-button:hover,
+::ng-deep .btn-fin-primary.dx-button:hover {
+  background-color: #004080 !important;
+  border-color: #004080 !important;
 }
+:host ::ng-deep .btn-fin-primary .dx-button-text,
+:host ::ng-deep .btn-fin-primary .dx-icon,
+::ng-deep .btn-fin-primary .dx-button-text,
+::ng-deep .btn-fin-primary .dx-icon { color: #ffffff !important; }
 
-:host ::ng-deep .dx-button {
-  height: 28px;
+/* ── Secondary: light border, dark text ── */
+:host ::ng-deep .btn-fin-secondary.dx-button,
+::ng-deep .btn-fin-secondary.dx-button {
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+  border-radius: 6px;
+  background: transparent !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+:host ::ng-deep .btn-fin-secondary.dx-button:hover,
+::ng-deep .btn-fin-secondary.dx-button:hover {
+  border-color: #94a3b8 !important;
+  background: rgba(15, 23, 42, 0.04) !important;
+}
+:host ::ng-deep .btn-fin-secondary .dx-button-text,
+:host ::ng-deep .btn-fin-secondary .dx-icon,
+::ng-deep .btn-fin-secondary .dx-button-text,
+::ng-deep .btn-fin-secondary .dx-icon { color: #1e293b !important; }
+
+/* ── Danger: red accent outlined ── */
+:host ::ng-deep .btn-fin-danger.dx-button,
+::ng-deep .btn-fin-danger.dx-button {
+  border-color: rgba(225, 29, 72, 0.35) !important;
+  color: #e11d48 !important;
+  border-radius: 6px;
+  background: transparent !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+:host ::ng-deep .btn-fin-danger.dx-button:hover,
+::ng-deep .btn-fin-danger.dx-button:hover {
+  border-color: #e11d48 !important;
+  background: rgba(225, 29, 72, 0.04) !important;
+}
+:host ::ng-deep .btn-fin-danger .dx-button-text,
+:host ::ng-deep .btn-fin-danger .dx-icon,
+::ng-deep .btn-fin-danger .dx-button-text,
+::ng-deep .btn-fin-danger .dx-icon { color: #e11d48 !important; }
+
+/* ── action-shadow: ombra morbida Navy per btn toolbar ── */
+:host ::ng-deep .action-shadow.dx-button,
+::ng-deep .action-shadow.dx-button {
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.15) !important;
 }
 
 /* ══════════════════════════════════════════
    DX Grid — Header Colonne
    ══════════════════════════════════════════ */
+:host ::ng-deep .dx-datagrid-headers {
+  border-bottom: 2px solid rgba(0, 51, 102, 0.65) !important;
+}
+
 :host ::ng-deep .dx-datagrid-headers .dx-header-row td {
   background-color: #EDF2F7 !important;
   color: #003366 !important;
   font-size: 11px !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.06em !important;
-  border-bottom: 2px solid rgba(0, 51, 102, 0.75) !important;
+  letter-spacing: 0.02em !important;
+  border-bottom: none !important;
   transition: background-color 0.15s !important;
 }
 
@@ -199,10 +261,17 @@
    DX Grid — Righe
    ══════════════════════════════════════════ */
 :host ::ng-deep .dx-data-row > td {
-  padding: 7px 10px !important;
-  font-size: 12px !important;
-  color: #334155 !important;
+  padding: 8px 10px !important;
+  font-family: var(--font-ui) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: var(--color-text-primary) !important;
   vertical-align: middle !important;
+  line-height: 1.45 !important;
+}
+
+:host ::ng-deep .dx-datagrid .dx-row > td {
+  border-bottom: 1px solid #f1f5f9 !important;
 }
 
 :host ::ng-deep .dx-data-row.dx-row-alt > td {
@@ -210,7 +279,7 @@
 }
 
 :host ::ng-deep .dx-data-row.dx-state-hover > td {
-  background-color: rgba(0, 51, 102, 0.03) !important;
+  background-color: rgba(0, 51, 102, 0.025) !important;
 }
 
 :host ::ng-deep .dx-selection.dx-data-row > td {
@@ -268,7 +337,7 @@
   z-index: 10;
   background: #fff;
   border-top: 1px solid #e5e7eb !important;
-  padding: 5px 10px !important;
+  padding: 2px 10px !important;
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-pager {
@@ -282,21 +351,21 @@
 :host ::ng-deep .dx-datagrid-pager .dx-info {
   order: -1 !important;
   margin-right: auto !important;
-  font-size: 11px !important;
+  font-size: 10px !important;
   color: #6b7280 !important;
   font-weight: 500;
   white-space: nowrap;
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page {
-  min-width: 28px !important;
-  height: 28px !important;
+  min-width: 22px !important;
+  height: 22px !important;
   line-height: normal !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  border-radius: 6px !important;
-  font-size: 12px !important;
+  border-radius: 5px !important;
+  font-size: 11px !important;
   font-weight: 500;
   color: #374151 !important;
   border: 1px solid #dce3ee !important;
@@ -306,9 +375,9 @@
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page:hover {
-  background: rgba(197, 160, 89, 0.08) !important;
-  color: #7a5c1e !important;
-  border-color: rgba(197, 160, 89, 0.5) !important;
+  background: rgba(0, 51, 102, 0.06) !important;
+  color: #003366 !important;
+  border-color: rgba(0, 51, 102, 0.3) !important;
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page.dx-selection {
@@ -319,14 +388,14 @@
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-navigate-button {
-  width: 28px !important;
-  height: 28px !important;
+  width: 22px !important;
+  height: 22px !important;
   line-height: normal !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   vertical-align: middle !important;
-  border-radius: 6px !important;
+  border-radius: 5px !important;
   border: 1px solid transparent !important;
   transition: background 0.15s, color 0.15s;
 }
@@ -352,11 +421,11 @@
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-page-size {
-  font-size: 12px !important;
-  height: 28px !important;
-  line-height: 28px !important;
-  padding: 0 10px !important;
-  border-radius: 6px !important;
+  font-size: 11px !important;
+  height: 22px !important;
+  line-height: 22px !important;
+  padding: 0 8px !important;
+  border-radius: 5px !important;
   border: 1px solid #dce3ee !important;
   color: #374151 !important;
   background: transparent !important;
@@ -364,9 +433,9 @@
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-page-size:hover {
-  background: rgba(197, 160, 89, 0.08) !important;
-  color: #7a5c1e !important;
-  border-color: rgba(197, 160, 89, 0.5) !important;
+  background: rgba(0, 51, 102, 0.06) !important;
+  color: #003366 !important;
+  border-color: rgba(0, 51, 102, 0.3) !important;
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-page-size.dx-selection {
@@ -376,14 +445,3 @@
   border-color: rgba(0, 51, 102, 0.3) !important;
 }
 
-/* ── Pulsante Cerca ── */
-:host ::ng-deep .btn-cerca.dx-button-default.dx-button-mode-contained {
-  background-color: #003366;
-  border-color: #003366;
-  white-space: nowrap;
-}
-
-:host ::ng-deep .btn-cerca.dx-button-default.dx-button-mode-contained:hover {
-  background-color: #004080;
-  border-color: #004080;
-}

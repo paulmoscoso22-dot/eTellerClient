@@ -1,118 +1,116 @@
-<div class="insert-container">
-  <form [formGroup]="insertForm" (ngSubmit)="onSubmit()">
-    
-    <div class="form-columns">
-      <!-- Primo Cologn -->
-      <div class="dx-fieldset">
-        <div class="dx-field">
-          <div class="dx-field-label">Data Registrazione *</div>
-          <div class="dx-field-value">
-            <dx-date-box formControlName="hisDate" type="date" displayFormat="dd/MM/yyyy">
-              <dx-validator>
-                <dxi-validation-rule type="required" message="Data Registrazione is required"></dxi-validation-rule>
-              </dx-validator>
-            </dx-date-box>
-          </div>
+<form [formGroup]="insertForm" (ngSubmit)="onSubmit()">
+  <div class="popup-layout">
+
+    <!-- ── Card 1: Registrazione ── -->
+    <section class="popup-card">
+      <h3 class="popup-card-title">Registrazione</h3>
+      <div class="popup-fields-grid popup-fields-grid--2col">
+
+        <div class="popup-field-group">
+          <label class="popup-field-label">Data registrazione <span class="req">*</span></label>
+          <dx-date-box formControlName="hisDate" type="date" displayFormat="dd/MM/yyyy" labelMode="hidden">
+            <dx-validator>
+              <dxi-validation-rule type="required" message="Data Registrazione obbligatoria"></dxi-validation-rule>
+            </dx-validator>
+          </dx-date-box>
         </div>
 
-        <div class="dx-field">
-          <div class="dx-field-label">Ara Recdate *</div>
-          <div class="dx-field-value">
-            <dx-date-box formControlName="araRecdate" type="date" displayFormat="dd/MM/yyyy">
-              <dx-validator>
-                <dxi-validation-rule type="required" message="Ara Recdate is required"></dxi-validation-rule>
-              </dx-validator>
-            </dx-date-box>
-          </div>
+        <div class="popup-field-group">
+          <label class="popup-field-label">Data ricezione <span class="req">*</span></label>
+          <dx-date-box formControlName="araRecdate" type="date" displayFormat="dd/MM/yyyy" labelMode="hidden">
+            <dx-validator>
+              <dxi-validation-rule type="required" message="Data ricezione obbligatoria"></dxi-validation-rule>
+            </dx-validator>
+          </dx-date-box>
         </div>
 
-        <div class="dx-field">
-          <div class="dx-field-label">Ara Name *</div>
-          <div class="dx-field-value">
-            <dx-text-box formControlName="araName">
-              <dx-validator>
-                <dxi-validation-rule type="required" message="Ara Name is required"></dxi-validation-rule>
-              </dx-validator>
-            </dx-text-box>
-          </div>
+        <div class="popup-field-group popup-col-span-2">
+          <label class="popup-field-label">Nome comparente <span class="req">*</span></label>
+          <dx-text-box formControlName="araName" labelMode="hidden">
+            <dx-validator>
+              <dxi-validation-rule type="required" message="Nome obbligatorio"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
         </div>
 
-        <div class="dx-field">
-          <div class="dx-field-label">Ara Birthdate</div>
-          <div class="dx-field-value">
-            <dx-date-box formControlName="araBirthdate" type="date" displayFormat="dd/MM/yyyy"></dx-date-box>
-          </div>
+      </div>
+    </section>
+
+    <!-- ── Card 2: Anagrafica ── -->
+    <section class="popup-card">
+      <h3 class="popup-card-title">Anagrafica</h3>
+      <div class="popup-fields-grid popup-fields-grid--2col">
+
+        <div class="popup-field-group">
+          <label class="popup-field-label">Data di nascita</label>
+          <dx-date-box formControlName="araBirthdate" type="date" displayFormat="dd/MM/yyyy" labelMode="hidden"></dx-date-box>
         </div>
 
-        <div class="dx-field">
-          <div class="dx-field-label">Ara Birthplace</div>
-          <div class="dx-field-value">
-            <dx-text-box formControlName="araBirthplace"></dx-text-box>
-          </div>
+        <div class="popup-field-group">
+          <label class="popup-field-label">Luogo di nascita</label>
+          <dx-text-box formControlName="araBirthplace" labelMode="hidden"></dx-text-box>
         </div>
 
-        <div class="dx-field">
-          <div class="dx-field-label">Ara Nationality</div>
-          <div class="dx-field-value">
-            <dx-select-box
-              formControlName="araNationality"
-              [dataSource]="countries()"
-              displayExpr="ctyShonamIta"
-              valueExpr="ctyIntcod"
-              [searchEnabled]="true"
-              placeholder="Seleziona Nazionalità...">
-            </dx-select-box>
-          </div>
+        <div class="popup-field-group popup-col-span-2">
+          <label class="popup-field-label">Nazionalità</label>
+          <dx-select-box
+            formControlName="araNationality"
+            [dataSource]="countries()"
+            displayExpr="ctyShonamIta"
+            valueExpr="ctyIntcod"
+            [searchEnabled]="true"
+            placeholder="Seleziona nazionalità..."
+            labelMode="hidden">
+          </dx-select-box>
+        </div>
+
+        <div class="popup-field-group">
+          <label class="popup-field-label">N° documento identità</label>
+          <dx-text-box formControlName="araIddocnum" labelMode="hidden"></dx-text-box>
+        </div>
+
+        <div class="popup-field-group">
+          <label class="popup-field-label">Scadenza documento</label>
+          <dx-date-box formControlName="araDocexpdate" type="date" displayFormat="dd/MM/yyyy" labelMode="hidden"></dx-date-box>
+        </div>
+
+        <div class="popup-field-group">
+          <label class="popup-field-label">Indirizzo</label>
+          <dx-text-box formControlName="araAddress" labelMode="hidden"></dx-text-box>
+        </div>
+
+        <div class="popup-field-group">
+          <label class="popup-field-label">Rappresenta</label>
+          <dx-text-box formControlName="araRepresents" labelMode="hidden"></dx-text-box>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Card 3: Opzioni ── -->
+    <section class="popup-card">
+      <h3 class="popup-card-title">Opzioni</h3>
+      <div class="popup-fields-grid">
+        <div class="popup-field-group">
+          <dx-check-box formControlName="araRecComplete" text="Registrazione completa"></dx-check-box>
         </div>
       </div>
+    </section>
 
-      <!-- Secondo Cologn -->
-      <div class="dx-fieldset">
-        <div class="dx-field">
-          <div class="dx-field-label">Ara Id Doc Num</div>
-          <div class="dx-field-value">
-            <dx-text-box formControlName="araIddocnum"></dx-text-box>
-          </div>
-        </div>
-
-        <div class="dx-field">
-          <div class="dx-field-label">Ara Doc Exp Date</div>
-          <div class="dx-field-value">
-            <dx-date-box formControlName="araDocexpdate" type="date" displayFormat="dd/MM/yyyy"></dx-date-box>
-          </div>
-        </div>
-
-        <div class="dx-field">
-          <div class="dx-field-label">Ara Rec Complete *</div>
-          <div class="dx-field-value">
-            <dx-check-box formControlName="araRecComplete"></dx-check-box>
-          </div>
-        </div>
-
-        <div class="dx-field">
-          <div class="dx-field-label">Ara Represents</div>
-          <div class="dx-field-value">
-            <dx-text-box formControlName="araRepresents"></dx-text-box>
-          </div>
-        </div>
-
-        <div class="dx-field">
-          <div class="dx-field-label">Ara Address</div>
-          <div class="dx-field-value">
-            <dx-text-box formControlName="araAddress"></dx-text-box>
-          </div>
-        </div>
+    <!-- ── Action bar ── -->
+    <div class="popup-action-bar">
+      <div class="popup-actions-secondary"></div>
+      <div class="popup-actions-primary">
+        <dx-button
+          text="Salva"
+          icon="save"
+          stylingMode="contained"
+          class="btn-fin-primary"
+          [useSubmitBehavior]="true"
+          [disabled]="insertForm.invalid">
+        </dx-button>
       </div>
     </div>
 
-    <div class="submit-button-container" style="text-align: right; padding-top: 20px; border-top: 1px solid #ddd; margin-top: 10px;">
-      <dx-button 
-        text="Salva" 
-        type="success" 
-        [useSubmitBehavior]="true" 
-        [disabled]="insertForm.invalid">
-      </dx-button>
-    </div>
-
-  </form>
-</div>
+  </div>
+</form>

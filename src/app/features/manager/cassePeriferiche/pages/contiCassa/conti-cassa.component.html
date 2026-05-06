@@ -1,5 +1,10 @@
 <div class="page-shell">
 
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Conti Cassa</h1>
+  </div>
+
   <!-- ── Main Card: Conti Cassa ── -->
   <section class="card-section">
 
@@ -14,112 +19,114 @@
 
     <!-- Toolbar filtri -->
     <div class="card-toolbar">
+      <div class="toolbar-inner">
 
-      <div class="toolbar-row">
-        <span class="filter-label">Cassa:</span>
-        <dx-select-box
-          [dataSource]="cassaFilterList"
-          displayExpr="cliDes"
-          valueExpr="cliId"
-          [value]="filterCassa()"
-          [showClearButton]="false"
-          class="filter-control"
-          (onValueChanged)="onFilterCassaChanged($event)">
-        </dx-select-box>
+        <div class="toolbar-filters">
+          <div class="toolbar-field toolbar-field--sm">
+            <label class="toolbar-lbl">Cassa</label>
+            <dx-select-box
+              [dataSource]="cassaFilterList"
+              displayExpr="cliDes"
+              valueExpr="cliId"
+              [value]="filterCassa()"
+              [showClearButton]="false"
+              (onValueChanged)="onFilterCassaChanged($event)">
+            </dx-select-box>
+          </div>
 
-        <span class="filter-label">Genere:</span>
-        <dx-select-box
-          [dataSource]="actFilterList"
-          displayExpr="actDes"
-          valueExpr="actId"
-          [value]="filterActId()"
-          [showClearButton]="false"
-          class="filter-control"
-          (onValueChanged)="onFilterActChanged($event)">
-        </dx-select-box>
+          <div class="toolbar-field toolbar-field--sm">
+            <label class="toolbar-lbl">Genere</label>
+            <dx-select-box
+              [dataSource]="actFilterList"
+              displayExpr="actDes"
+              valueExpr="actId"
+              [value]="filterActId()"
+              [showClearButton]="false"
+              (onValueChanged)="onFilterActChanged($event)">
+            </dx-select-box>
+          </div>
 
-        <span class="filter-label">Località:</span>
-        <dx-select-box
-          [dataSource]="brancheFilterList"
-          displayExpr="braDes"
-          valueExpr="braId"
-          [value]="filterBraId()"
-          [showClearButton]="false"
-          class="filter-control"
-          (onValueChanged)="onFilterBraChanged($event)">
-        </dx-select-box>
+          <div class="toolbar-field toolbar-field--sm">
+            <label class="toolbar-lbl">Località</label>
+            <dx-select-box
+              [dataSource]="brancheFilterList"
+              displayExpr="braDes"
+              valueExpr="braId"
+              [value]="filterBraId()"
+              [showClearButton]="false"
+              (onValueChanged)="onFilterBraChanged($event)">
+            </dx-select-box>
+          </div>
 
-        <div class="toolbar-row-spacer"></div>
+          <div class="toolbar-field toolbar-field--sm">
+            <label class="toolbar-lbl">Divisa</label>
+            <dx-select-box
+              [dataSource]="divisaFilterList"
+              displayExpr="curLondes"
+              valueExpr="curId"
+              [value]="filterCurId()"
+              [showClearButton]="false"
+              (onValueChanged)="onFilterCurChanged($event)">
+            </dx-select-box>
+          </div>
+
+          <div class="toolbar-field toolbar-field--sm">
+            <label class="toolbar-lbl">N° Conto</label>
+            <dx-text-box
+              [value]="filterAccId()"
+              [showClearButton]="true"
+              valueChangeEvent="input"
+              (onValueChanged)="onFilterAccIdChanged($event)">
+            </dx-text-box>
+          </div>
+
+          <div class="toolbar-field toolbar-field--sm">
+            <label class="toolbar-lbl">Gruppo</label>
+            <dx-select-box
+              [dataSource]="gruppoFilterList"
+              displayExpr="cutDes"
+              valueExpr="cutId"
+              [value]="filterCutId()"
+              [showClearButton]="false"
+              (onValueChanged)="onFilterCutChanged($event)">
+            </dx-select-box>
+          </div>
+
+          <div class="toolbar-field toolbar-field--lg">
+            <label class="toolbar-lbl">Descrizione</label>
+            <dx-text-box
+              [value]="filterDes()"
+              [showClearButton]="true"
+              valueChangeEvent="input"
+              (onValueChanged)="onFilterDesChanged($event)">
+            </dx-text-box>
+          </div>
+        </div>
 
         <div class="toolbar-actions">
           <dx-button
-            class="btn-cerca"
-            text="Cerca"
-            type="default"
-            stylingMode="contained"
-            icon="search">
+            class="btn-fin-secondary"
+            stylingMode="outlined"
+            icon="search"
+            hint="Cerca"
+            (onClick)="onSearch()">
           </dx-button>
           <dx-button
-            class="btn-reset"
-            text="Reset"
+            class="btn-fin-secondary"
             stylingMode="outlined"
             icon="revert"
+            hint="Ripristina filtri"
             (onClick)="resetFilters()">
           </dx-button>
           <dx-button
-            class="btn-new"
-            text="Nuovo"
-            type="default"
+            class="btn-fin-primary action-shadow"
+            text="Nuovo Conto"
             stylingMode="contained"
             (onClick)="openNewPopup()">
           </dx-button>
         </div>
+
       </div>
-
-      <div class="toolbar-row-separator"></div>
-
-      <div class="toolbar-row">
-        <span class="filter-label">Divisa:</span>
-        <dx-select-box
-          [dataSource]="divisaFilterList"
-          displayExpr="curLondes"
-          valueExpr="curId"
-          [value]="filterCurId()"
-          [showClearButton]="false"
-          class="filter-control"
-          (onValueChanged)="onFilterCurChanged($event)">
-        </dx-select-box>
-
-        <span class="filter-label">N° Conto:</span>
-        <dx-text-box
-          [value]="filterAccId()"
-          [showClearButton]="true"
-          valueChangeEvent="input"
-          class="filter-control"
-          (onValueChanged)="onFilterAccIdChanged($event)">
-        </dx-text-box>
-
-        <span class="filter-label">Gruppo:</span>
-        <dx-select-box
-          [dataSource]="gruppoFilterList"
-          displayExpr="cutDes"
-          valueExpr="cutId"
-          [value]="filterCutId()"
-          [showClearButton]="false"
-          class="filter-control"
-          (onValueChanged)="onFilterCutChanged($event)">
-        </dx-select-box>
-
-        <span class="filter-label">Descrizione:</span>
-        <dx-text-box
-          [value]="filterDes()"
-          [showClearButton]="true"
-          valueChangeEvent="input"
-          class="filter-control filter-control--wide"
-          (onValueChanged)="onFilterDesChanged($event)">
-        </dx-text-box>
-      </div>
-
     </div>
 
     <!-- Griglia -->
@@ -135,7 +142,14 @@
 
         <dxo-selection mode="single"></dxo-selection>
         <dxo-paging [pageSize]="20"></dxo-paging>
-        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
+        <dxo-pager
+          [showInfo]="true"
+          infoText="{2} conti"
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[20, 50, 100]"
+          [showNavigationButtons]="true"
+          displayMode="full">
+        </dxo-pager>
 
         <dxi-column dataField="iacHostPrefix" caption="Cod. Conto"   [width]="100" alignment="left"></dxi-column>
         <dxi-column dataField="iacActId"      caption="Tipo"         [width]="110" alignment="center" cellTemplate="actTemplate"></dxi-column>
@@ -345,7 +359,7 @@
         <div class="popup-actions-secondary">
           @if (popupMode() !== 'new') {
             <dx-button
-              class="btn-action-outline"
+              class="btn-fin-secondary"
               text="Storico"
               icon="clock"
               stylingMode="outlined"
@@ -355,28 +369,19 @@
         </div>
 
         <div class="popup-actions-primary">
-          @if (popupMode() === 'view') {
+          <dx-button
+            [text]="popupMode() === 'view' ? 'Chiudi' : 'Annulla'"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="closePopup()">
+          </dx-button>
+          @if (popupMode() !== 'view') {
             <dx-button
-              class="btn-action-close"
-              text="Chiudi"
-              icon="close"
-              (onClick)="closePopup()">
-            </dx-button>
-          }
-          @if (popupMode() === 'new') {
-            <dx-button
-              class="btn-action-primary"
-              text="Aggiungi"
-              icon="plus"
-              (onClick)="onSubmit()">
-            </dx-button>
-          }
-          @if (popupMode() === 'edit') {
-            <dx-button
-              class="btn-action-primary"
-              text="Salva"
-              icon="save"
-              (onClick)="onUpdate()">
+              class="btn-fin-primary"
+              [text]="popupMode() === 'new' ? 'Crea Conto' : 'Salva Modifiche'"
+              [icon]="popupMode() === 'new' ? 'plus' : 'save'"
+              stylingMode="contained"
+              (onClick)="popupMode() === 'new' ? onSubmit() : onUpdate()">
             </dx-button>
           }
         </div>

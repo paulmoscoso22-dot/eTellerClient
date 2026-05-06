@@ -1,5 +1,10 @@
 <div class="page-shell">
 
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Gestione Comparenti ADE</h1>
+  </div>
+
   <!-- ── Main Card ── -->
   <section class="card-section">
 
@@ -14,63 +19,59 @@
     </div>
     <div class="gold-divider"></div>
 
-    <!-- ── Filtri ── -->
+    <!-- ── Toolbar ── -->
     <div class="card-toolbar" [formGroup]="filterForm">
-      <div class="toolbar-row">
+      <div class="toolbar-inner">
 
-        <span class="filter-label">Nome:</span>
-        <dx-text-box
-          formControlName="araName"
-          [showClearButton]="true"
-          placeholder="Nome e cognome..."
-          class="filter-control filter-control--lg">
-        </dx-text-box>
+        <div class="toolbar-filters">
+          <div class="toolbar-field toolbar-field--lg">
+            <label class="toolbar-lbl">Nome e cognome</label>
+            <dx-text-box
+              formControlName="araName"
+              [showClearButton]="true"
+              placeholder="Nome e cognome..."
+              labelMode="hidden">
+            </dx-text-box>
+          </div>
 
-        <span class="filter-label">Data nascita:</span>
-        <dx-date-box
-          formControlName="araBirthdate"
-          type="date"
-          displayFormat="dd.MM.yyyy"
-          [showClearButton]="true"
-          class="filter-control filter-control--date">
-        </dx-date-box>
+          <div class="toolbar-field">
+            <label class="toolbar-lbl">Data nascita</label>
+            <dx-date-box
+              formControlName="araBirthdate"
+              type="date"
+              displayFormat="dd.MM.yyyy"
+              [showClearButton]="true"
+              labelMode="hidden">
+            </dx-date-box>
+          </div>
 
-        <dx-check-box
-          formControlName="araRecComplete"
-          text="Solo completi"
-          class="filter-chk">
-        </dx-check-box>
-
-        <dx-check-box
-          formControlName="showExpiredRecords"
-          text="Mostra scaduti"
-          class="filter-chk">
-        </dx-check-box>
-
-        <div class="toolbar-row-spacer"></div>
+          <div class="toolbar-checks">
+            <dx-check-box formControlName="araRecComplete"      text="Solo completi"></dx-check-box>
+            <dx-check-box formControlName="showExpiredRecords"  text="Mostra scaduti"></dx-check-box>
+          </div>
+        </div>
 
         <div class="toolbar-actions">
           <dx-button
-            class="btn-reset"
-            text="Reset"
-            stylingMode="outlined"
-            icon="revert"
-            (onClick)="resetFilters()">
-          </dx-button>
-          <dx-button
-            class="btn-cerca"
-            text="Cerca"
-            type="default"
-            stylingMode="contained"
             icon="search"
+            hint="Cerca"
+            stylingMode="contained"
+            class="btn-fin-primary action-shadow"
             [disabled]="isLoading()"
             (onClick)="search()">
           </dx-button>
           <dx-button
-            class="btn-add"
-            text="Aggiungi"
+            icon="revert"
+            hint="Ripristina filtri"
             stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="resetFilters()">
+          </dx-button>
+          <dx-button
             icon="add"
+            text="Aggiungi"
+            stylingMode="contained"
+            class="btn-fin-primary"
             (onClick)="openAddPopup()">
           </dx-button>
         </div>
@@ -105,7 +106,7 @@
         <dx-data-grid
           [dataSource]="appearers()"
           [showBorders]="false"
-          [columnAutoWidth]="true"
+          [columnAutoWidth]="false"
           [rowAlternationEnabled]="true"
           [hoverStateEnabled]="true"
           [height]="'100%'"
@@ -113,16 +114,22 @@
 
           <dxo-selection mode="single"></dxo-selection>
           <dxo-paging [pageSize]="30"></dxo-paging>
-          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 30, 50, 100]" [showInfo]="true"></dxo-pager>
+          <dxo-pager
+            [showPageSizeSelector]="true"
+            [allowedPageSizes]="[20, 30, 50, 100]"
+            [showInfo]="true"
+            [showNavigationButtons]="true"
+            displayMode="full">
+          </dxo-pager>
 
-          <dxi-column dataField="araName"       caption="Nome e cognome"   alignment="left"></dxi-column>
-          <dxi-column dataField="araRepresents" caption="Rappresentanza"   alignment="left"   [width]="130"></dxi-column>
-          <dxi-column dataField="araBirthdate"  caption="Data nascita"     alignment="center" [width]="105" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="araNationality"caption="Nazionalità"      alignment="left"   [width]="110"></dxi-column>
-          <dxi-column dataField="araAddress"    caption="Domicilio"        alignment="left"   [width]="160"></dxi-column>
-          <dxi-column dataField="araIddocnum"   caption="Nr doc identità"  alignment="left"   [width]="130"></dxi-column>
-          <dxi-column dataField="araDocexpdate" caption="Scad. doc."       alignment="center" [width]="100" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="araRecComplete"caption="Completo"         alignment="center" [width]="85"  cellTemplate="boolTemplate"></dxi-column>
+          <dxi-column dataField="araName"        caption="Nome e cognome"  alignment="left"></dxi-column>
+          <dxi-column dataField="araRepresents"  caption="Rappresentanza"  alignment="left"   [width]="130"></dxi-column>
+          <dxi-column dataField="araBirthdate"   caption="Data nascita"    alignment="center" [width]="105" dataType="date" format="dd.MM.yyyy"></dxi-column>
+          <dxi-column dataField="araNationality" caption="Nazionalità"     alignment="left"   [width]="110"></dxi-column>
+          <dxi-column dataField="araAddress"     caption="Domicilio"       alignment="left"   [width]="160"></dxi-column>
+          <dxi-column dataField="araIddocnum"    caption="Nr doc identità" alignment="left"   [width]="130"></dxi-column>
+          <dxi-column dataField="araDocexpdate"  caption="Scad. doc."      alignment="center" [width]="100" dataType="date" format="dd.MM.yyyy"></dxi-column>
+          <dxi-column dataField="araRecComplete" caption="Completo"        alignment="center" [width]="85"  cellTemplate="boolTemplate"></dxi-column>
 
           <dxi-column
             caption="Azioni"
@@ -210,32 +217,32 @@
           <h3 class="popup-card-title">Anagrafica</h3>
           <div class="popup-fields-grid popup-fields-grid--2col">
 
-            <div class="popup-field-group popup-field-group--full">
+            <div class="popup-field-group popup-col-span-2">
               <label class="popup-field-label">Nome e cognome <span class="req">*</span></label>
-              <dx-text-box formControlName="araName" [showClearButton]="true" placeholder="Nome e cognome..."></dx-text-box>
+              <dx-text-box formControlName="araName" [showClearButton]="true" placeholder="Nome e cognome..." labelMode="hidden"></dx-text-box>
             </div>
 
             <div class="popup-field-group">
               <label class="popup-field-label">Rappresentanza</label>
-              <dx-text-box formControlName="araRepresents" [showClearButton]="true"></dx-text-box>
+              <dx-text-box formControlName="araRepresents" [showClearButton]="true" labelMode="hidden"></dx-text-box>
             </div>
 
             <div class="popup-field-group">
               <label class="popup-field-label">Domicilio</label>
-              <dx-text-box formControlName="araAddress" [showClearButton]="true"></dx-text-box>
+              <dx-text-box formControlName="araAddress" [showClearButton]="true" labelMode="hidden"></dx-text-box>
             </div>
 
             <div class="popup-field-group">
               <label class="popup-field-label">Data nascita</label>
-              <dx-date-box formControlName="araBirthdate" type="date" displayFormat="dd.MM.yyyy" [showClearButton]="true"></dx-date-box>
+              <dx-date-box formControlName="araBirthdate" type="date" displayFormat="dd.MM.yyyy" [showClearButton]="true" labelMode="hidden"></dx-date-box>
             </div>
 
             <div class="popup-field-group">
               <label class="popup-field-label">Luogo nascita</label>
-              <dx-text-box formControlName="araBirthplace" [showClearButton]="true"></dx-text-box>
+              <dx-text-box formControlName="araBirthplace" [showClearButton]="true" labelMode="hidden"></dx-text-box>
             </div>
 
-            <div class="popup-field-group">
+            <div class="popup-field-group popup-col-span-2">
               <label class="popup-field-label">Nazionalità</label>
               <dx-select-box
                 formControlName="araNationality"
@@ -244,7 +251,8 @@
                 valueExpr="ctyIntcod"
                 [showClearButton]="true"
                 [searchEnabled]="true"
-                placeholder="Selezionare...">
+                placeholder="Selezionare..."
+                labelMode="hidden">
               </dx-select-box>
             </div>
 
@@ -258,15 +266,15 @@
 
             <div class="popup-field-group">
               <label class="popup-field-label">Nr. documento</label>
-              <dx-text-box formControlName="araIddocnum" [showClearButton]="true"></dx-text-box>
+              <dx-text-box formControlName="araIddocnum" [showClearButton]="true" labelMode="hidden"></dx-text-box>
             </div>
 
             <div class="popup-field-group">
               <label class="popup-field-label">Scadenza documento</label>
-              <dx-date-box formControlName="araDocexpdate" type="date" displayFormat="dd.MM.yyyy" [showClearButton]="true"></dx-date-box>
+              <dx-date-box formControlName="araDocexpdate" type="date" displayFormat="dd.MM.yyyy" [showClearButton]="true" labelMode="hidden"></dx-date-box>
             </div>
 
-            <div class="popup-field-group popup-field-group--checkboxes">
+            <div class="popup-field-group">
               <label class="popup-field-label">Opzioni</label>
               <div class="checkbox-stack">
                 <dx-check-box formControlName="araRecComplete" text="Scheda completa"></dx-check-box>
@@ -292,20 +300,21 @@
 
         <!-- ── Action bar ── -->
         <div class="popup-action-bar">
-          <div class="popup-actions-secondary"></div>
-          <div class="popup-actions-primary">
+          <div class="popup-actions-secondary">
             <dx-button
-              class="btn-action-close"
               text="Annulla"
               icon="close"
+              stylingMode="outlined"
+              class="btn-fin-secondary"
               (onClick)="closeFormPopup()">
             </dx-button>
+          </div>
+          <div class="popup-actions-primary">
             <dx-button
-              class="btn-action-save"
               [text]="isSaving() ? 'Salvataggio...' : 'Salva'"
-              type="default"
-              stylingMode="contained"
               icon="save"
+              stylingMode="contained"
+              class="btn-fin-primary"
               [disabled]="isSaving()"
               (onClick)="save()">
             </dx-button>
@@ -345,47 +354,51 @@
       }
 
       @if (!isLoadingHistory()) {
-        <dx-data-grid
-          [dataSource]="historyItems()"
-          [showBorders]="false"
-          [columnAutoWidth]="true"
-          [rowAlternationEnabled]="true"
-          [height]="400"
-          noDataText="Nessuna voce di storico disponibile">
+        <section class="popup-card">
+          <h3 class="popup-card-title">Storico modifiche</h3>
+          <dx-data-grid
+            [dataSource]="historyItems()"
+            [showBorders]="false"
+            [columnAutoWidth]="false"
+            [rowAlternationEnabled]="true"
+            [height]="400"
+            noDataText="Nessuna voce di storico disponibile">
 
-          <dxo-paging [pageSize]="15"></dxo-paging>
-          <dxo-pager [showInfo]="true"></dxo-pager>
+            <dxo-paging [pageSize]="15"></dxo-paging>
+            <dxo-pager [showInfo]="true" [showNavigationButtons]="true" displayMode="full"></dxo-pager>
 
-          <dxi-column dataField="hisDate"       caption="Data modifica"   alignment="center" [width]="140" dataType="datetime" format="dd.MM.yyyy HH:mm"></dxi-column>
-          <dxi-column dataField="araName"       caption="Nome e cognome"  alignment="left"></dxi-column>
-          <dxi-column dataField="araRepresents" caption="Rappresentanza"  alignment="left"   [width]="120"></dxi-column>
-          <dxi-column dataField="araBirthdate"  caption="Data nascita"    alignment="center" [width]="105" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="araNationality"caption="Nazionalità"     alignment="left"   [width]="110"></dxi-column>
-          <dxi-column dataField="araAddress"    caption="Domicilio"       alignment="left"   [width]="140"></dxi-column>
-          <dxi-column dataField="araIddocnum"   caption="Nr doc"          alignment="left"   [width]="110"></dxi-column>
-          <dxi-column dataField="araDocexpdate" caption="Scad. doc."      alignment="center" [width]="100" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="araRecComplete"caption="Completo"        alignment="center" [width]="80"  cellTemplate="histBoolTemplate"></dxi-column>
+            <dxi-column dataField="hisDate"        caption="Data modifica"  alignment="center" [width]="140" dataType="datetime" format="dd.MM.yyyy HH:mm"></dxi-column>
+            <dxi-column dataField="araName"        caption="Nome e cognome" alignment="left"></dxi-column>
+            <dxi-column dataField="araRepresents"  caption="Rappresentanza" alignment="left"   [width]="120"></dxi-column>
+            <dxi-column dataField="araBirthdate"   caption="Data nascita"   alignment="center" [width]="105" dataType="date" format="dd.MM.yyyy"></dxi-column>
+            <dxi-column dataField="araNationality" caption="Nazionalità"    alignment="left"   [width]="110"></dxi-column>
+            <dxi-column dataField="araAddress"     caption="Domicilio"      alignment="left"   [width]="140"></dxi-column>
+            <dxi-column dataField="araIddocnum"    caption="Nr doc"         alignment="left"   [width]="110"></dxi-column>
+            <dxi-column dataField="araDocexpdate"  caption="Scad. doc."     alignment="center" [width]="100" dataType="date" format="dd.MM.yyyy"></dxi-column>
+            <dxi-column dataField="araRecComplete" caption="Completo"       alignment="center" [width]="80"  cellTemplate="histBoolTemplate"></dxi-column>
 
-          <div *dxTemplate="let cell of 'histBoolTemplate'" class="bool-cell">
-            @if (cell.value) {
-              <span class="bool-badge bool-badge--yes">Sì</span>
-            } @else {
-              <span class="bool-badge bool-badge--no">No</span>
-            }
-          </div>
+            <div *dxTemplate="let cell of 'histBoolTemplate'" class="bool-cell">
+              @if (cell.value) {
+                <span class="bool-badge bool-badge--yes">Sì</span>
+              } @else {
+                <span class="bool-badge bool-badge--no">No</span>
+              }
+            </div>
 
-          <dxo-load-panel [enabled]="false"></dxo-load-panel>
+            <dxo-load-panel [enabled]="false"></dxo-load-panel>
 
-        </dx-data-grid>
+          </dx-data-grid>
+        </section>
       }
 
       <div class="popup-action-bar">
         <div class="popup-actions-secondary"></div>
         <div class="popup-actions-primary">
           <dx-button
-            class="btn-action-close"
             text="Chiudi"
             icon="close"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
             (onClick)="closeHistoryPopup()">
           </dx-button>
         </div>

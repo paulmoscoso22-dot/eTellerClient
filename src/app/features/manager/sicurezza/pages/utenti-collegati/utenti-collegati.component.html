@@ -30,7 +30,8 @@
               [value]="searchText()"
               (onValueChanged)="searchText.set($event.value)"
               placeholder="Cerca per User ID o Client ID..."
-              [showClearButton]="true">
+              [showClearButton]="true"
+              labelMode="hidden">
             </dx-text-box>
           </div>
         </div>
@@ -39,22 +40,28 @@
           <dx-button
             icon="search"
             hint="Cerca"
+            stylingMode="contained"
+            class="btn-fin-primary action-shadow">
+          </dx-button>
+          <dx-button
+            icon="revert"
+            hint="Ripristina"
             stylingMode="outlined"
-            class="btn-outline">
+            class="btn-fin-secondary"
+            (onClick)="searchText.set('')">
           </dx-button>
           <dx-button
             icon="refresh"
             text="Aggiorna"
             stylingMode="outlined"
-            class="btn-outline"
+            class="btn-fin-secondary"
             (onClick)="onRefresh()">
           </dx-button>
           <dx-button
             icon="remove"
             text="Forza Uscita"
-            type="danger"
-            stylingMode="outlined"
-            class="btn-danger"
+            stylingMode="contained"
+            class="btn-fin-danger-filled"
             [disabled]="!selectedUsrCliId() || isLoading()"
             (onClick)="forzaUscita()">
           </dx-button>
@@ -70,7 +77,7 @@
         keyExpr="usrCliId"
         [showBorders]="false"
         [allowColumnResizing]="true"
-        [columnAutoWidth]="true"
+        [columnAutoWidth]="false"
         [hoverStateEnabled]="true"
         [rowAlternationEnabled]="true"
         [height]="'100%'"
