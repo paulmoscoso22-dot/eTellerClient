@@ -1,21 +1,17 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, signal, computed, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
   DxValidatorModule, DxSelectBoxModule, DxCheckBoxModule
 } from 'devextreme-angular';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import notify from 'devextreme/ui/notify';
-
-export interface ITipoOperazione {
-  optId: string;
-  optDes: string;
-  optHoscod: string;
-  optAptId: string;
-  optIscredit: string;
-  optPrtdv: boolean;
-  optAdvId: string;
-}
+import { TipoOperazioneService } from '../../services/tipo-operazione.service';
+import {
+  ITipoOperazioneVm,
+  IUpsertOperationTypeCommand,
+} from '../../models/tipo-operazione.models';
 
 @Component({
   selector: 'app-tipo-operazione',
@@ -29,9 +25,13 @@ export interface ITipoOperazione {
   styleUrls: ['./tipo-operazione.component.css'],
 })
 export class TipoOperazioneComponent implements OnInit {
-  private fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly fb = inject(FormBuilder);
+  private readonly tipoOperazioneService = inject(TipoOperazioneService);
 
-  private operazioni = signal<ITipoOperazione[]>([]);
+  private operazioni = signal<ITipoOperazioneVm[]>([]);
+  isLoading = signal(false);
+  error = signal<string | null>(null);
 
   filterSearch = signal<string>('');
 
@@ -40,6 +40,7 @@ export class TipoOperazioneComponent implements OnInit {
   selectedLabel = signal<string>('');
 
   readonly segnoOptions = [
+    { id: '',   des: 'Seleziona...' },
     { id: '1',  des: '1  — Credito' },
     { id: '-1', des: '-1 — Debito'  },
   ];
@@ -59,88 +60,141 @@ export class TipoOperazioneComponent implements OnInit {
     optDes:     ['', [Validators.required, Validators.maxLength(50)]],
     optHoscod:  ['', [Validators.required, Validators.maxLength(25)]],
     optAptId:   ['', [Validators.required, Validators.maxLength(5)]],
-    optIscredit:['1', Validators.required],
+    optIscredit:[null, Validators.required],
     optPrtdv:   [false],
     optAdvId:   [''],
   });
 
   ngOnInit(): void {
-    // TODO: load from backend service
-    this.operazioni.set([
-      { optId: 'CAMBI', optDes: 'Cambio valuta', optHoscod: 'CAMBI', optAptId: 'ETL', optIscredit: '1',  optPrtdv: true,  optAdvId: 'FICHE_CAMBI' },
-      { optId: 'PREVC', optDes: 'Prelievo contanti', optHoscod: 'PREVC', optAptId: 'ETL', optIscredit: '-1', optPrtdv: true,  optAdvId: 'FICHE_PREVC' },
-      { optId: 'VERSC', optDes: 'Versamento contanti', optHoscod: 'VERSC', optAptId: 'ETL', optIscredit: '1',  optPrtdv: false, optAdvId: '' },
-      { optId: 'TCHEQ', optDes: 'Traveler Cheque', optHoscod: 'TCHEQ', optAptId: 'ETL', optIscredit: '1',  optPrtdv: true,  optAdvId: 'FICHE_TCHEQ' },
-      { optId: 'METPR', optDes: 'Metalli preziosi', optHoscod: 'METPR', optAptId: 'ETL', optIscredit: '-1', optPrtdv: false, optAdvId: '' },
-    ]);
+    this.loadAll();
+  }
+
+  private loadAll(): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+    this.tipoOperazioneService.getAll()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => {
+          this.operazioni.set(data);
+          this.isLoading.set(false);
+        },
+        error: (err: any) => {
+          const msg = err.message || 'Errore nel recupero dei dati';
+          this.error.set(msg);
+          this.isLoading.set(false);
+          notify(msg, 'error', 4000);
+        },
+      });
   }
 
   onSearchChanged(e: { value?: string }): void {
     this.filterSearch.set(e.value ?? '');
   }
 
-  openViewPopup(data: ITipoOperazione): void {
+  openNewPopup(): void {
+    this.operazioneForm.reset({ optIscredit: '', optPrtdv: false });
+    this.selectedLabel.set('');
+    this.popupMode.set('new');
+    this.isDetailPopupVisible = true;
+  }
+
+  private openViewPopup(data: ITipoOperazioneVm): void {
     this.selectedLabel.set(data.optId);
     this.operazioneForm.patchValue(data);
     this.popupMode.set('view');
     this.isDetailPopupVisible = true;
   }
 
-  openEditPopup(data: ITipoOperazione): void {
+  private openEditPopup(data: ITipoOperazioneVm): void {
+    data.optIscredit = data.optIscredit.trim();
+    console.log('Opening edit popup for:', data);
     this.selectedLabel.set(data.optId);
     this.operazioneForm.patchValue(data);
     this.popupMode.set('edit');
     this.isDetailPopupVisible = true;
   }
 
-  openNewPopup(): void {
-    this.operazioneForm.reset({ optIscredit: '1', optPrtdv: false });
-    this.selectedLabel.set('');
-    this.popupMode.set('new');
-    this.isDetailPopupVisible = true;
-  }
-
-  onTableAction(action: string, data: ITipoOperazione): void {
+  onTableAction(action: string, data: ITipoOperazioneVm): void {
     switch (action) {
       case 'view': this.openViewPopup(data); break;
       case 'edit': this.openEditPopup(data); break;
     }
   }
 
+  private buildCommand(): IUpsertOperationTypeCommand {
+    const v = this.operazioneForm.getRawValue();
+    return {
+      optId:      v.optId,
+      optDes:     v.optDes,
+      optHoscod:  v.optHoscod,
+      optIscredit: v.optIscredit,
+      optAptId:   v.optAptId,
+      optPrtdv:   v.optPrtdv,
+      optAdvId:   v.optAdvId || null,
+      traUser:    '',
+      traStation: '',
+    };
+  }
+
   onSubmit(): void {
     if (!this.operazioneForm.valid) {
-      notify('Compilare tutti i campi obbligatori', 'error', 3000);
+      notify('Compilare tutti i campi obbligatori con valori validi', 'error', 3000);
       return;
     }
-    const val = this.operazioneForm.getRawValue() as ITipoOperazione;
-    const exists = this.operazioni().some(o => o.optId === val.optId);
-    if (exists) {
-      notify(`Il codice "${val.optId}" esiste già`, 'error', 3000);
-      return;
-    }
-    // TODO: call backend insert
-    this.operazioni.update(list => [...list, val]);
-    notify(`Tipo operazione "${val.optId}" aggiunto con successo`, 'success', 3000);
-    this.closePopup();
+    const cmd = this.buildCommand();
+    this.isLoading.set(true);
+    this.tipoOperazioneService.insert(cmd)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (result: boolean) => {
+          this.isLoading.set(false);
+          if (result) {
+            this.isDetailPopupVisible = false;
+            notify(`Tipo operazione "${cmd.optId}" aggiunto con successo`, 'success', 3000);
+            this.loadAll();
+          } else {
+            notify('Operazione non riuscita. Il codice potrebbe essere già presente.', 'error', 4000);
+          }
+        },
+        error: (err: any) => {
+          this.isLoading.set(false);
+          notify(err.message || 'Errore durante il salvataggio', 'error', 4000);
+        },
+      });
   }
 
   onUpdate(): void {
+    console.log('Update command:', this.operazioneForm.getRawValue());
     if (!this.operazioneForm.valid) {
-      notify('Compilare tutti i campi obbligatori', 'error', 3000);
+      notify('Compilare tutti i campi obbligatori con valori validi', 'error', 3000);
       return;
     }
-    const val = this.operazioneForm.getRawValue() as ITipoOperazione;
-    // TODO: call backend update
-    this.operazioni.update(list => list.map(o =>
-      o.optId === val.optId ? { ...o, ...val } : o
-    ));
-    notify(`Tipo operazione "${val.optId}" aggiornato con successo`, 'success', 3000);
-    this.closePopup();
+    const cmd = this.buildCommand();
+    this.isLoading.set(true);
+    this.tipoOperazioneService.update(cmd)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (result: boolean) => {
+          this.isLoading.set(false);
+          if (result) {
+            this.isDetailPopupVisible = false;
+            notify(`Tipo operazione "${cmd.optId}" aggiornato con successo`, 'success', 3000);
+            this.loadAll();
+          } else {
+            notify('Operazione non riuscita.', 'error', 4000);
+          }
+        },
+        error: (err: any) => {
+          this.isLoading.set(false);
+          notify(err.message || 'Errore durante il salvataggio', 'error', 4000);
+        },
+      });
   }
 
   onTrace(): void {
     const id = this.operazioneForm.get('optId')?.value;
-    notify(`Storico: ST_OPERATIONTYPE_${id}`, 'info', 3000);
+    notify(`Storico non ancora disponibile per il tipo operazione "${id}"`, 'info', 3000);
   }
 
   closePopup(): void {
