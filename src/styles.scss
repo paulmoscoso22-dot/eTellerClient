@@ -149,20 +149,16 @@ h1 {
     cursor: default !important;
 }
 
-// ── Campi CHIAVE LOCKED (field-id-locked): in edit mode la chiave non è modificabile
-//    → sfondo grigio + bordo sinistro oro Sempione
+// ── Campi CHIAVE LOCKED (field-id-locked): stile gestito a livello di componente (pattern Casse)
+//    → nessun bordo oro: il bordo tratteggiato è definito nel CSS del componente
 .dx-popup-content .field-id-locked .dx-texteditor,
 .dx-popup-content .field-id-locked .dx-dropdowneditor {
-    background-color: #f0f2f5 !important;
-    border-color: #dce3ee !important;
-    border-style: solid !important;
-    border-left: 3px solid #C5A059 !important;
+    border-left: none !important;
 }
 
 .dx-popup-content .field-id-locked .dx-texteditor .dx-texteditor-input,
 .dx-popup-content .field-id-locked .dx-dropdowneditor .dx-texteditor-input {
-    color: #374151 !important;
-    cursor: not-allowed !important;
+    cursor: default !important;
 }
 
 // ── VIEW MODE: tutti i campi → trasparente, testo navy bold (aspetto label)

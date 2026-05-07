@@ -1,48 +1,277 @@
 <div class="page-shell">
 
+  <!-- ── Main Card: Spread ── -->
   <section class="card-section">
+
     <div class="sempione-card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+      </svg>
       <h2 class="card-title">Spread</h2>
     </div>
     <div class="gold-divider"></div>
 
+    <!-- Toolbar -->
     <div class="card-toolbar">
-      <div class="toolbar-row">
-        <dx-text-box placeholder="Divisa..." [value]="filterCur()" (onValueChanged)="filterCur.set($event.value)"></dx-text-box>
-        <dx-text-box placeholder="Tipo..." [value]="filterTipo()" (onValueChanged)="filterTipo.set($event.value)"></dx-text-box>
-        <dx-button text="Cerca" (onClick)="onCerca()"></dx-button>
-        <dx-button text="Reset" stylingMode="outlined" (onClick)="onResetFiltri()"></dx-button>
-        <dx-button text="Nuovo" type="default" (onClick)="openNewPopup()"></dx-button>
+      <div class="toolbar-inner">
+
+        <div class="toolbar-filters">
+
+          <div class="filter-field">
+            <span class="filter-label">Divisa</span>
+            <div class="toolbar-search-wrap">
+              <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <dx-text-box
+                placeholder="Divisa..."
+                [showClearButton]="true"
+                valueChangeEvent="input"
+                class="toolbar-textbox"
+                [value]="filterCur()"
+                (onValueChanged)="filterCur.set($event.value)">
+              </dx-text-box>
+            </div>
+          </div>
+
+          <div class="filter-field">
+            <span class="filter-label">Tipo</span>
+            <div class="toolbar-search-wrap">
+              <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <dx-text-box
+                placeholder="Tipo..."
+                [showClearButton]="true"
+                valueChangeEvent="input"
+                class="toolbar-textbox"
+                [value]="filterTipo()"
+                (onValueChanged)="filterTipo.set($event.value)">
+              </dx-text-box>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="toolbar-actions">
+          <dx-button
+            icon="search"
+            hint="Cerca"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="onCerca()">
+          </dx-button>
+          <dx-button
+            icon="revert"
+            hint="Reset filtri"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="onResetFiltri()">
+          </dx-button>
+          <dx-button
+            class="btn-fin-primary action-shadow"
+            text="Nuovo Spread"
+            stylingMode="contained"
+            (onClick)="openNewPopup()">
+          </dx-button>
+        </div>
+
       </div>
     </div>
 
+    <!-- Griglia spread -->
     <div class="card-body card-body--grid">
-      <dx-data-grid [dataSource]="filteredSpread()" [height]="'360'" [keyExpr]="['sprCurId','sprType']">
-        <dxi-column dataField="sprCurId" caption="Divisa" [width]="120"></dxi-column>
-        <dxi-column dataField="sprType" caption="Tipo" [width]="120"></dxi-column>
-        <dxi-column dataField="sprValue" caption="Valore" [width]="140" alignment="right"></dxi-column>
-        <dxi-column dataField="sprDatini" caption="Val. Dal" [width]="140"></dxi-column>
-        <dxi-column caption="Azioni" [width]="120" cellTemplate="actionsTemplate"></dxi-column>
+      <dx-data-grid
+        [dataSource]="filteredSpread()"
+        [showBorders]="false"
+        [showColumnLines]="false"
+        [showRowLines]="true"
+        [columnAutoWidth]="true"
+        [rowAlternationEnabled]="true"
+        [hoverStateEnabled]="true"
+        [height]="'100%'"
+        [keyExpr]="['sprCurId', 'sprType']">
 
-        <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
-          <button class="action-btn" (click)="onTableAction('view', cell.data)">View</button>
-          <button class="action-btn" (click)="onTableAction('edit', cell.data)">Edit</button>
-          <button class="action-btn" (click)="onTableAction('delete', cell.data)">Del</button>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxo-paging [pageSize]="20"></dxo-paging>
+        <dxo-pager
+          [showInfo]="true"
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[20, 50, 100]"
+          [showNavigationButtons]="true"
+          displayMode="full">
+        </dxo-pager>
+
+        <dxi-column dataField="sprCurId"  caption="Divisa"   [width]="120" alignment="left"></dxi-column>
+        <dxi-column dataField="sprType"   caption="Tipo"     [width]="140" alignment="left"></dxi-column>
+        <dxi-column dataField="sprValue"  caption="Valore"   [width]="140" alignment="right" cellTemplate="rateTemplate"></dxi-column>
+        <dxi-column dataField="sprDatini" caption="Val. Dal" [width]="140" alignment="left"></dxi-column>
+
+        <dxi-column
+          caption="Azioni"
+          [width]="110"
+          [allowSorting]="false"
+          [allowFiltering]="false"
+          alignment="center"
+          cellTemplate="actionsTemplate">
+        </dxi-column>
+
+        <div *dxTemplate="let cell of 'rateTemplate'" class="rate-cell">
+          {{ cell.value | number:'1.4-4' }}
         </div>
 
+        <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
+          <button class="action-btn action-btn--view" title="Visualizza" (click)="onTableAction('view', cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--edit" title="Modifica" (click)="onTableAction('edit', cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--delete" title="Elimina" (click)="onTableAction('delete', cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6l-1 14H6L5 6"></path>
+              <path d="M10 11v6M14 11v6"></path>
+              <path d="M9 6V4h6v2"></path>
+            </svg>
+          </button>
+        </div>
+
+        <dxo-load-panel [enabled]="false"></dxo-load-panel>
       </dx-data-grid>
     </div>
+
   </section>
 
 </div>
 
-<dx-popup [(visible)]="isPopupVisible" [showTitle]="true" [title]="selectedLabel()" (onHidden)="closePopup()" [width]="600">
+<!-- ── Popup Spread ── -->
+<dx-popup
+  [(visible)]="isPopupVisible"
+  [showTitle]="true"
+  [title]="popupMode() === 'new' ? 'Nuovo Spread'
+         : popupMode() === 'edit' ? 'Modifica Spread — ' + selectedLabel()
+         : 'Dettaglio Spread — ' + selectedLabel()"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [width]="'90%'"
+  [maxWidth]="640"
+  [height]="'auto'"
+  [maxHeight]="'90vh'"
+  (onHidden)="closePopup()">
+
   <div *dxTemplate="let data of 'content'">
-    <form [formGroup]="spreadForm" class="popup-layout">
-      <dx-text-box formControlName="sprCurId" placeholder="Divisa"></dx-text-box>
-      <dx-text-box formControlName="sprType" placeholder="Tipo"></dx-text-box>
-      <dx-number-box formControlName="sprValue" [format]="'#,##0.0000'"></dx-number-box>
-      <dx-button text="Salva" (onClick)="onSave()"></dx-button>
+    <form [formGroup]="spreadForm"
+          class="popup-layout"
+          [class.popup-view-mode]="popupMode() === 'view'">
+
+      <!-- ── Card: Identificazione ── -->
+      <section class="popup-card">
+        <h3 class="popup-card-title">Identificazione</h3>
+        <div class="popup-fields-grid popup-fields-grid--2col">
+
+          <div class="popup-field-group" [class.field-id-locked]="popupMode() !== 'new'">
+            <label class="popup-field-label">Divisa</label>
+            <dx-text-box
+              formControlName="sprCurId"
+              [readOnly]="popupMode() !== 'new'"
+              placeholder="Es. EUR">
+            </dx-text-box>
+          </div>
+
+          <div class="popup-field-group" [class.field-id-locked]="popupMode() !== 'new'">
+            <label class="popup-field-label">Tipo</label>
+            <dx-text-box
+              formControlName="sprType"
+              [readOnly]="popupMode() !== 'new'"
+              placeholder="Es. SPT1">
+            </dx-text-box>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Card: Valori ── -->
+      <section class="popup-card">
+        <h3 class="popup-card-title">Valori</h3>
+        <div class="popup-fields-grid popup-fields-grid--2col">
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Valore Spread</label>
+            <dx-number-box
+              formControlName="sprValue"
+              [format]="'#,##0.0000'"
+              [readOnly]="popupMode() === 'view'">
+            </dx-number-box>
+          </div>
+
+          <div class="popup-field-group">
+            <label class="popup-field-label">Valido Dal</label>
+            <dx-text-box
+              formControlName="sprDatini"
+              [readOnly]="popupMode() === 'view'"
+              placeholder="YYYY-MM-DD">
+            </dx-text-box>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Action Bar ── -->
+      <div class="popup-action-bar">
+        <div class="popup-actions-secondary"></div>
+        <div class="popup-actions-primary">
+          @if (popupMode() === 'view') {
+            <dx-button
+              class="btn-fin-secondary"
+              text="Chiudi"
+              icon="close"
+              stylingMode="outlined"
+              (onClick)="closePopup()">
+            </dx-button>
+          }
+          @if (popupMode() === 'new') {
+            <dx-button
+              class="btn-fin-secondary"
+              text="Annulla"
+              stylingMode="outlined"
+              (onClick)="closePopup()">
+            </dx-button>
+            <dx-button
+              class="btn-fin-primary"
+              text="Aggiungi"
+              icon="plus"
+              stylingMode="contained"
+              (onClick)="onSave()">
+            </dx-button>
+          }
+          @if (popupMode() === 'edit') {
+            <dx-button
+              class="btn-fin-secondary"
+              text="Chiudi"
+              stylingMode="outlined"
+              (onClick)="closePopup()">
+            </dx-button>
+            <dx-button
+              class="btn-fin-primary"
+              text="Salva"
+              icon="save"
+              stylingMode="contained"
+              (onClick)="onSave()">
+            </dx-button>
+          }
+        </div>
+      </div>
+
     </form>
   </div>
 </dx-popup>
