@@ -3,7 +3,7 @@ name: agent-code-review
 description: Rivede e valida la soluzione Angular proposta dall'orchestratore, assicurando il rispetto delle best practice di Angular 21 e delle linee guida del progetto.
 ##argument-hint: Una funzionalità o un problema tecnico da coordinare tra frontend e backend.
   
-model: opus
+model: sonnet
 applyTo: "*
 ---*"
 tools: [vscode, execute, read, agent, edit, search, web, 'github/*']

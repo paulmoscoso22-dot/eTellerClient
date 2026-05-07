@@ -1,6 +1,11 @@
 <div class="page-shell">
 
-  <!-- ── Main Card: Tipo Operazione ── -->
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Tipo Operazione</h1>
+  </div>
+
+  <!-- ── Card Main ── -->
   <section class="card-section">
 
     <div class="sempione-card-header">
@@ -13,29 +18,25 @@
     </div>
     <div class="gold-divider"></div>
 
-    <!-- Toolbar -->
+    <!-- ── Toolbar ── -->
     <div class="card-toolbar">
       <div class="toolbar-inner">
 
-        <div class="toolbar-search-wrap">
-          <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <dx-text-box
-            placeholder="Cerca per ID, descrizione o host code..."
-            [showClearButton]="true"
-            valueChangeEvent="input"
-            class="toolbar-textbox"
-            (onValueChanged)="onSearchChanged($event)">
-          </dx-text-box>
+        <div class="toolbar-filters">
+          <div class="toolbar-field toolbar-field--search">
+            <dx-text-box
+              placeholder="Cerca per ID, descrizione o host code..."
+              [showClearButton]="true"
+              valueChangeEvent="input"
+              (onValueChanged)="onSearchChanged($event)">
+            </dx-text-box>
+          </div>
         </div>
 
         <div class="toolbar-actions">
           <dx-button
-            class="btn-new"
+            class="btn-fin-primary action-shadow"
             text="Nuovo"
-            type="default"
             stylingMode="contained"
             (onClick)="openNewPopup()">
           </dx-button>
@@ -44,11 +45,13 @@
       </div>
     </div>
 
-    <!-- Griglia -->
+    <!-- ── Grid ── -->
     <div class="card-body card-body--grid">
       <dx-data-grid
         [dataSource]="filteredOperazioni()"
         [showBorders]="false"
+        [showColumnLines]="false"
+        [showRowLines]="true"
         [columnAutoWidth]="true"
         [rowAlternationEnabled]="true"
         [hoverStateEnabled]="true"
@@ -57,7 +60,14 @@
 
         <dxo-selection mode="single"></dxo-selection>
         <dxo-paging [pageSize]="20"></dxo-paging>
-        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
+        <dxo-pager
+          [showInfo]="true"
+          infoText="{2} operazioni"
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[20, 50, 100]"
+          [showNavigationButtons]="true"
+          displayMode="full">
+        </dxo-pager>
 
         <dxi-column dataField="optId"       caption="ID"           [width]="110" alignment="left"></dxi-column>
         <dxi-column dataField="optDes"      caption="Descrizione"                alignment="left"></dxi-column>
@@ -91,7 +101,6 @@
           }
         </div>
 
-        <!-- View + Edit only (no delete — legacy has no delete) -->
         <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
           <button class="action-btn action-btn--view" title="Visualizza" (click)="onTableAction('view', cell.data)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -107,14 +116,16 @@
           </button>
         </div>
 
+        <dxo-load-panel [enabled]="false"></dxo-load-panel>
       </dx-data-grid>
     </div>
 
   </section>
-
 </div>
 
-<!-- ── Popup Dettaglio Tipo Operazione ── -->
+<!-- ══════════════════════════════════════
+     Popup: Dettaglio / Modifica / Nuovo Tipo Operazione
+     ══════════════════════════════════════ -->
 <dx-popup
   [(visible)]="isDetailPopupVisible"
   [showTitle]="true"
@@ -201,7 +212,7 @@
           </div>
 
           <div class="popup-field-group">
-            <label class="popup-field-label">Segno Importo</label>
+            <label class="popup-field-label">Segno Importo *</label>
             <dx-select-box
               formControlName="optIscredit"
               [dataSource]="segnoOptions"
@@ -234,13 +245,13 @@
         </div>
       </section>
 
-      <!-- ── Action Bar sticky ── -->
+      <!-- ── Action Bar ── -->
       <div class="popup-action-bar">
 
         <div class="popup-actions-secondary">
           @if (popupMode() !== 'new') {
             <dx-button
-              class="btn-action-outline"
+              class="btn-fin-secondary"
               text="Storico"
               icon="clock"
               stylingMode="outlined"
@@ -250,28 +261,19 @@
         </div>
 
         <div class="popup-actions-primary">
-          @if (popupMode() === 'view') {
+          <dx-button
+            [text]="popupMode() === 'new' ? 'Annulla' : 'Chiudi'"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="closePopup()">
+          </dx-button>
+          @if (popupMode() !== 'view') {
             <dx-button
-              class="btn-action-close"
-              text="Chiudi"
-              icon="close"
-              (onClick)="closePopup()">
-            </dx-button>
-          }
-          @if (popupMode() === 'new') {
-            <dx-button
-              class="btn-action-primary"
-              text="Aggiungi"
-              icon="plus"
-              (onClick)="onSubmit()">
-            </dx-button>
-          }
-          @if (popupMode() === 'edit') {
-            <dx-button
-              class="btn-action-primary"
-              text="Salva"
-              icon="save"
-              (onClick)="onUpdate()">
+              [text]="popupMode() === 'new' ? 'Aggiungi' : 'Salva'"
+              [icon]="popupMode() === 'new' ? 'plus' : 'save'"
+              stylingMode="contained"
+              class="btn-fin-primary"
+              (onClick)="popupMode() === 'new' ? onSubmit() : onUpdate()">
             </dx-button>
           }
         </div>
