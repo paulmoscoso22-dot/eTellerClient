@@ -199,7 +199,17 @@
 
       <!-- ── Action bar ── -->
       <div class="popup-action-bar">
-        <div class="popup-actions-secondary"></div>
+        <div class="popup-actions-secondary">
+          @if (isEditMode()) {
+            <dx-button
+              class="btn-action-trace"
+              text="Traccia"
+              icon="chart"
+              stylingMode="outlined"
+              (onClick)="onTrace()">
+            </dx-button>
+          }
+        </div>
         <div class="popup-actions-primary">
           <dx-button
             class="btn-action-close"
