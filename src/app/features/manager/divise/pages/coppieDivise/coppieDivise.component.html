@@ -1,6 +1,11 @@
 <div class="page-shell">
 
-  <!-- ── Main Card: Coppie Divise ── -->
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Coppie Divise</h1>
+  </div>
+
+  <!-- ── Main Card ── -->
   <section class="card-section">
 
     <div class="sempione-card-header">
@@ -16,30 +21,44 @@
     </div>
     <div class="gold-divider"></div>
 
-    <!-- Toolbar -->
+    <!-- ── Toolbar ── -->
     <div class="card-toolbar">
       <div class="toolbar-inner">
 
-        <div class="toolbar-search-wrap">
-          <svg class="toolbar-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <dx-text-box
-            placeholder="Cerca per divisa o descrizione..."
-            [showClearButton]="true"
-            valueChangeEvent="input"
-            class="toolbar-textbox"
-            (onValueChanged)="onSearchChanged($event)">
-          </dx-text-box>
+        <div class="toolbar-filters">
+          <div class="toolbar-field">
+            <label class="toolbar-lbl">Cerca</label>
+            <dx-text-box
+              placeholder="Divisa o descrizione..."
+              [showClearButton]="true"
+              valueChangeEvent="input"
+              labelMode="hidden"
+              [value]="searchValue()"
+              (onValueChanged)="onSearchChanged($event)">
+            </dx-text-box>
+          </div>
         </div>
 
         <div class="toolbar-actions">
           <dx-button
-            class="btn-new"
-            text="Nuova coppia"
-            type="default"
+            icon="search"
+            hint="Cerca"
             stylingMode="contained"
+            class="btn-fin-primary action-shadow"
+            (onClick)="onSearchChanged({value: searchValue()})">
+          </dx-button>
+          <dx-button
+            icon="revert"
+            hint="Ripristina filtri"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="onSearchChanged({value: ''})">
+          </dx-button>
+          <dx-button
+            text="Nuova coppia"
+            icon="plus"
+            stylingMode="contained"
+            class="btn-fin-primary action-shadow"
             (onClick)="openNewPopup()">
           </dx-button>
         </div>
@@ -47,12 +66,12 @@
       </div>
     </div>
 
-    <!-- Griglia coppie divise -->
+    <!-- ── Griglia coppie divise ── -->
     <div class="card-body card-body--grid">
       <dx-data-grid
         [dataSource]="filteredCoppie()"
         [showBorders]="false"
-        [columnAutoWidth]="true"
+        [columnAutoWidth]="false"
         [rowAlternationEnabled]="true"
         [hoverStateEnabled]="true"
         [height]="'100%'"
@@ -60,13 +79,19 @@
 
         <dxo-selection mode="single"></dxo-selection>
         <dxo-paging [pageSize]="20"></dxo-paging>
-        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
+        <dxo-pager
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[20, 50, 100]"
+          [showInfo]="true"
+          [showNavigationButtons]="true"
+          displayMode="full">
+        </dxo-pager>
 
-        <dxi-column dataField="cucCur1"   caption="Divisa 1"          [width]="110" alignment="center" cellTemplate="currencyTemplate"></dxi-column>
-        <dxi-column dataField="cucCur2"   caption="Divisa 2"          [width]="110" alignment="center" cellTemplate="currencyTemplate"></dxi-column>
-        <dxi-column dataField="cucLondes" caption="Descrizione"                      alignment="left"></dxi-column>
-        <dxi-column dataField="cucShodes" caption="Des. Abbreviata"   [width]="150" alignment="left"></dxi-column>
-        <dxi-column dataField="cucSize"   caption="Taglio"            [width]="90"  alignment="center" cellTemplate="taglioTemplate"></dxi-column>
+        <dxi-column dataField="cucCur1"   caption="Divisa 1"        [width]="110" alignment="center" cellTemplate="currencyTemplate"></dxi-column>
+        <dxi-column dataField="cucCur2"   caption="Divisa 2"        [width]="110" alignment="center" cellTemplate="currencyTemplate"></dxi-column>
+        <dxi-column dataField="cucLondes" caption="Descrizione"                   alignment="left"></dxi-column>
+        <dxi-column dataField="cucShodes" caption="Des. Abbreviata" [width]="150" alignment="left"></dxi-column>
+        <dxi-column dataField="cucSize"   caption="Taglio"          [width]="90"  alignment="center" cellTemplate="taglioTemplate"></dxi-column>
 
         <dxi-column
           caption="Azioni"
@@ -77,34 +102,31 @@
           cellTemplate="actionsTemplate">
         </dxi-column>
 
-        <!-- Currency badge template -->
         <div *dxTemplate="let cell of 'currencyTemplate'" class="currency-cell">
           <span class="currency-badge">{{ cell.value }}</span>
         </div>
 
-        <!-- Taglio template -->
         <div *dxTemplate="let cell of 'taglioTemplate'" class="taglio-cell">
           <span class="taglio-pill" [class.taglio-pill--100]="cell.value === 100">
             {{ cell.value }}
           </span>
         </div>
 
-        <!-- Azioni template -->
         <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
           <button class="action-btn action-btn--view" title="Visualizza" (click)="onTableAction('view', cell.data)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
           </button>
           <button class="action-btn action-btn--edit" title="Modifica" (click)="onTableAction('edit', cell.data)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
             </svg>
           </button>
           <button class="action-btn action-btn--delete" title="Elimina" (click)="onTableAction('delete', cell.data)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6"></polyline>
               <path d="M19 6l-1 14H6L5 6"></path>
               <path d="M10 11v6M14 11v6"></path>
@@ -112,6 +134,8 @@
             </svg>
           </button>
         </div>
+
+        <dxo-load-panel [enabled]="false"></dxo-load-panel>
 
       </dx-data-grid>
     </div>
@@ -130,7 +154,8 @@
   [dragEnabled]="true"
   [hideOnOutsideClick]="false"
   [showCloseButton]="true"
-  [width]="680"
+  [width]="'90%'"
+  [maxWidth]="680"
   [height]="'auto'"
   [maxHeight]="'90vh'"
   (onHidden)="closePopup()">
@@ -144,7 +169,6 @@
       <section class="popup-card">
         <h3 class="popup-card-title">Coppia di Divise</h3>
 
-        <!-- Riga 1: le due divise (chiave) -->
         <div class="popup-fields-grid popup-fields-grid--2col">
 
           <div class="popup-field-group" [class.field-id-locked]="popupMode() !== 'new'">
@@ -155,6 +179,7 @@
               [valueExpr]="'curId'"
               [displayExpr]="'curShodes'"
               [readOnly]="popupMode() !== 'new'"
+              labelMode="hidden"
               placeholder="Seleziona...">
               <dx-validator>
                 <dxi-validation-rule type="required"></dxi-validation-rule>
@@ -170,6 +195,7 @@
               [valueExpr]="'curId'"
               [displayExpr]="'curShodes'"
               [readOnly]="popupMode() !== 'new'"
+              labelMode="hidden"
               placeholder="Seleziona...">
               <dx-validator>
                 <dxi-validation-rule type="required"></dxi-validation-rule>
@@ -179,10 +205,8 @@
 
         </div>
 
-        <!-- Separatore visivo -->
         <div class="popup-section-sep"></div>
 
-        <!-- Riga 2: descrizioni e taglio -->
         <div class="popup-fields-grid popup-fields-grid--3col">
 
           <div class="popup-field-group popup-col-span-2">
@@ -190,6 +214,7 @@
             <dx-text-box
               formControlName="cucLondes"
               [readOnly]="popupMode() === 'view'"
+              labelMode="hidden"
               placeholder="Es. Franco Svizzero / Euro">
               <dx-validator>
                 <dxi-validation-rule type="required"></dxi-validation-rule>
@@ -202,6 +227,7 @@
             <dx-text-box
               formControlName="cucShodes"
               [readOnly]="popupMode() === 'view'"
+              labelMode="hidden"
               placeholder="Es. CHF/EUR">
               <dx-validator>
                 <dxi-validation-rule type="required"></dxi-validation-rule>
@@ -214,7 +240,8 @@
             <dx-select-box
               formControlName="cucSize"
               [dataSource]="taglioOptions"
-              [readOnly]="popupMode() === 'view'">
+              [readOnly]="popupMode() === 'view'"
+              labelMode="hidden">
               <dx-validator>
                 <dxi-validation-rule type="required"></dxi-validation-rule>
               </dx-validator>
@@ -224,44 +251,65 @@
         </div>
       </section>
 
-      <!-- ── Action Bar sticky ── -->
+      <!-- ── Action Bar ── -->
       <div class="popup-action-bar">
+
         <div class="popup-actions-secondary">
           @if (popupMode() !== 'new') {
             <dx-button
-              class="btn-action-secondary"
               text="Storico"
               icon="clock"
+              stylingMode="outlined"
+              class="btn-fin-secondary"
               (onClick)="onTrace()">
             </dx-button>
           }
         </div>
+
         <div class="popup-actions-primary">
           @if (popupMode() === 'view') {
             <dx-button
-              class="btn-action-close"
               text="Chiudi"
               icon="close"
+              stylingMode="outlined"
+              class="btn-fin-secondary"
               (onClick)="closePopup()">
             </dx-button>
           }
           @if (popupMode() === 'new') {
             <dx-button
-              class="btn-action-primary"
+              text="Annulla"
+              icon="close"
+              stylingMode="outlined"
+              class="btn-fin-secondary"
+              (onClick)="closePopup()">
+            </dx-button>
+            <dx-button
               text="Aggiungi"
               icon="plus"
+              stylingMode="contained"
+              class="btn-fin-primary action-shadow"
               (onClick)="onInsert()">
             </dx-button>
           }
           @if (popupMode() === 'edit') {
             <dx-button
-              class="btn-action-primary"
+              text="Annulla"
+              icon="close"
+              stylingMode="outlined"
+              class="btn-fin-secondary"
+              (onClick)="closePopup()">
+            </dx-button>
+            <dx-button
               text="Salva"
               icon="save"
+              stylingMode="contained"
+              class="btn-fin-primary action-shadow"
               (onClick)="onUpdate()">
             </dx-button>
           }
         </div>
+
       </div>
 
     </form>

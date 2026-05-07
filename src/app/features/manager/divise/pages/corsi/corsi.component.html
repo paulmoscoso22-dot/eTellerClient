@@ -4,109 +4,113 @@
   <section class="card-section">
 
     <div class="sempione-card-header">
-      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <line x1="12" y1="1" x2="12" y2="23"></line>
         <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
       </svg>
-      <h2 class="card-title">Corsi</h2>
+      <h2 class="card-title">Corsi di Cambio</h2>
     </div>
     <div class="gold-divider"></div>
 
-    <!-- Toolbar: filtri -->
+    <!-- Toolbar -->
     <div class="card-toolbar">
 
-      <!-- Riga 1: filtri -->
+      <!-- Riga filtri -->
       <div class="toolbar-row">
+        <div class="toolbar-filters">
 
-        <div class="filter-field">
-          <span class="filter-label">Codice</span>
-          <div class="toolbar-search-wrap">
-            <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <dx-text-box
-              placeholder="Divisa..."
-              [showClearButton]="true"
-              valueChangeEvent="input"
-              class="toolbar-textbox"
-              [value]="filterCodice()"
-              (onValueChanged)="filterCodice.set($event.value)">
-            </dx-text-box>
+          <div class="filter-field">
+            <span class="filter-label">Codice</span>
+            <div class="toolbar-search-wrap">
+              <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <dx-text-box
+                placeholder="Divisa..."
+                [showClearButton]="true"
+                valueChangeEvent="input"
+                class="toolbar-textbox"
+                [value]="filterCodice()"
+                (onValueChanged)="filterCodice.set($event.value)">
+              </dx-text-box>
+            </div>
           </div>
-        </div>
 
-        <div class="filter-field">
-          <span class="filter-label">Descrizione</span>
-          <div class="toolbar-search-wrap">
-            <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <dx-text-box
-              placeholder="Descrizione..."
-              [showClearButton]="true"
-              valueChangeEvent="input"
-              class="toolbar-textbox-wide"
-              [value]="filterDescrizione()"
-              (onValueChanged)="filterDescrizione.set($event.value)">
-            </dx-text-box>
+          <div class="filter-field">
+            <span class="filter-label">Descrizione</span>
+            <div class="toolbar-search-wrap">
+              <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <dx-text-box
+                placeholder="Descrizione..."
+                [showClearButton]="true"
+                valueChangeEvent="input"
+                class="toolbar-textbox-wide"
+                [value]="filterDescrizione()"
+                (onValueChanged)="filterDescrizione.set($event.value)">
+              </dx-text-box>
+            </div>
           </div>
+
+          <div class="filter-field">
+            <span class="filter-label">Tipo</span>
+            <dx-select-box
+              [dataSource]="tipoOptions"
+              displayExpr="des"
+              valueExpr="id"
+              [value]="filterTipo()"
+              (onValueChanged)="filterTipo.set($event.value)"
+              [width]="160">
+            </dx-select-box>
+          </div>
+
+          <div class="filter-field">
+            <span class="filter-label">Dal</span>
+            <dx-date-box
+              [value]="filterDateDal()"
+              (onValueChanged)="filterDateDal.set($event.value)"
+              displayFormat="dd.MM.yyyy"
+              [showClearButton]="true"
+              [width]="130">
+            </dx-date-box>
+          </div>
+
+          <div class="filter-field">
+            <span class="filter-label">Al</span>
+            <dx-date-box
+              [value]="filterDateAl()"
+              (onValueChanged)="filterDateAl.set($event.value)"
+              displayFormat="dd.MM.yyyy"
+              [showClearButton]="true"
+              [width]="130">
+            </dx-date-box>
+          </div>
+
         </div>
 
-        <div class="filter-field">
-          <span class="filter-label">Tipo</span>
-          <dx-select-box
-            [dataSource]="tipoOptions"
-            displayExpr="des"
-            valueExpr="id"
-            [value]="filterTipo()"
-            (onValueChanged)="filterTipo.set($event.value)"
-            [width]="160">
-          </dx-select-box>
+        <div class="toolbar-actions">
+          <dx-button
+            icon="search"
+            hint="Cerca"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="onCerca()">
+          </dx-button>
+          <dx-button
+            icon="revert"
+            hint="Reset filtri"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="onResetFiltri()">
+          </dx-button>
         </div>
-
-        <div class="filter-field">
-          <span class="filter-label">Dal</span>
-          <dx-date-box
-            [value]="filterDateDal()"
-            (onValueChanged)="filterDateDal.set($event.value)"
-            displayFormat="dd.MM.yyyy"
-            [showClearButton]="true"
-            [width]="130">
-          </dx-date-box>
-        </div>
-
-        <div class="filter-field">
-          <span class="filter-label">Al</span>
-          <dx-date-box
-            [value]="filterDateAl()"
-            (onValueChanged)="filterDateAl.set($event.value)"
-            displayFormat="dd.MM.yyyy"
-            [showClearButton]="true"
-            [width]="130">
-          </dx-date-box>
-        </div>
-
-        <dx-button
-          class="btn-cerca"
-          text="Cerca"
-          type="default"
-          stylingMode="contained"
-          (onClick)="onCerca()">
-        </dx-button>
-        <dx-button
-          class="btn-reset"
-          text="Reset"
-          type="normal"
-          stylingMode="outlined"
-          (onClick)="onResetFiltri()">
-        </dx-button>
-
       </div>
 
-      <!-- Riga 2: info + azione -->
-      <div class="toolbar-row">
+      <!-- Riga meta: info + azione -->
+      <div class="toolbar-row toolbar-row--meta">
         <span class="last-update-badge">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11">
             <circle cx="12" cy="12" r="10"></circle>
@@ -116,9 +120,8 @@
         </span>
         <div class="toolbar-actions">
           <dx-button
-            class="btn-new"
+            class="btn-fin-primary action-shadow"
             text="Nuovo Corso"
-            type="default"
             stylingMode="contained"
             (onClick)="openNewPopup()">
           </dx-button>
@@ -132,6 +135,8 @@
       <dx-data-grid
         [dataSource]="filteredCorsi()"
         [showBorders]="false"
+        [showColumnLines]="false"
+        [showRowLines]="true"
         [columnAutoWidth]="true"
         [rowAlternationEnabled]="true"
         [hoverStateEnabled]="true"
@@ -140,18 +145,23 @@
 
         <dxo-selection mode="single"></dxo-selection>
         <dxo-paging [pageSize]="20"></dxo-paging>
-        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
+        <dxo-pager
+          [showInfo]="true"
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[20, 50, 100]"
+          [showNavigationButtons]="true"
+          displayMode="full">
+        </dxo-pager>
 
         <dxi-column dataField="cprCurId1"   caption="Div. CTP"    [width]="100" alignment="center" cellTemplate="currencyTemplate"></dxi-column>
         <dxi-column dataField="cprCurId2"   caption="Div. BASE"   [width]="100" alignment="center" cellTemplate="currencyTemplate"></dxi-column>
         <dxi-column dataField="cprCutId"    caption="Tipo"        [width]="90"  alignment="center" cellTemplate="tipoTemplate"></dxi-column>
         <dxi-column dataField="curHostcod"  caption="Cod. HOST"   [width]="110" alignment="left"></dxi-column>
-        <dxi-column dataField="cprRateBuy"  caption="Cambio BUY"  [width]="110" alignment="right" cellTemplate="rateTemplate"></dxi-column>
-        <dxi-column dataField="cprRateSell" caption="Cambio SELL" [width]="110" alignment="right" cellTemplate="rateTemplate"></dxi-column>
+        <dxi-column dataField="cprRateBuy"  caption="Cambio BUY"  [width]="120" alignment="right" cellTemplate="rateTemplate"></dxi-column>
+        <dxi-column dataField="cprRateSell" caption="Cambio SELL" [width]="120" alignment="right" cellTemplate="rateTemplate"></dxi-column>
         <dxi-column dataField="cprValdat"   caption="Data Valuta" [width]="140" alignment="left"></dxi-column>
         <dxi-column dataField="cprDatreg"   caption="Data Reg."   [width]="140" alignment="left"></dxi-column>
         <dxi-column dataField="curLondes"   caption="Descrizione"               alignment="left"></dxi-column>
-
         <dxi-column
           caption="Azioni"
           [width]="110"
@@ -161,12 +171,10 @@
           cellTemplate="actionsTemplate">
         </dxi-column>
 
-        <!-- Currency badge template -->
         <div *dxTemplate="let cell of 'currencyTemplate'" class="currency-cell">
           <span class="currency-badge">{{ cell.value }}</span>
         </div>
 
-        <!-- Tipo template -->
         <div *dxTemplate="let cell of 'tipoTemplate'" class="tipo-cell">
           <span class="tipo-pill"
             [class.tipo-pill--bb]="cell.value === 'BB'"
@@ -176,27 +184,25 @@
           </span>
         </div>
 
-        <!-- Rate template -->
         <div *dxTemplate="let cell of 'rateTemplate'" class="rate-cell">
           {{ cell.value | number:'1.4-4' }}
         </div>
 
-        <!-- Azioni template -->
         <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
           <button class="action-btn action-btn--view" title="Visualizza" (click)="onTableAction('view', cell.data)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
           </button>
           <button class="action-btn action-btn--edit" title="Modifica" (click)="onTableAction('edit', cell.data)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
             </svg>
           </button>
           <button class="action-btn action-btn--delete" title="Elimina" (click)="onTableAction('delete', cell.data)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6"></polyline>
               <path d="M19 6l-1 14H6L5 6"></path>
               <path d="M10 11v6M14 11v6"></path>
@@ -205,6 +211,7 @@
           </button>
         </div>
 
+        <dxo-load-panel [enabled]="false"></dxo-load-panel>
       </dx-data-grid>
     </div>
 
@@ -368,31 +375,46 @@
         </div>
       </section>
 
-      <!-- ── Action Bar sticky ── -->
+      <!-- ── Action Bar ── -->
       <div class="popup-action-bar">
         <div class="popup-actions-secondary"></div>
         <div class="popup-actions-primary">
           @if (popupMode() === 'view') {
             <dx-button
-              class="btn-action-close"
+              class="btn-fin-secondary"
               text="Chiudi"
               icon="close"
+              stylingMode="outlined"
               (onClick)="closePopup()">
             </dx-button>
           }
           @if (popupMode() === 'new') {
             <dx-button
-              class="btn-action-primary"
+              class="btn-fin-secondary"
+              text="Annulla"
+              stylingMode="outlined"
+              (onClick)="closePopup()">
+            </dx-button>
+            <dx-button
+              class="btn-fin-primary"
               text="Aggiungi"
               icon="plus"
+              stylingMode="contained"
               (onClick)="onSubmit()">
             </dx-button>
           }
           @if (popupMode() === 'edit') {
             <dx-button
-              class="btn-action-primary"
+              class="btn-fin-secondary"
+              text="Chiudi"
+              stylingMode="outlined"
+              (onClick)="closePopup()">
+            </dx-button>
+            <dx-button
+              class="btn-fin-primary"
               text="Salva"
               icon="save"
+              stylingMode="contained"
               (onClick)="onUpdate()">
             </dx-button>
           }
