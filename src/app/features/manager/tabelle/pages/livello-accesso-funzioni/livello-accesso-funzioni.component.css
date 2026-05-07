@@ -10,3 +10,36 @@ h1 {
   margin-bottom: 20px;
   font-size: 24px;
 }
+
+/* SVG icon sizing for this component */
+.page-shell svg {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Larger icon used in card header */
+.page-shell .card-icon {
+  width: 28px;
+  height: 28px;
+}
+
+/* Spinner size and animation */
+.spin-icon {
+  width: 22px;
+  height: 22px;
+  animation: copilot-spin 1s linear infinite;
+}
+
+@keyframes copilot-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Action buttons: slightly larger clickable icons */
+.actions-cell svg,
+.action-btn svg {
+  width: 20px;
+  height: 20px;
+}
