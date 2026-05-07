@@ -10,7 +10,7 @@ export interface TabellaVarcharItem {
 export interface TabellaVarcharSearchParams {
   nomeTabella: string;
   id: string;
-  des: string;
+  desLike: string;
 }
 
 export interface TabellaVarcharUpsert {
@@ -23,18 +23,18 @@ export interface TabellaVarcharUpsert {
 export class TabellaVarcharService {
   private readonly apiService = inject(ApiService);
 
-  search(nomeTabella: string, id: string, des: string): Observable<TabellaVarcharItem[]> {
-    const params: TabellaVarcharSearchParams = { nomeTabella, id, des };
-    return this.apiService.post<TabellaVarcharItem[]>('Manager/GetTabellaVarchar', params);
+  search(nomeTabella: string, id: string, desLike: string): Observable<TabellaVarcharItem[]> {
+    const params: TabellaVarcharSearchParams = { nomeTabella, id, desLike };
+    return this.apiService.post<TabellaVarcharItem[]>('Tabella/GetTabellaServVarchar', params);
   }
 
   insert(nomeTabella: string, id: string, des: string): Observable<boolean> {
     const body: TabellaVarcharUpsert = { nomeTabella, id, des };
-    return this.apiService.post<boolean>('Manager/InsertTabellaVarchar', body);
+    return this.apiService.post<boolean>('Tabella/InsertTabellaServVarchar', body);
   }
 
   update(nomeTabella: string, id: string, des: string): Observable<boolean> {
     const body: TabellaVarcharUpsert = { nomeTabella, id, des };
-    return this.apiService.post<boolean>('Manager/UpdateTabellaVarchar', body);
+    return this.apiService.post<boolean>('Tabella/UpdateTabellaServVarchar', body);
   }
 }

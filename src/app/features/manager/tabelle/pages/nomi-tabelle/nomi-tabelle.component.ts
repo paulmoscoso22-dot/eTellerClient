@@ -1,6 +1,7 @@
-import { Component, signal, DestroyRef, inject } from '@angular/core';
+import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   DxDataGridModule,
   DxTextBoxModule,
@@ -8,7 +9,10 @@ import {
   DxPopupModule,
 } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import notify from 'devextreme/ui/notify';
 import { TabellaVarcharService, TabellaVarcharItem } from '../../services/tabella-varchar.service';
+
+const TABLE = 'ST_TABLENAME';
 
 @Component({
   selector: 'app-nomi-tabelle',
@@ -24,9 +28,10 @@ import { TabellaVarcharService, TabellaVarcharItem } from '../../services/tabell
   templateUrl: './nomi-tabelle.component.html',
   styleUrls: ['./nomi-tabelle.component.css'],
 })
-export class NomiTabelleComponent {
+export class NomiTabelleComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
   private readonly service = inject(TabellaVarcharService);
 
   items = signal<TabellaVarcharItem[]>([]);
@@ -34,8 +39,8 @@ export class NomiTabelleComponent {
   error = signal<string | null>(null);
 
   filterForm: FormGroup = this.fb.group({
-    id: [''],
-    des: [''],
+    id: [null],
+    des: [null],
   });
 
   // ── Form popup ──
@@ -46,33 +51,34 @@ export class NomiTabelleComponent {
   saveError = signal<string | null>(null);
 
   editForm: FormGroup = this.fb.group({
-    id: [''],
-    des: [''],
+    id: [null],
+    des: [null],
   });
+
+  ngOnInit(): void {
+    this.showAll();
+  }
 
   search(): void {
     const { id, des } = this.filterForm.value;
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.service.search('ST_TABLENAME', id ?? '', des ?? '')
+    this.service.search(TABLE, id ?? null, des ?? null)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data) => { this.items.set(data); this.isLoading.set(false); },
-        error: (err: any) => {
-          this.error.set(err.message || 'Errore nel recupero dei dati');
-          this.isLoading.set(false);
-        }
+        next: (data) => this.handleSearchResult(data),
+        error: (err: any) => this.handleSearchError(err),
       });
   }
 
   showAll(): void {
-    this.filterForm.reset({ id: '', des: '' });
+    this.filterForm.reset({ id: null, des: null });
     this.search();
   }
 
   resetFilters(): void {
-    this.filterForm.reset({ id: '', des: '' });
+    this.filterForm.reset({ id: null, des: null });
     this.items.set([]);
     this.error.set(null);
   }
@@ -98,37 +104,84 @@ export class NomiTabelleComponent {
   }
 
   save(): void {
-    const v = this.editForm.value;
-    if (!v.id?.trim()) {
-      this.saveError.set('Il campo ID è obbligatorio');
-      return;
-    }
-    if (!v.des?.trim()) {
-      this.saveError.set('Il campo Descrizione è obbligatorio');
-      return;
-    }
+    if (!this.validateSaveForm()) return;
+
+    const payload = this.buildPayload();
+    const isEdit = this.isEditMode();
 
     this.isSaving.set(true);
     this.saveError.set(null);
 
-    const obs = this.isEditMode()
-      ? this.service.update('ST_TABLENAME', v.id.trim(), v.des.trim())
-      : this.service.insert('ST_TABLENAME', v.id.trim(), v.des.trim());
+    const obs = isEdit
+      ? this.service.update(TABLE, payload.id, payload.des)
+      : this.service.insert(TABLE, payload.id, payload.des);
 
     obs.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (result: boolean) => {
-        this.isSaving.set(false);
-        if (result) {
-          this.isFormPopupVisible = false;
-          this.search();
-        } else {
-          this.saveError.set('Operazione non riuscita. Verificare i dati inseriti.');
-        }
-      },
-      error: (err: any) => {
-        this.isSaving.set(false);
-        this.saveError.set(err.message || 'Errore durante il salvataggio');
-      }
+      next: (result: boolean) => this.handleSaveResult(result, isEdit, payload.id),
+      error: (err: any) => this.handleSaveError(err),
     });
   }
+
+  onTrace(): void {
+    this.router.navigate(['/trace'], {
+      queryParams: {
+        ENTNAME: TABLE,
+        traEntCode: this.selectedId(),
+      },
+    });
+  }
+
+  private handleSearchResult(data: TabellaVarcharItem[]): void {
+    this.items.set(data);
+    this.isLoading.set(false);
+  }
+
+  private handleSearchError(err: any): void {
+    this.error.set(err.message || 'Errore nel recupero dei dati');
+    this.isLoading.set(false);
+  }
+
+  private validateSaveForm(): boolean {
+    const v = this.editForm.value;
+    if (!v.id?.trim()) {
+      this.saveError.set('Il campo ID è obbligatorio');
+      return false;
+    }
+    if (!v.des?.trim()) {
+      this.saveError.set('Il campo Descrizione è obbligatorio');
+      return false;
+    }
+    return true;
+  }
+
+  private buildPayload(): { id: string; des: string } {
+    const v = this.editForm.value;
+    return { id: v.id.trim(), des: v.des.trim() };
+  }
+
+  private handleSaveResult(result: boolean, isEdit: boolean, label: string): void {
+    this.isSaving.set(false);
+    if (result) {
+      this.isFormPopupVisible = false;
+      notify(
+        isEdit
+          ? `Record "${label}" aggiornato con successo`
+          : `Record "${label}" inserito con successo`,
+        'success',
+        3000
+      );
+      this.search();
+    } else {
+      notify('Operazione non riuscita. Verificare i dati inseriti.', 'error', 4000);
+      this.saveError.set('Operazione non riuscita.');
+    }
+  }
+
+  private handleSaveError(err: any): void {
+    this.isSaving.set(false);
+    const msg = err.message || 'Errore durante il salvataggio';
+    notify(msg, 'error', 4000);
+    this.saveError.set(msg);
+  }
 }
+
