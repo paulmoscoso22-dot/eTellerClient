@@ -58,6 +58,61 @@ this.router.navigate(['/trace'], {
 
 > ❌ **Vietato** completare una migrazione senza aver portato tutti i pulsanti del sistema legacy, incluso `Traccia`.
 
+### Regola `ngOnInit()` obbligatorio nella migrazione
+
+Ogni componente migrato da ASP.NET Framework **deve sempre implementare `ngOnInit()`**, anche se la pagina legacy non aveva un `Page_Load` che caricava dati. Il metodo deve:
+
+- Essere **sempre presente** nella classe del componente (non ometterlo mai).
+- Chiamare `this.showAll()` (o il metodo di caricamento iniziale equivalente) in modo che la griglia sia **già popolata all'apertura della pagina**, esattamente come il `Page_Load` del vecchio sistema.
+- Delegare ad un **metodo privato** se serve logica aggiuntiva.
+
+```typescript
+// ✅ CORRETTO — ngOnInit sempre presente, chiama showAll
+ngOnInit(): void {
+  this.showAll();
+}
+
+showAll(): void {
+  this.filterForm.reset({ id: null, des: null });
+  this.search();
+}
+
+// ❌ SBAGLIATO — ngOnInit assente o vuoto
+// (la griglia si apre vuota, comportamento diverso dal legacy)
+```
+
+> ❌ **Vietato** consegnare una migrazione senza `ngOnInit()` o con la griglia vuota all'apertura.
+
+---
+
+### Regola Colonne Griglia: fedeltà al sistema legacy
+
+Le colonne della `dx-data-grid` del nuovo sistema **devono corrispondere esattamente** alle colonne presenti nel `GridView` della pagina `.aspx` vecchia. Non aggiungere né rimuovere colonne rispetto al legacy.
+
+**Procedura obbligatoria:**
+
+1. Identificare ogni `<asp:BoundField>` e `<asp:TemplateField>` nel `GridView` legacy.
+2. Mapparli 1:1 come `<dxi-column>` nella nuova griglia.
+3. Mantenere lo stesso `HeaderText` (tradotto in `caption`), lo stesso `DataField` (adattato al camelCase).
+4. La colonna **Azioni** (edit / trace) sostituisce il `CommandField ShowSelectButton`.
+
+| Elemento legacy | Equivalente Angular |
+|---|---|
+| `<asp:BoundField DataField="ID" HeaderText="ID">` | `<dxi-column dataField="id" caption="ID">` |
+| `<asp:BoundField DataField="DES" HeaderText="Descrizione">` | `<dxi-column dataField="des" caption="Descrizione">` |
+| `<asp:CommandField ShowSelectButton="True" SelectText="Scegli">` | colonna Azioni con template (edit + trace) |
+
+```html
+<!-- ✅ CORRETTO — colonne identiche al legacy GridView -->
+<dxi-column dataField="id"  caption="ID"          alignment="right" [width]="100" dataType="number"></dxi-column>
+<dxi-column dataField="des" caption="Descrizione" alignment="left"></dxi-column>
+<dxi-column caption="Azioni" [width]="90" cellTemplate="actionsTemplate" [allowSorting]="false"></dxi-column>
+```
+
+> ❌ **Vietato** aggiungere o rimuovere colonne rispetto alla pagina legacy senza esplicita richiesta dell'utente.
+
+---
+
 ### Regola `constructor` / `ngOnInit`
 
 | ❌ Vietato | ✅ Corretto |
