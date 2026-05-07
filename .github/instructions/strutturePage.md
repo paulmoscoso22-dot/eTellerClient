@@ -8,6 +8,56 @@
 - service for the method post get use subject behaviour
 - the mehtod ngOnInit only call a methods
 
+---
+
+## 🔁 Regola Migrazione da ASP.NET Framework Vecchio
+
+### Analisi obbligatoria prima di scrivere codice
+
+Quando ricevi una pagina `.aspx` / `.aspx.cs` da migrare, **prima di scrivere qualsiasi codice** devi:
+
+1. Identificare **tutti i pulsanti** presenti nella pagina vecchia (button, link button, command field).
+2. Mappare ciascuno nella nuova UI Angular + DevExtreme.
+3. Se un bottone richiede backend (es. Traccia, Elimina, Storico), implementarlo prima di passare al frontend.
+
+### Mappa obbligatoria pulsanti legacy → Angular
+
+| Pulsante legacy | Equivalente Angular / DevExtreme | Note |
+|---|---|---|
+| `ButtonSearch` / `Visualizza` | `dx-button` `Cerca` + `Mostra tutti` | sempre nella toolbar filtri |
+| `ButtonClear` / `Reset` | `dx-button` `Reset` | svuota filtri e griglia |
+| `ButtonADD` / `Aggiungi` | `dx-button` `Aggiungi` → apre popup add | abilita solo se autorizzato |
+| `ButtonMod` / `Modifica` | pulsante edit ✏️ nella colonna Azioni della griglia + bottone `Salva` nel popup | abilitato solo dopo selezione |
+| `ButtonTRACE` / `Traccia` | `dx-button` `Traccia` nel popup di modifica | naviga a `/trace` con `ENTNAME` e `traEntCode` |
+| `ButtonDEL` / `Elimina` | pulsante 🗑️ nella colonna Azioni + popup conferma | mostrare conferma prima di eliminare |
+| `CommandField ShowSelectButton` | colonna Azioni nella griglia con template | edit + trace + delete secondo la pagina |
+
+### Regola Traccia
+
+Il bottone `Traccia` è **sempre obbligatorio** quando è presente nel sistema legacy. Deve essere:
+
+- Visibile nel **popup di modifica** (non in quello di inserimento).
+- Facoltativamente aggiungibile anche nella colonna Azioni della griglia.
+- Implementato navigando a `/trace` con:
+
+```typescript
+this.router.navigate(['/trace'], {
+  queryParams: {
+    ENTNAME: TABLE,       // nome tabella o costante della pagina
+    traEntCode: item.id,  // codice del record selezionato
+  },
+});
+```
+
+```html
+@if (isEditMode()) {
+  <dx-button class="btn-action-trace" text="Traccia" icon="chart"
+             stylingMode="outlined" (onClick)="onTrace()"></dx-button>
+}
+```
+
+> ❌ **Vietato** completare una migrazione senza aver portato tutti i pulsanti del sistema legacy, incluso `Traccia`.
+
 ### Regola `constructor` / `ngOnInit`
 
 | ❌ Vietato | ✅ Corretto |
