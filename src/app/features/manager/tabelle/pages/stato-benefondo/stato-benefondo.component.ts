@@ -1,4 +1,4 @@
-import { Component, signal, DestroyRef, inject } from '@angular/core';
+import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -32,39 +32,43 @@ const TABLE = 'ST_BEFSTATUS';
   templateUrl: './stato-benefondo.component.html',
   styleUrls: ['./stato-benefondo.component.css'],
 })
-export class StatoBenefondoComponent {
+export class StatoBenefondoComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
   private readonly service = inject(TabellaIntService);
   private readonly router = inject(Router);
-
+  
   items = signal<TabellaIntItem[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
-
+  
   filterForm: FormGroup = this.fb.group({
-    id: [''],
-    des: [''],
+    id: [null],
+    des: [null],
   });
-
+  
   // ── Form popup ──
   isFormPopupVisible = false;
   popupMode = signal<'new' | 'view' | 'edit'>('new');
   selectedId = signal<number | null>(null);
   isSaving = signal(false);
   saveError = signal<string | null>(null);
-
+  
   editForm: FormGroup = this.fb.group({
     id: [null, Validators.required],
-    des: ['', [Validators.required, Validators.maxLength(50)]],
+    des: [null, [Validators.required, Validators.maxLength(50)]],
   });
+  
+  ngOnInit(): void {
+    this.search();
+  }
 
   search(): void {
     const { id, des } = this.filterForm.value;
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.service.search(TABLE, id ?? '', des ?? '')
+    this.service.search(TABLE, id ?? null, des ?? null)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => { this.items.set(data); this.isLoading.set(false); },
@@ -76,12 +80,12 @@ export class StatoBenefondoComponent {
   }
 
   showAll(): void {
-    this.filterForm.reset({ id: '', des: '' });
+    this.filterForm.reset({ id: null, des: null });
     this.search();
   }
 
   resetFilters(): void {
-    this.filterForm.reset({ id: '', des: '' });
+    this.filterForm.reset({ id: null, des: null });
     this.items.set([]);
     this.error.set(null);
   }
@@ -90,7 +94,7 @@ export class StatoBenefondoComponent {
     this.popupMode.set('new');
     this.selectedId.set(null);
     this.saveError.set(null);
-    this.editForm.reset({ id: null, des: '' });
+    this.editForm.reset({ id: null, des: null });
     this.isFormPopupVisible = true;
   }
 
