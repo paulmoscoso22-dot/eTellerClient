@@ -11,6 +11,12 @@ import {
   ScheduleOneTimeTaskCommand,
   IPeriodTypeResponse,
 } from '../models/FunzioneSchedule.models';
+import {
+  IServiziResponse,
+  IInsertServizioCommand,
+  IUpdateServizioCommand,
+  IDeleteServizioCommand,
+} from '../models/Servizi.models';
 
 @Injectable({ providedIn: 'root' })
 export class TabelleService {
@@ -47,5 +53,21 @@ export class TabelleService {
 
   getPeriodTypes(): Observable<IPeriodTypeResponse[]> {
     return this.api.get<IPeriodTypeResponse[]>('Manager/Tabelle/GetPeriodTypes');
+  }
+
+  getServizi(): Observable<IServiziResponse[]> {
+    return this.api.get<IServiziResponse[]>('Manager/Servizi/GetServizi');
+  }
+
+  insertServizio(command: IInsertServizioCommand): Observable<boolean> {
+    return this.api.post<boolean>('Manager/Servizi/InsertServizio', command);
+  }
+
+  updateServizio(command: IUpdateServizioCommand): Observable<boolean> {
+    return this.api.put<boolean>('Manager/Servizi/UpdateServizio', command);
+  }
+
+  deleteServizio(command: IDeleteServizioCommand): Observable<boolean> {
+    return this.api.deleteWithBody<boolean>('Manager/Servizi/DeleteServizio', command);
   }
 }
