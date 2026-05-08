@@ -23,8 +23,9 @@ export interface TabellaVarcharUpsert {
 export class TabellaVarcharService {
   private readonly apiService = inject(ApiService);
 
-  search(nomeTabella: string, id: string, desLike: string): Observable<TabellaVarcharItem[]> {
-    const params: TabellaVarcharSearchParams = { nomeTabella, id, desLike };
+
+  search(nomeTabella: string, id: string, des: string): Observable<TabellaVarcharItem[]> {
+    const params: TabellaVarcharSearchParams = { nomeTabella, id, desLike: des };
     return this.apiService.post<TabellaVarcharItem[]>('Tabella/GetTabellaServVarchar', params);
   }
 
