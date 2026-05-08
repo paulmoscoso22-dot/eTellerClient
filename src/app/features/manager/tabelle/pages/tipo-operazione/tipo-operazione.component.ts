@@ -1,6 +1,7 @@
 import { Component, signal, computed, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
   DxValidatorModule, DxSelectBoxModule, DxCheckBoxModule
@@ -28,12 +29,14 @@ export class TipoOperazioneComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
   private readonly tipoOperazioneService = inject(TipoOperazioneService);
+  private readonly router = inject(Router);
 
   private operazioni = signal<ITipoOperazioneVm[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
 
-  filterSearch = signal<string>('');
+  filterId  = signal<string>('');
+  filterDes = signal<string>('');
 
   popupMode = signal<'new' | 'view' | 'edit'>('new');
   isDetailPopupVisible = false;
@@ -46,12 +49,11 @@ export class TipoOperazioneComponent implements OnInit {
   ];
 
   filteredOperazioni = computed(() => {
-    const q = this.filterSearch().toLowerCase().trim();
-    if (!q) return this.operazioni();
+    const id  = this.filterId().toLowerCase().trim();
+    const des = this.filterDes().toLowerCase().trim();
     return this.operazioni().filter(o =>
-      o.optId.toLowerCase().includes(q) ||
-      o.optDes.toLowerCase().includes(q) ||
-      o.optHoscod.toLowerCase().includes(q)
+      (!id  || o.optId.toLowerCase().includes(id)) &&
+      (!des || o.optDes.toLowerCase().includes(des))
     );
   });
 
@@ -88,8 +90,17 @@ export class TipoOperazioneComponent implements OnInit {
       });
   }
 
-  onSearchChanged(e: { value?: string }): void {
-    this.filterSearch.set(e.value ?? '');
+  onFilterIdChanged(e: { value?: string }): void {
+    this.filterId.set(e.value ?? '');
+  }
+
+  onFilterDesChanged(e: { value?: string }): void {
+    this.filterDes.set(e.value ?? '');
+  }
+
+  resetSearch(): void {
+    this.filterId.set('');
+    this.filterDes.set('');
   }
 
   openNewPopup(): void {
@@ -117,8 +128,11 @@ export class TipoOperazioneComponent implements OnInit {
 
   onTableAction(action: string, data: ITipoOperazioneVm): void {
     switch (action) {
-      case 'view': this.openViewPopup(data); break;
-      case 'edit': this.openEditPopup(data); break;
+      case 'view':  this.openViewPopup(data); break;
+      case 'edit':  this.openEditPopup(data); break;
+      case 'trace': this.router.navigate(['/trace'], {
+        queryParams: { traTabNam: 'OPT_TYPE', traEntCode: data.optId },
+      }); break;
     }
   }
 
@@ -194,7 +208,9 @@ export class TipoOperazioneComponent implements OnInit {
 
   onTrace(): void {
     const id = this.operazioneForm.get('optId')?.value;
-    notify(`Storico non ancora disponibile per il tipo operazione "${id}"`, 'info', 3000);
+    this.router.navigate(['/trace'], {
+      queryParams: { traTabNam: 'OPT_TYPE', traEntCode: id },
+    });
   }
 
   closePopup(): void {

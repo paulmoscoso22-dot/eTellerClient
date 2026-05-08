@@ -1,14 +1,17 @@
 import { Component, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   DxDataGridModule,
   DxTextBoxModule,
   DxNumberBoxModule,
   DxButtonModule,
   DxPopupModule,
+  DxValidatorModule,
 } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import notify from 'devextreme/ui/notify';
 import { TabellaIntService, TabellaIntItem } from '../../services/tabella-int.service';
 
 const TABLE = 'ST_BEFSTATUS';
@@ -24,6 +27,7 @@ const TABLE = 'ST_BEFSTATUS';
     DxNumberBoxModule,
     DxButtonModule,
     DxPopupModule,
+    DxValidatorModule,
   ],
   templateUrl: './stato-benefondo.component.html',
   styleUrls: ['./stato-benefondo.component.css'],
@@ -32,6 +36,7 @@ export class StatoBenefondoComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
   private readonly service = inject(TabellaIntService);
+  private readonly router = inject(Router);
 
   items = signal<TabellaIntItem[]>([]);
   isLoading = signal(false);
@@ -44,14 +49,14 @@ export class StatoBenefondoComponent {
 
   // ── Form popup ──
   isFormPopupVisible = false;
-  isEditMode = signal(false);
+  popupMode = signal<'new' | 'view' | 'edit'>('new');
   selectedId = signal<number | null>(null);
   isSaving = signal(false);
   saveError = signal<string | null>(null);
 
   editForm: FormGroup = this.fb.group({
-    id: [null],
-    des: [''],
+    id: [null, Validators.required],
+    des: ['', [Validators.required, Validators.maxLength(50)]],
   });
 
   search(): void {
@@ -82,15 +87,23 @@ export class StatoBenefondoComponent {
   }
 
   openAddPopup(): void {
-    this.isEditMode.set(false);
+    this.popupMode.set('new');
     this.selectedId.set(null);
     this.saveError.set(null);
     this.editForm.reset({ id: null, des: '' });
     this.isFormPopupVisible = true;
   }
 
+  openViewPopup(item: TabellaIntItem): void {
+    this.popupMode.set('view');
+    this.selectedId.set(item.id);
+    this.saveError.set(null);
+    this.editForm.reset({ id: item.id, des: item.des });
+    this.isFormPopupVisible = true;
+  }
+
   openEditPopup(item: TabellaIntItem): void {
-    this.isEditMode.set(true);
+    this.popupMode.set('edit');
     this.selectedId.set(item.id);
     this.saveError.set(null);
     this.editForm.reset({ id: item.id, des: item.des });
@@ -99,6 +112,13 @@ export class StatoBenefondoComponent {
 
   closeFormPopup(): void {
     this.isFormPopupVisible = false;
+  }
+
+  onTrace(): void {
+    const id = this.editForm.get('id')?.value;
+    this.router.navigate(['/trace'], {
+      queryParams: { traTabNam: TABLE, traEntCode: id },
+    });
   }
 
   save(): void {
@@ -116,7 +136,7 @@ export class StatoBenefondoComponent {
     this.saveError.set(null);
 
     const idNum = Number(v.id);
-    const obs = this.isEditMode()
+    const obs = this.popupMode() === 'edit'
       ? this.service.update(TABLE, idNum, v.des.trim())
       : this.service.insert(TABLE, idNum, v.des.trim());
 
@@ -125,14 +145,19 @@ export class StatoBenefondoComponent {
         this.isSaving.set(false);
         if (result) {
           this.isFormPopupVisible = false;
+          const action = this.popupMode() === 'edit' ? 'aggiornato' : 'aggiunto';
+          notify(`Stato bene fondo "${idNum}" ${action} con successo`, 'success', 3000);
           this.search();
         } else {
           this.saveError.set('Operazione non riuscita. Il codice potrebbe essere già presente.');
+          notify('Operazione non riuscita. Il codice potrebbe essere già presente.', 'error', 4000);
         }
       },
       error: (err: any) => {
         this.isSaving.set(false);
-        this.saveError.set(err.message || 'Errore durante il salvataggio');
+        const msg = err.message || 'Errore durante il salvataggio';
+        this.saveError.set(msg);
+        notify(msg, 'error', 4000);
       }
     });
   }
