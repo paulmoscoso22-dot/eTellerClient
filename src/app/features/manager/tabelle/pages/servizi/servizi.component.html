@@ -33,6 +33,20 @@
 
         <div class="toolbar-actions">
           <dx-button
+            class="btn-refresh"
+            text="Aggiorna"
+            icon="refresh"
+            stylingMode="outlined"
+            (onClick)="onRefresh()">
+          </dx-button>
+          <dx-button
+            class="btn-reset"
+            text="Reset"
+            icon="revert"
+            stylingMode="outlined"
+            (onClick)="onResetForm()">
+          </dx-button>
+          <dx-button
             class="btn-new"
             text="Nuovo"
             type="default"
@@ -69,7 +83,7 @@
 
         <dxi-column
           caption="Azioni"
-          [width]="110"
+          [width]="140"
           [allowSorting]="false"
           [allowFiltering]="false"
           alignment="center"
@@ -95,6 +109,11 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--trace" title="Traccia" (click)="onTableAction('trace', cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
             </svg>
           </button>
           <button class="action-btn action-btn--delete" title="Elimina" (click)="onTableAction('delete', cell.data)">
@@ -211,7 +230,17 @@
 
       <!-- ── Action Bar sticky ── -->
       <div class="popup-action-bar">
-        <div class="popup-actions-secondary"></div>
+        <div class="popup-actions-secondary">
+          @if (popupMode() === 'edit' || popupMode() === 'view') {
+            <dx-button
+              class="btn-action-trace"
+              text="Traccia"
+              icon="chart"
+              stylingMode="outlined"
+              (onClick)="onTrace()">
+            </dx-button>
+          }
+        </div>
         <div class="popup-actions-primary">
           @if (popupMode() === 'view') {
             <dx-button
