@@ -9,6 +9,7 @@ import {
   DeleteFunzioneScheduleCommand,
   ResetFunctionErrorCommand,
   ScheduleOneTimeTaskCommand,
+  IPeriodTypeResponse,
 } from '../models/FunzioneSchedule.models';
 
 @Injectable({ providedIn: 'root' })
@@ -42,5 +43,9 @@ export class TabelleService {
 
   scheduleOneTimeTask(command: ScheduleOneTimeTaskCommand): Observable<boolean> {
     return this.api.post<boolean>('Manager/Tabelle/ScheduleOneTimeTask', command);
+  }
+
+  getPeriodTypes(): Observable<IPeriodTypeResponse[]> {
+    return this.api.get<IPeriodTypeResponse[]>('Manager/Tabelle/GetPeriodTypes');
   }
 }

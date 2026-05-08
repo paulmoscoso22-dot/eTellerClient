@@ -90,3 +90,8 @@ export interface ScheduleOneTimeTaskCommand {
   traStation: string;
   futId: string;
 }
+
+export interface IPeriodTypeResponse {
+  id: string;
+  des: string;
+}

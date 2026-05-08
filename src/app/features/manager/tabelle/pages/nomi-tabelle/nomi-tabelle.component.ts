@@ -87,7 +87,7 @@ export class NomiTabelleComponent implements OnInit {
     this.isEditMode.set(false);
     this.selectedId.set(null);
     this.saveError.set(null);
-    this.editForm.reset({ id: '', des: '' });
+    this.editForm.reset({ id: null, des: null });
     this.isFormPopupVisible = true;
   }
 

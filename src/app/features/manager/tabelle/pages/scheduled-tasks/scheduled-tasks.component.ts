@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal, computed, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import {
@@ -13,6 +14,7 @@ import { TabelleService } from '../../services/tabelle.service';
 import {
   FunzioniScheduleResponse,
   InsertFunzioneScheduleCommand,
+  IPeriodTypeResponse,
 } from '../../models/FunzioneSchedule.models';
 
 @Component({
@@ -31,6 +33,7 @@ export class ScheduledTasksComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly tabelleService = inject(TabelleService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
 
   private readonly tasks = signal<FunzioniScheduleResponse[]>([]);
   private readonly searchSubject = new Subject<string>();
@@ -40,12 +43,7 @@ export class ScheduledTasksComponent implements OnInit {
   isDetailPopupVisible = false;
   readonly selectedFutId = signal<string | null>(null);
 
-  readonly periodTypes = [
-    { id: 'D', des: 'Giorni' },
-    { id: 'H', des: 'Ore' },
-    { id: 'M', des: 'Minuti' },
-    { id: 'R', des: 'Esecuzione singola' },
-  ];
+  readonly periodTypes = signal<IPeriodTypeResponse[]>([]);
 
   readonly filteredTasks = computed(() => this.tasks());
 
@@ -89,6 +87,7 @@ export class ScheduledTasksComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadFunzioniSchedule();
+    this.loadPeriodTypes();
   }
 
   private loadFunzioniSchedule(): void {
@@ -97,6 +96,12 @@ export class ScheduledTasksComponent implements OnInit {
       .getFunzioniSchedule({ nomeLike: term || null, desLike: term || null })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(data => this.tasks.set(data));
+  }
+
+  private loadPeriodTypes(): void {
+    this.tabelleService.getPeriodTypes()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(data => this.periodTypes.set(data));
   }
 
   // ── Validazione orari (replica logica C# FunzEschedule.aspx.cs) ──────────
@@ -170,7 +175,7 @@ export class ScheduledTasksComponent implements OnInit {
       futPeriod:     isAuto ? (v.futPeriod    ?? null) : null,
       futStart:      isAuto ? (v.futStart     || null) : null,
       futEnd:        isAuto ? (v.futEnd       || null) : null,
-      futNamedll:    '',
+      futNamedll:    isAuto ? (v.futNamedll || null) : null,
       futClassname:  isAuto ? (v.futClassname || null) : null,
       futErrcount:   isAuto ? (v.futErrcount  ?? null) : null,
       futHosval:     isAuto ? null : (v.futHosval ?? null),
@@ -299,11 +304,32 @@ export class ScheduledTasksComponent implements OnInit {
     this.searchSubject.next(term);
   }
 
+  onRefresh(): void {
+    this.loadFunzioniSchedule();
+  }
+
   // ── Helpers griglia ───────────────────────────────────────────────────────
+
+  // ── Traccia da riga ──
+  onTraceFromRow(data: FunzioniScheduleResponse): void {
+    this.router.navigate(['/trace'], {
+      queryParams: { traTabNam: 'FUNZIONISHEDULE', traEntCode: data.futId }
+    });
+  }
+
+  // ── Traccia da popup ──
+  onTrace(): void {
+    const id = this.selectedFutId();
+    if (!id) return;
+    this.isDetailPopupVisible = false;
+    this.router.navigate(['/trace'], {
+      queryParams: { traTabNam: 'FUNZIONISHEDULE', traEntCode: id }
+    });
+  }
 
   getPeriodLabel(task: FunzioniScheduleResponse): string {
     if (!task.futAutatt) return '—';
-    const type = this.periodTypes.find(p => p.id === task.futPeriodtyp);
+    const type = this.periodTypes().find((p: IPeriodTypeResponse) => p.id === task.futPeriodtyp);
     return task.futPeriod
       ? `${task.futPeriod} ${type?.des ?? task.futPeriodtyp}`
       : (type?.des ?? '—');

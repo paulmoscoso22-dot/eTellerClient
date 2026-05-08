@@ -32,6 +32,13 @@
 
         <div class="toolbar-actions">
           <dx-button
+            class="btn-refresh"
+            text="Aggiorna"
+            icon="refresh"
+            stylingMode="outlined"
+            (onClick)="onRefresh()">
+          </dx-button>
+          <dx-button
             class="btn-new"
             text="Nuovo"
             type="default"
@@ -114,6 +121,13 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--trace" title="Traccia" (click)="onTraceFromRow(cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 3v5h5"></path>
+              <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"></path>
+              <polyline points="12 7 12 12 15 15"></polyline>
             </svg>
           </button>
           <button class="action-btn action-btn--delete" title="Elimina" (click)="onTableAction('delete', cell.data)">
@@ -262,7 +276,7 @@
               <label class="popup-field-label">Tipo Periodo</label>
               <dx-select-box
                 formControlName="futPeriodtyp"
-                [dataSource]="periodTypes"
+                [dataSource]="periodTypes()"
                 displayExpr="des"
                 valueExpr="id"
                 [readOnly]="popupMode() === 'view'">
@@ -300,6 +314,15 @@
       <div class="popup-action-bar">
 
         <div class="popup-actions-secondary">
+          @if (popupMode() === 'view' || popupMode() === 'edit') {
+            <dx-button
+              class="btn-action-outline"
+              text="Traccia"
+              icon="chart"
+              stylingMode="outlined"
+              (onClick)="onTrace()">
+            </dx-button>
+          }
           @if (popupMode() === 'edit') {
             <dx-button
               class="btn-action-outline"
