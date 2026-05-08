@@ -1,6 +1,11 @@
 <div class="page-shell">
 
-  <!-- ── Main Card ── -->
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Tipo Conto</h1>
+  </div>
+
+  <!-- ── Card Main ── -->
   <section class="card-section">
 
     <div class="sempione-card-header">
@@ -8,62 +13,55 @@
         <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
       </svg>
-      <h2 class="card-title">Tipi Conto (ST_ACCOUNTTYPE)</h2>
+      <h2 class="card-title">Tipi Conto</h2>
     </div>
     <div class="gold-divider"></div>
 
-    <!-- ── Filtri ── -->
+    <!-- ── Toolbar ── -->
     <div class="card-toolbar" [formGroup]="filterForm">
-      <div class="toolbar-row">
+      <div class="toolbar-inner">
 
-        <span class="filter-label">ID:</span>
-        <dx-text-box
-          formControlName="id"
-          [showClearButton]="true"
-          placeholder="Codice..."
-          class="filter-control filter-control--sm">
-        </dx-text-box>
-
-        <span class="filter-label">Descrizione:</span>
-        <dx-text-box
-          formControlName="des"
-          [showClearButton]="true"
-          placeholder="Descrizione..."
-          class="filter-control filter-control--lg">
-        </dx-text-box>
-
-        <div class="toolbar-row-spacer"></div>
+        <div class="toolbar-filters">
+          <div class="toolbar-field">
+            <span class="filter-label">ID</span>
+            <dx-text-box
+              formControlName="id"
+              [showClearButton]="true"
+              placeholder="Codice..."
+              valueChangeEvent="input">
+            </dx-text-box>
+          </div>
+          <div class="toolbar-field toolbar-field--lg">
+            <span class="filter-label">Descrizione</span>
+            <dx-text-box
+              formControlName="des"
+              [showClearButton]="true"
+              placeholder="Descrizione..."
+              valueChangeEvent="input">
+            </dx-text-box>
+          </div>
+        </div>
 
         <div class="toolbar-actions">
           <dx-button
-            class="btn-reset"
-            text="Reset"
-            stylingMode="outlined"
-            icon="revert"
-            (onClick)="resetFilters()">
-          </dx-button>
-          <dx-button
-            class="btn-showall"
-            text="Mostra tutti"
-            stylingMode="outlined"
-            icon="checklist"
-            [disabled]="isLoading()"
-            (onClick)="showAll()">
-          </dx-button>
-          <dx-button
-            class="btn-cerca"
-            text="Cerca"
-            type="default"
-            stylingMode="contained"
             icon="search"
+            hint="Cerca"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
             [disabled]="isLoading()"
             (onClick)="search()">
           </dx-button>
           <dx-button
-            class="btn-add"
-            text="Aggiungi"
+            icon="revert"
+            hint="Ripristina ricerca"
             stylingMode="outlined"
-            icon="add"
+            class="btn-fin-secondary"
+            (onClick)="resetFilters()">
+          </dx-button>
+          <dx-button
+            class="btn-fin-primary action-shadow"
+            text="Nuovo"
+            stylingMode="contained"
             (onClick)="openAddPopup()">
           </dx-button>
         </div>
@@ -71,7 +69,7 @@
       </div>
     </div>
 
-    <!-- ── Griglia ── -->
+    <!-- ── Grid ── -->
     <div class="card-body card-body--grid">
 
       @if (error()) {
@@ -98,6 +96,8 @@
         <dx-data-grid
           [dataSource]="items()"
           [showBorders]="false"
+          [showColumnLines]="false"
+          [showRowLines]="true"
           [columnAutoWidth]="true"
           [rowAlternationEnabled]="true"
           [hoverStateEnabled]="true"
@@ -107,14 +107,21 @@
 
           <dxo-selection mode="single"></dxo-selection>
           <dxo-paging [pageSize]="30"></dxo-paging>
-          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 30, 50, 100]" [showInfo]="true"></dxo-pager>
+          <dxo-pager
+            [showInfo]="true"
+            infoText="{2} tipi conto"
+            [showPageSizeSelector]="true"
+            [allowedPageSizes]="[20, 30, 50, 100]"
+            [showNavigationButtons]="true"
+            displayMode="full">
+          </dxo-pager>
 
           <dxi-column dataField="id"  caption="ID"          alignment="left" [width]="140"></dxi-column>
           <dxi-column dataField="des" caption="Descrizione" alignment="left"></dxi-column>
 
           <dxi-column
             caption="Azioni"
-            [width]="70"
+            [width]="90"
             [allowSorting]="false"
             [allowFiltering]="false"
             alignment="center"
@@ -138,25 +145,27 @@
     </div>
 
   </section>
-
 </div>
 
-<!-- ══ Popup Aggiungi / Modifica ══ -->
+<!-- ══════════════════════════════════════
+     Popup: Dettaglio / Modifica / Nuovo Tipo Conto
+     ══════════════════════════════════════ -->
 <dx-popup
   [(visible)]="isFormPopupVisible"
   [showTitle]="true"
-  [title]="isEditMode() ? ('Modifica — ' + selectedId()) : 'Nuovo tipo conto'"
+  [title]="isEditMode() ? ('Modifica Tipo Conto — ' + selectedId()) : 'Nuovo Tipo Conto'"
   [dragEnabled]="true"
   [hideOnOutsideClick]="false"
   [showCloseButton]="true"
   [width]="480"
   [height]="'auto'"
-  [maxHeight]="'92vh'"
+  [maxHeight]="'90vh'"
   (onHidden)="closeFormPopup()">
 
   <div *dxTemplate="let data of 'content'">
-    <div class="popup-layout" [formGroup]="editForm">
+    <form [formGroup]="editForm" class="popup-layout">
 
+      <!-- ── Card: Dati tipo conto ── -->
       <section class="popup-card">
         <h3 class="popup-card-title">Dati tipo conto</h3>
         <div class="popup-fields-grid">
@@ -196,28 +205,30 @@
         }
       </section>
 
-      <!-- ── Action bar ── -->
+      <!-- ── Action Bar ── -->
       <div class="popup-action-bar">
+
         <div class="popup-actions-secondary"></div>
+
         <div class="popup-actions-primary">
           <dx-button
-            class="btn-action-close"
             text="Annulla"
-            icon="close"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
             (onClick)="closeFormPopup()">
           </dx-button>
           <dx-button
-            class="btn-action-save"
-            [text]="isSaving() ? 'Salvataggio...' : 'Salva'"
-            type="default"
+            [text]="isSaving() ? 'Salvataggio...' : (isEditMode() ? 'Salva Modifiche' : 'Crea Tipo Conto')"
+            [icon]="isEditMode() ? 'save' : 'plus'"
             stylingMode="contained"
-            icon="save"
+            class="btn-fin-primary"
             [disabled]="isSaving()"
             (onClick)="save()">
           </dx-button>
         </div>
+
       </div>
 
-    </div>
+    </form>
   </div>
 </dx-popup>

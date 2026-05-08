@@ -1,4 +1,4 @@
-import { Component, signal, DestroyRef, inject } from '@angular/core';
+import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -8,6 +8,7 @@ import {
   DxPopupModule,
 } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 import { TabellaVarcharService, TabellaVarcharItem } from '../../services/tabella-varchar.service';
 
 const TABLE = 'sys_DEVICETYPE';
@@ -26,30 +27,35 @@ const TABLE = 'sys_DEVICETYPE';
   templateUrl: './tipo-device.component.html',
   styleUrls: ['./tipo-device.component.css'],
 })
-export class TipoDeviceComponent {
+export class TipoDeviceComponent implements OnInit {
+
+  ngOnInit(): void {
+    this.search();
+  }
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
   private readonly service = inject(TabellaVarcharService);
+  private readonly router = inject(Router);
 
   items = signal<TabellaVarcharItem[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
 
   filterForm: FormGroup = this.fb.group({
-    id: [''],
-    des: [''],
+    id: [null],
+    des: [null],
   });
 
   // ── Form popup ──
   isFormPopupVisible = false;
-  isEditMode = signal(false);
+  popupMode = signal<'add' | 'edit' | 'view'>('add');
   selectedId = signal<string | null>(null);
   isSaving = signal(false);
   saveError = signal<string | null>(null);
 
   editForm: FormGroup = this.fb.group({
-    id: [''],
-    des: [''],
+    id: [null],
+    des: [null],
   });
 
   search(): void {
@@ -57,7 +63,7 @@ export class TipoDeviceComponent {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.service.search(TABLE, id ?? '', des ?? '')
+    this.service.search(TABLE, id ?? null, des ?? null)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => { this.items.set(data); this.isLoading.set(false); },
@@ -80,7 +86,7 @@ export class TipoDeviceComponent {
   }
 
   openAddPopup(): void {
-    this.isEditMode.set(false);
+    this.popupMode.set('add');
     this.selectedId.set(null);
     this.saveError.set(null);
     this.editForm.reset({ id: '', des: '' });
@@ -88,7 +94,15 @@ export class TipoDeviceComponent {
   }
 
   openEditPopup(item: TabellaVarcharItem): void {
-    this.isEditMode.set(true);
+    this.popupMode.set('edit');
+    this.selectedId.set(item.id);
+    this.saveError.set(null);
+    this.editForm.reset({ id: item.id, des: item.des });
+    this.isFormPopupVisible = true;
+  }
+
+  openViewPopup(item: TabellaVarcharItem): void {
+    this.popupMode.set('view');
     this.selectedId.set(item.id);
     this.saveError.set(null);
     this.editForm.reset({ id: item.id, des: item.des });
@@ -97,6 +111,12 @@ export class TipoDeviceComponent {
 
   closeFormPopup(): void {
     this.isFormPopupVisible = false;
+  }
+
+  onTrace(id: string): void {
+    this.router.navigate(['/trace'], {
+      queryParams: { traTabNam: TABLE, traEntCode: id },
+    });
   }
 
   save(): void {
@@ -113,7 +133,7 @@ export class TipoDeviceComponent {
     this.isSaving.set(true);
     this.saveError.set(null);
 
-    const obs = this.isEditMode()
+    const obs = this.popupMode() === 'edit'
       ? this.service.update(TABLE, v.id.trim(), v.des.trim())
       : this.service.insert(TABLE, v.id.trim(), v.des.trim());
 
