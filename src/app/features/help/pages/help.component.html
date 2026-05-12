@@ -1,3 +1,46 @@
-<div class="container">
-  <h1>Help</h1>
+<div class="help-container">
+  <h2 class="page-title">Informazioni Sistema</h2>
+
+  @if (isLoading()) {
+    <div class="loading-wrapper">
+      <dx-load-indicator [visible]="true" />
+    </div>
+  }
+
+  @if (loadError()) {
+    <div class="error-message">{{ loadError() }}</div>
+  }
+
+  @if (!isLoading() && !loadError() && helpInfo()) {
+    <!-- Sezione: Informazioni Cassa -->
+    <div class="info-section">
+      <h3 class="section-title">Informazioni Cassa</h3>
+      <dx-form [formData]="helpInfo()" [readOnly]="true" labelLocation="left">
+        <dxi-item dataField="lastUser" [label]="{ text: 'Ultimo Utente' }" editorType="dxTextBox" />
+        <dxi-item dataField="lastLogoutDate" [label]="{ text: 'Data Ultimo Logout' }" editorType="dxTextBox" />
+        <dxi-item dataField="systemLanguage" [label]="{ text: 'Lingua Sistema' }" editorType="dxTextBox" />
+        <dxi-item dataField="fichesPrinter" [label]="{ text: 'Stampante Fiche' }" editorType="dxTextBox" />
+        <dxi-item dataField="isTwinSafeEnabled" [label]="{ text: 'TwinSafe Abilitato' }" editorType="dxCheckBox" />
+        <dxi-item dataField="isCassaOperationsEnabled" [label]="{ text: 'Operazioni Cassa Abilitate' }" editorType="dxCheckBox" />
+      </dx-form>
+    </div>
+
+    <!-- Sezione: Applicativo Web -->
+    <div class="info-section">
+      <h3 class="section-title">Applicativo Web</h3>
+      <dx-form [formData]="helpInfo()" [readOnly]="true" labelLocation="left">
+        <dxi-item dataField="webApplicationVersion" [label]="{ text: 'Versione Applicativo' }" editorType="dxTextBox" />
+      </dx-form>
+    </div>
+
+    <!-- Sezione: Host -->
+    <div class="info-section">
+      <h3 class="section-title">Host</h3>
+      <dx-form [formData]="helpInfo()" [readOnly]="true" labelLocation="left">
+        <dxi-item dataField="hostUser" [label]="{ text: 'Utente Host' }" editorType="dxTextBox" />
+        <dxi-item dataField="hostVersion" [label]="{ text: 'Versione Host' }" editorType="dxTextBox" />
+        <dxi-item dataField="hostCompileDate" [label]="{ text: 'Data Compilazione Host' }" editorType="dxTextBox" />
+      </dx-form>
+    </div>
+  }
 </div>
