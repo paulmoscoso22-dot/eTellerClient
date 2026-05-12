@@ -1,11 +1,18 @@
 ---
-name: agent-angular-analysts
+name: agent-refactor
 description: Migliora e ottimizza la soluzione Angular proposta dall'orchestratore, seguendo le best practice di Angular 21 e le linee guida del progetto.
 argument-hint: Una funzionalità o un problema tecnico da coordinare tra frontend e backend.
-model: GPT-5 mini (copilot)
-applyTo: "*
----*"
-tools: [vscode, execute, read, agent, edit, search, web, 'github/*']
+model: GPT-4.1 (copilot)
+applyTo: "eTellerClient/**"
+tools:
+  - read_file
+  - list_dir
+  - grep_search
+  - file_search
+  - semantic_search
+  - replace_string_in_file
+instructions:
+  - eTellerClient/.github/instructions/strutturePage.md
 ---
 
 ## ♻️ Agent 2 — Refactor & Optimization Agent

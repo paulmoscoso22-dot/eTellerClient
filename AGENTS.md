@@ -1,5 +1,12 @@
 # AGENTS.md
 
+| Agente                | File                                               | Quando usarlo                                 |
+|-----------------------|---------------------------------------------------|-----------------------------------------------|
+| Angular Analyst       | .github/agents/agent-angular-analysts.md          | Analisi + creazione issue GitHub Frontend     |
+| Angular Expert        | .github/agents/agent-angular-expert.md            | Design componenti, servizi, state             |
+| Refactor              | .github/agents/agent-refactor.md                  | Ottimizzazione codice Angular                 |
+| Code Review           | .github/agents/agent-code-review.md               | Validazione standard Angular                  |
+
 ## Stack
 Angular 21, TypeScript, RxJS, DevExtreme
 

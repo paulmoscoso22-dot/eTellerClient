@@ -2,12 +2,22 @@
 name: agent-angular-analysts
 description: >
   Analizza il codebase Angular (eTellerClient), identifica attività da fare (feature, bug, refactoring, test)
-  e crea issue dettagliate su GitHub con documentazione e passi operativi. 
+  e crea issue dettagliate su GitHub con documentazione e passi operativi.
   Da invocare quando si vuole censire, pianificare o documentare lavoro Angular prima che un altro agente lo implementi.
 argument-hint: Una pagina, un componente, una feature o un'area del codebase Angular da analizzare.
 model: GPT-4.1 (copilot)
+user-invocable: true
 applyTo: "eTellerClient/**"
-tools: [vscode, execute, read, agent, edit, search, web, 'github/*']
+tools:
+  - read_file
+  - list_dir
+  - grep_search
+  - file_search
+  - semantic_search
+  - mcp_io_github_git_issue_write
+  - mcp_io_github_git_search_issues
+instructions:
+  - eTellerClient/.github/instructions/strutturePage.md
 ---
 
 ## 🔍 Agent — Angular Analyst & Issue Creator
