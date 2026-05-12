@@ -2,7 +2,7 @@ import { Injectable, PLATFORM_ID, Inject, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { LoginCommand, LoginResponse } from './domain/auth.models';
+import { ILoginRequest, ILoginResponse } from './domain/auth.models';
 import { AuthService } from './services/auth.service';
 
 export class AuthTemp {
@@ -57,11 +57,13 @@ export class AuthFacade {
    * @param command - Login command with credentials and session info
    * @returns Observable of LoginResponse
    */
-  login(command: LoginCommand): Observable<LoginResponse> {
+  login(command: ILoginRequest): Observable<ILoginResponse> {
     return this.authService.login(command).pipe(
       tap((response) => {
         // Store token and update auth status
-        this.setAuthToken(response.token);
+        if (response.accessToken) {
+          this.setAuthToken(response.accessToken);
+        }
       })
     );
   }

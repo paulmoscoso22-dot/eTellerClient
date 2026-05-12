@@ -1,82 +1,49 @@
 <div class="login-container">
   <div class="login-card">
-    <h1 class="login-title">Login</h1>
+    <h1 class="login-title">eTeller</h1>
 
-    @if (errorMessage) {
-      <div class="error-message">
-        {{ errorMessage }}
+    <div class="form-group">
+      <label class="form-label">User ID</label>
+      <dx-text-box
+        [value]="formData().userId"
+        (onValueChanged)="updateUserId($event.value)"
+        [stylingMode]="'outlined'"
+        placeholder="Inserire User ID"
+        [disabled]="isLoading()"
+      ></dx-text-box>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <dx-text-box
+        [value]="formData().password"
+        (onValueChanged)="updatePassword($event.value)"
+        [stylingMode]="'outlined'"
+        mode="password"
+        placeholder="Inserire Password"
+        [disabled]="isLoading()"
+      ></dx-text-box>
+    </div>
+
+    <dx-button
+      text="Accedi"
+      type="default"
+      stylingMode="contained"
+      [width]="'100%'"
+      [disabled]="isLoading()"
+      (onClick)="onLogin()"
+    ></dx-button>
+
+    @if (isLoading()) {
+      <div class="loading-overlay">
+        <dx-load-indicator [height]="36" [width]="36"></dx-load-indicator>
       </div>
     }
-
-    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-
-      <!-- Username Field -->
-      <div class="form-group">
-        <label class="form-label">Username</label>
-        <dx-text-box
-          id="username"
-          #usernameInput
-          formControlName="username"
-          placeholder="Enter your username"
-          [stylingMode]="'outlined'"
-          mode="text"
-        >
-        </dx-text-box>
-        @if (username?.invalid && username?.touched) {
-          <div class="error-text">
-            @if (username?.errors?.['required']) {
-              <div>Username is required</div>
-            }
-            @if (username?.errors?.['minlength']) {
-              <div>
-                Username must be at least 3 characters
-              </div>
-            }
-          </div>
-        }
-      </div>
-
-      <!-- Password Field -->
-
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <dx-text-box
-          id="password"
-          #passwordInput
-          formControlName="password"
-          placeholder="Enter your password"
-          [stylingMode]="'outlined'"
-          mode="password"
-        >
-        </dx-text-box>
-        @if (password?.invalid && password?.touched) {
-          <div class="error-text">
-            @if (password?.errors?.['required']) {
-              <div>Password is required</div>
-            }
-            @if (password?.errors?.['minlength']) {
-              <div>
-                Password must be at least 6 characters
-              </div>
-            }
-          </div>
-        }
-      </div>
-
-      <!-- Login Button -->
-
-      <dx-button
-        text="Login"
-        type="success"
-        [width]="'100%'"
-        (onClick)="onLogin()"
-        [disabled]="loginForm.invalid || isLoading"
-      >
-      </dx-button>
-    </form>
-
-    <div class="login-footer">
-      <p>Don't have an account? <a href="/auth/register">Register here</a></p>
-    </div>
   </div>
 </div>
+
+<app-force-login
+  [visible]="showForceLoginPopup()"
+  (confirmed)="onConfirmForceLogin()"
+  (cancelled)="onCancelForceLogin()"
+></app-force-login>

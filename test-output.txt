@@ -1,0 +1,157 @@
+[33mÔØ»[39m Building...
+[32mÔ£ö[39m Building...
+Application bundle generation failed. [12.666 seconds] - 2026-05-12T07:40:50.796Z
+
+Ôû▓ [WARNING] File 'src\app\test\string\string.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  The file will be bundled and included in the output but will not be type-checked at build time. To remove this message you can add the file to the TypeScript program via the 'files' or 'include' property.
+
+
+Ôû▓ [WARNING] File 'src\app\features\operations\contiCorrenti\domain\conti-correnti-domain.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  The file will be bundled and included in the output but will not be type-checked at build time. To remove this message you can add the file to the TypeScript program via the 'files' or 'include' property.
+
+
+Ôû▓ [WARNING] File 'src\app\features\operations\contiCorrenti\domain\conti-correnti-domain.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+    src/app/features/operations/contiCorrenti/domain/conti-correnti-domain.spec.ts:1:36:
+      1 Ôöé import { ContiCorrentiDomain } from './conti-correnti-domain';
+        ÔòÁ                                     ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  The file will be bundled and included in the output but will not be type-checked at build time. To remove this message you can add the file to the TypeScript program via the 'files' or 'include' property.
+
+
+Ôû▓ [WARNING] File 'src\app\test\string\string.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+    src/app/test/string/string.spec.ts:1:24:
+      1 Ôöé import { message } from './string';
+        ÔòÁ                         ~~~~~~~~~~
+
+  The file will be bundled and included in the output but will not be type-checked at build time. To remove this message you can add the file to the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\app.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\services\environment.service.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\components\layaout\header\header.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\services\api.service.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\services\theme.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\services\config.service.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\services\menu.service.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\features\operations\cambi\pages\bigliettiBanca\vendita.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\components\layaout\header\version-display\version-display.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\features\operations\cambi\pages\moneteMetalli\acquisto.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\components\layaout\header\logo\logo.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\core\services\service.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\components\layaout\breadcrumb\breadcrumb.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\components\layaout\header\application-name\application-name.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\features\operations\contiCorrenti\services\conti-correnti.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\components\layaout\sidebar\sidebar.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\components\layaout\header\user-badge\user-badge.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\features\vigilanza\gestione\components\gestioneComparentiView\gestione-comparenti-ade-view.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\features\operations\cambi\pages\moneteMetalli\vendita.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\features\manager\informazioni\components\trace-detaill-component\trace-detaill.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\features\operations\cambi\pages\travelersCheques\acquisto.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\features\operations\contiCorrenti\components\ricerca-conto-table\ricerca-conto-table.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\features\operations\cambi\pages\bigliettiBanca\acquisto.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\components\layaout\header\environment-badge\environment-badge.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+
+X [ERROR] File 'src\app\features\operations\cambi\pages\travelersCheques\vendita.component.spec.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+

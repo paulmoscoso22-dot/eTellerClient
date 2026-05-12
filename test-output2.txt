@@ -1,0 +1,52 @@
+[33mÔØ»[39m Building...
+[32mÔ£ö[39m Building...
+[1mInitial chunk files[22m                                      [2m | [22m[1mNames[22m                                                 [2m | [22m [1mRaw size[22m
+[32mstyles.css[39m                                               [2m | [22m[2mstyles[22m                                                [2m | [22m[36m964.87 kB[39m[2m | [22m
+[32mspec-app-features-auth-pages-login.component.js[39m          [2m | [22m[2mspec-app-features-auth-pages-login.component[22m          [2m | [22m [36m18.37 kB[39m[2m | [22m
+[32mspec-app-features-auth-pages-change-password.component.js[39m[2m | [22m[2mspec-app-features-auth-pages-change-password.component[22m[2m | [22m [36m13.99 kB[39m[2m | [22m
+[32mchunk-ZWOUQJAI.js[39m                                        [2m | [22m[2m-[22m                                                     [2m | [22m  [36m6.13 kB[39m[2m | [22m
+[32mchunk-RSTWSNOR.js[39m                                        [2m | [22m[2m-[22m                                                     [2m | [22m  [36m4.75 kB[39m[2m | [22m
+[32mchunk-MV5PLKZ7.js[39m                                        [2m | [22m[2m-[22m                                                     [2m | [22m  [36m4.50 kB[39m[2m | [22m
+[32mspec-app-core-interceptors-error.interceptor.js[39m          [2m | [22m[2mspec-app-core-interceptors-error.interceptor[22m          [2m | [22m  [36m4.31 kB[39m[2m | [22m
+[32mspec-app-core-interceptors-auth.interceptor.js[39m           [2m | [22m[2mspec-app-core-interceptors-auth.interceptor[22m           [2m | [22m  [36m3.54 kB[39m[2m | [22m
+[32mspec-app-features-auth-services-auth.service.js[39m          [2m | [22m[2mspec-app-features-auth-services-auth.service[22m          [2m | [22m  [36m3.53 kB[39m[2m | [22m
+[32mspec-app-features-auth-auth.store.js[39m                     [2m | [22m[2mspec-app-features-auth-auth.store[22m                     [2m | [22m  [36m2.67 kB[39m[2m | [22m
+[32mchunk-QQJYUJUB.js[39m                                        [2m | [22m[2m-[22m                                                     [2m | [22m  [36m2.51 kB[39m[2m | [22m
+[32mspec-app-features-auth-pages-force-login.component.js[39m    [2m | [22m[2mspec-app-features-auth-pages-force-login.component[22m    [2m | [22m  [36m2.38 kB[39m[2m | [22m
+[32mspec-app-core-guards-role.guard.js[39m                       [2m | [22m[2mspec-app-core-guards-role.guard[22m                       [2m | [22m  [36m2.33 kB[39m[2m | [22m
+[32mchunk-UYL7WNZJ.js[39m                                        [2m | [22m[2m-[22m                                                     [2m | [22m  [36m2.30 kB[39m[2m | [22m
+[32mspec-app-core-guards-auth.guard.js[39m                       [2m | [22m[2mspec-app-core-guards-auth.guard[22m                       [2m | [22m  [36m1.97 kB[39m[2m | [22m
+[32minit-testbed.js[39m                                          [2m | [22m[2minit-testbed[22m                                          [2m | [22m  [36m1.21 kB[39m[2m | [22m
+
+[1m [22m                                                        [2m | [22m[1mInitial total[22m                                         [2m | [22m  [1m1.04 MB[22m
+
+Application bundle generation complete. [11.720 seconds] - 2026-05-12T07:47:38.207Z
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mC:/Software/eTeller2026/eTellerClient[39m
+
+ [31mÔØ»[39m [30m[42m eTellerClient [49m[39m src/app/features/auth/pages/force-login.component.spec.ts [2m([22m[2m0 test[22m[2m)[22m
+ [32mÔ£ô[39m [30m[42m eTellerClient [49m[39m src/app/features/auth/auth.store.spec.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m eTellerClient [49m[39m src/app/core/interceptors/auth.interceptor.spec.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m eTellerClient [49m[39m src/app/core/interceptors/error.interceptor.spec.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 90[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m eTellerClient [49m[39m src/app/core/guards/auth.guard.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m eTellerClient [49m[39m src/app/core/guards/role.guard.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m eTellerClient [49m[39m src/app/features/auth/services/auth.service.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [31mÔØ»[39m [30m[42m eTellerClient [49m[39m src/app/features/auth/pages/change-password.component.spec.ts [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m [30m[42m eTellerClient [49m[39m src/app/features/auth/pages/login.component.spec.ts [2m([22m[2m0 test[22m[2m)[22m
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Suites 3 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL   eTellerClient  src/app/features/auth/pages/change-password.component.spec.ts [ src/app/features/auth/pages/change-password.component.spec.ts ]
+ FAIL   eTellerClient  src/app/features/auth/pages/force-login.component.spec.ts [ src/app/features/auth/pages/force-login.component.spec.ts ]
+ FAIL   eTellerClient  src/app/features/auth/pages/login.component.spec.ts [ src/app/features/auth/pages/login.component.spec.ts ]
+Error: Directory import 'C:\Software\eTeller2026\eTellerClient\node_modules\devextreme\core\dom_adapter' is not supported resolving ES modules imported from C:\Software\eTeller2026\eTellerClient\node_modules\devextreme-angular\fesm2022\devextreme-angular-core.mjs
+Did you mean to import "devextreme/cjs/core/dom_adapter.js"?
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/3]ÔÄ»
+
+
+[2m Test Files [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m6 passed[39m[22m[90m (9)[39m
+[2m      Tests [22m [1m[32m27 passed[39m[22m[90m (27)[39m
+[2m   Start at [22m 09:47:39
+[2m   Duration [22m 17.57s[2m (transform 5.75s, setup 14.15s, import 1.93s, tests 278ms, environment 83.17s)[22m
+

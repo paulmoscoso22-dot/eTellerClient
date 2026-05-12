@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.spec.json",
+  "include": [
+    "src/**/*.d.ts",
+    "src/app/features/auth/**/*.ts",
+    "src/app/core/guards/**/*.ts",
+    "src/app/core/interceptors/**/*.ts",
+    "src/app/core/services/error-handler.service.ts",
+    "src/app/core/services/global-error-handler.ts",
+    "src/app/services/api.service.ts",
+    "src/app/services/environment.service.ts",
+    "src/app/services/config.service.ts"
+  ]
+}
