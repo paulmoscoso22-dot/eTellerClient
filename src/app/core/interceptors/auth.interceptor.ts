@@ -1,31 +1,22 @@
-import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-} from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { AuthFacade } from '../../features/auth/auth.facade';
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { AuthStore } from '../../features/auth/auth.store';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authFacade: AuthFacade) {}
+const AUTH_SKIP_URLS = ['/auth/login', '/auth/force-login', '/auth/change-password'];
 
-  intercept(
-    request: HttpRequest<unknown>,
-    next: HttpHandler
-  ): Observable<HttpEvent<unknown>> {
-    const token = this.authFacade.getAuthToken();
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const authStore = inject(AuthStore);
 
-    if (token) {
-      request = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    }
-
-    return next.handle(request);
+  if (AUTH_SKIP_URLS.some(url => req.url.includes(url))) {
+    return next(req);
   }
-}
+
+  const token = authStore.token();
+  if (!token) {
+    return next(req);
+  }
+
+  return next(req.clone({
+    setHeaders: { Authorization: `Bearer ${token}` },
+  }));
+};

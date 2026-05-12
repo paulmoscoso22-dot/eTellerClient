@@ -1,89 +1,116 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DxTextBoxModule, DxButtonModule, DxFormModule } from 'devextreme-angular';
-import { AuthFacade } from '../auth.facade';
+import { Component, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginCommand } from '../domain/auth.models';
+import {
+  DxFormModule,
+  DxButtonModule,
+  DxLoadIndicatorModule,
+  DxTextBoxModule,
+} from 'devextreme-angular';
+import { AUTH_RESULT_CODE, ILoginRequest, ILoginResponse } from '../domain/auth.models';
+import { AuthStore } from '../auth.store';
+import { AuthService } from '../services/auth.service';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { ForceLoginComponent } from './force-login.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DxTextBoxModule, DxButtonModule, DxFormModule],
+  imports: [DxFormModule, DxButtonModule, DxLoadIndicatorModule, DxTextBoxModule, ForceLoginComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit {
-  loginForm!: FormGroup;
-  isLoading = false;
-  errorMessage = '';
+export class LoginComponent {
+  private readonly authService = inject(AuthService);
+  private readonly authStore = inject(AuthStore);
+  private readonly router = inject(Router);
+  private readonly errorHandler = inject(ErrorHandlerService);
 
-  constructor(
-    private fb: FormBuilder,
-    private authFacade: AuthFacade,
-    private router: Router
-  ) {}
+  readonly isLoading = signal(false);
+  readonly showForceLoginPopup = signal(false);
+  private pendingRequest: ILoginRequest | null = null;
 
-  ngOnInit(): void {
-    this.initializeForm();
+  readonly formData = signal({ userId: '', password: '' });
+
+  updateUserId(value: string): void {
+    this.formData.update(f => ({ ...f, userId: value }));
   }
 
-  private initializeForm(): void {
-    this.loginForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    });
+  updatePassword(value: string): void {
+    this.formData.update(f => ({ ...f, password: value }));
   }
 
   onLogin(): void {
-    if (this.loginForm.invalid) {
-      this.errorMessage = 'Please fill in all required fields correctly';
+    const { userId, password } = this.formData();
+
+    if (!userId.trim() || !password.trim()) {
+      this.errorHandler.showWarning('Inserire userId e password');
       return;
     }
 
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    const { username, password } = this.loginForm.value;
-
-    // Build LoginCommand with form values and defaults
-    const loginCommand: LoginCommand = {
-      userId: username,
-      password: password,
-      ipAddress: this.getClientIpAddress(),
-      isCashDesk: false,
-      cashDeskId: null,
-      branchId: null,
-      macAddress: null,
+    const request: ILoginRequest = {
+      userId: userId.trim(),
+      password,
+      traStation: window.location.hostname,
       forceLogin: false,
-      isNewSession: true
     };
 
-    // Call auth facade to perform login
-    this.authFacade.login(loginCommand).subscribe({
+    this.isLoading.set(true);
+    this.authService.login(request).subscribe({
       next: (response) => {
-        this.isLoading = false;
-        // Token is already stored by the facade
-        this.router.navigate(['/']);
+        this.isLoading.set(false);
+        this.handleLoginResponse(response, request);
       },
-      error: (error) => {
-        this.isLoading = false;
-        this.errorMessage = error.error?.message || 'Login failed. Please try again.';
+      error: () => {
+        this.isLoading.set(false);
+        this.errorHandler.showBusinessError('Errore di connessione al server');
       },
     });
   }
 
-  private getClientIpAddress(): string {
-    // In a browser environment, the actual IP address is typically obtained from the server
-    // For now, return a placeholder. The backend should extract the real IP from the request.
-    return 'client-ip';
+  onConfirmForceLogin(): void {
+    if (!this.pendingRequest) return;
+    const request = this.pendingRequest;
+    this.showForceLoginPopup.set(false);
+    this.isLoading.set(true);
+    this.authService.forceLogin(request).subscribe({
+      next: (response) => {
+        this.isLoading.set(false);
+        this.pendingRequest = null;
+        this.handleLoginResponse(response, request);
+      },
+      error: () => {
+        this.isLoading.set(false);
+        this.pendingRequest = null;
+        this.errorHandler.showBusinessError('Errore durante il force login');
+      },
+    });
   }
 
-  get username() {
-    return this.loginForm.get('username');
+  onCancelForceLogin(): void {
+    this.showForceLoginPopup.set(false);
+    this.pendingRequest = null;
   }
 
-  get password() {
-    return this.loginForm.get('password');
+  private handleLoginResponse(response: ILoginResponse, request: ILoginRequest): void {
+    switch (response.resultCode) {
+      case AUTH_RESULT_CODE.OK:
+        this.authStore.set(response.accessToken!);
+        this.router.navigate(['/']);
+        break;
+      case AUTH_RESULT_CODE.USER_ALREADY_LOGGED:
+        this.pendingRequest = request;
+        this.showForceLoginPopup.set(true);
+        break;
+      case AUTH_RESULT_CODE.MUST_CHANGE_PASSWORD:
+      case AUTH_RESULT_CODE.PASSWORD_EXPIRED:
+        this.router.navigate(['/auth/change-password']);
+        break;
+      case AUTH_RESULT_CODE.INVALID_CREDENTIALS:
+        this.errorHandler.showBusinessError(response.message ?? 'Credenziali non valide');
+        break;
+      default:
+        this.errorHandler.showBusinessError(response.message ?? 'Errore di accesso');
+        break;
+    }
   }
 }

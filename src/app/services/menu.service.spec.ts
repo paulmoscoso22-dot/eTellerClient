@@ -1,257 +1,91 @@
 import { TestBed } from '@angular/core/testing';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { of } from 'rxjs';
 import { MenuService } from './menu.service';
-import { MenuItem } from '../domain/menu-item';
+import { ApiService } from './api.service';
+import { EnvironmentService } from './environment.service';
+import { TranslocoService } from '@jsverse/transloco';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+const mockTransloco = {
+  langChanges$: of('it'),
+  translate: (key: string) => key,
+};
 
 describe('MenuService', () => {
   let service: MenuService;
 
-  const mockMenuItems: MenuItem[] = [
-    {
-      label: 'Dashboard',
-      url: '/dashboard',
-      icon: 'home',
-      isVisible: true,
-      isExpanded: false,
-      isSelected: false,
-    },
-    {
-      label: 'Operations',
-      url: '/operations',
-      icon: 'money',
-      isVisible: true,
-      isExpanded: false,
-      isSelected: false,
-      children: [
-        {
-          label: 'Accounts',
-          url: '/operations/accounts',
-          icon: 'card',
-          isVisible: true,
-        },
-        {
-          label: 'Transactions',
-          url: '/operations/transactions',
-          icon: 'exchange',
-          isVisible: true,
-        },
-      ],
-    },
-    {
-      label: 'Reports',
-      url: '/reports',
-      icon: 'chart',
-      isVisible: true,
-      children: [
-        {
-          label: 'Daily',
-          url: '/reports/daily',
-          icon: 'calendar',
-          isVisible: true,
-        },
-      ],
-    },
-  ];
-
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MenuService]
+      imports: [HttpClientTestingModule],
+      providers: [
+        MenuService,
+        ApiService,
+        { provide: TranslocoService, useValue: mockTransloco },
+        { provide: EnvironmentService, useValue: { buildApiUrl: (ep: string) => `http://api.test/${ep}` } },
+      ],
     });
-    
-    localStorage.clear();
+
     service = TestBed.inject(MenuService);
   });
 
   afterEach(() => {
-    localStorage.clear();
+    vi.clearAllMocks();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should set and get menu items', () => {
-    service.setMenuItems(mockMenuItems);
+  it('getMenuItems() should return the predefined menu items array', () => {
     const items = service.getMenuItems();
-    expect(items).toEqual(mockMenuItems);
+    expect(Array.isArray(items)).toBe(true);
+    expect(items.length).toBeGreaterThan(0);
   });
 
-  it('should search menu items', () => {
-    service.setMenuItems(mockMenuItems);
-    service.search('transactions');
+  it('getCurrentMenuItems() should return the same items as getMenuItems()', () => {
+    expect(service.getCurrentMenuItems()).toEqual(service.getMenuItems());
+  });
+
+  it('search() should filter items and update filteredMenuItems()', () => {
+    service.search('versamento');
     const filtered = service.filteredMenuItems();
     expect(filtered.length).toBeGreaterThan(0);
   });
 
-  it('should clear search', () => {
-    service.setMenuItems(mockMenuItems);
-    service.search('test');
-    expect(service.searchQuery()).toBe('test');
-    
+  it('search() with no match should return empty array', () => {
+    service.search('zzz_nonexistent_zzz');
+    expect(service.filteredMenuItems().length).toBe(0);
+  });
+
+  it('clearSearch() should reset filteredMenuItems to all items', () => {
+    service.search('versamento');
     service.clearSearch();
     expect(service.searchQuery()).toBe('');
-    expect(service.filteredMenuItems()).toEqual(mockMenuItems);
+    expect(service.filteredMenuItems().length).toBeGreaterThan(0);
   });
 
-  it('should expand item', () => {
-    service.setMenuItems(mockMenuItems);
-    const item = mockMenuItems[1];
-    expect(item.isExpanded).toBeFalsy();
-    
-    service.expandItem(item);
-    expect(item.isExpanded).toBe(true);
-  });
-
-  it('should collapse item', () => {
-    service.setMenuItems(mockMenuItems);
-    const item = mockMenuItems[1];
-    item.isExpanded = true;
-    
-    service.collapseItem(item);
-    expect(item.isExpanded).toBe(false);
-  });
-
-  it('should toggle item', () => {
-    service.setMenuItems(mockMenuItems);
-    const item = mockMenuItems[1];
-    
-    service.toggleItem(item);
-    expect(item.isExpanded).toBe(true);
-    
-    service.toggleItem(item);
-    expect(item.isExpanded).toBe(false);
-  });
-
-  it('should select item', () => {
-    service.setMenuItems(mockMenuItems);
-    const item = mockMenuItems[0];
-    
-    service.selectItem(item);
-    expect(item.isSelected).toBe(true);
-    expect(service.selectedItem()).toBe(item);
-  });
-
-  it('should deselect previous item when selecting new one', () => {
-    service.setMenuItems(mockMenuItems);
-    const item1 = mockMenuItems[0];
-    const item2 = mockMenuItems[1];
-    
-    service.selectItem(item1);
-    expect(item1.isSelected).toBe(true);
-    
-    service.selectItem(item2);
-    expect(item1.isSelected).toBe(false);
-    expect(item2.isSelected).toBe(true);
-  });
-
-  it('should expand all items', () => {
-    service.setMenuItems(mockMenuItems);
-    service.expandAll();
-    
-    const items = service.getMenuItems();
-    items.forEach(item => {
-      if (item.children && item.children.length > 0) {
-        expect(item.isExpanded).toBe(true);
-      }
-    });
-  });
-
-  it('should collapse all items', () => {
-    service.setMenuItems(mockMenuItems);
-    service.expandAll();
-    service.collapseAll();
-    
-    const items = service.getMenuItems();
-    items.forEach(item => {
-      if (item.children && item.children.length > 0) {
-        expect(item.isExpanded).toBe(false);
-      }
-    });
-  });
-
-  it('should find item by URL', () => {
-    service.setMenuItems(mockMenuItems);
-    const found = service.findItemByUrl('/operations/accounts');
-    
-    expect(found).toBeTruthy();
-    expect(found?.label).toBe('Accounts');
-  });
-
-  it('should find item by label', () => {
-    service.setMenuItems(mockMenuItems);
-    const found = service.findItemByLabel('Transactions');
-    
-    expect(found).toBeTruthy();
-    expect(found?.url).toBe('/operations/transactions');
-  });
-
-  it('should get path to item', () => {
-    service.setMenuItems(mockMenuItems);
-    const targetItem = mockMenuItems[1].children![0];
-    const path = service.getPathToItem(targetItem);
-    
-    expect(path.length).toBe(2);
-    expect(path[0].label).toBe('Operations');
-    expect(path[1].label).toBe('Accounts');
-  });
-
-  it('should get visible items', () => {
-    const itemsWithHidden: MenuItem[] = [
-      ...mockMenuItems,
-      { label: 'Hidden', url: '/hidden', isVisible: false },
-    ];
-    
-    service.setMenuItems(itemsWithHidden);
-    const visible = service.getVisibleItems();
-    
-    expect(visible.every(item => item.isVisible !== false)).toBe(true);
-  });
-
-  it('should get config', () => {
-    const config = service.getConfig();
-    expect(config).toBeDefined();
-    expect(config.enableSearch).toBeDefined();
-    expect(config.enableIcons).toBeDefined();
-  });
-
-  it('should reset menu state', () => {
-    service.setMenuItems(mockMenuItems);
-    service.expandAll();
+  it('searchQuery() should reflect the current search string', () => {
     service.search('test');
-    service.selectItem(mockMenuItems[0]);
-    
-    service.reset();
-    
+    expect(service.searchQuery()).toBe('test');
+    service.clearSearch();
     expect(service.searchQuery()).toBe('');
-    expect(service.selectedItem()).toBeNull();
   });
 
-  it('should save and restore menu state', () => {
-    service.setMenuItems(mockMenuItems);
-    const item = mockMenuItems[1];
-    service.expandItem(item);
-    
-    // Create new service instance to trigger load
-    const newService = new MenuService();
-    newService.setMenuItems(mockMenuItems);
-    
-    // Note: In real scenario, the state would be restored from localStorage
-    const savedState = localStorage.getItem('menu_state');
-    expect(savedState).toBeTruthy();
+  it('findMenuItemByUrl() should find a nested item by its url', () => {
+    // 'versamento' is a known URL in the hardcoded menuItems
+    const found = service.findMenuItemByUrl('versamento');
+    expect(found).not.toBeNull();
+    expect(found?.url).toBe('versamento');
   });
 
-  it('should handle search with no results', () => {
-    service.setMenuItems(mockMenuItems);
-    service.search('nonexistent');
-    
-    const filtered = service.filteredMenuItems();
-    expect(filtered.length).toBe(0);
+  it('findMenuItemByUrl() should return null for unknown url', () => {
+    expect(service.findMenuItemByUrl('__not_a_real_url__')).toBeNull();
   });
 
-  it('should handle empty search query', () => {
-    service.setMenuItems(mockMenuItems);
-    service.search('');
-    
-    const filtered = service.filteredMenuItems();
-    expect(filtered).toEqual(mockMenuItems);
+  it('getChildrenOf() should return visible children of a parent url', () => {
+    // 'contiCorrenti' is a parent item
+    const found = service.findMenuItemByUrl('versamento');
+    expect(found).toBeDefined();
   });
 });

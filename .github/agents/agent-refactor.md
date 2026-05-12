@@ -10,6 +10,14 @@ tools: [vscode, execute, read, agent, edit, search, web, 'github/*']
 
 ## ♻️ Agent 2 — Refactor & Optimization Agent
 
+### ⚠️ LETTURA OBBLIGATORIA PRIMA DI QUALSIASI AZIONE
+
+Per ogni task che include componenti o servizi Angular con subscription/Signals:
+
+1. `eTellerClient/.github/skills/memory-management/SKILL.md` — applica i pattern di cleanup
+
+---
+
 ### Responsibility
 - Improve and simplify the proposed design
 - Remove unnecessary complexity
@@ -19,6 +27,7 @@ tools: [vscode, execute, read, agent, edit, search, web, 'github/*']
 - not use any new libraries or frameworks
 - factorize code to be more modular and reusable
 - usa clean code principles
+- **Verifica memory leak** — applica `takeUntilDestroyed()`, `DestroyRef.onDestroy()`, cleanup `effect()` e distruzione componenti dinamici
 
 ### Output (MANDATORY HANDOFF)
 

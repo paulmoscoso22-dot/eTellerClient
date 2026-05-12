@@ -1,5 +1,7 @@
-import { Component, DestroyRef, EventEmitter, Output, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, DestroyRef, EventEmitter, Output, inject, isDevMode, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthStore } from '../../../features/auth/auth.store';
+import { AuthService } from '../../../features/auth/services/auth.service';
 import { Logo } from './logo/logo.component';
 import { UserBadge } from './user-badge/user-badge.component';
 import { DxDropDownButtonModule, DxTooltipModule } from 'devextreme-angular';
@@ -11,7 +13,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [Logo, UserBadge, RouterLink, DxDropDownButtonModule, DxTooltipModule, CommonModule],
+  imports: [Logo, UserBadge, DxDropDownButtonModule, DxTooltipModule, CommonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -19,8 +21,11 @@ export class HeaderComponent {
   @Output() menuIconClicked = new EventEmitter<void>();
   @Output() userIconClicked = new EventEmitter<void>();
 
-  private transloco  = inject(TranslocoService);
-  private destroyRef = inject(DestroyRef);
+  private transloco   = inject(TranslocoService);
+  private destroyRef  = inject(DestroyRef);
+  private authStore   = inject(AuthStore);
+  private authService = inject(AuthService);
+  private router      = inject(Router);
 
   languages = [
     { code: 'it', label: 'IT' },
@@ -73,5 +78,22 @@ export class HeaderComponent {
 
   onMenuIconClicked(): void {
     this.menuIconClicked.emit();
+  }
+
+  onLogout(): void {
+    const user = this.authStore.currentUser();
+    if (user) {
+      this.authService.logout(user.sessionId, user.userId, window.location.hostname).subscribe({
+        next: () => {
+          if (isDevMode()) console.debug('[Auth] Logout completato');
+        },
+        error: (err) => {
+          if (isDevMode()) console.warn('[Auth] Errore logout backend (reset comunque):', err.status);
+        },
+      });
+    }
+    // Reset SEMPRE — indipendentemente dalla risposta del server
+    this.authStore.reset();
+    this.router.navigate(['/auth/login']);
   }
 }

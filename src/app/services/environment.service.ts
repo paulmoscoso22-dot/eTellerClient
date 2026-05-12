@@ -40,6 +40,9 @@ export class EnvironmentService {
    * @returns URL completo (es: 'https://fidowebapi.develop.bancasempione.ch/utenti')
    */
   buildApiUrl(endpoint: string): string {
+    if (endpoint.startsWith('http')) {
+      return endpoint;
+    }
     // Rimuove slash iniziale se presente
     const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
     return `${this.apiUrl}/${cleanEndpoint}`;

@@ -1,18 +1,18 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './pages/login.component';
-import { RegisterComponent } from './pages/register.component';
 
-/**
- * Auth feature routes
- */
 export const AUTH_ROUTES: Routes = [
   {
-    path: '',
-    children: [
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
-      { path: '', redirectTo: 'login', pathMatch: 'full' },
-    ],
+    path: 'login',
+    loadComponent: () => import('./pages/login.component').then(m => m.LoginComponent)
   },
+  {
+    path: 'change-password',
+    loadComponent: () => import('./pages/change-password.component').then(m => m.ChangePasswordComponent)
+  },
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  }
 ];
 
