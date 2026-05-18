@@ -101,7 +101,7 @@ export class ServiziComponent implements OnInit {
     }
   }
 
-  onMoreAction(e: any, data: IServizio): void {
+  onMoreAction(e: any, data: IServiziResponse): void {
     if (e.itemData.id === 'storico') this.onStorico(data.serId);
     if (e.itemData.id === 'delete')  this.onDelete(data);
   }
@@ -111,7 +111,7 @@ export class ServiziComponent implements OnInit {
     notify(`Storico del servizio "${serId}"`, 'info', 3000);
   }
 
-  onDelete(data: IServizio): void {
+  onDelete(data: IServiziResponse): void {
     // TODO: call backend delete
     this.servizi.update(list => list.filter(s => s.serId !== data.serId));
     notify(`Servizio "${data.serId}" eliminato`, 'success', 3000);
