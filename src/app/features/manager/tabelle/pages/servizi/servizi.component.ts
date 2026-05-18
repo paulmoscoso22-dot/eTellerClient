@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule,
-  DxPopupModule, DxTextAreaModule, DxValidatorModule
+  DxPopupModule, DxTextAreaModule, DxValidatorModule, DxDropDownButtonModule
 } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 
@@ -26,7 +26,7 @@ export interface IServizio {
   imports: [
     CommonModule, ReactiveFormsModule,
     DxDataGridModule, DxTextBoxModule, DxCheckBoxModule,
-    DxButtonModule, DxPopupModule, DxTextAreaModule, DxValidatorModule
+    DxButtonModule, DxPopupModule, DxTextAreaModule, DxValidatorModule, DxDropDownButtonModule
   ],
   templateUrl: './servizi.component.html',
   styleUrls: ['./servizi.component.css'],
@@ -39,6 +39,11 @@ export class ServiziComponent implements OnInit {
   popupMode = signal<'new' | 'view' | 'edit'>('new');
   isDetailPopupVisible = false;
   selectedSerId = signal<string | null>(null);
+
+  moreActions = [
+    { id: 'storico', text: 'Storico (Traccia)', icon: 'clock' },
+    { id: 'delete',  text: 'Elimina',           icon: 'trash' },
+  ];
 
   filteredServizi = computed(() => {
     const q = this.searchValue().toLowerCase().trim();
@@ -105,6 +110,16 @@ export class ServiziComponent implements OnInit {
       case 'edit':   this.openEditPopup(data); break;
       case 'delete': this.onDelete(data);      break;
     }
+  }
+
+  onMoreAction(e: any, data: IServizio): void {
+    if (e.itemData.id === 'storico') this.onStorico(data.serId);
+    if (e.itemData.id === 'delete')  this.onDelete(data);
+  }
+
+  onStorico(serId: string): void {
+    // TODO: navigate to storico
+    notify(`Storico del servizio "${serId}"`, 'info', 3000);
   }
 
   onDelete(data: IServizio): void {

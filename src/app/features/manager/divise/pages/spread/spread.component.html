@@ -19,38 +19,24 @@
 
           <div class="filter-field">
             <span class="filter-label">Divisa</span>
-            <div class="toolbar-search-wrap">
-              <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              <dx-text-box
-                placeholder="Divisa..."
-                [showClearButton]="true"
-                valueChangeEvent="input"
-                class="toolbar-textbox"
-                [value]="filterCur()"
-                (onValueChanged)="filterCur.set($event.value)">
-              </dx-text-box>
-            </div>
+            <dx-text-box
+              placeholder="Divisa..."
+              [showClearButton]="true"
+              valueChangeEvent="input"
+              [value]="filterCur()"
+              (onValueChanged)="filterCur.set($event.value)">
+            </dx-text-box>
           </div>
 
           <div class="filter-field">
             <span class="filter-label">Tipo</span>
-            <div class="toolbar-search-wrap">
-              <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              <dx-text-box
-                placeholder="Tipo..."
-                [showClearButton]="true"
-                valueChangeEvent="input"
-                class="toolbar-textbox"
-                [value]="filterTipo()"
-                (onValueChanged)="filterTipo.set($event.value)">
-              </dx-text-box>
-            </div>
+            <dx-text-box
+              placeholder="Tipo..."
+              [showClearButton]="true"
+              valueChangeEvent="input"
+              [value]="filterTipo()"
+              (onValueChanged)="filterTipo.set($event.value)">
+            </dx-text-box>
           </div>
 
         </div>

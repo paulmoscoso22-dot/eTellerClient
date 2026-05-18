@@ -200,8 +200,9 @@
           <div *dxTemplate="let cell of 'statusTemplate'">
             <span class="status-badge"
               [class.status-badge--active]="cell.value === 'enabled'"
+              [class.status-badge--disabled]="cell.value === 'disabled'"
               [class.status-badge--blocked]="cell.value === 'blocked'">
-              {{ cell.value === 'enabled' ? 'Attivo' : cell.value === 'blocked' ? 'Bloccato' : cell.value }}
+              {{ cell.value === 'enabled' ? 'Attivo' : cell.value === 'disabled' ? 'Disabilitato' : cell.value === 'blocked' ? 'Bloccato' : cell.value }}
             </span>
           </div>
 

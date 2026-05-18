@@ -1,6 +1,11 @@
 <div class="page-shell">
 
-  <!-- ── Main Card: Gestione Servizi ── -->
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Gestione Servizi</h1>
+  </div>
+
+  <!-- ── Card Main ── -->
   <section class="card-section">
 
     <div class="sempione-card-header">
@@ -9,33 +14,43 @@
         <path d="M6.34 17.66a8 8 0 1 1 11.32 0"></path>
         <line x1="12" y1="22" x2="12" y2="17"></line>
       </svg>
-      <h2 class="card-title">Gestione Servizi</h2>
+      <h2 class="card-title">Elenco Servizi</h2>
     </div>
     <div class="gold-divider"></div>
 
-    <!-- Toolbar -->
+    <!-- ── Toolbar ── -->
     <div class="card-toolbar">
       <div class="toolbar-inner">
 
-        <div class="toolbar-search-wrap">
-          <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <dx-text-box
-            placeholder="Cerca per ID o descrizione..."
-            [showClearButton]="true"
-            valueChangeEvent="input"
-            class="toolbar-textbox"
-            (onValueChanged)="onSearchChanged($event)">
-          </dx-text-box>
+        <div class="toolbar-filters">
+          <div class="toolbar-field toolbar-field--lg">
+            <dx-text-box
+              [value]="searchValue()"
+              placeholder="Cerca per ID o descrizione..."
+              [showClearButton]="true"
+              valueChangeEvent="input"
+              (onValueChanged)="onSearchChanged($event)">
+            </dx-text-box>
+          </div>
         </div>
 
         <div class="toolbar-actions">
           <dx-button
-            class="btn-new"
-            text="Nuovo"
-            type="default"
+            icon="search"
+            hint="Cerca"
+            stylingMode="outlined"
+            class="btn-fin-secondary">
+          </dx-button>
+          <dx-button
+            icon="revert"
+            hint="Ripristina ricerca"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="onSearchChanged({value: ''})">
+          </dx-button>
+          <dx-button
+            class="btn-fin-primary action-shadow"
+            text="Nuovo Servizio"
             stylingMode="contained"
             (onClick)="openNewPopup()">
           </dx-button>
@@ -44,7 +59,7 @@
       </div>
     </div>
 
-    <!-- Griglia servizi -->
+    <!-- ── Griglia servizi ── -->
     <div class="card-body card-body--grid">
       <dx-data-grid
         [dataSource]="filteredServizi()"
@@ -59,17 +74,17 @@
         <dxo-paging [pageSize]="15"></dxo-paging>
         <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[15, 25, 50]" [showInfo]="true"></dxo-pager>
 
-        <dxi-column dataField="serId"     caption="ID"                [width]="130" alignment="left"></dxi-column>
-        <dxi-column dataField="serDes"    caption="Descrizione"                      alignment="left"></dxi-column>
-        <dxi-column dataField="serRunning" caption="Running"  [width]="90"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
-        <dxi-column dataField="serTrace"   caption="Traccia"  [width]="90"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
-        <dxi-column dataField="serEmail"   caption="Email"    [width]="80"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
-        <dxi-column dataField="serEnable"  caption="Abilitato"[width]="90"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
+        <dxi-column dataField="serId"      caption="ID"               [width]="130" alignment="left"></dxi-column>
+        <dxi-column dataField="serDes"     caption="Descrizione"                     alignment="left"></dxi-column>
+        <dxi-column dataField="serRunning" caption="Running"   [width]="90"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
+        <dxi-column dataField="serTrace"   caption="Traccia"   [width]="90"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
+        <dxi-column dataField="serEmail"   caption="Email"     [width]="80"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
+        <dxi-column dataField="serEnable"  caption="Abilitato" [width]="90"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
         <dxi-column dataField="serLastRun" caption="Ultima esecuzione" [width]="160" alignment="left"></dxi-column>
 
         <dxi-column
           caption="Azioni"
-          [width]="110"
+          [width]="100"
           [allowSorting]="false"
           [allowFiltering]="false"
           alignment="center"
@@ -85,26 +100,33 @@
         </div>
 
         <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
-          <button class="action-btn action-btn--view" title="Visualizza" (click)="onTableAction('view', cell.data)">
+          <button class="action-btn action-btn--view" title="Visualizza"
+                  (click)="onTableAction('view', cell.data)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
           </button>
-          <button class="action-btn action-btn--edit" title="Modifica" (click)="onTableAction('edit', cell.data)">
+          <button class="action-btn action-btn--edit" title="Modifica"
+                  (click)="onTableAction('edit', cell.data)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
             </svg>
           </button>
-          <button class="action-btn action-btn--delete" title="Elimina" (click)="onTableAction('delete', cell.data)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="3 6 5 6 21 6"></polyline>
-              <path d="M19 6l-1 14H6L5 6"></path>
-              <path d="M10 11v6M14 11v6"></path>
-              <path d="M9 6V4h6v2"></path>
-            </svg>
-          </button>
+          <dx-drop-down-button
+            icon="overflow"
+            hint="Altre azioni"
+            [items]="moreActions"
+            displayExpr="text"
+            keyExpr="id"
+            [showArrowIcon]="false"
+            [useSelectMode]="false"
+            stylingMode="text"
+            [dropDownOptions]="{ width: 190 }"
+            (onItemClick)="onMoreAction($event, cell.data)"
+            class="action-more-btn">
+          </dx-drop-down-button>
         </div>
 
       </dx-data-grid>
@@ -114,7 +136,9 @@
 
 </div>
 
-<!-- ── Popup Dettaglio Servizio ── -->
+<!-- ══════════════════════════════════════
+     Popup: Dettaglio / Form Servizio
+     ══════════════════════════════════════ -->
 <dx-popup
   [(visible)]="isDetailPopupVisible"
   [showTitle]="true"
@@ -124,9 +148,10 @@
   [dragEnabled]="true"
   [hideOnOutsideClick]="false"
   [showCloseButton]="true"
-  [width]="700"
+  [width]="'92%'"
+  [maxWidth]="700"
   [height]="'auto'"
-  [maxHeight]="'90vh'"
+  [maxHeight]="'92vh'"
   (onHidden)="closePopup()">
 
   <div *dxTemplate="let data of 'content'">
@@ -134,13 +159,13 @@
           class="popup-layout"
           [class.popup-view-mode]="popupMode() === 'view'">
 
-      <!-- ── Card: Dati Servizio ── -->
+      <!-- ── Card 1: Dati Servizio ── -->
       <section class="popup-card">
         <h3 class="popup-card-title">Dati Servizio</h3>
-
         <div class="popup-fields-grid popup-fields-grid--2col">
+
           <div class="popup-field-group" [class.field-id-locked]="popupMode() !== 'new'">
-            <label class="popup-field-label">Codice</label>
+            <label class="popup-field-label">Codice *</label>
             <dx-text-box
               formControlName="serId"
               [readOnly]="popupMode() !== 'new'">
@@ -149,34 +174,35 @@
               </dx-validator>
             </dx-text-box>
           </div>
-        </div>
 
-        <div class="popup-field-group popup-field-group--full">
-          <label class="popup-field-label">Descrizione</label>
-          <dx-text-area
-            formControlName="serDes"
-            [height]="80"
-            [readOnly]="popupMode() === 'view'">
-          </dx-text-area>
-        </div>
-
-        @if (popupMode() !== 'new') {
-          <div class="popup-field-group popup-field-group--full">
-            <label class="popup-field-label">Ultimo errore</label>
+          <div class="popup-field-group popup-col-span-2">
+            <label class="popup-field-label">Descrizione</label>
             <dx-text-area
-              formControlName="serDeserr"
-              [height]="56"
-              [readOnly]="true">
+              formControlName="serDes"
+              [height]="80"
+              [readOnly]="popupMode() === 'view'">
             </dx-text-area>
           </div>
-        }
+
+          @if (popupMode() !== 'new') {
+            <div class="popup-field-group popup-col-span-2">
+              <label class="popup-field-label">Ultimo errore</label>
+              <dx-text-area
+                formControlName="serDeserr"
+                [height]="56"
+                [readOnly]="true">
+              </dx-text-area>
+            </div>
+          }
+
+        </div>
       </section>
 
-      <!-- ── Card: Configurazione ── -->
+      <!-- ── Card 2: Configurazione ── -->
       <section class="popup-card">
         <h3 class="popup-card-title">Configurazione</h3>
+        <div class="popup-fields-grid popup-fields-grid--3col">
 
-        <div class="popup-fields-grid popup-fields-grid--2col">
           <div class="popup-field-group">
             <label class="popup-field-label">Email di sistema</label>
             <dx-text-box
@@ -184,6 +210,7 @@
               [readOnly]="popupMode() === 'view'">
             </dx-text-box>
           </div>
+
           <div class="popup-field-group">
             <label class="popup-field-label">Email applicazione</label>
             <dx-text-box
@@ -191,53 +218,60 @@
               [readOnly]="popupMode() === 'view'">
             </dx-text-box>
           </div>
-        </div>
 
-        <div class="popup-flags-row">
-          <div class="popup-flag-group">
+          <div></div><!-- spacer col 3 -->
+
+          <div class="popup-field-group">
             <label class="popup-field-label">Invio Email</label>
             <dx-check-box formControlName="serEmail" [readOnly]="popupMode() === 'view'"></dx-check-box>
           </div>
-          <div class="popup-flag-group">
+
+          <div class="popup-field-group">
             <label class="popup-field-label">Abilitato</label>
             <dx-check-box formControlName="serEnable" [readOnly]="popupMode() === 'view'"></dx-check-box>
           </div>
-          <div class="popup-flag-group">
+
+          <div class="popup-field-group">
             <label class="popup-field-label">Attiva Trace</label>
             <dx-check-box formControlName="serTrace" [readOnly]="popupMode() === 'view'"></dx-check-box>
           </div>
+
         </div>
       </section>
 
-      <!-- ── Action Bar sticky ── -->
+      <!-- ── Action Bar ── -->
       <div class="popup-action-bar">
-        <div class="popup-actions-secondary"></div>
-        <div class="popup-actions-primary">
-          @if (popupMode() === 'view') {
+
+        <div class="popup-actions-secondary">
+          @if (popupMode() !== 'new') {
             <dx-button
-              class="btn-action-close"
-              text="Chiudi"
-              icon="close"
-              (onClick)="closePopup()">
-            </dx-button>
-          }
-          @if (popupMode() === 'new') {
-            <dx-button
-              class="btn-action-primary"
-              text="Aggiungi"
-              icon="plus"
-              (onClick)="onSubmit()">
-            </dx-button>
-          }
-          @if (popupMode() === 'edit') {
-            <dx-button
-              class="btn-action-primary"
-              text="Salva"
-              icon="save"
-              (onClick)="onUpdate()">
+              text="Storico"
+              icon="clock"
+              stylingMode="outlined"
+              class="btn-fin-secondary"
+              (onClick)="onStorico(selectedSerId()!)">
             </dx-button>
           }
         </div>
+
+        <div class="popup-actions-primary">
+          <dx-button
+            [text]="popupMode() === 'new' ? 'Annulla' : 'Chiudi'"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
+            (onClick)="closePopup()">
+          </dx-button>
+          @if (popupMode() !== 'view') {
+            <dx-button
+              [text]="popupMode() === 'new' ? 'Aggiungi' : 'Salva'"
+              [icon]="popupMode() === 'new' ? 'plus' : 'save'"
+              stylingMode="contained"
+              class="btn-fin-primary"
+              (onClick)="popupMode() === 'new' ? onSubmit() : onUpdate()">
+            </dx-button>
+          }
+        </div>
+
       </div>
 
     </form>

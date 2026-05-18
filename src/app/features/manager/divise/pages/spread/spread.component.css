@@ -75,8 +75,17 @@
   padding: 0;
   flex: 1 1 auto;
   min-height: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+:host ::ng-deep .card-body--grid dx-data-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  display: block;
+  overflow: hidden;
 }
 
 :host ::ng-deep .card-body--grid .dx-datagrid,
