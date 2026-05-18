@@ -574,11 +574,14 @@
   border: 1px solid #e5e7eb;
 }
 
-:host ::ng-deep .status-badge--active,
-::ng-deep .status-badge--active  { background: #d1fae5 !important; color: #065f46 !important; border-color: #a7f3d0 !important; }
+:host ::ng-deep .status-badge.status-badge--active,
+::ng-deep .status-badge.status-badge--active   { background: #d1fae5 !important; color: #065f46 !important; border-color: #a7f3d0 !important; }
 
-:host ::ng-deep .status-badge--blocked,
-::ng-deep .status-badge--blocked { background: #fee2e2 !important; color: #991b1b !important; border-color: #fecaca !important; }
+:host ::ng-deep .status-badge.status-badge--disabled,
+::ng-deep .status-badge.status-badge--disabled { background: #fee2e2 !important; color: #991b1b !important; border-color: #fecaca !important; }
+
+:host ::ng-deep .status-badge.status-badge--blocked,
+::ng-deep .status-badge.status-badge--blocked  { background: #fef9c3 !important; color: #854d0e !important; border-color: #fde047 !important; }
 
 /* ── Field error ── */
 .field-error {

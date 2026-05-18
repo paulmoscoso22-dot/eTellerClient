@@ -122,11 +122,11 @@ export class NomiTabelleComponent implements OnInit {
     });
   }
 
-  onTrace(): void {
+  onTrace(id?: string): void {
     this.router.navigate(['/trace'], {
       queryParams: {
         ENTNAME: TABLE,
-        traEntCode: this.selectedId(),
+        traEntCode: id ?? this.selectedId(),
       },
     });
   }

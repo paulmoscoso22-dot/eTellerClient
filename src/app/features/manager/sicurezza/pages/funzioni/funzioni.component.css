@@ -578,6 +578,11 @@
   display: none !important;
 }
 
+/* ── Testo checkbox offline nel popup (ridotto di 3pt rispetto al default) ── */
+::ng-deep .popup-layout .dx-checkbox-text {
+  font-size: 10px !important;
+}
+
 /* ── Badge offline nel popup ── */
 .offline-badge {
   display: inline-flex;

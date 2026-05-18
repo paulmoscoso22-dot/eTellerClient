@@ -1,6 +1,11 @@
 <div class="page-shell">
 
-  <!-- ── Main Card ── -->
+  <!-- ── Titolo pagina ── -->
+  <div class="page-header-row">
+    <h1 class="page-title">Forza Traccia</h1>
+  </div>
+
+  <!-- ── Card Main ── -->
   <section class="card-section">
 
     <div class="sempione-card-header">
@@ -10,33 +15,32 @@
         <line x1="9" y1="13" x2="15" y2="13"></line>
         <line x1="9" y1="17" x2="13" y2="17"></line>
       </svg>
-      <h2 class="card-title">Forza Traccia (FORCE_TRX)</h2>
+      <h2 class="card-title">Elenco Forzature Traccia (FORCE_TRX)</h2>
     </div>
     <div class="gold-divider"></div>
 
     <!-- ── Toolbar ── -->
     <div class="card-toolbar">
-      <div class="toolbar-row">
+      <div class="toolbar-inner">
 
-        <span class="filter-label">Lingua:</span>
-        <dx-select-box
-          [dataSource]="languages"
-          displayExpr="label"
-          valueExpr="id"
-          [value]="selectedLanCode()"
-          (onValueChanged)="onLanguageChanged($event.value)"
-          class="filter-control filter-control--sm">
-        </dx-select-box>
-
-        <div class="toolbar-row-spacer"></div>
+        <div class="toolbar-filters">
+          <div class="toolbar-field toolbar-field--sm">
+            <dx-select-box
+              [dataSource]="languages"
+              displayExpr="label"
+              valueExpr="id"
+              [value]="selectedLanCode()"
+              (onValueChanged)="onLanguageChanged($event.value)">
+            </dx-select-box>
+          </div>
+        </div>
 
         <div class="toolbar-actions">
           <dx-button
-            class="btn-cerca"
-            text="Cerca"
-            type="default"
-            stylingMode="contained"
             icon="search"
+            hint="Cerca"
+            stylingMode="outlined"
+            class="btn-fin-secondary"
             [disabled]="isLoading()"
             (onClick)="search()">
           </dx-button>
@@ -82,17 +86,17 @@
           <dxo-paging [pageSize]="30"></dxo-paging>
           <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 30, 50, 100]" [showInfo]="true"></dxo-pager>
 
-          <dxi-column dataField="trfId"      caption="ID Forzatura"    alignment="right"  [width]="110"></dxi-column>
-          <dxi-column dataField="trfTrxId"   caption="ID Transazione"  alignment="right"  [width]="120"></dxi-column>
-          <dxi-column dataField="trfFortyp"  caption="Tipo forzatura"  alignment="left"   [width]="140"></dxi-column>
-          <dxi-column dataField="trfFortxt"  caption="Testo"           alignment="left"></dxi-column>
-          <dxi-column dataField="trxDatope"  caption="Data operazione" alignment="left"   [width]="140" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="trxDatval"  caption="Data valuta"     alignment="left"   [width]="120" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="errDesc"    caption="Descrizione errore" alignment="left"></dxi-column>
+          <dxi-column dataField="trfId"     caption="ID Forzatura"      alignment="right" [width]="110"></dxi-column>
+          <dxi-column dataField="trfTrxId"  caption="ID Transazione"    alignment="right" [width]="120"></dxi-column>
+          <dxi-column dataField="trfFortyp" caption="Tipo forzatura"    alignment="left"  [width]="140"></dxi-column>
+          <dxi-column dataField="trfFortxt" caption="Testo"             alignment="left"></dxi-column>
+          <dxi-column dataField="trxDatope" caption="Data operazione"   alignment="left"  [width]="130" dataType="date" format="dd.MM.yyyy"></dxi-column>
+          <dxi-column dataField="trxDatval" caption="Data valuta"       alignment="left"  [width]="110" dataType="date" format="dd.MM.yyyy"></dxi-column>
+          <dxi-column dataField="errDesc"   caption="Descrizione errore" alignment="left"></dxi-column>
 
           <dxi-column
             caption="Dettaglio"
-            [width]="80"
+            [width]="75"
             [allowSorting]="false"
             [allowFiltering]="false"
             alignment="center"
@@ -100,10 +104,11 @@
           </dxi-column>
 
           <div *dxTemplate="let cell of 'detailTemplate'" class="actions-cell">
-            <button class="action-btn action-btn--edit" title="Dettaglio" (click)="openDetail(cell.data)">
+            <button class="action-btn action-btn--view" title="Dettaglio"
+                    (click)="openDetail(cell.data)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
               </svg>
             </button>
           </div>
@@ -119,7 +124,9 @@
 
 </div>
 
-<!-- ══ Popup Dettaglio ══ -->
+<!-- ══════════════════════════════════════
+     Popup: Dettaglio Forzatura
+     ══════════════════════════════════════ -->
 <dx-popup
   [(visible)]="isDetailPopupVisible"
   [showTitle]="true"
@@ -136,7 +143,9 @@
   <div *dxTemplate="let data of 'content'">
     @if (selectedItem(); as item) {
       <div class="popup-layout">
+
         <section class="popup-card">
+          <h3 class="popup-card-title">Dati Forzatura</h3>
           <div class="popup-fields-grid popup-fields-grid--2col">
 
             <div class="popup-field-group">
@@ -164,20 +173,20 @@
               <div class="popup-field-value">{{ item.trfFortyp }}</div>
             </div>
 
-            <div class="popup-field-group popup-field-group--full">
+            <div class="popup-field-group popup-col-span-2">
               <label class="popup-field-label">Testo</label>
               <div class="popup-field-value">{{ item.trfFortxt ?? '—' }}</div>
             </div>
 
-            <div class="popup-field-group popup-field-group--full">
+            <div class="popup-field-group popup-col-span-2">
               <label class="popup-field-label">Descrizione errore</label>
               <div class="popup-field-value">{{ item.errDesc ?? '—' }}</div>
             </div>
 
           </div>
         </section>
+
       </div>
     }
   </div>
-
 </dx-popup>
