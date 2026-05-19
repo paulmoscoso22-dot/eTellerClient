@@ -1,0 +1,23 @@
+<div class="popup-action-bar">
+  <div class="popup-actions-secondary">
+    <ng-content select="[secondary-actions]"></ng-content>
+  </div>
+  <div class="popup-actions-primary">
+    <dx-button
+      [text]="cancelText"
+      stylingMode="outlined"
+      class="btn-fin-secondary"
+      (onClick)="cancel.emit()">
+    </dx-button>
+    @if (showSave) {
+      <dx-button
+        [text]="isSaving ? 'Salvataggio...' : saveText"
+        icon="save"
+        stylingMode="contained"
+        class="btn-fin-primary"
+        [disabled]="isSaving"
+        (onClick)="save.emit()">
+      </dx-button>
+    }
+  </div>
+</div>

@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+.popup-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.popup-actions-secondary { display: flex; gap: 6px; }
+.popup-actions-primary   { display: flex; gap: 6px; }

@@ -1,316 +1,260 @@
 <div class="page-shell">
 
-  <!-- ── Titolo pagina ── -->
-  <div class="page-header-row">
-    <h1 class="page-title">Tipo Operazione</h1>
-  </div>
+  <app-sempione-page-header title="Tipo Operazione"></app-sempione-page-header>
 
-  <!-- ── Card Main ── -->
-  <section class="card-section">
+  <app-sempione-card>
 
-    <div class="sempione-card-header">
+    <app-sempione-card-header title="Elenco Tipo Operazione (OPT_TYPE)">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
         <line x1="8" y1="21" x2="16" y2="21"></line>
         <line x1="12" y1="17" x2="12" y2="21"></line>
       </svg>
-      <h2 class="card-title">Elenco Tipo Operazione</h2>
-    </div>
-    <div class="gold-divider"></div>
+    </app-sempione-card-header>
 
-    <!-- ── Toolbar ── -->
-    <div class="card-toolbar">
-      <div class="toolbar-inner">
+    <app-sempione-toolbar>
 
-        <div class="toolbar-filters">
-          <div class="toolbar-field">
-            <span class="filter-label">ID</span>
-            <dx-text-box
-              [value]="filterId()"
-              [showClearButton]="true"
-              placeholder="Codice..."
-              valueChangeEvent="input"
-              (onValueChanged)="onFilterIdChanged($event)">
-            </dx-text-box>
-          </div>
-          <div class="toolbar-field toolbar-field--lg">
-            <span class="filter-label">Descrizione</span>
-            <dx-text-box
-              [value]="filterDes()"
-              [showClearButton]="true"
-              placeholder="Descrizione..."
-              valueChangeEvent="input"
-              (onValueChanged)="onFilterDesChanged($event)">
-            </dx-text-box>
-          </div>
-        </div>
-
-        <div class="toolbar-actions">
-          <dx-button
-            icon="search"
-            hint="Cerca"
-            stylingMode="outlined"
-            class="btn-fin-secondary">
-          </dx-button>
-          <dx-button
-            icon="revert"
-            hint="Ripristina ricerca"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="resetSearch()">
-          </dx-button>
-          <dx-button
-            class="btn-fin-primary action-shadow"
-            text="Nuovo"
-            stylingMode="contained"
-            (onClick)="openNewPopup()">
-          </dx-button>
-        </div>
-
+      <div class="toolbar-field toolbar-field--sm">
+        <dx-text-box
+          [value]="filterId()"
+          [showClearButton]="true"
+          placeholder="Codice..."
+          valueChangeEvent="input"
+          (onValueChanged)="onFilterIdChanged($event)">
+        </dx-text-box>
       </div>
-    </div>
 
-    <!-- ── Grid ── -->
+      <div class="toolbar-field toolbar-field--lg">
+        <dx-text-box
+          [value]="filterDes()"
+          [showClearButton]="true"
+          placeholder="Descrizione..."
+          valueChangeEvent="input"
+          (onValueChanged)="onFilterDesChanged($event)">
+        </dx-text-box>
+      </div>
+
+      <div toolbar-actions>
+        <app-sempione-button
+          icon="revert"
+          hint="Ripristina ricerca"
+          variant="secondary"
+          (clicked)="resetSearch()">
+        </app-sempione-button>
+        <span class="toolbar-sep" toolbar-actions></span>
+        <app-sempione-button
+          text="Nuovo"
+          icon="add"
+          variant="primary"
+          [shadow]="true"
+          (clicked)="openNewPopup()">
+        </app-sempione-button>
+      </div>
+
+    </app-sempione-toolbar>
+
+    <!-- Grid kept as raw dx-data-grid: has custom cell templates (segno/bool) -->
     <div class="card-body card-body--grid">
-      <dx-data-grid
-        [dataSource]="filteredOperazioni()"
-        [showBorders]="false"
-        [showColumnLines]="false"
-        [showRowLines]="true"
-        [columnAutoWidth]="true"
-        [rowAlternationEnabled]="true"
-        [hoverStateEnabled]="true"
-        [height]="'100%'"
-        keyExpr="optId">
-
-        <dxo-selection mode="single"></dxo-selection>
-        <dxo-paging [pageSize]="20"></dxo-paging>
-        <dxo-pager
-          [showInfo]="true"
-          infoText="{2} operazioni"
-          [showPageSizeSelector]="true"
-          [allowedPageSizes]="[20, 50, 100]"
-          [showNavigationButtons]="true"
-          displayMode="full">
-        </dxo-pager>
-
-        <dxi-column dataField="optId"       caption="ID"           [width]="110" alignment="left"></dxi-column>
-        <dxi-column dataField="optDes"      caption="Descrizione"                alignment="left"></dxi-column>
-        <dxi-column dataField="optHoscod"   caption="Host Code"    [width]="130" alignment="left"></dxi-column>
-        <dxi-column dataField="optAptId"    caption="Applicazione" [width]="110" alignment="center"></dxi-column>
-        <dxi-column dataField="optIscredit" caption="Segno"        [width]="90"  alignment="center" cellTemplate="segnoTemplate"></dxi-column>
-        <dxi-column dataField="optPrtdv"    caption="Stampa fiche" [width]="110" alignment="center" [allowSorting]="false" cellTemplate="boolTemplate"></dxi-column>
-
-        <dxi-column
-          caption="Azioni"
-          [width]="110"
-          [allowSorting]="false"
-          [allowFiltering]="false"
-          alignment="center"
-          cellTemplate="actionsTemplate">
-        </dxi-column>
-
-        <div *dxTemplate="let cell of 'segnoTemplate'" class="segno-cell">
-          <span class="segno-pill"
-            [class.segno-pill--pos]="cell.value === '1'"
-            [class.segno-pill--neg]="cell.value === '-1'">
-            {{ cell.value === '1' ? '+1' : cell.value }}
-          </span>
+      @if (error()) {
+        <div class="grid-message grid-message--error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          {{ error() }}
         </div>
-
-        <div *dxTemplate="let cell of 'boolTemplate'" class="bool-cell">
-          @if (cell.value) {
-            <span class="bool-pill bool-pill--yes">✓</span>
-          } @else {
-            <span class="bool-pill bool-pill--no">—</span>
-          }
+      }
+      @if (isLoading()) {
+        <div class="grid-message grid-message--loading">
+          <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          </svg>
+          Caricamento in corso...
         </div>
+      }
+      @if (!isLoading() && !error()) {
+        <dx-data-grid
+          [dataSource]="filteredOperazioni()"
+          [showBorders]="false"
+          [columnAutoWidth]="true"
+          [rowAlternationEnabled]="true"
+          [hoverStateEnabled]="true"
+          [height]="'100%'"
+          keyExpr="optId">
 
-        <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
-          <button class="action-btn action-btn--view" title="Visualizza" (click)="onTableAction('view', cell.data)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
-          </button>
-          <button class="action-btn action-btn--edit" title="Modifica" (click)="onTableAction('edit', cell.data)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-            </svg>
-          </button>
-          <button class="action-btn action-btn--trace" title="Storico" (click)="onTableAction('trace', cell.data)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
-          </button>
-        </div>
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-paging [pageSize]="20"></dxo-paging>
+          <dxo-pager
+            [showInfo]="true"
+            [showPageSizeSelector]="true"
+            [allowedPageSizes]="[20, 50, 100]"
+            [showNavigationButtons]="true"
+            displayMode="full">
+          </dxo-pager>
+          <dxo-load-panel [enabled]="false"></dxo-load-panel>
 
-        <dxo-load-panel [enabled]="false"></dxo-load-panel>
-      </dx-data-grid>
+          <dxi-column dataField="optId"       caption="ID"           [width]="110" alignment="left"></dxi-column>
+          <dxi-column dataField="optDes"      caption="Descrizione"                alignment="left"></dxi-column>
+          <dxi-column dataField="optHoscod"   caption="Host Code"    [width]="130" alignment="left"></dxi-column>
+          <dxi-column dataField="optAptId"    caption="Applicazione" [width]="110" alignment="center"></dxi-column>
+          <dxi-column dataField="optIscredit" caption="Segno"        [width]="90"  alignment="center" cellTemplate="segnoTemplate"></dxi-column>
+          <dxi-column dataField="optPrtdv"    caption="Stampa fiche" [width]="110" alignment="center" [allowSorting]="false" cellTemplate="boolTemplate"></dxi-column>
+
+          <dxi-column caption="Azioni" [width]="90" [allowSorting]="false" [allowFiltering]="false" alignment="center" cellTemplate="actionsTemplate"></dxi-column>
+
+          <div *dxTemplate="let cell of 'segnoTemplate'" class="segno-cell">
+            <span class="segno-pill"
+              [class.segno-pill--pos]="cell.value === '1'"
+              [class.segno-pill--neg]="cell.value === '-1'">
+              {{ cell.value === '1' ? '+1' : cell.value }}
+            </span>
+          </div>
+
+          <div *dxTemplate="let cell of 'boolTemplate'" class="bool-cell">
+            @if (cell.value) {
+              <span class="bool-pill bool-pill--yes">✓</span>
+            } @else {
+              <span class="bool-pill bool-pill--no">—</span>
+            }
+          </div>
+
+          <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
+            <app-sempione-row-actions
+              [showView]="true"
+              [showEdit]="true"
+              [showTrace]="true"
+              (view)="onTableAction('view', cell.data)"
+              (edit)="onTableAction('edit', cell.data)"
+              (trace)="onTableAction('trace', cell.data)">
+            </app-sempione-row-actions>
+          </div>
+
+        </dx-data-grid>
+      }
     </div>
 
-  </section>
+  </app-sempione-card>
+
 </div>
 
-<!-- ══════════════════════════════════════
-     Popup: Dettaglio / Modifica / Nuovo Tipo Operazione
-     ══════════════════════════════════════ -->
-<dx-popup
+<!-- ── Popup ── -->
+<app-sempione-popup
   [(visible)]="isDetailPopupVisible"
-  [showTitle]="true"
   [title]="popupMode() === 'edit' ? 'Modifica Tipo Operazione — ' + selectedLabel()
          : popupMode() === 'view' ? 'Dettaglio Tipo Operazione — ' + selectedLabel()
          : 'Nuovo Tipo Operazione'"
-  [dragEnabled]="true"
-  [hideOnOutsideClick]="false"
-  [showCloseButton]="true"
-  [width]="'90%'"
   [maxWidth]="700"
-  [height]="'auto'"
-  [maxHeight]="'90vh'"
-  (onHidden)="closePopup()">
+  (hidden)="closePopup()">
 
-  <div *dxTemplate="let data of 'content'">
-    <form [formGroup]="operazioneForm"
-          class="popup-layout"
-          [class.popup-view-mode]="popupMode() === 'view'">
+  <form [formGroup]="operazioneForm" class="popup-layout">
 
-      <!-- ── Card 1: Identificazione ── -->
-      <section class="popup-card">
-        <h3 class="popup-card-title">Identificazione</h3>
-        <div class="popup-fields-grid popup-fields-grid--2col">
+    <app-sempione-popup-card title="Identificazione">
+      <div class="popup-fields-grid popup-fields-grid--2col">
 
-          <div class="popup-field-group" [class.field-id-locked]="popupMode() !== 'new'">
-            <label class="popup-field-label">Codice *</label>
-            <dx-text-box
-              formControlName="optId"
-              [readOnly]="popupMode() !== 'new'"
-              placeholder="Max 5 caratteri">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-                <dxi-validation-rule type="stringLength" [max]="5" message="Massimo 5 caratteri"></dxi-validation-rule>
-              </dx-validator>
-            </dx-text-box>
-          </div>
+        <app-sempione-field-group label="Codice" [required]="true" [locked]="popupMode() !== 'new'">
+          <dx-text-box
+            formControlName="optId"
+            [readOnly]="popupMode() !== 'new'"
+            placeholder="Max 5 caratteri">
+            <dx-validator>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
+              <dxi-validation-rule type="stringLength" [max]="5" message="Massimo 5 caratteri"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group">
-            <label class="popup-field-label">Applicazione *</label>
-            <dx-text-box
-              formControlName="optAptId"
-              [readOnly]="popupMode() === 'view'"
-              placeholder="Max 5 caratteri">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-                <dxi-validation-rule type="stringLength" [max]="5" message="Massimo 5 caratteri"></dxi-validation-rule>
-              </dx-validator>
-            </dx-text-box>
-          </div>
+        <app-sempione-field-group label="Applicazione" [required]="true">
+          <dx-text-box
+            formControlName="optAptId"
+            [readOnly]="popupMode() === 'view'"
+            placeholder="Max 5 caratteri">
+            <dx-validator>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
+              <dxi-validation-rule type="stringLength" [max]="5" message="Massimo 5 caratteri"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group popup-col-span-2">
-            <label class="popup-field-label">Descrizione *</label>
-            <dx-text-box
-              formControlName="optDes"
-              [readOnly]="popupMode() === 'view'"
-              placeholder="Max 50 caratteri">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-                <dxi-validation-rule type="stringLength" [max]="50" message="Massimo 50 caratteri"></dxi-validation-rule>
-              </dx-validator>
-            </dx-text-box>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ── Card 2: Configurazione ── -->
-      <section class="popup-card">
-        <h3 class="popup-card-title">Configurazione</h3>
-        <div class="popup-fields-grid popup-fields-grid--2col">
-
-          <div class="popup-field-group">
-            <label class="popup-field-label">Host Code *</label>
-            <dx-text-box
-              formControlName="optHoscod"
-              [readOnly]="popupMode() === 'view'"
-              placeholder="Max 25 caratteri">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-                <dxi-validation-rule type="stringLength" [max]="25" message="Massimo 25 caratteri"></dxi-validation-rule>
-              </dx-validator>
-            </dx-text-box>
-          </div>
-
-          <div class="popup-field-group">
-            <label class="popup-field-label">Segno Importo *</label>
-            <dx-select-box
-              formControlName="optIscredit"
-              [dataSource]="segnoOptions"
-              displayExpr="des"
-              valueExpr="id"
-              [readOnly]="popupMode() === 'view'">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-              </dx-validator>
-            </dx-select-box>
-          </div>
-
-          <div class="popup-field-group">
-            <label class="popup-field-label">Modello Fiche</label>
-            <dx-text-box
-              formControlName="optAdvId"
-              [readOnly]="popupMode() === 'view'"
-              placeholder="Max 50 caratteri">
-            </dx-text-box>
-          </div>
-
-          <div class="popup-field-group popup-flag-group">
-            <label class="popup-field-label">Stampa Fiche</label>
-            <dx-check-box
-              formControlName="optPrtdv"
-              [readOnly]="popupMode() === 'view'">
-            </dx-check-box>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ── Action Bar ── -->
-      <div class="popup-action-bar">
-
-        <div class="popup-actions-secondary">
-          @if (popupMode() !== 'new') {
-            <dx-button
-              class="btn-fin-secondary"
-              text="Storico"
-              icon="clock"
-              stylingMode="outlined"
-              (onClick)="onTrace()">
-            </dx-button>
-          }
-        </div>
-
-        <div class="popup-actions-primary">
-          <dx-button
-            [text]="popupMode() === 'new' ? 'Annulla' : 'Chiudi'"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="closePopup()">
-          </dx-button>
-          @if (popupMode() !== 'view') {
-            <dx-button
-              [text]="popupMode() === 'new' ? 'Crea Operazione' : 'Salva Modifiche'"
-              [icon]="popupMode() === 'new' ? 'plus' : 'save'"
-              stylingMode="contained"
-              class="btn-fin-primary"
-              (onClick)="popupMode() === 'new' ? onSubmit() : onUpdate()">
-            </dx-button>
-          }
-        </div>
+        <app-sempione-field-group label="Descrizione" [required]="true" class="popup-col-span-2">
+          <dx-text-box
+            formControlName="optDes"
+            [readOnly]="popupMode() === 'view'"
+            placeholder="Max 50 caratteri">
+            <dx-validator>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
+              <dxi-validation-rule type="stringLength" [max]="50" message="Massimo 50 caratteri"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </app-sempione-field-group>
 
       </div>
+    </app-sempione-popup-card>
 
-    </form>
-  </div>
-</dx-popup>
+    <app-sempione-popup-card title="Configurazione">
+      <div class="popup-fields-grid popup-fields-grid--2col">
+
+        <app-sempione-field-group label="Host Code" [required]="true">
+          <dx-text-box
+            formControlName="optHoscod"
+            [readOnly]="popupMode() === 'view'"
+            placeholder="Max 25 caratteri">
+            <dx-validator>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
+              <dxi-validation-rule type="stringLength" [max]="25" message="Massimo 25 caratteri"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Segno Importo" [required]="true">
+          <dx-select-box
+            formControlName="optIscredit"
+            [dataSource]="segnoOptions"
+            displayExpr="des"
+            valueExpr="id"
+            [readOnly]="popupMode() === 'view'">
+            <dx-validator>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dx-validator>
+          </dx-select-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Modello Fiche">
+          <dx-text-box
+            formControlName="optAdvId"
+            [readOnly]="popupMode() === 'view'"
+            placeholder="Max 50 caratteri">
+          </dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Stampa Fiche">
+          <dx-check-box
+            formControlName="optPrtdv"
+            [readOnly]="popupMode() === 'view'">
+          </dx-check-box>
+        </app-sempione-field-group>
+
+      </div>
+    </app-sempione-popup-card>
+
+    <app-sempione-popup-action-bar
+      [cancelText]="popupMode() === 'new' ? 'Annulla' : 'Chiudi'"
+      [saveText]="popupMode() === 'new' ? 'Crea Operazione' : 'Salva Modifiche'"
+      [showSave]="popupMode() !== 'view'"
+      [isSaving]="isLoading()"
+      (save)="popupMode() === 'new' ? onSubmit() : onUpdate()"
+      (cancel)="closePopup()">
+      @if (popupMode() !== 'new') {
+        <app-sempione-button
+          secondary-actions
+          text="Storico"
+          icon="clock"
+          variant="secondary"
+          (clicked)="onTrace()">
+        </app-sempione-button>
+      }
+    </app-sempione-popup-action-bar>
+
+  </form>
+
+</app-sempione-popup>

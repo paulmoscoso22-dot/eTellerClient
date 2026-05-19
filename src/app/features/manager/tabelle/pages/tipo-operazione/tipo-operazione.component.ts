@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
+  DxDataGridModule, DxTextBoxModule,
   DxValidatorModule, DxSelectBoxModule, DxCheckBoxModule
 } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -13,14 +13,36 @@ import {
   ITipoOperazioneVm,
   IUpsertOperationTypeCommand,
 } from '../../models/tipo-operazione.models';
+import {
+  SempionePageHeaderComponent,
+  SempioneCardComponent,
+  SempioneCardHeaderComponent,
+  SempioneToolbarComponent,
+  SempionePopupComponent,
+  SempionePopupCardComponent,
+  SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+  SempioneButtonComponent,
+  SempioneRowActionsComponent,
+} from '../../../../../components/General';
 
 @Component({
   selector: 'app-tipo-operazione',
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
-    DxValidatorModule, DxSelectBoxModule, DxCheckBoxModule
+    DxDataGridModule, DxTextBoxModule,
+    DxValidatorModule, DxSelectBoxModule, DxCheckBoxModule,
+    SempionePageHeaderComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
+    SempioneToolbarComponent,
+    SempionePopupComponent,
+    SempionePopupCardComponent,
+    SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
+    SempioneButtonComponent,
+    SempioneRowActionsComponent,
   ],
   templateUrl: './tipo-operazione.component.html',
   styleUrls: ['./tipo-operazione.component.css'],
@@ -208,6 +230,7 @@ export class TipoOperazioneComponent implements OnInit {
 
   onTrace(): void {
     const id = this.operazioneForm.get('optId')?.value;
+    this.isDetailPopupVisible = false;
     this.router.navigate(['/trace'], {
       queryParams: { traTabNam: 'OPT_TYPE', traEntCode: id },
     });

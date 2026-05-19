@@ -1,0 +1,55 @@
+:host {
+  display: block;
+  flex-shrink: 0;
+}
+
+.card-toolbar {
+  background: rgba(237, 242, 247, 0.5);
+  border-bottom: 1px solid #dce3ee;
+  padding: 7px 12px;
+}
+
+.toolbar-inner {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.toolbar-filters {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  align-items: flex-end;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Make the [toolbar-actions] wrapper div a flex container */
+:host ::ng-deep .toolbar-actions > div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Visual separator between secondary and primary action buttons */
+:host ::ng-deep .toolbar-actions .toolbar-sep {
+  width: 1px;
+  height: 16px;
+  background: #dce3ee;
+  flex-shrink: 0;
+  align-self: center;
+  margin: 0 2px;
+}
+
+@media (max-width: 640px) {
+  .toolbar-inner { flex-wrap: wrap; }
+  .toolbar-filters { flex: 1 1 100%; }
+  .toolbar-actions { flex: 1 1 100%; justify-content: flex-end; }
+}

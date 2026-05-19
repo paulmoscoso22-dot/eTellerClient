@@ -1,83 +1,73 @@
 <div class="page-shell">
 
-  <!-- ── Titolo pagina ── -->
-  <div class="page-header-row">
-    <h1 class="page-title">Gestione Errori</h1>
-  </div>
+  <app-sempione-page-header title="Gestione Errori"></app-sempione-page-header>
 
-  <!-- ── Card Main ── -->
-  <section class="card-section">
+  <app-sempione-card>
 
-    <div class="sempione-card-header">
+    <app-sempione-card-header title="Elenco Errori (ST_ERRORCODE)">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"></circle>
         <line x1="12" y1="8" x2="12" y2="12"></line>
         <line x1="12" y1="16" x2="12.01" y2="16"></line>
       </svg>
-      <h2 class="card-title">Elenco Errori (ST_ERRORCODE)</h2>
-    </div>
-    <div class="gold-divider"></div>
+    </app-sempione-card-header>
 
-    <!-- ── Toolbar ── -->
-    <div class="card-toolbar">
-      <div class="toolbar-inner" [formGroup]="filterForm">
+    <div [formGroup]="filterForm">
+      <app-sempione-toolbar>
 
-        <div class="toolbar-filters">
-          <div class="toolbar-field toolbar-field--sm">
-            <dx-text-box
-              formControlName="errId"
-              placeholder="Codice errore..."
-              [showClearButton]="true"
-              valueChangeEvent="input">
-            </dx-text-box>
-          </div>
-          <div class="toolbar-field toolbar-field--lg">
-            <dx-text-box
-              formControlName="testoLike"
-              placeholder="Cerca per descrizione..."
-              [showClearButton]="true"
-              valueChangeEvent="input">
-            </dx-text-box>
-          </div>
+        <div class="toolbar-field toolbar-field--sm">
+          <dx-text-box
+            formControlName="errId"
+            placeholder="Codice errore..."
+            [showClearButton]="true"
+            valueChangeEvent="input">
+          </dx-text-box>
         </div>
 
-        <div class="toolbar-actions">
-          <dx-button
+        <div class="toolbar-field toolbar-field--lg">
+          <dx-text-box
+            formControlName="testoLike"
+            placeholder="Cerca per descrizione..."
+            [showClearButton]="true"
+            valueChangeEvent="input">
+          </dx-text-box>
+        </div>
+
+        <div toolbar-actions>
+          <app-sempione-button
             icon="search"
             hint="Cerca"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
+            variant="secondary"
             [disabled]="isLoading()"
-            (onClick)="search()">
-          </dx-button>
-          <dx-button
+            (clicked)="search()">
+          </app-sempione-button>
+          <app-sempione-button
             icon="revert"
             hint="Reset filtri"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="resetFilters()">
-          </dx-button>
-          <dx-button
+            variant="secondary"
+            (clicked)="resetFilters()">
+          </app-sempione-button>
+          <app-sempione-button
             icon="checklist"
             hint="Mostra tutti"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
+            variant="secondary"
             [disabled]="isLoading()"
-            (onClick)="showAll()">
-          </dx-button>
-          <dx-button
-            class="btn-fin-primary action-shadow"
+            (clicked)="showAll()">
+          </app-sempione-button>
+          <span class="toolbar-sep" toolbar-actions></span>
+          <app-sempione-button
             text="Nuovo"
             icon="add"
-            stylingMode="contained"
-            (onClick)="openAddPopup()">
-          </dx-button>
+            variant="primary"
+            [shadow]="true"
+            (clicked)="openAddPopup()">
+          </app-sempione-button>
         </div>
 
-      </div>
+      </app-sempione-toolbar>
     </div>
 
-    <!-- ── Griglia ── -->
+    <!-- Grid kept as raw dx-data-grid: has delete action -->
     <div class="card-body card-body--grid">
 
       @if (error()) {
@@ -113,227 +103,153 @@
           <dxo-selection mode="single"></dxo-selection>
           <dxo-paging [pageSize]="30"></dxo-paging>
           <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 30, 50, 100]" [showInfo]="true"></dxo-pager>
+          <dxo-load-panel [enabled]="false"></dxo-load-panel>
 
           <dxi-column dataField="errId"     caption="Codice"      alignment="left"   [width]="140"></dxi-column>
           <dxi-column dataField="errTyp"    caption="Tipo"        alignment="center" [width]="60"></dxi-column>
           <dxi-column dataField="errDescIt" caption="Descrizione" alignment="left"></dxi-column>
 
-          <dxi-column
-            caption="Azioni"
-            [width]="95"
-            [allowSorting]="false"
-            [allowFiltering]="false"
-            alignment="center"
-            cellTemplate="actionsTemplate">
-          </dxi-column>
+          <dxi-column caption="Azioni" [width]="90" [allowSorting]="false" [allowFiltering]="false" alignment="center" cellTemplate="actionsTemplate"></dxi-column>
 
           <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
-            <button class="action-btn action-btn--edit" title="Modifica"
-                    (click)="openEditPopup(cell.data)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-              </svg>
-            </button>
-            <button class="action-btn action-btn--delete" title="Elimina"
-                    (click)="requestDelete(cell.data)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
-                <path d="M10 11v6"></path><path d="M14 11v6"></path>
-                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
-              </svg>
-            </button>
-            <button class="action-btn action-btn--trace" title="Traccia"
-                    (click)="openTrace(cell.data)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-            </button>
+            <app-sempione-row-actions
+              [showView]="true"
+              [showEdit]="true"
+              [showTrace]="true"
+              [showDelete]="true"
+              (view)="openViewPopup(cell.data)"
+              (edit)="openEditPopup(cell.data)"
+              (trace)="openTrace(cell.data)"
+              (delete)="requestDelete(cell.data)">
+            </app-sempione-row-actions>
           </div>
-
-          <dxo-load-panel [enabled]="false"></dxo-load-panel>
 
         </dx-data-grid>
       }
 
     </div>
 
-  </section>
+  </app-sempione-card>
 
 </div>
 
-<!-- ══════════════════════════════════════
-     Popup: Aggiungi / Modifica Errore
-     ══════════════════════════════════════ -->
-<dx-popup
+<!-- ── Popup Aggiungi / Modifica / Dettaglio Errore ── -->
+<app-sempione-popup
   [(visible)]="isFormPopupVisible"
-  [showTitle]="true"
-  [title]="isEditMode() ? 'Modifica Errore' : 'Nuovo Errore'"
-  [dragEnabled]="true"
-  [hideOnOutsideClick]="false"
-  [showCloseButton]="true"
-  [width]="'90%'"
+  [title]="popupMode() === 'edit' ? 'Modifica Errore — ' + selectedErrId()
+         : popupMode() === 'view' ? 'Dettaglio Errore — ' + selectedErrId()
+         : 'Nuovo Errore'"
   [maxWidth]="700"
-  [height]="'auto'"
-  [maxHeight]="'92vh'"
-  (onHidden)="closeFormPopup()">
+  (hidden)="closeFormPopup()">
 
-  <div *dxTemplate="let data of 'content'">
-    <form [formGroup]="editForm" class="popup-layout">
+  <form [formGroup]="editForm" class="popup-layout">
 
-      <!-- ── Card 1: Codice e Descrizioni ── -->
-      <section class="popup-card">
-        <h3 class="popup-card-title">Codice e Descrizioni</h3>
-        <div class="popup-fields-grid popup-fields-grid--2col">
+    <app-sempione-popup-card title="Codice e Descrizioni">
+      <div class="popup-fields-grid popup-fields-grid--2col">
 
-          <div class="popup-field-group" [class.field-id-locked]="isEditMode()">
-            <label class="popup-field-label">Codice Errore <span class="req">*</span></label>
-            <dx-text-box
-              formControlName="errId"
-              [maxLength]="25"
-              [showClearButton]="!isEditMode()"
-              placeholder="Max 25 caratteri...">
-            </dx-text-box>
-          </div>
+        <app-sempione-field-group label="Codice Errore" [required]="true" [locked]="popupMode() !== 'new'">
+          <dx-text-box
+            formControlName="errId"
+            [maxLength]="25"
+            [showClearButton]="popupMode() === 'new'"
+            [readOnly]="popupMode() !== 'new'"
+            placeholder="Max 25 caratteri...">
+          </dx-text-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group">
-            <label class="popup-field-label">Tipo</label>
-            <dx-select-box
-              formControlName="errTyp"
-              [items]="errTypOptions"
-              displayExpr="label"
-              valueExpr="id"
-              [showClearButton]="true"
-              placeholder="Seleziona tipo...">
-            </dx-select-box>
-          </div>
+        <app-sempione-field-group label="Tipo">
+          <dx-select-box
+            formControlName="errTyp"
+            [items]="errTypOptions"
+            displayExpr="label"
+            valueExpr="id"
+            [showClearButton]="popupMode() !== 'view'"
+            [readOnly]="popupMode() === 'view'"
+            placeholder="Seleziona tipo...">
+          </dx-select-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group popup-col-span-2">
-            <label class="popup-field-label">Descrizione IT <span class="req">*</span></label>
-            <dx-text-box
-              formControlName="errDescIt"
-              [showClearButton]="true"
-              placeholder="Descrizione in italiano...">
-            </dx-text-box>
-          </div>
+        <app-sempione-field-group label="Descrizione IT" [required]="true" class="popup-col-span-2">
+          <dx-text-box
+            formControlName="errDescIt"
+            [showClearButton]="popupMode() !== 'view'"
+            [readOnly]="popupMode() === 'view'"
+            placeholder="Descrizione in italiano...">
+          </dx-text-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group">
-            <label class="popup-field-label">Descrizione EN</label>
-            <dx-text-box
-              formControlName="errDescEn"
-              [showClearButton]="true"
-              placeholder="Description in English...">
-            </dx-text-box>
-          </div>
+        <app-sempione-field-group label="Descrizione EN">
+          <dx-text-box formControlName="errDescEn" [showClearButton]="popupMode() !== 'view'" [readOnly]="popupMode() === 'view'" placeholder="Description in English..."></dx-text-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group">
-            <label class="popup-field-label">Descrizione FR</label>
-            <dx-text-box
-              formControlName="errDescFr"
-              [showClearButton]="true"
-              placeholder="Description en Français...">
-            </dx-text-box>
-          </div>
+        <app-sempione-field-group label="Descrizione FR">
+          <dx-text-box formControlName="errDescFr" [showClearButton]="popupMode() !== 'view'" [readOnly]="popupMode() === 'view'" placeholder="Description en Français..."></dx-text-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group">
-            <label class="popup-field-label">Descrizione DE</label>
-            <dx-text-box
-              formControlName="errDescDe"
-              [showClearButton]="true"
-              placeholder="Beschreibung auf Deutsch...">
-            </dx-text-box>
-          </div>
+        <app-sempione-field-group label="Descrizione DE">
+          <dx-text-box formControlName="errDescDe" [showClearButton]="popupMode() !== 'view'" [readOnly]="popupMode() === 'view'" placeholder="Beschreibung auf Deutsch..."></dx-text-box>
+        </app-sempione-field-group>
 
+      </div>
+    </app-sempione-popup-card>
+
+    <app-sempione-popup-card title="Opzioni e Soluzione">
+      <div class="popup-flags-row">
+        <div class="popup-flag-group">
+          <label class="popup-field-label">Cancellabile</label>
+          <dx-check-box formControlName="errCanFlag" [readOnly]="popupMode() === 'view'"></dx-check-box>
         </div>
-      </section>
-
-      <!-- ── Card 2: Opzioni e Soluzione ── -->
-      <section class="popup-card">
-        <h3 class="popup-card-title">Opzioni e Soluzione</h3>
-
-        <div class="popup-flags-row">
-          <div class="popup-flag-group">
-            <label class="popup-field-label">Cancellabile</label>
-            <dx-check-box formControlName="errCanFlag"></dx-check-box>
-          </div>
-          <div class="popup-flag-group">
-            <label class="popup-field-label">Confermabile</label>
-            <dx-check-box formControlName="errConFlag"></dx-check-box>
-          </div>
-          <div class="popup-flag-group popup-flag-group--accent">
-            <label class="popup-field-label">Force Code abilitato</label>
-            <dx-check-box formControlName="errForFlag"></dx-check-box>
-          </div>
+        <div class="popup-flag-group">
+          <label class="popup-field-label">Confermabile</label>
+          <dx-check-box formControlName="errConFlag" [readOnly]="popupMode() === 'view'"></dx-check-box>
         </div>
-
-        <div class="popup-fields-grid popup-fields-grid--2col" style="margin-top: 14px;">
-          <div class="popup-field-group">
-            <label class="popup-field-label">Force Code</label>
-            <dx-select-box
-              formControlName="errFocId"
-              [items]="forceCodes()"
-              displayExpr="focDes"
-              valueExpr="focId"
-              [showClearButton]="true"
-              [disabled]="!isFocIdEnabled"
-              placeholder="Seleziona force code...">
-            </dx-select-box>
-          </div>
-        </div>
-
-        <div class="popup-fields-grid popup-fields-grid--1col" style="margin-top: 12px;">
-          <div class="popup-field-group">
-            <label class="popup-field-label">Soluzione suggerita</label>
-            <dx-text-area
-              formControlName="errDesSol"
-              [height]="80"
-              placeholder="Descrizione della soluzione suggerita...">
-            </dx-text-area>
-          </div>
-        </div>
-
-        @if (saveError()) {
-          <div class="save-error-message">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-            {{ saveError() }}
-          </div>
-        }
-      </section>
-
-      <!-- ── Action Bar ── -->
-      <div class="popup-action-bar">
-        <div class="popup-actions-secondary"></div>
-        <div class="popup-actions-primary">
-          <dx-button
-            text="Annulla"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="closeFormPopup()">
-          </dx-button>
-          <dx-button
-            [text]="isEditMode() ? 'Aggiorna' : 'Inserisci'"
-            icon="save"
-            stylingMode="contained"
-            class="btn-fin-primary"
-            [disabled]="isSaving()"
-            (onClick)="save()">
-          </dx-button>
+        <div class="popup-flag-group popup-flag-group--accent">
+          <label class="popup-field-label">Force Code abilitato</label>
+          <dx-check-box formControlName="errForFlag" [readOnly]="popupMode() === 'view'"></dx-check-box>
         </div>
       </div>
 
-    </form>
-  </div>
-</dx-popup>
+      <div class="popup-fields-grid popup-fields-grid--2col" style="margin-top: 14px;">
+        <app-sempione-field-group label="Force Code">
+          <dx-select-box
+            formControlName="errFocId"
+            [items]="forceCodes()"
+            displayExpr="focDes"
+            valueExpr="focId"
+            [showClearButton]="popupMode() !== 'view'"
+            [readOnly]="popupMode() === 'view'"
+            [disabled]="!isFocIdEnabled"
+            placeholder="Seleziona force code...">
+          </dx-select-box>
+        </app-sempione-field-group>
+      </div>
 
-<!-- ══════════════════════════════════════
-     Popup: Conferma Eliminazione
-     ══════════════════════════════════════ -->
+      <div class="popup-fields-grid popup-fields-grid--1col" style="margin-top: 12px;">
+        <app-sempione-field-group label="Soluzione suggerita">
+          <dx-text-area formControlName="errDesSol" [height]="80" [readOnly]="popupMode() === 'view'" placeholder="Descrizione della soluzione suggerita..."></dx-text-area>
+        </app-sempione-field-group>
+      </div>
+
+      <app-sempione-alert [message]="saveError()"></app-sempione-alert>
+    </app-sempione-popup-card>
+
+    <app-sempione-popup-action-bar
+      [cancelText]="popupMode() === 'new' ? 'Annulla' : 'Chiudi'"
+      [saveText]="popupMode() === 'edit' ? 'Aggiorna' : 'Inserisci'"
+      [showSave]="popupMode() !== 'view'"
+      [isSaving]="isSaving()"
+      (save)="save()"
+      (cancel)="closeFormPopup()">
+      @if (popupMode() !== 'new') {
+        <app-sempione-button secondary-actions text="Storico" icon="clock" variant="secondary" (clicked)="openTrace($any({errId: selectedErrId()}))"></app-sempione-button>
+      }
+    </app-sempione-popup-action-bar>
+
+  </form>
+
+</app-sempione-popup>
+
+<!-- ── Popup Conferma Eliminazione ── -->
 <dx-popup
   [(visible)]="isConfirmDeleteVisible"
   [showTitle]="false"

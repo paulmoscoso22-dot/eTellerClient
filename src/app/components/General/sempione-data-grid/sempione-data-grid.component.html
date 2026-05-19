@@ -1,0 +1,100 @@
+<div class="grid-host">
+
+  @if (error) {
+    <div class="grid-message grid-message--error">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      {{ error }}
+    </div>
+  }
+
+  @if (isLoading) {
+    <div class="grid-message grid-message--loading">
+      <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+      </svg>
+      Caricamento in corso...
+    </div>
+  }
+
+  @if (!isLoading && !error) {
+    <dx-data-grid
+      [dataSource]="dataSource"
+      [keyExpr]="keyExpr || undefined"
+      [showBorders]="false"
+      [columnAutoWidth]="true"
+      [rowAlternationEnabled]="true"
+      [hoverStateEnabled]="true"
+      [height]="'100%'"
+      [noDataText]="noDataText"
+      (onSelectionChanged)="selectionChanged.emit($event)">
+
+      <dxo-selection mode="single"></dxo-selection>
+      <dxo-paging [pageSize]="pageSize"></dxo-paging>
+      <dxo-pager
+        [showPageSizeSelector]="true"
+        [allowedPageSizes]="allowedPageSizes"
+        [showInfo]="true">
+      </dxo-pager>
+      <dxo-load-panel [enabled]="false"></dxo-load-panel>
+
+      @for (col of columns; track col.dataField) {
+        @if (col.type === 'status') {
+          <dxi-column
+            [dataField]="col.dataField"
+            [caption]="col.caption"
+            [width]="col.width"
+            [allowSorting]="col.allowSorting ?? true"
+            cellTemplate="statusCell"
+            alignment="center">
+          </dxi-column>
+        } @else {
+          <dxi-column
+            [dataField]="col.dataField"
+            [caption]="col.caption"
+            [width]="col.width"
+            [alignment]="col.alignment ?? 'left'"
+            [allowSorting]="col.allowSorting ?? true"
+            [dataType]="col.dataType"
+            [format]="col.format">
+          </dxi-column>
+        }
+      }
+
+      <div *dxTemplate="let cell of 'statusCell'">
+        <span [class]="cell.value?.toLowerCase() === 'a'
+          ? 'status-pill status-pill--active'
+          : 'status-pill status-pill--inactive'">
+          {{ cell.value?.toLowerCase() === 'a' ? 'Attivo' : 'Inattivo' }}
+        </span>
+      </div>
+
+      @if (showViewAction || showEditAction || showTraceAction) {
+        <dxi-column
+          caption="Azioni"
+          [width]="actionsColumnWidth"
+          [allowSorting]="false"
+          [allowFiltering]="false"
+          alignment="center"
+          cellTemplate="rowActionsTemplate">
+        </dxi-column>
+
+        <div *dxTemplate="let cell of 'rowActionsTemplate'" class="actions-cell">
+          <app-sempione-row-actions
+            [showView]="showViewAction"
+            [showEdit]="showEditAction"
+            [showTrace]="showTraceAction"
+            (view)="rowView.emit(cell.data)"
+            (edit)="rowEdit.emit(cell.data)"
+            (trace)="rowTrace.emit(cell.data)">
+          </app-sempione-row-actions>
+        </div>
+      }
+
+    </dx-data-grid>
+  }
+
+</div>

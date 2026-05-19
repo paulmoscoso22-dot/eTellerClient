@@ -1,14 +1,10 @@
 <div class="page-shell">
 
-  <!-- ── Titolo pagina ── -->
-  <div class="page-header-row">
-    <h1 class="page-title">Funzioni Tracce</h1>
-  </div>
+  <app-sempione-page-header title="Funzioni Tracce"></app-sempione-page-header>
 
-  <!-- ── Card Main ── -->
-  <section class="card-section">
+  <app-sempione-card>
 
-    <div class="sempione-card-header">
+    <app-sempione-card-header title="Elenco Funzioni Tracce (ST_TRACE_FUNCTION)">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
         <polyline points="14 2 14 8 20 8"></polyline>
@@ -16,224 +12,119 @@
         <line x1="16" y1="17" x2="8" y2="17"></line>
         <polyline points="10 9 9 9 8 9"></polyline>
       </svg>
-      <h2 class="card-title">Elenco Funzioni Tracce (ST_TRACE_FUNCTION)</h2>
-    </div>
-    <div class="gold-divider"></div>
+    </app-sempione-card-header>
 
-    <!-- ── Toolbar ── -->
-    <div class="card-toolbar">
-      <div class="toolbar-inner" [formGroup]="filterForm">
+    <div [formGroup]="filterForm">
+      <app-sempione-toolbar>
 
-        <div class="toolbar-filters">
-          <div class="toolbar-field toolbar-field--sm">
-            <dx-text-box
-              formControlName="id"
-              placeholder="Codice..."
-              [showClearButton]="true"
-              valueChangeEvent="input">
-            </dx-text-box>
-          </div>
-          <div class="toolbar-field toolbar-field--lg">
-            <dx-text-box
-              formControlName="desLike"
-              placeholder="Cerca per descrizione..."
-              [showClearButton]="true"
-              valueChangeEvent="input">
-            </dx-text-box>
-          </div>
+        <div class="toolbar-field toolbar-field--sm">
+          <dx-text-box
+            formControlName="id"
+            placeholder="Codice..."
+            [showClearButton]="true"
+            valueChangeEvent="input">
+          </dx-text-box>
         </div>
 
-        <div class="toolbar-actions">
-          <dx-button
+        <div class="toolbar-field toolbar-field--lg">
+          <dx-text-box
+            formControlName="desLike"
+            placeholder="Cerca per descrizione..."
+            [showClearButton]="true"
+            valueChangeEvent="input">
+          </dx-text-box>
+        </div>
+
+        <div toolbar-actions>
+          <app-sempione-button
             icon="search"
             hint="Cerca"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
+            variant="secondary"
             [disabled]="isLoading()"
-            (onClick)="search()">
-          </dx-button>
-          <dx-button
+            (clicked)="search()">
+          </app-sempione-button>
+          <app-sempione-button
             icon="revert"
             hint="Reset filtri"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="resetFilters()">
-          </dx-button>
-          <dx-button
+            variant="secondary"
+            (clicked)="resetFilters()">
+          </app-sempione-button>
+          <app-sempione-button
             icon="checklist"
             hint="Mostra tutti"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
+            variant="secondary"
             [disabled]="isLoading()"
-            (onClick)="showAll()">
-          </dx-button>
-          <dx-button
-            class="btn-fin-primary action-shadow"
+            (clicked)="showAll()">
+          </app-sempione-button>
+          <span class="toolbar-sep" toolbar-actions></span>
+          <app-sempione-button
             text="Nuovo"
             icon="add"
-            stylingMode="contained"
-            (onClick)="openAddPopup()">
-          </dx-button>
+            variant="primary"
+            [shadow]="true"
+            (clicked)="openAddPopup()">
+          </app-sempione-button>
         </div>
 
-      </div>
+      </app-sempione-toolbar>
     </div>
 
-    <!-- ── Griglia ── -->
-    <div class="card-body card-body--grid">
+    <app-sempione-data-grid
+      [dataSource]="items()"
+      [columns]="gridColumns"
+      [isLoading]="isLoading()"
+      [error]="error()"
+      [showEditAction]="true"
+      [showTraceAction]="true"
+      noDataText="Nessun risultato trovato."
+      (rowEdit)="openEditPopup($event)"
+      (rowTrace)="openTrace($event)">
+    </app-sempione-data-grid>
 
-      @if (error()) {
-        <div class="grid-message grid-message--error">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
-          {{ error() }}
-        </div>
-      }
-
-      @if (isLoading()) {
-        <div class="grid-message grid-message--loading">
-          <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-          </svg>
-          Caricamento in corso...
-        </div>
-      }
-
-      @if (!isLoading() && !error()) {
-        <dx-data-grid
-          [dataSource]="items()"
-          [showBorders]="false"
-          [columnAutoWidth]="true"
-          [rowAlternationEnabled]="true"
-          [hoverStateEnabled]="true"
-          [height]="'100%'"
-          noDataText="Nessun risultato trovato.">
-
-          <dxo-selection mode="single"></dxo-selection>
-          <dxo-paging [pageSize]="30"></dxo-paging>
-          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 30, 50, 100]" [showInfo]="true"></dxo-pager>
-
-          <dxi-column dataField="id"  caption="Codice"      alignment="left" [width]="140"></dxi-column>
-          <dxi-column dataField="des" caption="Descrizione" alignment="left"></dxi-column>
-
-          <dxi-column
-            caption="Azioni"
-            [width]="70"
-            [allowSorting]="false"
-            [allowFiltering]="false"
-            alignment="center"
-            cellTemplate="actionsTemplate">
-          </dxi-column>
-
-          <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
-            <button class="action-btn action-btn--edit" title="Modifica"
-                    (click)="openEditPopup(cell.data)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-              </svg>
-            </button>
-            <button class="action-btn action-btn--trace" title="Traccia"
-                    (click)="openTrace(cell.data)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-            </button>
-          </div>
-
-          <dxo-load-panel [enabled]="false"></dxo-load-panel>
-
-        </dx-data-grid>
-      }
-
-    </div>
-
-  </section>
+  </app-sempione-card>
 
 </div>
 
-<!-- ══════════════════════════════════════
-     Popup: Aggiungi / Modifica
-     ══════════════════════════════════════ -->
-<dx-popup
+<!-- ── Popup Aggiungi / Modifica ── -->
+<app-sempione-popup
   [(visible)]="isFormPopupVisible"
-  [showTitle]="true"
   [title]="isEditMode() ? 'Modifica Funzione Traccia' : 'Nuova Funzione Traccia'"
-  [dragEnabled]="true"
-  [hideOnOutsideClick]="false"
-  [showCloseButton]="true"
-  [width]="'90%'"
   [maxWidth]="500"
-  [height]="'auto'"
-  [maxHeight]="'92vh'"
-  (onHidden)="closeFormPopup()">
+  (hidden)="closeFormPopup()">
 
-  <div *dxTemplate="let data of 'content'">
-    <form [formGroup]="editForm" class="popup-layout">
+  <div [formGroup]="editForm" class="popup-layout">
 
-      <!-- ── Card: Dati ── -->
-      <section class="popup-card">
-        <h3 class="popup-card-title">Dati funzione traccia</h3>
-        <div class="popup-fields-grid popup-fields-grid--1col">
+    <app-sempione-popup-card title="Dati funzione traccia">
+      <div class="popup-fields-grid popup-fields-grid--1col">
 
-          <div class="popup-field-group" [class.field-id-locked]="isEditMode()">
-            <label class="popup-field-label">Codice <span class="req">*</span></label>
-            <dx-text-box
-              formControlName="id"
-              [maxLength]="5"
-              [showClearButton]="!isEditMode()"
-              placeholder="Max 5 caratteri...">
-            </dx-text-box>
-          </div>
+        <app-sempione-field-group label="Codice" [required]="true" [locked]="isEditMode()">
+          <dx-text-box
+            formControlName="id"
+            [maxLength]="5"
+            [showClearButton]="!isEditMode()"
+            placeholder="Max 5 caratteri...">
+          </dx-text-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group">
-            <label class="popup-field-label">Descrizione <span class="req">*</span></label>
-            <dx-text-box
-              formControlName="des"
-              [showClearButton]="true"
-              placeholder="Inserire descrizione...">
-            </dx-text-box>
-          </div>
+        <app-sempione-field-group label="Descrizione" [required]="true">
+          <dx-text-box
+            formControlName="des"
+            [showClearButton]="true"
+            placeholder="Inserire descrizione...">
+          </dx-text-box>
+        </app-sempione-field-group>
 
-        </div>
-
-        @if (saveError()) {
-          <div class="save-error-message">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-            {{ saveError() }}
-          </div>
-        }
-      </section>
-
-      <!-- ── Action Bar ── -->
-      <div class="popup-action-bar">
-        <div class="popup-actions-secondary"></div>
-        <div class="popup-actions-primary">
-          <dx-button
-            text="Annulla"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="closeFormPopup()">
-          </dx-button>
-          <dx-button
-            [text]="isEditMode() ? 'Aggiorna' : 'Inserisci'"
-            icon="save"
-            stylingMode="contained"
-            class="btn-fin-primary"
-            [disabled]="isSaving()"
-            (onClick)="save()">
-          </dx-button>
-        </div>
       </div>
+      <app-sempione-alert [message]="saveError()"></app-sempione-alert>
+    </app-sempione-popup-card>
 
-    </form>
+    <app-sempione-popup-action-bar
+      [saveText]="isEditMode() ? 'Aggiorna' : 'Inserisci'"
+      [isSaving]="isSaving()"
+      (save)="save()"
+      (cancel)="closeFormPopup()">
+    </app-sempione-popup-action-bar>
+
   </div>
-</dx-popup>
+
+</app-sempione-popup>

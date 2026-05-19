@@ -2,16 +2,25 @@ import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  DxDataGridModule,
-  DxTextBoxModule,
-  DxButtonModule,
-  DxPopupModule,
-} from 'devextreme-angular';
+import { DxTextBoxModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import notify from 'devextreme/ui/notify';
 import { FunzioniTraccieService } from '../../services/funzioni-traccie.service';
 import { IFunzioniTraccieItemResponse, IFunzioniTraccieUpsertRequest } from '../../models/funzioni-traccie.models';
+import {
+  SempionePageHeaderComponent,
+  SempioneCardComponent,
+  SempioneCardHeaderComponent,
+  SempioneToolbarComponent,
+  SempioneDataGridComponent,
+  SempioneGridColumn,
+  SempionePopupComponent,
+  SempionePopupCardComponent,
+  SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+  SempioneButtonComponent,
+  SempioneAlertComponent,
+} from '../../../../../components/General';
 
 const NOME_TABELLA = 'ST_TRACE_FUNCTION';
 
@@ -21,10 +30,18 @@ const NOME_TABELLA = 'ST_TRACE_FUNCTION';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DxDataGridModule,
     DxTextBoxModule,
-    DxButtonModule,
-    DxPopupModule,
+    SempionePageHeaderComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
+    SempioneToolbarComponent,
+    SempioneDataGridComponent,
+    SempionePopupComponent,
+    SempionePopupCardComponent,
+    SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
+    SempioneButtonComponent,
+    SempioneAlertComponent,
   ],
   templateUrl: './funzioni-traccie.component.html',
   styleUrls: ['./funzioni-traccie.component.css'],
@@ -39,19 +56,23 @@ export class FunzioniTraccieComponent implements OnInit {
   isLoading = signal(false);
   error = signal<string | null>(null);
 
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'id',  caption: 'Codice',       alignment: 'left', width: 140 },
+    { dataField: 'des', caption: 'Descrizione',   alignment: 'left' },
+  ];
+
   filterForm: FormGroup = this.fb.group({
     id: [null],
     desLike: [null],
   });
 
-  // ── Form popup ──
   isFormPopupVisible = false;
   isEditMode = signal(false);
   isSaving = signal(false);
   saveError = signal<string | null>(null);
 
   editForm: FormGroup = this.fb.group({
-    id: ['', [Validators.required, Validators.maxLength(5)]],
+    id:  ['', [Validators.required, Validators.maxLength(5)]],
     des: ['', Validators.required],
   });
 
@@ -64,15 +85,11 @@ export class FunzioniTraccieComponent implements OnInit {
   private loadAll(): void {
     this.isLoading.set(true);
     this.error.set(null);
-
     this.funzioniTraccieService.getAll(null, null)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => { this.items.set(data); this.isLoading.set(false); },
-        error: (err: any) => {
-          this.error.set(err.message || 'Errore nel recupero dei dati');
-          this.isLoading.set(false);
-        }
+        error: (err: any) => { this.error.set(err.message || 'Errore nel recupero dei dati'); this.isLoading.set(false); },
       });
   }
 
@@ -80,15 +97,11 @@ export class FunzioniTraccieComponent implements OnInit {
     const { id, desLike } = this.filterForm.value;
     this.isLoading.set(true);
     this.error.set(null);
-
     this.funzioniTraccieService.getAll(id ?? null, desLike ?? null)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => { this.items.set(data); this.isLoading.set(false); },
-        error: (err: any) => {
-          this.error.set(err.message || 'Errore nel recupero dei dati');
-          this.isLoading.set(false);
-        }
+        error: (err: any) => { this.error.set(err.message || 'Errore nel recupero dei dati'); this.isLoading.set(false); },
       });
   }
 
@@ -125,7 +138,6 @@ export class FunzioniTraccieComponent implements OnInit {
 
   save(): void {
     if (!this.validateSaveForm()) return;
-
     const payload = this.buildPayload();
     const isEdit = this.isEditMode();
 
@@ -161,24 +173,14 @@ export class FunzioniTraccieComponent implements OnInit {
 
   private buildPayload(): IFunzioniTraccieUpsertRequest {
     const v = this.editForm.getRawValue();
-    return {
-      nomeTabella: NOME_TABELLA,
-      id: v.id.trim(),
-      des: v.des.trim(),
-    };
+    return { nomeTabella: NOME_TABELLA, id: v.id.trim(), des: v.des.trim() };
   }
 
   private handleSaveResult(result: boolean, isEdit: boolean, id: string): void {
     this.isSaving.set(false);
     if (result) {
       this.isFormPopupVisible = false;
-      notify(
-        isEdit
-          ? `Funzione traccia "${id}" aggiornata con successo`
-          : `Funzione traccia "${id}" inserita con successo`,
-        'success',
-        3000
-      );
+      notify(isEdit ? `Funzione traccia "${id}" aggiornata` : `Funzione traccia "${id}" inserita`, 'success', 3000);
       this.loadAll();
     } else {
       const msg = 'Operazione non riuscita. Il codice potrebbe essere già presente.';
@@ -196,10 +198,7 @@ export class FunzioniTraccieComponent implements OnInit {
 
   openTrace(item: IFunzioniTraccieItemResponse): void {
     this.router.navigate(['/trace'], {
-      queryParams: {
-        ENTNAME: NOME_TABELLA,
-        traEntCode: item.id,
-      }
+      queryParams: { traTabNam: NOME_TABELLA, traEntCode: item.id },
     });
   }
 }

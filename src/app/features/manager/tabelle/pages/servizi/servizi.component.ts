@@ -3,13 +3,25 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule,
-  DxPopupModule, DxTextAreaModule, DxValidatorModule, DxDropDownButtonModule
+  DxDataGridModule, DxTextBoxModule, DxCheckBoxModule,
+  DxTextAreaModule, DxValidatorModule,
 } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TabelleService } from '../../services/tabelle.service';
 import { IServiziResponse } from '../../models/Servizi.models';
+import {
+  SempionePageHeaderComponent,
+  SempioneCardComponent,
+  SempioneCardHeaderComponent,
+  SempioneToolbarComponent,
+  SempionePopupComponent,
+  SempionePopupCardComponent,
+  SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+  SempioneButtonComponent,
+  SempioneRowActionsComponent,
+} from '../../../../../components/General';
 
 const TRACE_TABLE = 'SERVIZI';
 
@@ -19,7 +31,17 @@ const TRACE_TABLE = 'SERVIZI';
   imports: [
     CommonModule, ReactiveFormsModule,
     DxDataGridModule, DxTextBoxModule, DxCheckBoxModule,
-    DxButtonModule, DxPopupModule, DxTextAreaModule, DxValidatorModule, DxDropDownButtonModule
+    DxTextAreaModule, DxValidatorModule,
+    SempionePageHeaderComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
+    SempioneToolbarComponent,
+    SempionePopupComponent,
+    SempionePopupCardComponent,
+    SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
+    SempioneButtonComponent,
+    SempioneRowActionsComponent,
   ],
   templateUrl: './servizi.component.html',
   styleUrls: ['./servizi.component.css'],
@@ -173,13 +195,13 @@ export class ServiziComponent implements OnInit {
     const id = this.selectedSerId();
     this.closePopup();
     this.router.navigate(['/trace'], {
-      queryParams: { ENTNAME: TRACE_TABLE, traEntCode: id },
+      queryParams: { traTabNam: TRACE_TABLE, traEntCode: id },
     });
   }
 
   onTraceFromRow(data: IServiziResponse): void {
     this.router.navigate(['/trace'], {
-      queryParams: { ENTNAME: TRACE_TABLE, traEntCode: data.serId },
+      queryParams: { traTabNam: TRACE_TABLE, traEntCode: data.serId },
     });
   }
 

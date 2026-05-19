@@ -1,3 +1,101 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Sempione Design System — Global tokens
+// Brand navy: #003366  |  Gold: #C5A059  |  Text primary: #1e293b
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Sempione button variants (usati da SempioneButtonComponent + pagine)
+// PRIMARY: navy solid — CTA principale
+.btn-fin-primary.dx-button {
+  background-color: #003366 !important;
+  border-color:     #003366 !important;
+  border-radius: 6px;
+
+  .dx-button-text, .dx-icon { color: #fff !important; }
+
+  &:hover, &.dx-state-hover {
+    background-color: #004080 !important;
+    border-color:     #004080 !important;
+  }
+}
+
+// SECONDARY: outline neutro — azioni secondarie
+.btn-fin-secondary.dx-button {
+  background-color: transparent !important;
+  border-color: #cbd5e1 !important;
+  border-radius: 6px;
+
+  .dx-button-text, .dx-icon { color: #1e293b !important; }
+
+  &:hover, &.dx-state-hover {
+    border-color: #94a3b8 !important;
+    background-color: rgba(15, 23, 42, 0.04) !important;
+  }
+}
+
+// GOLD: outline oro — azioni speciali (es. Aggiungi)
+.btn-fin-gold.dx-button {
+  background-color: transparent !important;
+  border-color: #C5A059 !important;
+  border-radius: 6px;
+
+  .dx-button-text, .dx-icon { color: #8a6d22 !important; }
+
+  &:hover, &.dx-state-hover {
+    border-color: #a8882e !important;
+    background-color: rgba(197, 160, 89, 0.08) !important;
+  }
+}
+
+// SHADOW: elevazione per il bottone CTA principale in toolbar
+.btn-fin-shadow.dx-button {
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.18) !important;
+
+  &:hover, &.dx-state-hover {
+    box-shadow: 0 6px 16px rgba(0, 51, 102, 0.24) !important;
+  }
+}
+
+// ── Toolbar: altezza uniforme 28px per tutti gli input dentro .card-toolbar
+// (stili globali necessari perché il contenuto è proiettato via ng-content)
+.card-toolbar {
+  .dx-texteditor,
+  .dx-dropdowneditor { height: 28px; border-radius: 6px; }
+
+  .dx-texteditor-input {
+    min-height: unset;
+    height: 26px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-size: 13px;
+  }
+
+  .dx-texteditor-buttons-container { height: 26px; }
+  .dx-button { height: 28px; }
+
+  .dx-texteditor.dx-state-focused {
+    border-color: #003366 !important;
+    box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.08) !important;
+  }
+}
+
+// ── Popup layout: contenitore flex colonna usato dentro i popup
+.popup-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ── Popup fields grid utilities
+.popup-fields-grid        { display: grid; gap: 12px; }
+.popup-fields-grid--1col  { grid-template-columns: 1fr; }
+.popup-fields-grid--2col  { grid-template-columns: 1fr 1fr; }
+.popup-fields-grid--3col  { grid-template-columns: 1fr 1fr 1fr; }
+
+// ── Toolbar field helpers
+.toolbar-field         { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.toolbar-field--sm     { flex: 0 0 140px; }
+.toolbar-field--lg     { flex: 2; }
+
 /* DevExtreme default theme - will be replaced dynamically by ThemeService */
 @import 'devextreme/dist/css/dx.fluent.blue.light.compact.css';
 

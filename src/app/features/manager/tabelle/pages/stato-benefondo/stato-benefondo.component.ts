@@ -2,17 +2,24 @@ import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  DxDataGridModule,
-  DxTextBoxModule,
-  DxNumberBoxModule,
-  DxButtonModule,
-  DxPopupModule,
-  DxValidatorModule,
-} from 'devextreme-angular';
+import { DxTextBoxModule, DxNumberBoxModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import notify from 'devextreme/ui/notify';
 import { TabellaIntService, TabellaIntItem } from '../../services/tabella-int.service';
+import {
+  SempionePageHeaderComponent,
+  SempioneCardComponent,
+  SempioneCardHeaderComponent,
+  SempioneToolbarComponent,
+  SempioneDataGridComponent,
+  SempioneGridColumn,
+  SempionePopupComponent,
+  SempionePopupCardComponent,
+  SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+  SempioneButtonComponent,
+  SempioneAlertComponent,
+} from '../../../../../components/General';
 
 const TABLE = 'ST_BEFSTATUS';
 
@@ -22,12 +29,19 @@ const TABLE = 'ST_BEFSTATUS';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DxDataGridModule,
     DxTextBoxModule,
     DxNumberBoxModule,
-    DxButtonModule,
-    DxPopupModule,
-    DxValidatorModule,
+    SempionePageHeaderComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
+    SempioneToolbarComponent,
+    SempioneDataGridComponent,
+    SempionePopupComponent,
+    SempionePopupCardComponent,
+    SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
+    SempioneButtonComponent,
+    SempioneAlertComponent,
   ],
   templateUrl: './stato-benefondo.component.html',
   styleUrls: ['./stato-benefondo.component.css'],
@@ -41,12 +55,17 @@ export class StatoBenefondoComponent implements OnInit {
   items = signal<TabellaIntItem[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
-  
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'id',  caption: 'ID',          alignment: 'left', width: 100 },
+    { dataField: 'des', caption: 'Descrizione',  alignment: 'left' },
+  ];
+
   filterForm: FormGroup = this.fb.group({
     id: [null],
     des: [null],
   });
-  
+
   // ── Form popup ──
   isFormPopupVisible = false;
   popupMode = signal<'new' | 'view' | 'edit'>('new');
@@ -118,8 +137,9 @@ export class StatoBenefondoComponent implements OnInit {
     this.isFormPopupVisible = false;
   }
 
-  onTrace(): void {
-    const id = this.editForm.get('id')?.value;
+  onTrace(item?: TabellaIntItem): void {
+    const id = item?.id ?? this.editForm.get('id')?.value;
+    if (!item) this.isFormPopupVisible = false;
     this.router.navigate(['/trace'], {
       queryParams: { traTabNam: TABLE, traEntCode: id },
     });

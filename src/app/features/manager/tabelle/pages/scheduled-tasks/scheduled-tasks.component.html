@@ -1,71 +1,45 @@
 <div class="page-shell">
 
-  <!-- ── Titolo pagina ── -->
-  <div class="page-header-row">
-    <h1 class="page-title">Gestione Scheduled Tasks</h1>
-  </div>
+  <app-sempione-page-header title="Gestione Scheduled Tasks"></app-sempione-page-header>
 
-  <!-- ── Card Main ── -->
-  <section class="card-section">
+  <app-sempione-card>
 
-    <div class="sempione-card-header">
+    <app-sempione-card-header title="Elenco Scheduled Task">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"></circle>
         <polyline points="12 6 12 12 16 14"></polyline>
       </svg>
-      <h2 class="card-title">Elenco Scheduled Task</h2>
-    </div>
-    <div class="gold-divider"></div>
+    </app-sempione-card-header>
 
-    <!-- Toolbar -->
-    <div class="card-toolbar">
-      <div class="toolbar-inner">
-
-        <div class="toolbar-filters">
-          <div class="toolbar-field toolbar-field--lg">
-            <dx-text-box
-              [value]="searchValue()"
-              placeholder="Cerca per ID, nome o descrizione..."
-              [showClearButton]="true"
-              valueChangeEvent="input"
-              (onValueChanged)="onSearchChanged($event)">
-            </dx-text-box>
-          </div>
-        </div>
-
-        <div class="toolbar-actions">
-          <dx-button
-            icon="search"
-            hint="Cerca"
-            stylingMode="outlined"
-            class="btn-fin-secondary">
-          </dx-button>
-          <dx-button
-            icon="revert"
-            hint="Ripristina ricerca"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="onSearchChanged({value: ''})">
-          </dx-button>
-          <dx-button
-            icon="refresh"
-            hint="Aggiorna"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="onRefresh()">
-          </dx-button>
-          <dx-button
-            class="btn-fin-primary action-shadow"
-            text="Nuovo Task"
-            stylingMode="contained"
-            (onClick)="openNewPopup()">
-          </dx-button>
-        </div>
-
+    <app-sempione-toolbar>
+      <div class="toolbar-field toolbar-field--lg">
+        <dx-text-box
+          [value]="searchValue()"
+          placeholder="Cerca per ID, nome o descrizione..."
+          [showClearButton]="true"
+          valueChangeEvent="input"
+          (onValueChanged)="onSearchChanged($event)">
+        </dx-text-box>
       </div>
-    </div>
+      <div toolbar-actions>
+        <app-sempione-button
+          icon="refresh"
+          hint="Aggiorna"
+          variant="secondary"
+          (clicked)="onRefresh()">
+        </app-sempione-button>
+        <span class="toolbar-sep" toolbar-actions></span>
+        <app-sempione-button
+          text="Nuovo Task"
+          icon="add"
+          variant="primary"
+          [shadow]="true"
+          (clicked)="openNewPopup()">
+        </app-sempione-button>
+      </div>
+    </app-sempione-toolbar>
 
-    <!-- Griglia tasks -->
+    <!-- Grid kept as raw dx-data-grid: has bool/periodo/err cell templates -->
     <div class="card-body card-body--grid">
       <dx-data-grid
         [dataSource]="filteredTasks()"
@@ -74,34 +48,35 @@
         [rowAlternationEnabled]="true"
         [hoverStateEnabled]="true"
         [height]="'100%'"
-        keyExpr="futId">
+        keyExpr="futId"
+        noDataText="Nessun task trovato.">
 
         <dxo-selection mode="single"></dxo-selection>
         <dxo-paging [pageSize]="15"></dxo-paging>
         <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[15, 25, 50]" [showInfo]="true"></dxo-pager>
+        <dxo-load-panel [enabled]="false"></dxo-load-panel>
 
-        <dxi-column dataField="futId"        caption="ID"       [width]="110" alignment="left"></dxi-column>
-        <dxi-column dataField="futFunname"   caption="Nome"                   alignment="left"></dxi-column>
-        <dxi-column dataField="futScriptname" caption="Script"  [width]="180" alignment="left"></dxi-column>
-        <dxi-column dataField="futTimeout"   caption="Timeout"  [width]="80"  alignment="right"></dxi-column>
-        <dxi-column dataField="futActive"    caption="Attiva"   [width]="80"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
-        <dxi-column dataField="futAutatt"    caption="Auto"     [width]="70"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
-        <dxi-column dataField="futTrace"     caption="Traccia"  [width]="80"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
-        <dxi-column dataField="futOffline"   caption="Offline"  [width]="78"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
-        <dxi-column                          caption="Periodo"  [width]="120" alignment="left"   [allowSorting]="false" [allowFiltering]="false" cellTemplate="periodoTemplate"></dxi-column>
-        <dxi-column dataField="futLastrun"   caption="Ultimo"   [width]="140" alignment="left"></dxi-column>
-        <dxi-column dataField="futErrcount"  caption="Err."     [width]="60"  alignment="center" cellTemplate="errTemplate"></dxi-column>
+        <dxi-column dataField="futId"         caption="ID"       [width]="110" alignment="left"></dxi-column>
+        <dxi-column dataField="futFunname"    caption="Nome"                   alignment="left"></dxi-column>
+        <dxi-column dataField="futScriptname" caption="Script"   [width]="180" alignment="left"></dxi-column>
+        <dxi-column dataField="futTimeout"    caption="Timeout"  [width]="80"  alignment="right"></dxi-column>
+        <dxi-column dataField="futActive"     caption="Attiva"   [width]="80"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
+        <dxi-column dataField="futAutatt"     caption="Auto"     [width]="70"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
+        <dxi-column dataField="futTrace"      caption="Traccia"  [width]="80"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
+        <dxi-column dataField="futOffline"    caption="Offline"  [width]="78"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
+        <dxi-column                           caption="Periodo"  [width]="120" alignment="left"   [allowSorting]="false" [allowFiltering]="false" cellTemplate="periodoTemplate"></dxi-column>
+        <dxi-column dataField="futLastrun"    caption="Ultimo"   [width]="140" alignment="left"></dxi-column>
+        <dxi-column dataField="futErrcount"   caption="Err."     [width]="60"  alignment="center" cellTemplate="errTemplate"></dxi-column>
 
         <dxi-column
           caption="Azioni"
-          [width]="95"
+          [width]="90"
           [allowSorting]="false"
           [allowFiltering]="false"
           alignment="center"
           cellTemplate="actionsTemplate">
         </dxi-column>
 
-        <!-- Bool pill template -->
         <div *dxTemplate="let cell of 'boolTemplate'" class="bool-cell">
           @if (cell.value) {
             <span class="bool-pill bool-pill--yes">✓</span>
@@ -110,12 +85,10 @@
           }
         </div>
 
-        <!-- Periodo template -->
         <div *dxTemplate="let cell of 'periodoTemplate'" class="text-cell">
           {{ getPeriodLabel(cell.data) }}
         </div>
 
-        <!-- Errori template -->
         <div *dxTemplate="let cell of 'errTemplate'" class="err-cell">
           @if (cell.value > 0) {
             <span class="err-pill">{{ cell.value }}</span>
@@ -124,271 +97,176 @@
           }
         </div>
 
-        <!-- Azioni template -->
         <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
-          <button class="action-btn action-btn--view" title="Visualizza" (click)="onTableAction('view', cell.data)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
-          </button>
-          <button class="action-btn action-btn--edit" title="Modifica" (click)="onTableAction('edit', cell.data)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-            </svg>
-          </button>
-          <details class="action-more">
-            <summary class="action-more-trigger" title="Altre azioni">
-              <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" width="13" height="13">
-                <circle cx="12" cy="5" r="1.8"></circle>
-                <circle cx="12" cy="12" r="1.8"></circle>
-                <circle cx="12" cy="19" r="1.8"></circle>
-              </svg>
-            </summary>
-            <div class="action-more-menu">
-              <button class="action-more-item" (click)="onTraceFromRow(cell.data)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">
-                  <path d="M3 3v5h5"></path>
-                  <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"></path>
-                  <polyline points="12 7 12 12 15 15"></polyline>
-                </svg>
-                Storico (Traccia)
-              </button>
-              <button class="action-more-item action-more-item--danger" (click)="onTableAction('delete', cell.data)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6l-1 14H6L5 6"></path>
-                  <path d="M10 11v6M14 11v6"></path>
-                  <path d="M9 6V4h6v2"></path>
-                </svg>
-                Elimina
-              </button>
-            </div>
-          </details>
+          <app-sempione-row-actions
+            [showView]="true"
+            [showEdit]="true"
+            [showTrace]="true"
+            [showDelete]="true"
+            (view)="onTableAction('view', cell.data)"
+            (edit)="onTableAction('edit', cell.data)"
+            (trace)="onTraceFromRow(cell.data)"
+            (delete)="onTableAction('delete', cell.data)">
+          </app-sempione-row-actions>
         </div>
 
       </dx-data-grid>
     </div>
 
-  </section>
+  </app-sempione-card>
 
 </div>
 
 <!-- ── Popup Dettaglio Task ── -->
-<dx-popup
+<app-sempione-popup
   [(visible)]="isDetailPopupVisible"
-  [showTitle]="true"
   [title]="popupMode() === 'edit' ? 'Modifica Task — ' + selectedFutId()
          : popupMode() === 'view' ? 'Dettaglio Task — ' + selectedFutId()
          : 'Nuovo Scheduled Task'"
-  [dragEnabled]="true"
-  [hideOnOutsideClick]="false"
-  [showCloseButton]="true"
-  [width]="'90%'"
   [maxWidth]="900"
-  [height]="'auto'"
-  [maxHeight]="'90vh'"
-  (onHidden)="closePopup()">
+  (hidden)="closePopup()">
 
-  <div *dxTemplate="let data of 'content'">
-    <form [formGroup]="taskForm"
-          class="popup-layout"
-          [class.popup-view-mode]="popupMode() === 'view'">
+  <form [formGroup]="taskForm" class="popup-layout">
 
-      <!-- ── Card 1: Dati Task ── -->
-      <section class="popup-card">
-        <h3 class="popup-card-title">Dati Task</h3>
+    <app-sempione-popup-card title="Dati Task">
+      <div class="popup-fields-grid popup-fields-grid--4col">
 
-        <div class="popup-fields-grid popup-fields-grid--4col">
+        <app-sempione-field-group label="Codice" [required]="true" [locked]="popupMode() !== 'new'">
+          <dx-text-box formControlName="futId" [readOnly]="popupMode() !== 'new'">
+            <dx-validator>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group" [class.field-id-locked]="popupMode() !== 'new'">
-            <label class="popup-field-label">Codice</label>
-            <dx-text-box formControlName="futId" [readOnly]="popupMode() !== 'new'">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-              </dx-validator>
-            </dx-text-box>
-          </div>
+        <app-sempione-field-group label="Nome" [required]="true" class="popup-col-span-3">
+          <dx-text-box formControlName="futFunname" [readOnly]="popupMode() === 'view'">
+            <dx-validator>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group popup-col-span-3">
-            <label class="popup-field-label">Nome</label>
-            <dx-text-box formControlName="futFunname" [readOnly]="popupMode() === 'view'">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-              </dx-validator>
-            </dx-text-box>
-          </div>
+        <app-sempione-field-group label="Descrizione" [required]="true" class="popup-col-span-3">
+          <dx-text-box formControlName="futDes" [readOnly]="popupMode() === 'view'">
+            <dx-validator>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group popup-col-span-3">
-            <label class="popup-field-label">Descrizione</label>
-            <dx-text-box formControlName="futDes" [readOnly]="popupMode() === 'view'">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-              </dx-validator>
-            </dx-text-box>
-          </div>
+        <app-sempione-field-group label="Timeout (ms)" [required]="true">
+          <dx-number-box
+            formControlName="futTimeout"
+            [min]="100"
+            [max]="10000000"
+            [readOnly]="popupMode() === 'view'">
+            <dx-validator>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
+              <dxi-validation-rule type="range" [min]="100" [max]="10000000" message="Valore tra 100 e 10.000.000"></dxi-validation-rule>
+            </dx-validator>
+          </dx-number-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group">
-            <label class="popup-field-label">Timeout (ms)</label>
-            <dx-number-box
-              formControlName="futTimeout"
-              [min]="100"
-              [max]="10000000"
-              [readOnly]="popupMode() === 'view'">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-                <dxi-validation-rule type="range" [min]="100" [max]="10000000" message="Valore tra 100 e 10.000.000"></dxi-validation-rule>
-              </dx-validator>
-            </dx-number-box>
-          </div>
-
-          <div class="popup-field-group popup-col-span-4">
-            <label class="popup-field-label">Script</label>
-            <dx-text-box formControlName="futScriptname" [readOnly]="popupMode() === 'view'">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-              </dx-validator>
-            </dx-text-box>
-          </div>
-
-        </div>
-
-        <!-- Flag row -->
-        <div class="popup-flags-row">
-          <div class="popup-flag-group">
-            <label class="popup-field-label">Traccia</label>
-            <dx-check-box formControlName="futTrace" [readOnly]="popupMode() === 'view'"></dx-check-box>
-          </div>
-          <div class="popup-flag-group">
-            <label class="popup-field-label">Abilitata</label>
-            <dx-check-box formControlName="futActive" [readOnly]="popupMode() === 'view'"></dx-check-box>
-          </div>
-          <div class="popup-flag-group">
-            <label class="popup-field-label">Offline</label>
-            <dx-check-box formControlName="futOffline" [readOnly]="popupMode() === 'view'"></dx-check-box>
-          </div>
-          <div class="popup-flag-group popup-flag-group--accent">
-            <label class="popup-field-label">Auto (schedulata)</label>
-            <dx-check-box formControlName="futAutatt" [readOnly]="popupMode() === 'view'"></dx-check-box>
-          </div>
-        </div>
-      </section>
-
-      <!-- ── Card 2a: Schedulazione (visibile se futAutatt = true) ── -->
-      @if (showScheduling) {
-        <section class="popup-card popup-card--scheduling">
-          <h3 class="popup-card-title popup-card-title--scheduling">Schedulazione automatica</h3>
-
-          <div class="popup-fields-grid popup-fields-grid--2col">
-            <div class="popup-field-group">
-              <label class="popup-field-label">DLL</label>
-              <dx-text-box formControlName="futNamedll" [readOnly]="popupMode() === 'view'"></dx-text-box>
-            </div>
-            <div class="popup-field-group">
-              <label class="popup-field-label">Classe</label>
-              <dx-text-box formControlName="futClassname" [readOnly]="popupMode() === 'view'"></dx-text-box>
-            </div>
-          </div>
-
-          <div class="popup-fields-grid popup-fields-grid--4col" style="margin-top: 12px;">
-            <div class="popup-field-group">
-              <label class="popup-field-label">Dalle</label>
-              <dx-text-box formControlName="futStart" placeholder="HH:MM:SS" [readOnly]="popupMode() === 'view'"></dx-text-box>
-            </div>
-            <div class="popup-field-group">
-              <label class="popup-field-label">Alle</label>
-              <dx-text-box formControlName="futEnd" placeholder="HH:MM:SS" [readOnly]="popupMode() === 'view'"></dx-text-box>
-            </div>
-            <div class="popup-field-group">
-              <label class="popup-field-label">Tipo Periodo</label>
-              <dx-select-box
-                formControlName="futPeriodtyp"
-                [dataSource]="periodTypes()"
-                displayExpr="des"
-                valueExpr="id"
-                [readOnly]="popupMode() === 'view'">
-              </dx-select-box>
-            </div>
-            <div class="popup-field-group">
-              <label class="popup-field-label">Valore</label>
-              <dx-number-box formControlName="futPeriod" [min]="0" [readOnly]="popupMode() === 'view'"></dx-number-box>
-            </div>
-          </div>
-
-          <div class="popup-fields-grid popup-fields-grid--4col" style="margin-top: 12px;">
-            <div class="popup-field-group">
-              <label class="popup-field-label">Errori max</label>
-              <dx-number-box formControlName="futErrcount" [min]="1" [max]="100" [readOnly]="popupMode() === 'view'"></dx-number-box>
-            </div>
-          </div>
-        </section>
-      }
-
-      <!-- ── Card 2b: Configurazione Manuale (visibile se futAutatt = false) ── -->
-      @if (!showScheduling) {
-        <section class="popup-card">
-          <h3 class="popup-card-title">Configurazione Manuale</h3>
-          <div class="popup-flags-row">
-            <div class="popup-flag-group">
-              <label class="popup-field-label">Validazione Host</label>
-              <dx-check-box formControlName="futHosval" [readOnly]="popupMode() === 'view'"></dx-check-box>
-            </div>
-          </div>
-        </section>
-      }
-
-      <!-- ── Action Bar ── -->
-      <div class="popup-action-bar">
-
-        <div class="popup-actions-secondary">
-          @if (popupMode() !== 'new') {
-            <dx-button
-              text="Traccia"
-              icon="chart"
-              stylingMode="outlined"
-              class="btn-fin-secondary"
-              (onClick)="onTrace()">
-            </dx-button>
-          }
-          @if (popupMode() === 'edit') {
-            <dx-button
-              text="Esecuzione singola"
-              icon="runner"
-              stylingMode="outlined"
-              class="btn-fin-secondary"
-              (onClick)="onOneTimeRun()">
-            </dx-button>
-            <dx-button
-              text="Reset errori"
-              icon="revert"
-              stylingMode="outlined"
-              class="btn-fin-secondary"
-              (onClick)="onResetErrors()">
-            </dx-button>
-          }
-        </div>
-
-        <div class="popup-actions-primary">
-          <dx-button
-            [text]="popupMode() === 'new' ? 'Annulla' : 'Chiudi'"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="closePopup()">
-          </dx-button>
-          @if (popupMode() !== 'view') {
-            <dx-button
-              [text]="popupMode() === 'new' ? 'Aggiungi' : 'Salva'"
-              [icon]="popupMode() === 'new' ? 'plus' : 'save'"
-              stylingMode="contained"
-              class="btn-fin-primary"
-              (onClick)="popupMode() === 'new' ? onSubmit() : onUpdate()">
-            </dx-button>
-          }
-        </div>
+        <app-sempione-field-group label="Script" [required]="true" class="popup-col-span-4">
+          <dx-text-box formControlName="futScriptname" [readOnly]="popupMode() === 'view'">
+            <dx-validator>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </app-sempione-field-group>
 
       </div>
 
-    </form>
-  </div>
-</dx-popup>
+      <div class="popup-flags-row" style="margin-top: 14px;">
+        <div class="popup-flag-group">
+          <label class="popup-field-label">Traccia</label>
+          <dx-check-box formControlName="futTrace" [readOnly]="popupMode() === 'view'"></dx-check-box>
+        </div>
+        <div class="popup-flag-group">
+          <label class="popup-field-label">Abilitata</label>
+          <dx-check-box formControlName="futActive" [readOnly]="popupMode() === 'view'"></dx-check-box>
+        </div>
+        <div class="popup-flag-group">
+          <label class="popup-field-label">Offline</label>
+          <dx-check-box formControlName="futOffline" [readOnly]="popupMode() === 'view'"></dx-check-box>
+        </div>
+        <div class="popup-flag-group popup-flag-group--accent">
+          <label class="popup-field-label">Auto (schedulata)</label>
+          <dx-check-box formControlName="futAutatt" [readOnly]="popupMode() === 'view'"></dx-check-box>
+        </div>
+      </div>
+    </app-sempione-popup-card>
+
+    @if (showScheduling) {
+      <app-sempione-popup-card title="Schedulazione automatica">
+        <div class="popup-fields-grid popup-fields-grid--2col">
+          <app-sempione-field-group label="DLL">
+            <dx-text-box formControlName="futNamedll" [readOnly]="popupMode() === 'view'"></dx-text-box>
+          </app-sempione-field-group>
+          <app-sempione-field-group label="Classe">
+            <dx-text-box formControlName="futClassname" [readOnly]="popupMode() === 'view'"></dx-text-box>
+          </app-sempione-field-group>
+        </div>
+
+        <div class="popup-fields-grid popup-fields-grid--4col" style="margin-top: 12px;">
+          <app-sempione-field-group label="Dalle">
+            <dx-text-box formControlName="futStart" placeholder="HH:MM:SS" [readOnly]="popupMode() === 'view'"></dx-text-box>
+          </app-sempione-field-group>
+          <app-sempione-field-group label="Alle">
+            <dx-text-box formControlName="futEnd" placeholder="HH:MM:SS" [readOnly]="popupMode() === 'view'"></dx-text-box>
+          </app-sempione-field-group>
+          <app-sempione-field-group label="Tipo Periodo">
+            <dx-select-box
+              formControlName="futPeriodtyp"
+              [dataSource]="periodTypes()"
+              displayExpr="des"
+              valueExpr="id"
+              [readOnly]="popupMode() === 'view'">
+            </dx-select-box>
+          </app-sempione-field-group>
+          <app-sempione-field-group label="Valore">
+            <dx-number-box formControlName="futPeriod" [min]="0" [readOnly]="popupMode() === 'view'"></dx-number-box>
+          </app-sempione-field-group>
+        </div>
+
+        <div class="popup-fields-grid popup-fields-grid--4col" style="margin-top: 12px;">
+          <app-sempione-field-group label="Errori max">
+            <dx-number-box formControlName="futErrcount" [min]="1" [max]="100" [readOnly]="popupMode() === 'view'"></dx-number-box>
+          </app-sempione-field-group>
+        </div>
+      </app-sempione-popup-card>
+    }
+
+    @if (!showScheduling) {
+      <app-sempione-popup-card title="Configurazione Manuale">
+        <div class="popup-flags-row">
+          <div class="popup-flag-group">
+            <label class="popup-field-label">Validazione Host</label>
+            <dx-check-box formControlName="futHosval" [readOnly]="popupMode() === 'view'"></dx-check-box>
+          </div>
+        </div>
+      </app-sempione-popup-card>
+    }
+
+    <app-sempione-popup-action-bar
+      [cancelText]="popupMode() === 'new' ? 'Annulla' : 'Chiudi'"
+      [saveText]="popupMode() === 'new' ? 'Aggiungi' : 'Salva'"
+      [showSave]="popupMode() !== 'view'"
+      [isSaving]="false"
+      (save)="popupMode() === 'new' ? onSubmit() : onUpdate()"
+      (cancel)="closePopup()">
+      @if (popupMode() !== 'new') {
+        <app-sempione-button secondary-actions text="Traccia" icon="clock" variant="secondary" (clicked)="onTrace()"></app-sempione-button>
+      }
+      @if (popupMode() === 'edit') {
+        <app-sempione-button secondary-actions text="Esecuzione singola" icon="runner" variant="secondary" (clicked)="onOneTimeRun()"></app-sempione-button>
+      }
+      @if (popupMode() === 'edit') {
+        <app-sempione-button secondary-actions text="Reset errori" icon="revert" variant="secondary" (clicked)="onResetErrors()"></app-sempione-button>
+      }
+    </app-sempione-popup-action-bar>
+
+  </form>
+
+</app-sempione-popup>

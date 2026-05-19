@@ -1,0 +1,19 @@
+<dx-popup
+  [visible]="visible"
+  (visibleChange)="visibleChange.emit($event)"
+  [showTitle]="true"
+  [title]="title"
+  [dragEnabled]="dragEnabled"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [width]="'90%'"
+  [maxWidth]="maxWidth"
+  [height]="'auto'"
+  [maxHeight]="maxHeight"
+  (onHidden)="onHidden()">
+
+  <div *dxTemplate="let _ of 'content'" class="popup-content-shell">
+    <ng-content></ng-content>
+  </div>
+
+</dx-popup>

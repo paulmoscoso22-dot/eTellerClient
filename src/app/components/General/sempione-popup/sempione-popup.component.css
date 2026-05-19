@@ -1,0 +1,12 @@
+:host {
+  display: contents;
+}
+
+/* The content shell provides the flex column layout for popup-cards + action-bar */
+.popup-content-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: #f8fafc;
+}

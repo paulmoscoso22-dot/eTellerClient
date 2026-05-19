@@ -1,14 +1,23 @@
 import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {
-  DxDataGridModule,
-  DxTextBoxModule,
-  DxButtonModule,
-  DxPopupModule,
-} from 'devextreme-angular';
+import { DxTextBoxModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TabellaVarcharService, TabellaVarcharItem } from '../../services/tabella-varchar.service';
+import {
+  SempionePageHeaderComponent,
+  SempioneCardComponent,
+  SempioneCardHeaderComponent,
+  SempioneToolbarComponent,
+  SempioneDataGridComponent,
+  SempioneGridColumn,
+  SempionePopupComponent,
+  SempionePopupCardComponent,
+  SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+  SempioneButtonComponent,
+  SempioneAlertComponent,
+} from '../../../../../components/General';
 
 const TABLE = 'ST_ACCOUNTTYPE';
 
@@ -18,10 +27,18 @@ const TABLE = 'ST_ACCOUNTTYPE';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DxDataGridModule,
     DxTextBoxModule,
-    DxButtonModule,
-    DxPopupModule,
+    SempionePageHeaderComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
+    SempioneToolbarComponent,
+    SempioneDataGridComponent,
+    SempionePopupComponent,
+    SempionePopupCardComponent,
+    SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
+    SempioneButtonComponent,
+    SempioneAlertComponent,
   ],
   templateUrl: './tipo-conti.component.html',
   styleUrls: ['./tipo-conti.component.css'],
@@ -35,6 +52,11 @@ export class TipoContiComponent implements OnInit {
   items = signal<TabellaVarcharItem[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'id',  caption: 'ID',          alignment: 'left', width: 140 },
+    { dataField: 'des', caption: 'Descrizione',  alignment: 'left' },
+  ];
 
   filterForm: FormGroup = this.fb.group({
     id: [null],
