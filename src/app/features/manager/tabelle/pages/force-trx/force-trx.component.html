@@ -1,192 +1,105 @@
 <div class="page-shell">
 
-  <!-- ── Titolo pagina ── -->
-  <div class="page-header-row">
-    <h1 class="page-title">Forza Traccia</h1>
-  </div>
+  <app-sempione-page-header title="Forza Traccia"></app-sempione-page-header>
 
-  <!-- ── Card Main ── -->
-  <section class="card-section">
+  <app-sempione-card>
 
-    <div class="sempione-card-header">
+    <app-sempione-card-header title="Elenco Forzature Traccia (FORCE_TRX)">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="3" y="3" width="18" height="18" rx="2"></rect>
         <line x1="9" y1="9" x2="15" y2="9"></line>
         <line x1="9" y1="13" x2="15" y2="13"></line>
         <line x1="9" y1="17" x2="13" y2="17"></line>
       </svg>
-      <h2 class="card-title">Elenco Forzature Traccia (FORCE_TRX)</h2>
-    </div>
-    <div class="gold-divider"></div>
+    </app-sempione-card-header>
 
-    <!-- ── Toolbar ── -->
-    <div class="card-toolbar">
-      <div class="toolbar-inner">
-
-        <div class="toolbar-filters">
-          <div class="toolbar-field toolbar-field--sm">
-            <dx-select-box
-              [dataSource]="languages"
-              displayExpr="label"
-              valueExpr="id"
-              [value]="selectedLanCode()"
-              (onValueChanged)="onLanguageChanged($event.value)">
-            </dx-select-box>
-          </div>
-        </div>
-
-        <div class="toolbar-actions">
-          <dx-button
-            icon="search"
-            hint="Cerca"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            [disabled]="isLoading()"
-            (onClick)="search()">
-          </dx-button>
-        </div>
-
+    <app-sempione-toolbar>
+      <div class="toolbar-field toolbar-field--sm">
+        <dx-select-box
+          [dataSource]="languages"
+          displayExpr="label"
+          valueExpr="id"
+          [value]="selectedLanCode()"
+          (onValueChanged)="onLanguageChanged($event.value)">
+        </dx-select-box>
       </div>
-    </div>
+      <div toolbar-actions>
+        <app-sempione-button
+          icon="search"
+          hint="Cerca"
+          variant="secondary"
+          [disabled]="isLoading()"
+          (clicked)="search()">
+        </app-sempione-button>
+      </div>
+    </app-sempione-toolbar>
 
-    <!-- ── Griglia ── -->
-    <div class="card-body card-body--grid">
+    <app-sempione-data-grid
+      [dataSource]="items()"
+      [columns]="gridColumns"
+      keyExpr="trfId"
+      [isLoading]="isLoading()"
+      [error]="error()"
+      [showViewAction]="true"
+      noDataText="Nessuna transazione trovata. Premere Cerca per caricare i dati."
+      (rowView)="openDetail($event)">
+    </app-sempione-data-grid>
 
-      @if (error()) {
-        <div class="grid-message grid-message--error">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
-          {{ error() }}
-        </div>
-      }
-
-      @if (isLoading()) {
-        <div class="grid-message grid-message--loading">
-          <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-          </svg>
-          Caricamento in corso...
-        </div>
-      }
-
-      @if (!isLoading() && !error()) {
-        <dx-data-grid
-          [dataSource]="items()"
-          [showBorders]="false"
-          [columnAutoWidth]="true"
-          [rowAlternationEnabled]="true"
-          [hoverStateEnabled]="true"
-          [height]="'100%'"
-          noDataText="Nessuna transazione trovata. Premere Cerca per caricare i dati.">
-
-          <dxo-selection mode="single"></dxo-selection>
-          <dxo-paging [pageSize]="30"></dxo-paging>
-          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 30, 50, 100]" [showInfo]="true"></dxo-pager>
-
-          <dxi-column dataField="trfId"     caption="ID Forzatura"      alignment="right" [width]="110"></dxi-column>
-          <dxi-column dataField="trfTrxId"  caption="ID Transazione"    alignment="right" [width]="120"></dxi-column>
-          <dxi-column dataField="trfFortyp" caption="Tipo forzatura"    alignment="left"  [width]="140"></dxi-column>
-          <dxi-column dataField="trfFortxt" caption="Testo"             alignment="left"></dxi-column>
-          <dxi-column dataField="trxDatope" caption="Data operazione"   alignment="left"  [width]="130" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="trxDatval" caption="Data valuta"       alignment="left"  [width]="110" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="errDesc"   caption="Descrizione errore" alignment="left"></dxi-column>
-
-          <dxi-column
-            caption="Dettaglio"
-            [width]="75"
-            [allowSorting]="false"
-            [allowFiltering]="false"
-            alignment="center"
-            cellTemplate="detailTemplate">
-          </dxi-column>
-
-          <div *dxTemplate="let cell of 'detailTemplate'" class="actions-cell">
-            <button class="action-btn action-btn--view" title="Dettaglio"
-                    (click)="openDetail(cell.data)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </button>
-          </div>
-
-          <dxo-load-panel [enabled]="false"></dxo-load-panel>
-
-        </dx-data-grid>
-      }
-
-    </div>
-
-  </section>
+  </app-sempione-card>
 
 </div>
 
-<!-- ══════════════════════════════════════
-     Popup: Dettaglio Forzatura
-     ══════════════════════════════════════ -->
-<dx-popup
+<!-- ── Popup Dettaglio Forzatura ── -->
+<app-sempione-popup
   [(visible)]="isDetailPopupVisible"
-  [showTitle]="true"
   [title]="'Dettaglio Forzatura — ID ' + (selectedItem()?.trfId ?? '')"
-  [dragEnabled]="true"
-  [hideOnOutsideClick]="true"
-  [showCloseButton]="true"
-  [width]="'90%'"
   [maxWidth]="600"
-  [height]="'auto'"
-  [maxHeight]="'92vh'"
-  (onHidden)="closeDetail()">
+  (hidden)="closeDetail()">
 
-  <div *dxTemplate="let data of 'content'">
-    @if (selectedItem(); as item) {
-      <div class="popup-layout">
+  @if (selectedItem(); as item) {
+    <div class="popup-layout">
 
-        <section class="popup-card">
-          <h3 class="popup-card-title">Dati Forzatura</h3>
-          <div class="popup-fields-grid popup-fields-grid--2col">
+      <app-sempione-popup-card title="Dati Forzatura">
+        <div class="popup-fields-grid popup-fields-grid--2col">
 
-            <div class="popup-field-group">
-              <label class="popup-field-label">ID Forzatura</label>
-              <div class="popup-field-value">{{ item.trfId }}</div>
-            </div>
+          <app-sempione-field-group label="ID Forzatura">
+            <dx-text-box [value]="item.trfId.toString()" [readOnly]="true"></dx-text-box>
+          </app-sempione-field-group>
 
-            <div class="popup-field-group">
-              <label class="popup-field-label">ID Transazione</label>
-              <div class="popup-field-value">{{ item.trfTrxId }}</div>
-            </div>
+          <app-sempione-field-group label="ID Transazione">
+            <dx-text-box [value]="item.trfTrxId.toString()" [readOnly]="true"></dx-text-box>
+          </app-sempione-field-group>
 
-            <div class="popup-field-group">
-              <label class="popup-field-label">Data operazione</label>
-              <div class="popup-field-value">{{ item.trxDatope | date:'dd.MM.yyyy' }}</div>
-            </div>
+          <app-sempione-field-group label="Data operazione">
+            <dx-text-box [value]="(item.trxDatope | date:'dd.MM.yyyy') ?? ''" [readOnly]="true"></dx-text-box>
+          </app-sempione-field-group>
 
-            <div class="popup-field-group">
-              <label class="popup-field-label">Data valuta</label>
-              <div class="popup-field-value">{{ item.trxDatval | date:'dd.MM.yyyy' }}</div>
-            </div>
+          <app-sempione-field-group label="Data valuta">
+            <dx-text-box [value]="(item.trxDatval | date:'dd.MM.yyyy') ?? ''" [readOnly]="true"></dx-text-box>
+          </app-sempione-field-group>
 
-            <div class="popup-field-group">
-              <label class="popup-field-label">Tipo forzatura</label>
-              <div class="popup-field-value">{{ item.trfFortyp }}</div>
-            </div>
+          <app-sempione-field-group label="Tipo forzatura">
+            <dx-text-box [value]="item.trfFortyp" [readOnly]="true"></dx-text-box>
+          </app-sempione-field-group>
 
-            <div class="popup-field-group popup-col-span-2">
-              <label class="popup-field-label">Testo</label>
-              <div class="popup-field-value">{{ item.trfFortxt ?? '—' }}</div>
-            </div>
+          <app-sempione-field-group label="Testo" class="popup-col-span-2">
+            <dx-text-box [value]="item.trfFortxt ?? ''" [readOnly]="true"></dx-text-box>
+          </app-sempione-field-group>
 
-            <div class="popup-field-group popup-col-span-2">
-              <label class="popup-field-label">Descrizione errore</label>
-              <div class="popup-field-value">{{ item.errDesc ?? '—' }}</div>
-            </div>
+          <app-sempione-field-group label="Descrizione errore" class="popup-col-span-2">
+            <dx-text-box [value]="item.errDesc ?? ''" [readOnly]="true"></dx-text-box>
+          </app-sempione-field-group>
 
-          </div>
-        </section>
+        </div>
+      </app-sempione-popup-card>
 
-      </div>
-    }
-  </div>
-</dx-popup>
+      <app-sempione-popup-action-bar
+        cancelText="Chiudi"
+        [showSave]="false"
+        (cancel)="closeDetail()">
+      </app-sempione-popup-action-bar>
+
+    </div>
+  }
+
+</app-sempione-popup>

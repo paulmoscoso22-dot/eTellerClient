@@ -1,0 +1,49 @@
+:host {
+  display: block;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.field-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+  line-height: 1.2;
+}
+
+.req { color: #dc2626; }
+
+/* ── Locked key field (edit mode) ── */
+:host ::ng-deep .field-id-locked .dx-texteditor,
+:host ::ng-deep .field-id-locked .dx-dropdowneditor {
+  pointer-events: none !important;
+}
+
+:host ::ng-deep .field-id-locked .dx-texteditor .dx-texteditor-container,
+:host ::ng-deep .field-id-locked .dx-dropdowneditor .dx-texteditor-container {
+  border: 1px dashed #cbd5e1 !important;
+  border-radius: 4px !important;
+  background-color: #f8fafc !important;
+  min-height: 28px !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .field-id-locked .dx-texteditor .dx-texteditor-input,
+:host ::ng-deep .field-id-locked .dx-dropdowneditor .dx-texteditor-input {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  -webkit-text-fill-color: #1e293b !important;
+  opacity: 1 !important;
+  cursor: default !important;
+  background-color: transparent !important;
+}
+
+:host ::ng-deep .field-id-locked .dx-dropdowneditor-button,
+:host ::ng-deep .field-id-locked .dx-clear-button {
+  display: none !important;
+}

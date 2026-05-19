@@ -10,7 +10,6 @@ import {
   DxSelectBoxModule,
   DxCheckBoxModule,
   DxTextAreaModule,
-  DxLoadIndicatorModule,
 } from 'devextreme-angular';
 import { Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -21,6 +20,19 @@ import {
   IGestioneErroriUpsertRequest,
   IForceCodeResponse,
 } from '../../models/gestione-errori.models';
+import {
+  SempionePageHeaderComponent,
+  SempioneCardComponent,
+  SempioneCardHeaderComponent,
+  SempioneToolbarComponent,
+  SempionePopupComponent,
+  SempionePopupCardComponent,
+  SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+  SempioneButtonComponent,
+  SempioneAlertComponent,
+  SempioneRowActionsComponent,
+} from '../../../../../components/General';
 
 const ENTNAME = 'ST_ERRORCODE';
 
@@ -37,7 +49,17 @@ const ENTNAME = 'ST_ERRORCODE';
     DxSelectBoxModule,
     DxCheckBoxModule,
     DxTextAreaModule,
-    DxLoadIndicatorModule,
+    SempionePageHeaderComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
+    SempioneToolbarComponent,
+    SempionePopupComponent,
+    SempionePopupCardComponent,
+    SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
+    SempioneButtonComponent,
+    SempioneAlertComponent,
+    SempioneRowActionsComponent,
   ],
   templateUrl: './gestione-errori.component.html',
   styleUrls: ['./gestione-errori.component.css'],
@@ -60,7 +82,8 @@ export class GestioneErroriComponent implements OnInit {
 
   // ── Form popup ──
   isFormPopupVisible = false;
-  isEditMode = signal(false);
+  popupMode = signal<'new' | 'view' | 'edit'>('new');
+  selectedErrId = signal('');
   isSaving = signal(false);
   saveError = signal<string | null>(null);
 
@@ -149,7 +172,8 @@ export class GestioneErroriComponent implements OnInit {
   }
 
   openAddPopup(): void {
-    this.isEditMode.set(false);
+    this.popupMode.set('new');
+    this.selectedErrId.set('');
     this.saveError.set(null);
     this.editForm.reset({
       errId: '', errTyp: null, errDescIt: '', errDescEn: null,
@@ -161,8 +185,30 @@ export class GestioneErroriComponent implements OnInit {
     this.isFormPopupVisible = true;
   }
 
+  openViewPopup(item: IGestioneErroriItemResponse): void {
+    this.popupMode.set('view');
+    this.selectedErrId.set(item.errId);
+    this.saveError.set(null);
+    this.editForm.reset({
+      errId:      item.errId,
+      errTyp:     item.errTyp,
+      errDescIt:  item.errDescIt ?? '',
+      errDescEn:  item.errDescEn,
+      errDescFr:  item.errDescFr,
+      errDescDe:  item.errDescDe,
+      errCanFlag: item.errCanFlag,
+      errConFlag: item.errConFlag,
+      errForFlag: item.errForFlag,
+      errFocId:   item.errFocId,
+      errDesSol:  item.errDesSol,
+    });
+    this.editForm.get('errId')!.disable();
+    this.isFormPopupVisible = true;
+  }
+
   openEditPopup(item: IGestioneErroriItemResponse): void {
-    this.isEditMode.set(true);
+    this.popupMode.set('edit');
+    this.selectedErrId.set(item.errId);
     this.saveError.set(null);
     this.editForm.reset({
       errId:      item.errId,
@@ -189,7 +235,7 @@ export class GestioneErroriComponent implements OnInit {
     if (!this.validateSaveForm()) return;
 
     const payload = this.buildPayload();
-    const isEdit = this.isEditMode();
+    const isEdit = this.popupMode() === 'edit';
 
     this.isSaving.set(true);
     this.saveError.set(null);
@@ -287,7 +333,7 @@ export class GestioneErroriComponent implements OnInit {
   openTrace(item: IGestioneErroriItemResponse): void {
     this.router.navigate(['/trace'], {
       queryParams: {
-        ENTNAME,
+        traTabNam: ENTNAME,
         traEntCode: item.errId,
       },
     });

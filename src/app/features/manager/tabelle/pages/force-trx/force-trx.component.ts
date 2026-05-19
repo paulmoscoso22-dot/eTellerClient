@@ -1,24 +1,40 @@
 import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  DxDataGridModule,
-  DxButtonModule,
-  DxSelectBoxModule,
-  DxPopupModule,
-} from 'devextreme-angular';
+import { DxSelectBoxModule, DxTextBoxModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ForceTrxService } from '../../services/force-trx.service';
 import { IForceTrxItemResponse } from '../../models/force-trx.models';
+import {
+  SempionePageHeaderComponent,
+  SempioneCardComponent,
+  SempioneCardHeaderComponent,
+  SempioneToolbarComponent,
+  SempionePopupComponent,
+  SempionePopupCardComponent,
+  SempionePopupActionBarComponent,
+  SempioneButtonComponent,
+  SempioneFieldGroupComponent,
+  SempioneDataGridComponent,
+  SempioneGridColumn,
+} from '../../../../../components/General';
 
 @Component({
   selector: 'app-force-trx',
   standalone: true,
   imports: [
     CommonModule,
-    DxDataGridModule,
-    DxButtonModule,
     DxSelectBoxModule,
-    DxPopupModule,
+    DxTextBoxModule,
+    SempionePageHeaderComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
+    SempioneToolbarComponent,
+    SempionePopupComponent,
+    SempionePopupCardComponent,
+    SempionePopupActionBarComponent,
+    SempioneButtonComponent,
+    SempioneFieldGroupComponent,
+    SempioneDataGridComponent,
   ],
   templateUrl: './force-trx.component.html',
   styleUrls: ['./force-trx.component.css'],
@@ -33,6 +49,16 @@ export class ForceTrxComponent implements OnInit {
 
   selectedItem = signal<IForceTrxItemResponse | null>(null);
   isDetailPopupVisible = false;
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'trfId',     caption: 'ID Forzatura',       alignment: 'right', width: 110 },
+    { dataField: 'trfTrxId',  caption: 'ID Transazione',     alignment: 'right', width: 120 },
+    { dataField: 'trfFortyp', caption: 'Tipo forzatura',     alignment: 'left',  width: 140 },
+    { dataField: 'trfFortxt', caption: 'Testo',              alignment: 'left' },
+    { dataField: 'trxDatope', caption: 'Data operazione',    alignment: 'left',  width: 130, dataType: 'date', format: 'dd.MM.yyyy' },
+    { dataField: 'trxDatval', caption: 'Data valuta',        alignment: 'left',  width: 110, dataType: 'date', format: 'dd.MM.yyyy' },
+    { dataField: 'errDesc',   caption: 'Descrizione errore', alignment: 'left' },
+  ];
 
   readonly languages = [
     { id: 'IT', label: 'Italiano' },

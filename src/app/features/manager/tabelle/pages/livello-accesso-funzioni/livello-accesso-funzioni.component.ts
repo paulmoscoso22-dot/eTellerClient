@@ -2,16 +2,24 @@ import { Component, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  DxDataGridModule,
-  DxTextBoxModule,
-  DxNumberBoxModule,
-  DxButtonModule,
-  DxPopupModule,
-} from 'devextreme-angular';
+import { DxTextBoxModule, DxNumberBoxModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import notify from 'devextreme/ui/notify';
 import { TabellaIntService, TabellaIntItem } from '../../services/tabella-int.service';
+import {
+  SempionePageHeaderComponent,
+  SempioneCardComponent,
+  SempioneCardHeaderComponent,
+  SempioneToolbarComponent,
+  SempioneDataGridComponent,
+  SempioneGridColumn,
+  SempionePopupComponent,
+  SempionePopupCardComponent,
+  SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+  SempioneButtonComponent,
+  SempioneAlertComponent,
+} from '../../../../../components/General';
 
 const TABLE = 'ST_FUNACCTYP';
 
@@ -21,11 +29,19 @@ const TABLE = 'ST_FUNACCTYP';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DxDataGridModule,
     DxTextBoxModule,
     DxNumberBoxModule,
-    DxButtonModule,
-    DxPopupModule,
+    SempionePageHeaderComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
+    SempioneToolbarComponent,
+    SempioneDataGridComponent,
+    SempionePopupComponent,
+    SempionePopupCardComponent,
+    SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
+    SempioneButtonComponent,
+    SempioneAlertComponent,
   ],
   templateUrl: './livello-accesso-funzioni.component.html',
   styleUrls: ['./livello-accesso-funzioni.component.css'],
@@ -39,6 +55,11 @@ export class LivelloAccessoFunzioniComponent {
   items = signal<TabellaIntItem[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'id',  caption: 'ID',          alignment: 'left', width: 100 },
+    { dataField: 'des', caption: 'Descrizione',  alignment: 'left' },
+  ];
 
   filterForm: FormGroup = this.fb.group({
     id: [null],
@@ -104,18 +125,15 @@ export class LivelloAccessoFunzioniComponent {
     this.isFormPopupVisible = false;
   }
 
-  onTrace(): void {
-    const id = this.selectedId() ?? this.editForm.get('id')?.value;
-    if (id === null || id === undefined || id === '') {
+  onTrace(item?: TabellaIntItem): void {
+    const id = item?.id ?? this.selectedId();
+    if (id === null || id === undefined) {
       notify('Selezionare un record da tracciare', 'warning', 3000);
       return;
     }
-
+    if (!item) this.isFormPopupVisible = false;
     this.router.navigate(['/trace'], {
-      queryParams: {
-        ENTNAME: TABLE,
-        traEntCode: id,
-      },
+      queryParams: { traTabNam: TABLE, traEntCode: id },
     });
   }
 

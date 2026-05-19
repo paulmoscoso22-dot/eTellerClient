@@ -1,15 +1,24 @@
 import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {
-  DxDataGridModule,
-  DxTextBoxModule,
-  DxButtonModule,
-  DxPopupModule,
-} from 'devextreme-angular';
+import { DxTextBoxModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TabellaVarcharService, TabellaVarcharItem } from '../../services/tabella-varchar.service';
+import {
+  SempionePageHeaderComponent,
+  SempioneCardComponent,
+  SempioneCardHeaderComponent,
+  SempioneToolbarComponent,
+  SempioneDataGridComponent,
+  SempioneGridColumn,
+  SempionePopupComponent,
+  SempionePopupCardComponent,
+  SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+  SempioneButtonComponent,
+  SempioneAlertComponent,
+} from '../../../../../components/General';
 
 const TABLE = 'sys_DEVICETYPE';
 
@@ -19,10 +28,18 @@ const TABLE = 'sys_DEVICETYPE';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DxDataGridModule,
     DxTextBoxModule,
-    DxButtonModule,
-    DxPopupModule,
+    SempionePageHeaderComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
+    SempioneToolbarComponent,
+    SempioneDataGridComponent,
+    SempionePopupComponent,
+    SempionePopupCardComponent,
+    SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
+    SempioneButtonComponent,
+    SempioneAlertComponent,
   ],
   templateUrl: './tipo-device.component.html',
   styleUrls: ['./tipo-device.component.css'],
@@ -40,6 +57,11 @@ export class TipoDeviceComponent implements OnInit {
   items = signal<TabellaVarcharItem[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'id',  caption: 'ID',          alignment: 'left', width: 200 },
+    { dataField: 'des', caption: 'Descrizione',  alignment: 'left' },
+  ];
 
   filterForm: FormGroup = this.fb.group({
     id: [null],
@@ -114,6 +136,7 @@ export class TipoDeviceComponent implements OnInit {
   }
 
   onTrace(id: string): void {
+    this.isFormPopupVisible = false;
     this.router.navigate(['/trace'], {
       queryParams: { traTabNam: TABLE, traEntCode: id },
     });

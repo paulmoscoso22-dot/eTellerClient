@@ -2,15 +2,24 @@ import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  DxDataGridModule,
-  DxTextBoxModule,
-  DxButtonModule,
-  DxPopupModule,
-} from 'devextreme-angular';
+import { DxTextBoxModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import notify from 'devextreme/ui/notify';
 import { TabellaVarcharService, TabellaVarcharItem } from '../../services/tabella-varchar.service';
+import {
+  SempionePageHeaderComponent,
+  SempioneCardComponent,
+  SempioneCardHeaderComponent,
+  SempioneToolbarComponent,
+  SempioneDataGridComponent,
+  SempioneGridColumn,
+  SempionePopupComponent,
+  SempionePopupCardComponent,
+  SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+  SempioneButtonComponent,
+  SempioneAlertComponent,
+} from '../../../../../components/General';
 
 const TABLE = 'ST_TABLENAME';
 
@@ -20,10 +29,18 @@ const TABLE = 'ST_TABLENAME';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DxDataGridModule,
     DxTextBoxModule,
-    DxButtonModule,
-    DxPopupModule,
+    SempionePageHeaderComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
+    SempioneToolbarComponent,
+    SempioneDataGridComponent,
+    SempionePopupComponent,
+    SempionePopupCardComponent,
+    SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
+    SempioneButtonComponent,
+    SempioneAlertComponent,
   ],
   templateUrl: './nomi-tabelle.component.html',
   styleUrls: ['./nomi-tabelle.component.css'],
@@ -37,6 +54,11 @@ export class NomiTabelleComponent implements OnInit {
   items = signal<TabellaVarcharItem[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'id',  caption: 'ID',          alignment: 'left', width: 220 },
+    { dataField: 'des', caption: 'Descrizione',  alignment: 'left' },
+  ];
 
   filterForm: FormGroup = this.fb.group({
     id: [null],
@@ -123,9 +145,10 @@ export class NomiTabelleComponent implements OnInit {
   }
 
   onTrace(id?: string): void {
+    if (!id) this.isFormPopupVisible = false;
     this.router.navigate(['/trace'], {
       queryParams: {
-        ENTNAME: TABLE,
+        traTabNam: TABLE,
         traEntCode: id ?? this.selectedId(),
       },
     });

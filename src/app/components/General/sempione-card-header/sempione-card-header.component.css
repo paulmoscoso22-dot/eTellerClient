@@ -1,0 +1,36 @@
+:host {
+  display: contents;
+}
+
+.card-header {
+  background: #003366;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff !important;
+  flex: 1;
+}
+
+.gold-divider {
+  height: 2px;
+  background: #C5A059;
+  flex-shrink: 0;
+}
+
+/* Icon projected via ng-content — overrides global 24px */
+:host ::ng-deep .card-icon {
+  width: 18px !important;
+  height: 18px !important;
+  color: #fff;
+  flex-shrink: 0;
+}

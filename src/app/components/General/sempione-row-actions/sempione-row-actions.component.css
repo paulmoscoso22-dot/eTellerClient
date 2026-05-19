@@ -1,0 +1,103 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ra-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+/* ── Inline action buttons ── */
+.ra-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.14s;
+}
+.ra-btn svg { width: 13px; height: 13px; transition: stroke 0.14s; }
+
+.ra-btn--view svg        { stroke: #94a3b8; }
+.ra-btn--view:hover      { background: rgba(0, 51, 102, 0.06); }
+.ra-btn--view:hover svg  { stroke: #64748b; }
+
+.ra-btn--edit svg        { stroke: rgba(0, 51, 102, 0.65); }
+.ra-btn--edit:hover      { background: rgba(0, 51, 102, 0.09); }
+.ra-btn--edit:hover svg  { stroke: #003366; }
+
+.ra-btn--trace svg       { stroke: rgba(180, 83, 9, 0.60); }
+.ra-btn--trace:hover     { background: rgba(217, 119, 6, 0.09); }
+.ra-btn--trace:hover svg { stroke: #b45309; }
+
+.ra-btn--delete svg        { stroke: rgba(220, 38, 38, 0.55); }
+.ra-btn--delete:hover      { background: rgba(220, 38, 38, 0.08); }
+.ra-btn--delete:hover svg  { stroke: #dc2626; }
+
+/* ── Overflow menu (details/summary dropdown) ── */
+.ra-more { position: relative; display: inline-flex; align-items: center; }
+
+.ra-more-trigger {
+  list-style: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  border: none;
+  background: none;
+  transition: background 0.14s, color 0.14s;
+}
+.ra-more-trigger::-webkit-details-marker { display: none; }
+.ra-more-trigger::marker { display: none; }
+.ra-more-trigger:hover,
+.ra-more[open] .ra-more-trigger { background: rgba(0, 51, 102, 0.08); color: #003366; }
+
+.ra-more-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 9999;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  min-width: 155px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.ra-more-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #334155;
+  text-align: left;
+  transition: background 0.12s, color 0.12s;
+}
+.ra-more-item:hover { background: rgba(0, 51, 102, 0.06); color: #003366; }
+.ra-more-item svg { flex-shrink: 0; }
+.ra-more-item--trace       { color: #92400e; }
+.ra-more-item--trace svg   { stroke: #b45309; }
+.ra-more-item--trace:hover { background: rgba(217, 119, 6, 0.07); color: #92400e; }
+.ra-more-item--danger { color: #dc2626; }
+.ra-more-item--danger:hover { background: rgba(220, 38, 38, 0.07); color: #b91c1c; }

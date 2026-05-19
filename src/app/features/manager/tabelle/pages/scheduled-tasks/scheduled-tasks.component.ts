@@ -5,12 +5,23 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import {
-  DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule,
-  DxPopupModule, DxTextAreaModule, DxValidatorModule, DxNumberBoxModule,
-  DxSelectBoxModule, DxTagBoxModule
+  DxDataGridModule, DxTextBoxModule, DxCheckBoxModule,
+  DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule
 } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import { TabelleService } from '../../services/tabelle.service';
+import {
+  SempionePageHeaderComponent,
+  SempioneCardComponent,
+  SempioneCardHeaderComponent,
+  SempioneToolbarComponent,
+  SempionePopupComponent,
+  SempionePopupCardComponent,
+  SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+  SempioneButtonComponent,
+  SempioneRowActionsComponent,
+} from '../../../../../components/General';
 import {
   FunzioniScheduleResponse,
   InsertFunzioneScheduleCommand,
@@ -22,9 +33,18 @@ import {
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule,
-    DxPopupModule, DxTextAreaModule, DxValidatorModule, DxNumberBoxModule,
-    DxSelectBoxModule, DxTagBoxModule
+    DxDataGridModule, DxTextBoxModule, DxCheckBoxModule,
+    DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule,
+    SempionePageHeaderComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
+    SempioneToolbarComponent,
+    SempionePopupComponent,
+    SempionePopupCardComponent,
+    SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
+    SempioneButtonComponent,
+    SempioneRowActionsComponent,
   ],
   templateUrl: './scheduled-tasks.component.html',
   styleUrls: ['./scheduled-tasks.component.css'],
