@@ -6,24 +6,3 @@
   overflow: hidden;
 }
 
-.page-shell {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  padding: 12px 16px 0;
-  gap: 10px;
-  overflow: hidden;
-}
-
-/* Popup layout helpers */
-.popup-layout            { display: flex; flex-direction: column; gap: 16px; }
-.popup-fields-grid       { display: grid; gap: 12px; }
-.popup-fields-grid--1col { grid-template-columns: 1fr; }
-.popup-fields-grid--2col { grid-template-columns: 1fr 1fr; }
-.popup-col-span-2        { grid-column: 1 / -1; }
-
-@media (max-width: 640px) {
-  .popup-fields-grid--2col { grid-template-columns: 1fr; }
-  .popup-col-span-2        { grid-column: 1; }
-}

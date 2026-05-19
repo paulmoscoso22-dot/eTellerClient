@@ -1,0 +1,11 @@
+@if (showSearch) {
+  <app-sempione-button icon="search" hint="Cerca" variant="secondary" [disabled]="isLoading" (clicked)="search.emit()"></app-sempione-button>
+}
+@if (showReset) {
+  <app-sempione-button icon="revert" hint="Reset filtri" variant="secondary" (clicked)="reset.emit()"></app-sempione-button>
+}
+@if (showAll) {
+  <app-sempione-button icon="checklist" hint="Mostra tutti" variant="secondary" [disabled]="isLoading" (clicked)="listAll.emit()"></app-sempione-button>
+}
+<span class="toolbar-sep"></span>
+<app-sempione-button [text]="newText" icon="add" variant="primary" [shadow]="true" (clicked)="add.emit()"></app-sempione-button>

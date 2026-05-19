@@ -41,11 +41,8 @@
 .ra-btn--delete:hover      { background: rgba(220, 38, 38, 0.08); }
 .ra-btn--delete:hover svg  { stroke: #dc2626; }
 
-/* ── Overflow menu (details/summary dropdown) ── */
-.ra-more { position: relative; display: inline-flex; align-items: center; }
-
+/* ── Overflow menu trigger ── */
 .ra-more-trigger {
-  list-style: none;
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
@@ -57,15 +54,11 @@
   background: none;
   transition: background 0.14s, color 0.14s;
 }
-.ra-more-trigger::-webkit-details-marker { display: none; }
-.ra-more-trigger::marker { display: none; }
 .ra-more-trigger:hover,
-.ra-more[open] .ra-more-trigger { background: rgba(0, 51, 102, 0.08); color: #003366; }
+.ra-more-trigger.open { background: rgba(0, 51, 102, 0.08); color: #003366; }
 
 .ra-more-menu {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 4px);
+  position: fixed;
   z-index: 9999;
   background: #fff;
   border: 1px solid #e2e8f0;

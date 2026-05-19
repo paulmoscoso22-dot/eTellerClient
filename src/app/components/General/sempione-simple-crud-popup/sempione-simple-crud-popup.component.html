@@ -1,0 +1,61 @@
+<app-sempione-popup
+  [visible]="_visible"
+  [title]="mode | popupTitle: newTitle : entityLabel : item?.id ?? null"
+  [maxWidth]="maxWidth"
+  (hidden)="onHidden()">
+
+  <div [formGroup]="editForm" class="popup-layout">
+
+    <app-sempione-popup-card [title]="cardTitle">
+      <div class="popup-fields-grid popup-fields-grid--1col">
+
+        <app-sempione-field-group [label]="idLabel" [required]="true" [locked]="mode !== 'new'">
+          @if (idInputType === 'text') {
+            <dx-text-box
+              formControlName="id"
+              [readOnly]="mode !== 'new'"
+              [maxLength]="idMaxLength"
+              [showClearButton]="mode === 'new'"
+              [placeholder]="idPlaceholder">
+            </dx-text-box>
+          } @else {
+            <dx-number-box
+              formControlName="id"
+              [readOnly]="mode !== 'new'"
+              [showClearButton]="mode === 'new'"
+              [showSpinButtons]="mode === 'new'"
+              [min]="0"
+              format="#0"
+              [placeholder]="idPlaceholder">
+            </dx-number-box>
+          }
+        </app-sempione-field-group>
+
+        <app-sempione-field-group [label]="desLabel" [required]="true">
+          <dx-text-box
+            formControlName="des"
+            [readOnly]="mode === 'view'"
+            [maxLength]="desMaxLength"
+            [showClearButton]="mode !== 'view'"
+            [placeholder]="desPlaceholder">
+          </dx-text-box>
+        </app-sempione-field-group>
+
+      </div>
+      <app-sempione-alert [message]="saveError()"></app-sempione-alert>
+    </app-sempione-popup-card>
+
+    <app-sempione-popup-action-bar
+      [cancelText]="mode === 'new' ? 'Annulla' : 'Chiudi'"
+      [saveText]="saveText"
+      [showSave]="mode !== 'view'"
+      [isSaving]="isSaving()"
+      [showStorico]="mode !== 'new'"
+      (save)="save()"
+      (cancel)="close()"
+      (storico)="storico.emit(item?.id ?? null)">
+    </app-sempione-popup-action-bar>
+
+  </div>
+
+</app-sempione-popup>

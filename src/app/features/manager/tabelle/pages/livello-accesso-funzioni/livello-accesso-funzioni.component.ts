@@ -1,10 +1,7 @@
-import { Component, signal, DestroyRef, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DxTextBoxModule, DxNumberBoxModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import notify from 'devextreme/ui/notify';
 import { TabellaIntService, TabellaIntItem } from '../../services/tabella-int.service';
 import {
   SempionePageHeaderComponent,
@@ -13,12 +10,9 @@ import {
   SempioneToolbarComponent,
   SempioneDataGridComponent,
   SempioneGridColumn,
-  SempionePopupComponent,
-  SempionePopupCardComponent,
-  SempionePopupActionBarComponent,
-  SempioneFieldGroupComponent,
-  SempioneButtonComponent,
-  SempioneAlertComponent,
+  SempioneIdDesFilterComponent,
+  SempioneCrudToolbarActionsComponent,
+  SempioneSimpleCrudPopupComponent,
 } from '../../../../../components/General';
 
 const TABLE = 'ST_FUNACCTYP';
@@ -27,26 +21,21 @@ const TABLE = 'ST_FUNACCTYP';
   selector: 'app-livello-accesso-funzioni',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
-    DxTextBoxModule,
-    DxNumberBoxModule,
     SempionePageHeaderComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
     SempioneToolbarComponent,
     SempioneDataGridComponent,
-    SempionePopupComponent,
-    SempionePopupCardComponent,
-    SempionePopupActionBarComponent,
-    SempioneFieldGroupComponent,
-    SempioneButtonComponent,
-    SempioneAlertComponent,
+    SempioneIdDesFilterComponent,
+    SempioneCrudToolbarActionsComponent,
+    SempioneSimpleCrudPopupComponent,
   ],
   templateUrl: './livello-accesso-funzioni.component.html',
   styleUrls: ['./livello-accesso-funzioni.component.css'],
 })
-export class LivelloAccessoFunzioniComponent {
+export class LivelloAccessoFunzioniComponent implements OnInit {
+
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
@@ -58,24 +47,17 @@ export class LivelloAccessoFunzioniComponent {
 
   readonly gridColumns: SempioneGridColumn[] = [
     { dataField: 'id',  caption: 'ID',          alignment: 'left', width: 100 },
-    { dataField: 'des', caption: 'Descrizione',  alignment: 'left' },
+    { dataField: 'des', caption: 'Descrizione',  alignment: 'left', wrap: true },
   ];
 
-  filterForm: FormGroup = this.fb.group({
-    id: [null],
-    des: [null]
-  });
+  filterForm: FormGroup = this.fb.group({ id: [null], des: [null] });
 
   isFormPopupVisible = false;
   isEditMode = signal(false);
-  selectedId = signal<number | null>(null);
-  isSaving = signal(false);
-  saveError = signal<string | null>(null);
+  popupItem = signal<TabellaIntItem | null>(null);
 
-  editForm: FormGroup = this.fb.group({
-    id: [null],
-    des: [null]
-  });
+  readonly doInsert = (id: string, des: string) => this.service.insert(TABLE, +id, des);
+  readonly doUpdate = (id: string, des: string) => this.service.update(TABLE, +id, des);
 
   ngOnInit(): void {
     this.showAll();
@@ -89,8 +71,11 @@ export class LivelloAccessoFunzioniComponent {
     this.service.search(TABLE, id ?? null, des ?? null)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data) => this.handleSearchResult(data),
-        error: (err: any) => this.handleSearchError(err),
+        next: (data) => { this.items.set(data); this.isLoading.set(false); },
+        error: (err: any) => {
+          this.error.set(err.message || 'Errore nel recupero dei dati');
+          this.isLoading.set(false);
+        }
       });
   }
 
@@ -100,114 +85,27 @@ export class LivelloAccessoFunzioniComponent {
   }
 
   resetFilters(): void {
-    this.filterForm.reset({ id: '', des: '' });
+    this.filterForm.reset({ id: null, des: null });
     this.items.set([]);
     this.error.set(null);
   }
 
   openAddPopup(): void {
     this.isEditMode.set(false);
-    this.selectedId.set(null);
-    this.saveError.set(null);
-    this.editForm.reset({ id: null, des: '' });
+    this.popupItem.set(null);
     this.isFormPopupVisible = true;
   }
 
   openEditPopup(item: TabellaIntItem): void {
     this.isEditMode.set(true);
-    this.selectedId.set(item.id);
-    this.saveError.set(null);
-    this.editForm.reset({ id: item.id, des: item.des });
+    this.popupItem.set(item);
     this.isFormPopupVisible = true;
   }
 
-  closeFormPopup(): void {
+  onTrace(id?: string | number | null): void {
     this.isFormPopupVisible = false;
-  }
-
-  onTrace(item?: TabellaIntItem): void {
-    const id = item?.id ?? this.selectedId();
-    if (id === null || id === undefined) {
-      notify('Selezionare un record da tracciare', 'warning', 3000);
-      return;
-    }
-    if (!item) this.isFormPopupVisible = false;
     this.router.navigate(['/trace'], {
-      queryParams: { traTabNam: TABLE, traEntCode: id },
+      queryParams: { traTabNam: TABLE, traEntCode: id ?? this.popupItem()?.id },
     });
-  }
-
-  save(): void {
-    if (!this.validateSaveForm()) return;
-
-    const payload = this.buildPayload();
-    const isEdit = this.isEditMode();
-    const label = `${payload.id} / ${payload.des}`;
-
-    this.isSaving.set(true);
-    this.saveError.set(null);
-
-    const obs = isEdit
-      ? this.service.update(TABLE, payload.id, payload.des)
-      : this.service.insert(TABLE, payload.id, payload.des);
-
-    obs.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (result: boolean) => this.handleSaveResult(result, isEdit, label),
-      error: (err: any) => this.handleSaveError(err),
-    });
-  }
-
-  private handleSearchResult(data: TabellaIntItem[]): void {
-    this.items.set(data);
-    this.isLoading.set(false);
-  }
-
-  private handleSearchError(err: any): void {
-    this.error.set(err.message || 'Errore nel recupero dei dati');
-    this.isLoading.set(false);
-  }
-
-  private validateSaveForm(): boolean {
-    const v = this.editForm.value;
-    if (v.id === null || v.id === undefined || isNaN(Number(v.id))) {
-      this.saveError.set('Il campo ID è obbligatorio e deve essere un numero intero');
-      return false;
-    }
-    if (!v.des?.trim()) {
-      this.saveError.set('Il campo Descrizione è obbligatorio');
-      return false;
-    }
-    return true;
-  }
-
-  private buildPayload(): { id: number; des: string } {
-    const v = this.editForm.value;
-    return { id: Number(v.id), des: v.des.trim() };
-  }
-
-  private handleSaveResult(result: boolean, isEdit: boolean, label: string): void {
-    this.isSaving.set(false);
-    if (result) {
-      this.isFormPopupVisible = false;
-      notify(
-        isEdit
-          ? `Record "${label}" aggiornato con successo`
-          : `Record "${label}" inserito con successo`,
-        'success',
-        3000
-      );
-      this.search();
-    } else {
-      notify('Operazione non riuscita. Verificare i dati inseriti.', 'error', 4000);
-      this.saveError.set('Operazione non riuscita.');
-    }
-  }
-
-  private handleSaveError(err: any): void {
-    this.isSaving.set(false);
-    const msg = err.message || 'Errore durante il salvataggio';
-    notify(msg, 'error', 4000);
-    this.saveError.set(msg);
   }
 }
-

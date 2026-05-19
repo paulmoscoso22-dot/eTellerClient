@@ -1,6 +1,9 @@
 <div class="popup-action-bar">
   <div class="popup-actions-secondary">
     <ng-content select="[secondary-actions]"></ng-content>
+    @if (showStorico) {
+      <app-sempione-button text="Storico" icon="clock" variant="secondary" (clicked)="storico.emit()"></app-sempione-button>
+    }
   </div>
   <div class="popup-actions-primary">
     <dx-button

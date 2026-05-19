@@ -16,54 +16,20 @@
     <div [formGroup]="filterForm">
       <app-sempione-toolbar>
 
-        <div class="toolbar-field toolbar-field--sm">
-          <dx-text-box
-            formControlName="id"
-            placeholder="ID..."
-            [showClearButton]="true"
-            valueChangeEvent="input">
-          </dx-text-box>
-        </div>
+        <app-sempione-id-des-filter
+          idPlaceholder="ID..."
+          desPlaceholder="Cerca per descrizione..."
+          (enterKey)="search()">
+        </app-sempione-id-des-filter>
 
-        <div class="toolbar-field toolbar-field--lg">
-          <dx-text-box
-            formControlName="des"
-            placeholder="Cerca per descrizione..."
-            [showClearButton]="true"
-            valueChangeEvent="input">
-          </dx-text-box>
-        </div>
-
-        <div toolbar-actions>
-          <app-sempione-button
-            icon="search"
-            hint="Cerca"
-            variant="secondary"
-            [disabled]="isLoading()"
-            (clicked)="search()">
-          </app-sempione-button>
-          <app-sempione-button
-            icon="revert"
-            hint="Reset filtri"
-            variant="secondary"
-            (clicked)="resetFilters()">
-          </app-sempione-button>
-          <app-sempione-button
-            icon="checklist"
-            hint="Mostra tutti"
-            variant="secondary"
-            [disabled]="isLoading()"
-            (clicked)="showAll()">
-          </app-sempione-button>
-          <span class="toolbar-sep" toolbar-actions></span>
-          <app-sempione-button
-            text="Nuovo"
-            icon="add"
-            variant="primary"
-            [shadow]="true"
-            (clicked)="openAddPopup()">
-          </app-sempione-button>
-        </div>
+        <app-sempione-crud-toolbar-actions
+          [showAll]="true"
+          [isLoading]="isLoading()"
+          (search)="search()"
+          (reset)="resetFilters()"
+          (listAll)="showAll()"
+          (add)="openAddPopup()">
+        </app-sempione-crud-toolbar-actions>
 
       </app-sempione-toolbar>
     </div>
@@ -80,71 +46,26 @@
       noDataText="Nessun risultato trovato."
       (rowView)="openViewPopup($event)"
       (rowEdit)="openEditPopup($event)"
-      (rowTrace)="onTrace($event)">
+      (rowTrace)="onTrace($event.id)">
     </app-sempione-data-grid>
 
   </app-sempione-card>
 
 </div>
 
-<!-- ── Popup ── -->
-<app-sempione-popup
+<app-sempione-simple-crud-popup
   [(visible)]="isFormPopupVisible"
-  [title]="popupMode() === 'edit' ? 'Modifica Stato Transazione — ' + selectedId()
-         : popupMode() === 'view' ? 'Dettaglio Stato Transazione — ' + selectedId()
-         : 'Nuovo Stato Transazione'"
-  [maxWidth]="480"
-  (hidden)="closeFormPopup()">
-
-  <div [formGroup]="editForm" class="popup-layout">
-
-    <app-sempione-popup-card title="Dati stato transazione">
-      <div class="popup-fields-grid popup-fields-grid--1col">
-
-        <app-sempione-field-group label="ID (intero)" [required]="true" [locked]="popupMode() !== 'new'">
-          <dx-number-box
-            formControlName="id"
-            [readOnly]="popupMode() !== 'new'"
-            [showClearButton]="popupMode() === 'new'"
-            [showSpinButtons]="popupMode() === 'new'"
-            [min]="0"
-            format="#0"
-            placeholder="Numero intero...">
-          </dx-number-box>
-        </app-sempione-field-group>
-
-        <app-sempione-field-group label="Descrizione" [required]="true">
-          <dx-text-box
-            formControlName="des"
-            [readOnly]="popupMode() === 'view'"
-            [maxLength]="50"
-            [showClearButton]="popupMode() !== 'view'"
-            placeholder="Max 50 caratteri...">
-          </dx-text-box>
-        </app-sempione-field-group>
-
-      </div>
-      <app-sempione-alert [message]="saveError()"></app-sempione-alert>
-    </app-sempione-popup-card>
-
-    <app-sempione-popup-action-bar
-      [cancelText]="popupMode() === 'new' ? 'Annulla' : 'Chiudi'"
-      [saveText]="popupMode() === 'new' ? 'Crea Stato' : 'Salva Modifiche'"
-      [showSave]="popupMode() !== 'view'"
-      [isSaving]="isSaving()"
-      (save)="save()"
-      (cancel)="closeFormPopup()">
-      @if (popupMode() !== 'new') {
-        <app-sempione-button
-          secondary-actions
-          text="Storico"
-          icon="clock"
-          variant="secondary"
-          (clicked)="onTrace()">
-        </app-sempione-button>
-      }
-    </app-sempione-popup-action-bar>
-
-  </div>
-
-</app-sempione-popup>
+  [mode]="popupMode()"
+  [item]="popupItem()"
+  tableName="sys_TRX_STATUS"
+  entityLabel="Stato Transazione"
+  newTitle="Nuovo Stato Transazione"
+  cardTitle="Dati stato transazione"
+  idInputType="number"
+  idLabel="ID (intero)"
+  idPlaceholder="Numero intero..."
+  [onInsert]="doInsert"
+  [onUpdate]="doUpdate"
+  (saved)="search()"
+  (storico)="onTrace($event)">
+</app-sempione-simple-crud-popup>

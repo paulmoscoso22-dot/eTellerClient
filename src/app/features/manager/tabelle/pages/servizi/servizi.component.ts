@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  DxDataGridModule, DxTextBoxModule, DxCheckBoxModule,
+  DxTextBoxModule, DxCheckBoxModule,
   DxTextAreaModule, DxValidatorModule,
 } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
@@ -19,8 +19,11 @@ import {
   SempionePopupCardComponent,
   SempionePopupActionBarComponent,
   SempioneFieldGroupComponent,
-  SempioneButtonComponent,
-  SempioneRowActionsComponent,
+
+
+  SempioneDataGridComponent,
+  SempioneGridColumn,
+  SempioneCrudToolbarActionsComponent,
 } from '../../../../../components/General';
 
 const TRACE_TABLE = 'SERVIZI';
@@ -30,7 +33,7 @@ const TRACE_TABLE = 'SERVIZI';
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxDataGridModule, DxTextBoxModule, DxCheckBoxModule,
+    DxTextBoxModule, DxCheckBoxModule,
     DxTextAreaModule, DxValidatorModule,
     SempionePageHeaderComponent,
     SempioneCardComponent,
@@ -40,8 +43,10 @@ const TRACE_TABLE = 'SERVIZI';
     SempionePopupCardComponent,
     SempionePopupActionBarComponent,
     SempioneFieldGroupComponent,
-    SempioneButtonComponent,
-    SempioneRowActionsComponent,
+  
+  
+    SempioneDataGridComponent,
+    SempioneCrudToolbarActionsComponent,
   ],
   templateUrl: './servizi.component.html',
   styleUrls: ['./servizi.component.css'],
@@ -56,6 +61,17 @@ export class ServiziComponent implements OnInit {
   popupMode = signal<'new' | 'view' | 'edit'>('new');
   isDetailPopupVisible = false;
   selectedSerId = signal<string | null>(null);
+  isSaving = signal(false);
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'serId',      caption: 'ID',                 alignment: 'left',   width: 130 },
+    { dataField: 'serDes',     caption: 'Descrizione',        alignment: 'left', wrap: true   },
+    { dataField: 'serRunning', caption: 'Running',   type: 'bool', alignment: 'center', width: 90  },
+    { dataField: 'serTrace',   caption: 'Traccia',   type: 'bool', alignment: 'center', width: 90  },
+    { dataField: 'serEmail',   caption: 'Email',     type: 'bool', alignment: 'center', width: 80  },
+    { dataField: 'serEnable',  caption: 'Abilitato', type: 'bool', alignment: 'center', width: 90  },
+    { dataField: 'serLastRun', caption: 'Ultima esecuzione',  alignment: 'left',   width: 160 },
+  ];
 
   moreActions = [
     { id: 'storico', text: 'Storico (Traccia)', icon: 'clock' },
@@ -145,6 +161,7 @@ export class ServiziComponent implements OnInit {
       return;
     }
     const v = this.serviziForm.getRawValue();
+    this.isSaving.set(true);
     this.tabelleService.insertServizio({
       traUser: 'USR',
       traStation: 'WEB',
@@ -157,11 +174,12 @@ export class ServiziComponent implements OnInit {
       serEnable: v.serEnable ?? true,
     }).subscribe({
       next: () => {
+        this.isSaving.set(false);
         notify('Servizio creato con successo', 'success', 3000);
         this.loadServizi();
         this.closePopup();
       },
-      error: () => notify('Errore durante la creazione', 'error', 3000),
+      error: () => { this.isSaving.set(false); notify('Errore durante la creazione', 'error', 3000); },
     });
   }
 
@@ -171,6 +189,7 @@ export class ServiziComponent implements OnInit {
       return;
     }
     const v = this.serviziForm.getRawValue();
+    this.isSaving.set(true);
     this.tabelleService.updateServizio({
       traUser: 'USR',
       traStation: 'WEB',
@@ -183,11 +202,12 @@ export class ServiziComponent implements OnInit {
       serEnable: v.serEnable ?? true,
     }).subscribe({
       next: () => {
+        this.isSaving.set(false);
         notify('Servizio aggiornato con successo', 'success', 3000);
         this.loadServizi();
         this.closePopup();
       },
-      error: () => notify('Errore durante l\'aggiornamento', 'error', 3000),
+      error: () => { this.isSaving.set(false); notify('Errore durante l\'aggiornamento', 'error', 3000); },
     });
   }
 

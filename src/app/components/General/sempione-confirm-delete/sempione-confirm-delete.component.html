@@ -1,0 +1,52 @@
+<dx-popup
+  [(visible)]="visible"
+  [showTitle]="false"
+  [dragEnabled]="false"
+  [hideOnOutsideClick]="false"
+  [showCloseButton]="false"
+  [width]="420"
+  [height]="'auto'"
+  (onHidden)="onCancel()">
+
+  <div *dxTemplate="let data of 'content'">
+    <div class="confirm-layout">
+
+      <div class="confirm-body">
+        <div class="confirm-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <div class="confirm-text">
+          <p class="confirm-title">Conferma eliminazione</p>
+          <p class="confirm-msg">
+            Stai per eliminare {{ entityLabel }}
+            @if (entityName != null) {
+              <strong>{{ entityName }}</strong>
+            }.
+            Questa operazione non può essere annullata.
+          </p>
+        </div>
+      </div>
+
+      <div class="confirm-actions">
+        <dx-button
+          text="Annulla"
+          stylingMode="outlined"
+          class="btn-fin-secondary"
+          (onClick)="onCancel()">
+        </dx-button>
+        <dx-button
+          text="Elimina"
+          icon="trash"
+          stylingMode="contained"
+          class="btn-fin-danger"
+          (onClick)="onConfirm()">
+        </dx-button>
+      </div>
+
+    </div>
+  </div>
+</dx-popup>

@@ -1,4 +1,4 @@
-import { Component, input, output, computed } from '@angular/core';
+import { Component, input, output, computed, signal, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-sempione-row-actions',
@@ -26,4 +26,32 @@ export class SempioneRowActionsComponent {
   );
 
   protected readonly useOverflow = computed(() => this.actionCount() > 3);
+
+  protected menuOpen = signal(false);
+  protected menuTop  = signal(0);
+  protected menuLeft = signal(0);
+
+  protected openMenu(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.menuOpen()) {
+      this.menuOpen.set(false);
+      return;
+    }
+    const trigger = event.currentTarget as HTMLElement;
+    const rect = trigger.getBoundingClientRect();
+    this.menuTop.set(rect.bottom + 4);
+    this.menuLeft.set(Math.max(0, rect.right - 155));
+    this.menuOpen.set(true);
+  }
+
+  protected closeMenu(): void {
+    this.menuOpen.set(false);
+  }
+
+  @HostListener('document:click')
+  protected onDocumentClick(): void {
+    if (this.menuOpen()) {
+      this.menuOpen.set(false);
+    }
+  }
 }

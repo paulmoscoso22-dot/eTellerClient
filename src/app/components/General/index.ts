@@ -12,3 +12,8 @@ export { SempioneButtonComponent } from './sempione-button/sempione-button.compo
 export type { SempioneButtonVariant } from './sempione-button/sempione-button.component';
 export { SempioneAlertComponent } from './sempione-alert/sempione-alert.component';
 export { SempioneRowActionsComponent } from './sempione-row-actions/sempione-row-actions.component';
+export { SempioneConfirmDeleteComponent } from './sempione-confirm-delete/sempione-confirm-delete.component';
+export { SempioneCrudToolbarActionsComponent } from './sempione-crud-toolbar-actions/sempione-crud-toolbar-actions.component';
+export { PopupTitlePipe } from './pipes/popup-title.pipe';
+export { SempioneIdDesFilterComponent } from './sempione-id-des-filter/sempione-id-des-filter.component';
+export { SempioneSimpleCrudPopupComponent } from './sempione-simple-crud-popup/sempione-simple-crud-popup.component';

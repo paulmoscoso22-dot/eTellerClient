@@ -1,0 +1,83 @@
+::ng-deep .confirm-layout {
+  padding: 24px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+::ng-deep .confirm-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+::ng-deep .confirm-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fef2f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep .confirm-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: #dc2626;
+}
+
+::ng-deep .confirm-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+::ng-deep .confirm-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+::ng-deep .confirm-msg {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+::ng-deep .confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ── Button styles ── */
+::ng-deep .btn-fin-secondary.dx-button {
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+  border-radius: 6px;
+  background: transparent !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+::ng-deep .btn-fin-secondary.dx-button:hover {
+  border-color: #94a3b8 !important;
+  background: rgba(15, 23, 42, 0.04) !important;
+}
+::ng-deep .btn-fin-secondary .dx-button-text,
+::ng-deep .btn-fin-secondary .dx-icon { color: #1e293b !important; }
+
+::ng-deep .btn-fin-danger.dx-button {
+  background-color: #dc2626 !important;
+  border-color: #dc2626 !important;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+::ng-deep .btn-fin-danger.dx-button:hover {
+  background-color: #b91c1c !important;
+  border-color: #b91c1c !important;
+}
+::ng-deep .btn-fin-danger .dx-button-text,
+::ng-deep .btn-fin-danger .dx-icon { color: #ffffff !important; }

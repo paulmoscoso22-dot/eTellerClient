@@ -14,54 +14,20 @@
     <div [formGroup]="filterForm">
       <app-sempione-toolbar>
 
-        <div class="toolbar-field toolbar-field--sm">
-          <dx-text-box
-            formControlName="id"
-            placeholder="Codice..."
-            [showClearButton]="true"
-            valueChangeEvent="input">
-          </dx-text-box>
-        </div>
+        <app-sempione-id-des-filter
+          idPlaceholder="Codice..."
+          desPlaceholder="Cerca per descrizione..."
+          (enterKey)="search()">
+        </app-sempione-id-des-filter>
 
-        <div class="toolbar-field toolbar-field--lg">
-          <dx-text-box
-            formControlName="des"
-            placeholder="Cerca per descrizione..."
-            [showClearButton]="true"
-            valueChangeEvent="input">
-          </dx-text-box>
-        </div>
-
-        <div toolbar-actions>
-          <app-sempione-button
-            icon="search"
-            hint="Cerca"
-            variant="secondary"
-            [disabled]="isLoading()"
-            (clicked)="search()">
-          </app-sempione-button>
-          <app-sempione-button
-            icon="revert"
-            hint="Reset filtri"
-            variant="secondary"
-            (clicked)="resetFilters()">
-          </app-sempione-button>
-          <app-sempione-button
-            icon="checklist"
-            hint="Mostra tutti"
-            variant="secondary"
-            [disabled]="isLoading()"
-            (clicked)="showAll()">
-          </app-sempione-button>
-          <span class="toolbar-sep" toolbar-actions></span>
-          <app-sempione-button
-            text="Nuovo"
-            icon="add"
-            variant="primary"
-            [shadow]="true"
-            (clicked)="openAddPopup()">
-          </app-sempione-button>
-        </div>
+        <app-sempione-crud-toolbar-actions
+          [showAll]="true"
+          [isLoading]="isLoading()"
+          (search)="search()"
+          (reset)="resetFilters()"
+          (listAll)="showAll()"
+          (add)="openPopup()">
+        </app-sempione-crud-toolbar-actions>
 
       </app-sempione-toolbar>
     </div>
@@ -73,56 +39,27 @@
       [isLoading]="isLoading()"
       [error]="error()"
       [showEditAction]="true"
+      [showTraceAction]="true"
       noDataText="Nessun risultato trovato."
-      (rowEdit)="openEditPopup($event)">
+      (rowEdit)="openEditPopup($event)"
+      (rowTrace)="onTrace($event.id)">
     </app-sempione-data-grid>
 
   </app-sempione-card>
 
 </div>
 
-<!-- ── Popup Aggiungi / Modifica ── -->
-<app-sempione-popup
+<app-sempione-simple-crud-popup
   [(visible)]="isFormPopupVisible"
-  [title]="isEditMode() ? 'Modifica Tipo Conto — ' + selectedId() : 'Nuovo Tipo Conto'"
-  [maxWidth]="480"
-  (hidden)="closeFormPopup()">
-
-  <div [formGroup]="editForm" class="popup-layout">
-
-    <app-sempione-popup-card title="Dati tipo conto">
-      <div class="popup-fields-grid popup-fields-grid--1col">
-
-        <app-sempione-field-group label="ID" [required]="true" [locked]="isEditMode()">
-          <dx-text-box
-            formControlName="id"
-            [readOnly]="isEditMode()"
-            [maxLength]="10"
-            [showClearButton]="!isEditMode()"
-            placeholder="Max 10 caratteri...">
-          </dx-text-box>
-        </app-sempione-field-group>
-
-        <app-sempione-field-group label="Descrizione" [required]="true">
-          <dx-text-box
-            formControlName="des"
-            [maxLength]="50"
-            [showClearButton]="true"
-            placeholder="Descrizione...">
-          </dx-text-box>
-        </app-sempione-field-group>
-
-      </div>
-      <app-sempione-alert [message]="saveError()"></app-sempione-alert>
-    </app-sempione-popup-card>
-
-    <app-sempione-popup-action-bar
-      [saveText]="isEditMode() ? 'Salva Modifiche' : 'Crea Tipo Conto'"
-      [isSaving]="isSaving()"
-      (save)="save()"
-      (cancel)="closeFormPopup()">
-    </app-sempione-popup-action-bar>
-
-  </div>
-
-</app-sempione-popup>
+  [mode]="isEditMode() ? 'edit' : 'new'"
+  [item]="popupItem()"
+  tableName="ST_ACCOUNTTYPE"
+  entityLabel="Tipo Conto"
+  newTitle="Nuovo Tipo Conto"
+  cardTitle="Dati tipo conto"
+  [idMaxLength]="10"
+  [onInsert]="doInsert"
+  [onUpdate]="doUpdate"
+  (saved)="search()"
+  (storico)="onTrace($event)">
+</app-sempione-simple-crud-popup>
