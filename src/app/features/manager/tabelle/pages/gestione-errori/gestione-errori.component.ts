@@ -3,13 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  DxDataGridModule,
-  DxTextBoxModule,
-  DxButtonModule,
-  DxPopupModule,
-  DxSelectBoxModule,
-  DxCheckBoxModule,
-  DxTextAreaModule,
+  DxTextBoxModule, DxSelectBoxModule,
+  DxCheckBoxModule, DxTextAreaModule,
 } from 'devextreme-angular';
 import { Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -29,9 +24,12 @@ import {
   SempionePopupCardComponent,
   SempionePopupActionBarComponent,
   SempioneFieldGroupComponent,
-  SempioneButtonComponent,
+
   SempioneAlertComponent,
-  SempioneRowActionsComponent,
+  SempioneDataGridComponent,
+  SempioneGridColumn,
+  SempioneConfirmDeleteComponent,
+  SempioneCrudToolbarActionsComponent,
 } from '../../../../../components/General';
 
 const ENTNAME = 'ST_ERRORCODE';
@@ -42,10 +40,7 @@ const ENTNAME = 'ST_ERRORCODE';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DxDataGridModule,
     DxTextBoxModule,
-    DxButtonModule,
-    DxPopupModule,
     DxSelectBoxModule,
     DxCheckBoxModule,
     DxTextAreaModule,
@@ -57,9 +52,11 @@ const ENTNAME = 'ST_ERRORCODE';
     SempionePopupCardComponent,
     SempionePopupActionBarComponent,
     SempioneFieldGroupComponent,
-    SempioneButtonComponent,
+  
     SempioneAlertComponent,
-    SempioneRowActionsComponent,
+    SempioneDataGridComponent,
+    SempioneConfirmDeleteComponent,
+    SempioneCrudToolbarActionsComponent,
   ],
   templateUrl: './gestione-errori.component.html',
   styleUrls: ['./gestione-errori.component.css'],
@@ -100,6 +97,12 @@ export class GestioneErroriComponent implements OnInit {
     errFocId:   [null],
     errDesSol:  [null],
   });
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'errId',     caption: 'Codice',      alignment: 'left',   width: 140 },
+    { dataField: 'errTyp',    caption: 'Tipo',        alignment: 'center', width: 60  },
+    { dataField: 'errDescIt', caption: 'Descrizione', alignment: 'left', wrap: true   },
+  ];
 
   readonly errTypOptions = [
     { id: 'S', label: 'S - System' },

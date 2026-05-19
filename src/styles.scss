@@ -90,6 +90,37 @@
 .popup-fields-grid--1col  { grid-template-columns: 1fr; }
 .popup-fields-grid--2col  { grid-template-columns: 1fr 1fr; }
 .popup-fields-grid--3col  { grid-template-columns: 1fr 1fr 1fr; }
+.popup-fields-grid--4col  { grid-template-columns: repeat(4, 1fr); }
+
+// ── Popup col-span utilities
+.popup-col-span-2    { grid-column: 1 / -1; }
+.popup-col-span-half { grid-column: span 2; }
+.popup-col-span-3    { grid-column: span 3; }
+
+// ── Popup field label + flags row
+.popup-field-label { font-size: 11px; font-weight: 500; color: #64748b; line-height: 1.2; }
+.popup-flags-row   { display: flex; flex-wrap: wrap; gap: 18px; margin-bottom: 4px; }
+.popup-flag-group  { display: flex; align-items: center; gap: 8px; }
+.popup-flag-group .popup-field-label { margin: 0; }
+.popup-flag-group--accent .popup-field-label { color: #003366; font-weight: 600; }
+
+@media (max-width: 640px) {
+  .popup-fields-grid--4col { grid-template-columns: 1fr 1fr; }
+  .popup-fields-grid--3col { grid-template-columns: 1fr 1fr; }
+  .popup-fields-grid--2col { grid-template-columns: 1fr; }
+  .popup-col-span-2, .popup-col-span-half, .popup-col-span-3 { grid-column: 1 / -1; }
+}
+
+// ── Page shell: flex column container for all routed tabelle pages
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 12px 16px 0;
+  gap: 10px;
+  overflow: hidden;
+}
 
 // ── Toolbar field helpers
 .toolbar-field         { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }

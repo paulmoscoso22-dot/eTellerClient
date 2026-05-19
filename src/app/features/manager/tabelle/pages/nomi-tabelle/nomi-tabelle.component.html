@@ -15,54 +15,20 @@
     <div [formGroup]="filterForm">
       <app-sempione-toolbar>
 
-        <div class="toolbar-field toolbar-field--sm">
-          <dx-text-box
-            formControlName="id"
-            placeholder="Codice tabella..."
-            [showClearButton]="true"
-            valueChangeEvent="input">
-          </dx-text-box>
-        </div>
+        <app-sempione-id-des-filter
+          idPlaceholder="Codice tabella..."
+          desPlaceholder="Cerca per descrizione..."
+          (enterKey)="search()">
+        </app-sempione-id-des-filter>
 
-        <div class="toolbar-field toolbar-field--lg">
-          <dx-text-box
-            formControlName="des"
-            placeholder="Cerca per descrizione..."
-            [showClearButton]="true"
-            valueChangeEvent="input">
-          </dx-text-box>
-        </div>
-
-        <div toolbar-actions>
-          <app-sempione-button
-            icon="search"
-            hint="Cerca"
-            variant="secondary"
-            [disabled]="isLoading()"
-            (clicked)="search()">
-          </app-sempione-button>
-          <app-sempione-button
-            icon="revert"
-            hint="Reset filtri"
-            variant="secondary"
-            (clicked)="resetFilters()">
-          </app-sempione-button>
-          <app-sempione-button
-            icon="checklist"
-            hint="Mostra tutti"
-            variant="secondary"
-            [disabled]="isLoading()"
-            (clicked)="showAll()">
-          </app-sempione-button>
-          <span class="toolbar-sep" toolbar-actions></span>
-          <app-sempione-button
-            text="Nuovo"
-            icon="add"
-            variant="primary"
-            [shadow]="true"
-            (clicked)="openAddPopup()">
-          </app-sempione-button>
-        </div>
+        <app-sempione-crud-toolbar-actions
+          [showAll]="true"
+          [isLoading]="isLoading()"
+          (search)="search()"
+          (reset)="resetFilters()"
+          (listAll)="showAll()"
+          (add)="openAddPopup()">
+        </app-sempione-crud-toolbar-actions>
 
       </app-sempione-toolbar>
     </div>
@@ -84,56 +50,17 @@
 
 </div>
 
-<!-- ── Popup Aggiungi / Modifica ── -->
-<app-sempione-popup
+<app-sempione-simple-crud-popup
   [(visible)]="isFormPopupVisible"
-  [title]="isEditMode() ? 'Modifica — ' + selectedId() : 'Nuovo nome tabella'"
-  [maxWidth]="480"
-  (hidden)="closeFormPopup()">
-
-  <div [formGroup]="editForm" class="popup-layout">
-
-    <app-sempione-popup-card title="Dati nome tabella">
-      <div class="popup-fields-grid popup-fields-grid--1col">
-
-        <app-sempione-field-group label="ID" [required]="true" [locked]="isEditMode()">
-          <dx-text-box
-            formControlName="id"
-            [readOnly]="isEditMode()"
-            [maxLength]="50"
-            [showClearButton]="!isEditMode()"
-            placeholder="Codice identificativo...">
-          </dx-text-box>
-        </app-sempione-field-group>
-
-        <app-sempione-field-group label="Descrizione" [required]="true">
-          <dx-text-box
-            formControlName="des"
-            [maxLength]="50"
-            [showClearButton]="true"
-            placeholder="Descrizione...">
-          </dx-text-box>
-        </app-sempione-field-group>
-
-      </div>
-      <app-sempione-alert [message]="saveError()"></app-sempione-alert>
-    </app-sempione-popup-card>
-
-    <app-sempione-popup-action-bar
-      [isSaving]="isSaving()"
-      (save)="save()"
-      (cancel)="closeFormPopup()">
-      @if (isEditMode()) {
-        <app-sempione-button
-          secondary-actions
-          text="Storico"
-          icon="clock"
-          variant="secondary"
-          (clicked)="onTrace()">
-        </app-sempione-button>
-      }
-    </app-sempione-popup-action-bar>
-
-  </div>
-
-</app-sempione-popup>
+  [mode]="isEditMode() ? 'edit' : 'new'"
+  [item]="popupItem()"
+  tableName="ST_TABLENAME"
+  entityLabel="Nome Tabella"
+  newTitle="Nuovo nome tabella"
+  cardTitle="Dati nome tabella"
+  idPlaceholder="Codice identificativo..."
+  [onInsert]="doInsert"
+  [onUpdate]="doUpdate"
+  (saved)="search()"
+  (storico)="onTrace($event)">
+</app-sempione-simple-crud-popup>

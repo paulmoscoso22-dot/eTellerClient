@@ -22,87 +22,30 @@
           (onValueChanged)="onSearchChanged($event)">
         </dx-text-box>
       </div>
-      <div toolbar-actions>
-        <app-sempione-button
-          icon="search"
-          hint="Cerca"
-          variant="secondary"
-          (clicked)="loadServizi()">
-        </app-sempione-button>
-        <app-sempione-button
-          icon="revert"
-          hint="Ripristina ricerca"
-          variant="secondary"
-          (clicked)="onResetForm()">
-        </app-sempione-button>
-        <span class="toolbar-sep" toolbar-actions></span>
-        <app-sempione-button
-          text="Nuovo Servizio"
-          icon="add"
-          variant="primary"
-          [shadow]="true"
-          (clicked)="openNewPopup()">
-        </app-sempione-button>
-      </div>
+      <app-sempione-crud-toolbar-actions
+        newText="Nuovo Servizio"
+        (search)="loadServizi()"
+        (reset)="onResetForm()"
+        (add)="openNewPopup()">
+      </app-sempione-crud-toolbar-actions>
     </app-sempione-toolbar>
 
-    <!-- Grid kept as raw dx-data-grid: has bool templates and drop-down-button actions -->
-    <div class="card-body card-body--grid">
-      <dx-data-grid
-        [dataSource]="filteredServizi()"
-        [showBorders]="false"
-        [rowAlternationEnabled]="true"
-        [hoverStateEnabled]="true"
-        [wordWrapEnabled]="true"
-        [height]="'100%'"
-        keyExpr="serId"
-        noDataText="Nessun servizio trovato.">
-
-        <dxo-selection mode="single"></dxo-selection>
-        <dxo-paging [pageSize]="15"></dxo-paging>
-        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[15, 25, 50]" [showInfo]="true"></dxo-pager>
-        <dxo-load-panel [enabled]="false"></dxo-load-panel>
-
-        <dxi-column dataField="serId"      caption="ID"               [width]="130" alignment="left"></dxi-column>
-        <dxi-column dataField="serDes"     caption="Descrizione"                    alignment="left"></dxi-column>
-        <dxi-column dataField="serRunning" caption="Running"   [width]="90"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
-        <dxi-column dataField="serTrace"   caption="Traccia"   [width]="90"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
-        <dxi-column dataField="serEmail"   caption="Email"     [width]="80"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
-        <dxi-column dataField="serEnable"  caption="Abilitato" [width]="90"  alignment="center" [allowSorting]="false" [allowFiltering]="false" cellTemplate="boolTemplate"></dxi-column>
-        <dxi-column dataField="serLastRun" caption="Ultima esecuzione" [width]="160" alignment="left"></dxi-column>
-
-        <dxi-column
-          caption="Azioni"
-          [width]="90"
-          [allowSorting]="false"
-          [allowFiltering]="false"
-          alignment="center"
-          cellTemplate="actionsTemplate">
-        </dxi-column>
-
-        <div *dxTemplate="let cell of 'boolTemplate'" class="bool-cell">
-          @if (cell.value) {
-            <span class="bool-pill bool-pill--yes">✓</span>
-          } @else {
-            <span class="bool-pill bool-pill--no">—</span>
-          }
-        </div>
-
-        <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
-          <app-sempione-row-actions
-            [showView]="true"
-            [showEdit]="true"
-            [showTrace]="true"
-            [showDelete]="true"
-            (view)="onTableAction('view', cell.data)"
-            (edit)="onTableAction('edit', cell.data)"
-            (trace)="onTableAction('trace', cell.data)"
-            (delete)="onTableAction('delete', cell.data)">
-          </app-sempione-row-actions>
-        </div>
-
-      </dx-data-grid>
-    </div>
+    <app-sempione-data-grid
+      [dataSource]="filteredServizi()"
+      [columns]="gridColumns"
+      keyExpr="serId"
+      [pageSize]="15"
+      [allowedPageSizes]="[15, 25, 50]"
+      [showViewAction]="true"
+      [showEditAction]="true"
+      [showTraceAction]="true"
+      [showDeleteAction]="true"
+      noDataText="Nessun servizio trovato."
+      (rowView)="openViewPopup($event)"
+      (rowEdit)="openEditPopup($event)"
+      (rowTrace)="onTraceFromRow($event)"
+      (rowDelete)="onDelete($event)">
+    </app-sempione-data-grid>
 
   </app-sempione-card>
 
@@ -189,12 +132,11 @@
       [cancelText]="popupMode() === 'new' ? 'Annulla' : 'Chiudi'"
       [saveText]="popupMode() === 'new' ? 'Aggiungi' : 'Salva'"
       [showSave]="popupMode() !== 'view'"
-      [isSaving]="false"
+      [isSaving]="isSaving()"
+      [showStorico]="popupMode() !== 'new'"
       (save)="popupMode() === 'new' ? onSubmit() : onUpdate()"
-      (cancel)="closePopup()">
-      @if (popupMode() !== 'new') {
-        <app-sempione-button secondary-actions text="Storico" icon="clock" variant="secondary" (clicked)="onTrace()"></app-sempione-button>
-      }
+      (cancel)="closePopup()"
+      (storico)="onTrace()">
     </app-sempione-popup-action-bar>
 
   </form>

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  DxDataGridModule, DxTextBoxModule,
+  DxTextBoxModule,
   DxValidatorModule, DxSelectBoxModule, DxCheckBoxModule
 } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -22,8 +22,11 @@ import {
   SempionePopupCardComponent,
   SempionePopupActionBarComponent,
   SempioneFieldGroupComponent,
-  SempioneButtonComponent,
-  SempioneRowActionsComponent,
+
+
+  SempioneDataGridComponent,
+  SempioneGridColumn,
+  SempioneCrudToolbarActionsComponent,
 } from '../../../../../components/General';
 
 @Component({
@@ -31,7 +34,7 @@ import {
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxDataGridModule, DxTextBoxModule,
+    DxTextBoxModule,
     DxValidatorModule, DxSelectBoxModule, DxCheckBoxModule,
     SempionePageHeaderComponent,
     SempioneCardComponent,
@@ -41,8 +44,10 @@ import {
     SempionePopupCardComponent,
     SempionePopupActionBarComponent,
     SempioneFieldGroupComponent,
-    SempioneButtonComponent,
-    SempioneRowActionsComponent,
+  
+  
+    SempioneDataGridComponent,
+    SempioneCrudToolbarActionsComponent,
   ],
   templateUrl: './tipo-operazione.component.html',
   styleUrls: ['./tipo-operazione.component.css'],
@@ -63,6 +68,15 @@ export class TipoOperazioneComponent implements OnInit {
   popupMode = signal<'new' | 'view' | 'edit'>('new');
   isDetailPopupVisible = false;
   selectedLabel = signal<string>('');
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'optId',       caption: 'ID',           alignment: 'left',   width: 110              },
+    { dataField: 'optDes',      caption: 'Descrizione',  alignment: 'left', wrap: true               },
+    { dataField: 'optHoscod',   caption: 'Host Code',    alignment: 'left',   width: 130              },
+    { dataField: 'optAptId',    caption: 'Applicazione', alignment: 'center', width: 110              },
+    { dataField: 'optIscredit', caption: 'Segno',        alignment: 'center', width: 90,  type: 'segno' },
+    { dataField: 'optPrtdv',    caption: 'Stampa fiche', alignment: 'center', width: 110, type: 'bool'  },
+  ];
 
   readonly segnoOptions = [
     { id: '',   des: 'Seleziona...' },

@@ -71,8 +71,8 @@ export class CausaleMovimentiComponent implements OnInit {
     { dataField: 'brcActId',     caption: 'Genere conto',    alignment: 'left', width: 115 },
     { dataField: 'brcCodcau',    caption: 'Causale dare',    alignment: 'left', width: 110 },
     { dataField: 'brcCodcausto', caption: 'Causale avere',   alignment: 'left', width: 115 },
-    { dataField: 'brcText1',     caption: 'Testo 1',         alignment: 'left' },
-    { dataField: 'brcText2',     caption: 'Testo 2',         alignment: 'left' },
+    { dataField: 'brcText1',     caption: 'Testo 1',         alignment: 'left', wrap: true },
+    { dataField: 'brcText2',     caption: 'Testo 2',         alignment: 'left', wrap: true },
   ];
 
   filterForm: FormGroup = this.fb.group({

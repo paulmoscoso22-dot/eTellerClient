@@ -198,18 +198,10 @@
     <app-sempione-popup-action-bar
       [saveText]="isEditMode() ? 'Aggiorna' : 'Inserisci'"
       [isSaving]="isSaving()"
+      [showStorico]="isEditMode()"
       (save)="save()"
-      (cancel)="closeFormPopup()">
-      <div secondary-actions>
-        @if (isEditMode()) {
-          <app-sempione-button
-            text="Storico"
-            icon="clock"
-            variant="secondary"
-            (clicked)="openTraceSelected()">
-          </app-sempione-button>
-        }
-      </div>
+      (cancel)="closeFormPopup()"
+      (storico)="openTraceSelected()">
     </app-sempione-popup-action-bar>
 
   </div>

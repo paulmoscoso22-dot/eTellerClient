@@ -62,6 +62,7 @@ export class ScheduledTasksComponent implements OnInit {
   readonly popupMode = signal<'new' | 'view' | 'edit'>('new');
   isDetailPopupVisible = false;
   readonly selectedFutId = signal<string | null>(null);
+  readonly isSaving = signal(false);
 
   readonly periodTypes = signal<IPeriodTypeResponse[]>([]);
 
@@ -242,30 +243,34 @@ export class ScheduledTasksComponent implements OnInit {
   onSubmit(): void {
     if (!this.validateForm()) return;
     const command = this.buildCommand();
+    this.isSaving.set(true);
     this.tabelleService.insertFunzioneSchedule(command)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
+          this.isSaving.set(false);
           notify(`Task "${command.futId}" creato con successo`, 'success', 3000);
           this.closePopup();
           this.loadFunzioniSchedule();
         },
-        error: () => notify('Errore durante la creazione del task', 'error', 3000),
+        error: () => { this.isSaving.set(false); notify('Errore durante la creazione del task', 'error', 3000); },
       });
   }
 
   onUpdate(): void {
     if (!this.validateForm()) return;
     const command = this.buildCommand();
+    this.isSaving.set(true);
     this.tabelleService.updateFunzioneSchedule(command)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
+          this.isSaving.set(false);
           notify(`Task "${command.futId}" aggiornato con successo`, 'success', 3000);
           this.closePopup();
           this.loadFunzioniSchedule();
         },
-        error: () => notify('Errore durante l\'aggiornamento del task', 'error', 3000),
+        error: () => { this.isSaving.set(false); notify('Errore durante l\'aggiornamento del task', 'error', 3000); },
       });
   }
 

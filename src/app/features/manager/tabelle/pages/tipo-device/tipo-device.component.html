@@ -14,54 +14,20 @@
     <div [formGroup]="filterForm">
       <app-sempione-toolbar>
 
-        <div class="toolbar-field toolbar-field--sm">
-          <dx-text-box
-            formControlName="id"
-            placeholder="Codice..."
-            [showClearButton]="true"
-            (onEnterKey)="search()">
-          </dx-text-box>
-        </div>
+        <app-sempione-id-des-filter
+          idPlaceholder="Codice..."
+          desPlaceholder="Descrizione..."
+          (enterKey)="search()">
+        </app-sempione-id-des-filter>
 
-        <div class="toolbar-field toolbar-field--lg">
-          <dx-text-box
-            formControlName="des"
-            placeholder="Descrizione..."
-            [showClearButton]="true"
-            (onEnterKey)="search()">
-          </dx-text-box>
-        </div>
-
-        <div toolbar-actions>
-          <app-sempione-button
-            icon="search"
-            hint="Cerca"
-            variant="secondary"
-            [disabled]="isLoading()"
-            (clicked)="search()">
-          </app-sempione-button>
-          <app-sempione-button
-            icon="revert"
-            hint="Reset filtri"
-            variant="secondary"
-            (clicked)="resetFilters()">
-          </app-sempione-button>
-          <app-sempione-button
-            icon="checklist"
-            hint="Mostra tutti"
-            variant="secondary"
-            [disabled]="isLoading()"
-            (clicked)="showAll()">
-          </app-sempione-button>
-          <span class="toolbar-sep" toolbar-actions></span>
-          <app-sempione-button
-            text="Nuovo"
-            icon="add"
-            variant="primary"
-            [shadow]="true"
-            (clicked)="openAddPopup()">
-          </app-sempione-button>
-        </div>
+        <app-sempione-crud-toolbar-actions
+          [showAll]="true"
+          [isLoading]="isLoading()"
+          (search)="search()"
+          (reset)="resetFilters()"
+          (listAll)="showAll()"
+          (add)="openAddPopup()">
+        </app-sempione-crud-toolbar-actions>
 
       </app-sempione-toolbar>
     </div>
@@ -85,62 +51,16 @@
 
 </div>
 
-<!-- ── Popup Aggiungi / Visualizza / Modifica ── -->
-<app-sempione-popup
+<app-sempione-simple-crud-popup
   [(visible)]="isFormPopupVisible"
-  [title]="popupMode() === 'edit' ? 'Modifica Tipo Device — ' + selectedId()
-         : popupMode() === 'view' ? 'Dettaglio Tipo Device — ' + selectedId()
-         : 'Nuovo Tipo Device'"
-  [maxWidth]="480"
-  (hidden)="closeFormPopup()">
-
-  <div [formGroup]="editForm" class="popup-layout">
-
-    <app-sempione-popup-card title="Dati tipo device">
-      <div class="popup-fields-grid popup-fields-grid--1col">
-
-        <app-sempione-field-group label="ID" [required]="true" [locked]="popupMode() !== 'add'">
-          <dx-text-box
-            formControlName="id"
-            [readOnly]="popupMode() !== 'add'"
-            [maxLength]="50"
-            [showClearButton]="popupMode() === 'add'"
-            placeholder="Max 50 caratteri...">
-          </dx-text-box>
-        </app-sempione-field-group>
-
-        <app-sempione-field-group label="Descrizione" [required]="true">
-          <dx-text-box
-            formControlName="des"
-            [readOnly]="popupMode() === 'view'"
-            [maxLength]="50"
-            [showClearButton]="popupMode() !== 'view'"
-            placeholder="Descrizione...">
-          </dx-text-box>
-        </app-sempione-field-group>
-
-      </div>
-      <app-sempione-alert [message]="saveError()"></app-sempione-alert>
-    </app-sempione-popup-card>
-
-    <app-sempione-popup-action-bar
-      [cancelText]="popupMode() === 'add' ? 'Annulla' : 'Chiudi'"
-      [saveText]="popupMode() === 'edit' ? 'Salva Modifiche' : 'Crea Device'"
-      [showSave]="popupMode() !== 'view'"
-      [isSaving]="isSaving()"
-      (save)="save()"
-      (cancel)="closeFormPopup()">
-      @if (popupMode() !== 'add') {
-        <app-sempione-button
-          secondary-actions
-          text="Storico"
-          icon="clock"
-          variant="secondary"
-          (clicked)="onTrace(selectedId()!)">
-        </app-sempione-button>
-      }
-    </app-sempione-popup-action-bar>
-
-  </div>
-
-</app-sempione-popup>
+  [mode]="popupMode()"
+  [item]="popupItem()"
+  tableName="sys_DEVICETYPE"
+  entityLabel="Tipo Device"
+  newTitle="Nuovo Tipo Device"
+  cardTitle="Dati tipo device"
+  [onInsert]="doInsert"
+  [onUpdate]="doUpdate"
+  (saved)="search()"
+  (storico)="onTrace($event)">
+</app-sempione-simple-crud-popup>

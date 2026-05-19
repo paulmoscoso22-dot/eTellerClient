@@ -1,0 +1,16 @@
+<div [class]="'toolbar-field toolbar-field--' + idSize">
+  <dx-text-box
+    [formControlName]="idControlName"
+    [placeholder]="idPlaceholder"
+    [showClearButton]="true"
+    (onEnterKey)="enterKey.emit()">
+  </dx-text-box>
+</div>
+<div [class]="'toolbar-field toolbar-field--' + desSize">
+  <dx-text-box
+    [formControlName]="desControlName"
+    [placeholder]="desPlaceholder"
+    [showClearButton]="true"
+    (onEnterKey)="enterKey.emit()">
+  </dx-text-box>
+</div>

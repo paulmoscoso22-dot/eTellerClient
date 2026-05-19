@@ -40,17 +40,17 @@
   }
 
   @if (useOverflow()) {
-    <details class="ra-more">
-      <summary class="ra-more-trigger" title="Altre azioni">
-        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" width="13" height="13">
-          <circle cx="12" cy="5" r="1.8"></circle>
-          <circle cx="12" cy="12" r="1.8"></circle>
-          <circle cx="12" cy="19" r="1.8"></circle>
-        </svg>
-      </summary>
-      <div class="ra-more-menu">
+    <button class="ra-more-trigger" [class.open]="menuOpen()" title="Altre azioni" (click)="openMenu($event)">
+      <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" width="13" height="13">
+        <circle cx="12" cy="5" r="1.8"></circle>
+        <circle cx="12" cy="12" r="1.8"></circle>
+        <circle cx="12" cy="19" r="1.8"></circle>
+      </svg>
+    </button>
+    @if (menuOpen()) {
+      <div class="ra-more-menu" [style.top.px]="menuTop()" [style.left.px]="menuLeft()">
         @if (showTrace()) {
-          <button class="ra-more-item ra-more-item--trace" (click)="trace.emit(); $event.stopPropagation()">
+          <button class="ra-more-item ra-more-item--trace" (click)="trace.emit(); closeMenu(); $event.stopPropagation()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 16 14"></polyline>
@@ -59,7 +59,7 @@
           </button>
         }
         @if (showDelete()) {
-          <button class="ra-more-item ra-more-item--danger" (click)="delete.emit(); $event.stopPropagation()">
+          <button class="ra-more-item ra-more-item--danger" (click)="delete.emit(); closeMenu(); $event.stopPropagation()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">
               <polyline points="3 6 5 6 21 6"></polyline>
               <path d="M19 6l-1 14H6L5 6"></path>
@@ -70,7 +70,7 @@
           </button>
         }
       </div>
-    </details>
+    }
   }
 
 </div>

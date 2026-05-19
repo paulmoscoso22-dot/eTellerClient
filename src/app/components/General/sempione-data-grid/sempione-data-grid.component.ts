@@ -9,9 +9,10 @@ export interface SempioneGridColumn {
   width?: number;
   alignment?: 'left' | 'center' | 'right';
   allowSorting?: boolean;
-  type?: 'text' | 'status';
+  type?: 'text' | 'status' | 'bool' | 'segno';
   dataType?: 'string' | 'number' | 'date' | 'boolean' | 'datetime';
   format?: string;
+  wrap?: boolean;
 }
 
 @Component({
@@ -31,16 +32,22 @@ export class SempioneDataGridComponent {
   @Input() showViewAction: boolean = false;
   @Input() showEditAction: boolean = true;
   @Input() showTraceAction: boolean = false;
+  @Input() showDeleteAction: boolean = false;
   @Input() isLoading: boolean = false;
   @Input() error: string | null = null;
 
   @Output() rowView = new EventEmitter<any>();
   @Output() rowEdit = new EventEmitter<any>();
   @Output() rowTrace = new EventEmitter<any>();
+  @Output() rowDelete = new EventEmitter<any>();
   @Output() selectionChanged = new EventEmitter<any>();
 
+  get hasWrapColumn(): boolean {
+    return this.columns.some(c => c.wrap);
+  }
+
   get actionsColumnWidth(): number {
-    const count = [this.showViewAction, this.showEditAction, this.showTraceAction].filter(Boolean).length;
+    const count = [this.showViewAction, this.showEditAction, this.showTraceAction, this.showDeleteAction].filter(Boolean).length;
     if (count >= 3) return 90;
     if (count === 2) return 70;
     return 50;

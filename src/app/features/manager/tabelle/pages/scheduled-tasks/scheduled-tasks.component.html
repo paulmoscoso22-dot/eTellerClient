@@ -253,7 +253,7 @@
       [cancelText]="popupMode() === 'new' ? 'Annulla' : 'Chiudi'"
       [saveText]="popupMode() === 'new' ? 'Aggiungi' : 'Salva'"
       [showSave]="popupMode() !== 'view'"
-      [isSaving]="false"
+      [isSaving]="isSaving()"
       (save)="popupMode() === 'new' ? onSubmit() : onUpdate()"
       (cancel)="closePopup()">
       @if (popupMode() !== 'new') {

@@ -6,16 +6,6 @@
   overflow: hidden;
 }
 
-.page-shell {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  padding: 12px 16px 0;
-  gap: 10px;
-  overflow: hidden;
-}
-
 /* ── Grid container ── */
 .card-body--grid {
   padding: 0;
@@ -67,31 +57,11 @@
 .err-cell { display: flex; justify-content: center; align-items: center; }
 .err-pill { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 11px; font-size: 11px; font-weight: 700; background: #fee2e2; color: #991b1b; }
 
-/* ── Popup layout ── */
-.popup-layout            { display: flex; flex-direction: column; gap: 16px; }
-.popup-fields-grid       { display: grid; gap: 10px 14px; }
-.popup-fields-grid--2col { grid-template-columns: 1fr 1fr; }
-.popup-fields-grid--3col { grid-template-columns: 1fr 1fr 1fr; }
-.popup-fields-grid--4col { grid-template-columns: repeat(4, 1fr); }
-.popup-col-span-2        { grid-column: 1 / -1; }
-.popup-col-span-half     { grid-column: span 2; }
-.popup-col-span-3        { grid-column: span 3; }
-.popup-col-span-4        { grid-column: 1 / -1; }
-
 /* ── Scheduling card variant ── */
 .popup-card--scheduling      { border-color: #bfdbfe; background: #f8faff; }
 .popup-card-title--scheduling { color: #1d4ed8; border-left-color: #1d4ed8; background: #eff6ff; }
 
-/* ── Field label + flags row ── */
-.popup-field-label { font-size: 11px; font-weight: 500; color: #64748b; line-height: 1.2; }
-.popup-flags-row { display: flex; gap: 28px; align-items: flex-start; margin-top: 16px; padding-top: 12px; border-top: 1px solid #e2e8f0; flex-wrap: wrap; }
+/* ── Flags row (scheduling variant: column layout, border separator) ── */
+.popup-flags-row  { display: flex; gap: 28px; align-items: flex-start; margin-top: 16px; padding-top: 12px; border-top: 1px solid #e2e8f0; flex-wrap: wrap; }
 .popup-flag-group { display: flex; flex-direction: column; gap: 6px; }
 .popup-flag-group--accent .popup-field-label { color: #1d4ed8; }
-
-@media (max-width: 640px) {
-  .popup-fields-grid--4col { grid-template-columns: 1fr 1fr; }
-  .popup-fields-grid--3col { grid-template-columns: 1fr 1fr; }
-  .popup-fields-grid--2col { grid-template-columns: 1fr; }
-  .popup-col-span-3        { grid-column: 1 / -1; }
-  .popup-col-span-4        { grid-column: 1; }
-}

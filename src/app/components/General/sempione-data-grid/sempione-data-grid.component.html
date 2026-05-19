@@ -26,6 +26,7 @@
       [keyExpr]="keyExpr || undefined"
       [showBorders]="false"
       [columnAutoWidth]="true"
+      [wordWrapEnabled]="hasWrapColumn"
       [rowAlternationEnabled]="true"
       [hoverStateEnabled]="true"
       [height]="'100%'"
@@ -51,6 +52,25 @@
             cellTemplate="statusCell"
             alignment="center">
           </dxi-column>
+        } @else if (col.type === 'bool') {
+          <dxi-column
+            [dataField]="col.dataField"
+            [caption]="col.caption"
+            [width]="col.width"
+            [allowSorting]="col.allowSorting ?? false"
+            [allowFiltering]="false"
+            cellTemplate="boolCell"
+            alignment="center">
+          </dxi-column>
+        } @else if (col.type === 'segno') {
+          <dxi-column
+            [dataField]="col.dataField"
+            [caption]="col.caption"
+            [width]="col.width"
+            [allowSorting]="col.allowSorting ?? true"
+            cellTemplate="segnoCell"
+            alignment="center">
+          </dxi-column>
         } @else {
           <dxi-column
             [dataField]="col.dataField"
@@ -59,7 +79,8 @@
             [alignment]="col.alignment ?? 'left'"
             [allowSorting]="col.allowSorting ?? true"
             [dataType]="col.dataType"
-            [format]="col.format">
+            [format]="col.format"
+            [cssClass]="col.wrap ? 'col-wrap' : ''">
           </dxi-column>
         }
       }
@@ -72,7 +93,23 @@
         </span>
       </div>
 
-      @if (showViewAction || showEditAction || showTraceAction) {
+      <div *dxTemplate="let cell of 'boolCell'" class="bool-cell">
+        @if (cell.value) {
+          <span class="bool-pill bool-pill--yes">✓</span>
+        } @else {
+          <span class="bool-pill bool-pill--no">—</span>
+        }
+      </div>
+
+      <div *dxTemplate="let cell of 'segnoCell'" class="segno-cell">
+        <span class="segno-pill"
+          [class.segno-pill--pos]="cell.value === '1'"
+          [class.segno-pill--neg]="cell.value === '-1'">
+          {{ cell.value === '1' ? '+1' : cell.value }}
+        </span>
+      </div>
+
+      @if (showViewAction || showEditAction || showTraceAction || showDeleteAction) {
         <dxi-column
           caption="Azioni"
           [width]="actionsColumnWidth"
@@ -87,9 +124,11 @@
             [showView]="showViewAction"
             [showEdit]="showEditAction"
             [showTrace]="showTraceAction"
+            [showDelete]="showDeleteAction"
             (view)="rowView.emit(cell.data)"
             (edit)="rowEdit.emit(cell.data)"
-            (trace)="rowTrace.emit(cell.data)">
+            (trace)="rowTrace.emit(cell.data)"
+            (delete)="rowDelete.emit(cell.data)">
           </app-sempione-row-actions>
         </div>
       }
