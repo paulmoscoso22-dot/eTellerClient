@@ -1,97 +1,34 @@
-<div class="page-shell">
+<app-sempione-page-header title="Gestione Comparenti ADE"></app-sempione-page-header>
 
-  <!-- ── Titolo pagina ── -->
-  <div class="page-header-row">
-    <h1 class="page-title">Gestione Comparenti ADE</h1>
-  </div>
+<app-sempione-card>
+  <app-sempione-card-header title="Gestione Comparenti ADE">
+    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+      <circle cx="9" cy="7" r="4"></circle>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+    </svg>
+  </app-sempione-card-header>
 
-  <!-- ── Main Card ── -->
-  <section class="card-section">
+  <div [formGroup]="filterForm">
+    <app-sempione-toolbar>
+      <dx-text-box
+        formControlName="araName"
+        [showClearButton]="true"
+        placeholder="Nome e cognome..."
+        labelMode="hidden">
+      </dx-text-box>
 
-    <div class="sempione-card-header">
-      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-        <circle cx="9" cy="7" r="4"></circle>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-      </svg>
-      <h2 class="card-title">Gestione Comparenti ADE</h2>
-    </div>
-    <div class="gold-divider"></div>
-
-    <!-- ── Toolbar ── -->
-    <div class="card-toolbar" [formGroup]="filterForm">
-      <div class="toolbar-inner">
-
-        <div class="toolbar-filters">
-          <div class="toolbar-field toolbar-field--lg">
-            <label class="toolbar-lbl">Nome e cognome</label>
-            <dx-text-box
-              formControlName="araName"
-              [showClearButton]="true"
-              placeholder="Nome e cognome..."
-              labelMode="hidden">
-            </dx-text-box>
-          </div>
-
-          <div class="toolbar-field">
-            <label class="toolbar-lbl">Data nascita</label>
-            <dx-date-box
-              formControlName="araBirthdate"
-              type="date"
-              displayFormat="dd.MM.yyyy"
-              [showClearButton]="true"
-              labelMode="hidden">
-            </dx-date-box>
-          </div>
-
-          <div class="toolbar-checks">
-            <dx-check-box formControlName="araRecComplete"      text="Solo completi"></dx-check-box>
-            <dx-check-box formControlName="showExpiredRecords"  text="Mostra scaduti"></dx-check-box>
-          </div>
-        </div>
-
-        <div class="toolbar-actions">
-          <dx-button
-            icon="search"
-            hint="Cerca"
-            stylingMode="contained"
-            class="btn-fin-primary action-shadow"
-            [disabled]="isLoading()"
-            (onClick)="search()">
-          </dx-button>
-          <dx-button
-            icon="revert"
-            hint="Ripristina filtri"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="resetFilters()">
-          </dx-button>
-          <dx-button
-            icon="add"
-            text="Aggiungi"
-            stylingMode="contained"
-            class="btn-fin-primary"
-            (onClick)="openAddPopup()">
-          </dx-button>
-        </div>
-
+      <div class="toolbar-field">
+        <dx-date-box
+          formControlName="araBirthdate"
+          type="date"
+          displayFormat="dd.MM.yyyy"
+          [showClearButton]="true"
+          placeholder="Data nascita..."
+          labelMode="hidden">
+        </dx-date-box>
       </div>
-    </div>
-
-    <!-- ── Griglia ── -->
-    <div class="card-body card-body--grid">
-
-      @if (error()) {
-        <div class="grid-message grid-message--error">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
-          {{ error() }}
-        </div>
-      }
 
       @if (isLoading()) {
         <div class="grid-message grid-message--loading">
@@ -188,70 +125,95 @@
 
     </div>
 
-  </section>
+      <div toolbar-actions>
+        <dx-button
+          icon="search"
+          hint="Cerca"
+          stylingMode="outlined"
+          class="btn-fin-secondary"
+          [disabled]="isLoading()"
+          (onClick)="search()">
+        </dx-button>
+        <dx-button
+          icon="revert"
+          hint="Ripristina filtri"
+          stylingMode="outlined"
+          class="btn-fin-secondary"
+          (onClick)="resetFilters()">
+        </dx-button>
+        <span class="toolbar-sep" toolbar-actions></span>
+        <dx-button
+          icon="add"
+          text="Aggiungi"
+          stylingMode="contained"
+          class="btn-fin-primary"
+          (onClick)="openAddPopup()">
+        </dx-button>
+      </div>
+    </app-sempione-toolbar>
+  </div>
 
-</div>
+  <app-sempione-data-grid
+    [dataSource]="appearers()"
+    [keyExpr]="'araId'"
+    [columns]="columns"
+    [isLoading]="isLoading()"
+    [error]="error()"
+    [pageSize]="30"
+    [allowedPageSizes]="[20, 30, 50, 100]"
+    [showEditAction]="true"
+    [showTraceAction]="true"
+    emptyStateText="Nessun comparente trovato. Inserire i criteri di ricerca e premere Cerca."
+    emptyStateIcon="user"
+    (rowEdit)="openEditPopup($event)"
+    (rowTrace)="openHistoryPopup($event)">
+  </app-sempione-data-grid>
+</app-sempione-card>
 
 <!-- ══ Popup Aggiungi / Modifica ══ -->
-<dx-popup
+<app-sempione-popup
   [(visible)]="isFormPopupVisible"
-  [showTitle]="true"
   [title]="isEditMode() ? ('Modifica Comparente — ID ' + selectedAraId()) : 'Nuovo Comparente'"
-  [dragEnabled]="true"
-  [hideOnOutsideClick]="false"
-  [showCloseButton]="true"
-  [width]="'90%'"
   [maxWidth]="760"
-  [height]="'auto'"
-  [maxHeight]="'92vh'"
-  (onHidden)="closeFormPopup()">
+  (hidden)="closeFormPopup()">
 
-  <div *dxTemplate="let data of 'content'">
+  @if (isLoadingForm()) {
+    <div class="popup-loading">
+      <dx-load-indicator [visible]="true"></dx-load-indicator>
+      <span>Caricamento...</span>
+    </div>
+  }
 
-    @if (isLoadingForm()) {
-      <div class="popup-loading">
-        <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-        </svg>
-        Caricamento...
-      </div>
-    }
+  @if (!isLoadingForm()) {
+    <div class="popup-layout" [formGroup]="editForm">
 
-    @if (!isLoadingForm()) {
-      <div class="popup-layout" [formGroup]="editForm">
+      <app-sempione-popup-card title="Anagrafica">
+        <div class="popup-fields-grid popup-fields-grid--2col">
 
-        <!-- ── Card 1: Anagrafica ── -->
-        <section class="popup-card">
-          <h3 class="popup-card-title">Anagrafica</h3>
-          <div class="popup-fields-grid popup-fields-grid--2col">
+          <div class="popup-col-span-2">
+            <app-sempione-field-group label="Nome e cognome" [required]="true">
+              <dx-text-box formControlName="araName" [showClearButton]="true" labelMode="hidden"></dx-text-box>
+            </app-sempione-field-group>
+          </div>
 
-            <div class="popup-field-group popup-col-span-2">
-              <label class="popup-field-label">Nome e cognome <span class="req">*</span></label>
-              <dx-text-box formControlName="araName" [showClearButton]="true" placeholder="Nome e cognome..." labelMode="hidden"></dx-text-box>
-            </div>
+          <app-sempione-field-group label="Rappresentanza">
+            <dx-text-box formControlName="araRepresents" [showClearButton]="true" labelMode="hidden"></dx-text-box>
+          </app-sempione-field-group>
 
-            <div class="popup-field-group">
-              <label class="popup-field-label">Rappresentanza</label>
-              <dx-text-box formControlName="araRepresents" [showClearButton]="true" labelMode="hidden"></dx-text-box>
-            </div>
+          <app-sempione-field-group label="Domicilio">
+            <dx-text-box formControlName="araAddress" [showClearButton]="true" labelMode="hidden"></dx-text-box>
+          </app-sempione-field-group>
 
-            <div class="popup-field-group">
-              <label class="popup-field-label">Domicilio</label>
-              <dx-text-box formControlName="araAddress" [showClearButton]="true" labelMode="hidden"></dx-text-box>
-            </div>
+          <app-sempione-field-group label="Data nascita">
+            <dx-date-box formControlName="araBirthdate" type="date" displayFormat="dd.MM.yyyy" [showClearButton]="true" labelMode="hidden"></dx-date-box>
+          </app-sempione-field-group>
 
-            <div class="popup-field-group">
-              <label class="popup-field-label">Data nascita</label>
-              <dx-date-box formControlName="araBirthdate" type="date" displayFormat="dd.MM.yyyy" [showClearButton]="true" labelMode="hidden"></dx-date-box>
-            </div>
+          <app-sempione-field-group label="Luogo nascita">
+            <dx-text-box formControlName="araBirthplace" [showClearButton]="true" labelMode="hidden"></dx-text-box>
+          </app-sempione-field-group>
 
-            <div class="popup-field-group">
-              <label class="popup-field-label">Luogo nascita</label>
-              <dx-text-box formControlName="araBirthplace" [showClearButton]="true" labelMode="hidden"></dx-text-box>
-            </div>
-
-            <div class="popup-field-group popup-col-span-2">
-              <label class="popup-field-label">Nazionalità</label>
+          <div class="popup-col-span-2">
+            <app-sempione-field-group label="Nazionalità">
               <dx-select-box
                 formControlName="araNationality"
                 [dataSource]="countries()"
@@ -262,156 +224,83 @@
                 placeholder="Selezionare..."
                 labelMode="hidden">
               </dx-select-box>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- ── Card 2: Documento ── -->
-        <section class="popup-card">
-          <h3 class="popup-card-title">Documento di identità</h3>
-          <div class="popup-fields-grid popup-fields-grid--2col">
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Nr. documento</label>
-              <dx-text-box formControlName="araIddocnum" [showClearButton]="true" labelMode="hidden"></dx-text-box>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Scadenza documento</label>
-              <dx-date-box formControlName="araDocexpdate" type="date" displayFormat="dd.MM.yyyy" [showClearButton]="true" labelMode="hidden"></dx-date-box>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Opzioni</label>
-              <div class="checkbox-stack">
-                <dx-check-box formControlName="araRecComplete" text="Scheda completa"></dx-check-box>
-                @if (isEditMode()) {
-                  <dx-check-box formControlName="araIsupdated" text="Aggiornato"></dx-check-box>
-                }
-              </div>
-            </div>
-
+            </app-sempione-field-group>
           </div>
 
-          @if (saveError()) {
-            <div class="save-error-message">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
-              {{ saveError() }}
-            </div>
-          }
-        </section>
-
-        <!-- ── Action bar ── -->
-        <div class="popup-action-bar">
-          <div class="popup-actions-secondary">
-            <dx-button
-              text="Annulla"
-              icon="close"
-              stylingMode="outlined"
-              class="btn-fin-secondary"
-              (onClick)="closeFormPopup()">
-            </dx-button>
-          </div>
-          <div class="popup-actions-primary">
-            <dx-button
-              [text]="isSaving() ? 'Salvataggio...' : 'Salva'"
-              icon="save"
-              stylingMode="contained"
-              class="btn-fin-primary"
-              [disabled]="isSaving()"
-              (onClick)="save()">
-            </dx-button>
-          </div>
         </div>
+      </app-sempione-popup-card>
 
-      </div>
-    }
+      <app-sempione-popup-card title="Documento di identità">
+        <div class="popup-fields-grid popup-fields-grid--2col">
 
-  </div>
-</dx-popup>
+          <app-sempione-field-group label="Nr. documento">
+            <dx-text-box formControlName="araIddocnum" [showClearButton]="true" labelMode="hidden"></dx-text-box>
+          </app-sempione-field-group>
 
-<!-- ══ Popup Storico ══ -->
-<dx-popup
-  [(visible)]="isHistoryPopupVisible"
-  [showTitle]="true"
-  [title]="'Storico Comparente — ID ' + historyAraId()"
-  [dragEnabled]="true"
-  [hideOnOutsideClick]="true"
-  [showCloseButton]="true"
-  [width]="'94%'"
-  [maxWidth]="960"
-  [height]="'auto'"
-  [maxHeight]="'85vh'"
-  (onHidden)="closeHistoryPopup()">
+          <app-sempione-field-group label="Scadenza documento">
+            <dx-date-box formControlName="araDocexpdate" type="date" displayFormat="dd.MM.yyyy" [showClearButton]="true" labelMode="hidden"></dx-date-box>
+          </app-sempione-field-group>
 
-  <div *dxTemplate="let data of 'content'">
-    <div class="popup-layout">
-
-      @if (isLoadingHistory()) {
-        <div class="grid-message grid-message--loading">
-          <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-          </svg>
-          Caricamento storico...
-        </div>
-      }
-
-      @if (!isLoadingHistory()) {
-        <section class="popup-card">
-          <h3 class="popup-card-title">Storico modifiche</h3>
-          <dx-data-grid
-            [dataSource]="historyItems()"
-            [showBorders]="false"
-            [columnAutoWidth]="false"
-            [rowAlternationEnabled]="true"
-            [height]="400"
-            noDataText="Nessuna voce di storico disponibile">
-
-            <dxo-paging [pageSize]="15"></dxo-paging>
-            <dxo-pager [showInfo]="true" [showNavigationButtons]="true" displayMode="full"></dxo-pager>
-
-            <dxi-column dataField="hisDate"        caption="Data modifica"  alignment="center" [width]="140" dataType="datetime" format="dd.MM.yyyy HH:mm"></dxi-column>
-            <dxi-column dataField="araName"        caption="Nome e cognome" alignment="left"></dxi-column>
-            <dxi-column dataField="araRepresents"  caption="Rappresentanza" alignment="left"   [width]="120"></dxi-column>
-            <dxi-column dataField="araBirthdate"   caption="Data nascita"   alignment="center" [width]="105" dataType="date" format="dd.MM.yyyy"></dxi-column>
-            <dxi-column dataField="araNationality" caption="Nazionalità"    alignment="left"   [width]="110"></dxi-column>
-            <dxi-column dataField="araAddress"     caption="Domicilio"      alignment="left"   [width]="140"></dxi-column>
-            <dxi-column dataField="araIddocnum"    caption="Nr doc"         alignment="left"   [width]="110"></dxi-column>
-            <dxi-column dataField="araDocexpdate"  caption="Scad. doc."     alignment="center" [width]="100" dataType="date" format="dd.MM.yyyy"></dxi-column>
-            <dxi-column dataField="araRecComplete" caption="Completo"       alignment="center" [width]="80"  cellTemplate="histBoolTemplate"></dxi-column>
-
-            <div *dxTemplate="let cell of 'histBoolTemplate'" class="bool-cell">
-              @if (cell.value) {
-                <span class="bool-badge bool-badge--yes">Sì</span>
-              } @else {
-                <span class="bool-badge bool-badge--no">No</span>
+          <app-sempione-field-group label="Opzioni">
+            <div class="checkbox-stack">
+              <dx-check-box formControlName="araRecComplete" text="Scheda completa"></dx-check-box>
+              @if (isEditMode()) {
+                <dx-check-box formControlName="araIsupdated" text="Aggiornato"></dx-check-box>
               }
             </div>
+          </app-sempione-field-group>
 
-            <dxo-load-panel [enabled]="false"></dxo-load-panel>
-
-          </dx-data-grid>
-        </section>
-      }
-
-      <div class="popup-action-bar">
-        <div class="popup-actions-secondary"></div>
-        <div class="popup-actions-primary">
-          <dx-button
-            text="Chiudi"
-            icon="close"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="closeHistoryPopup()">
-          </dx-button>
         </div>
-      </div>
+
+        @if (saveError()) {
+          <div class="save-error-msg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            {{ saveError() }}
+          </div>
+        }
+      </app-sempione-popup-card>
+
+      <app-sempione-popup-action-bar
+        saveText="Salva"
+        cancelText="Annulla"
+        [isSaving]="isSaving()"
+        (save)="save()"
+        (cancel)="closeFormPopup()">
+      </app-sempione-popup-action-bar>
 
     </div>
+  }
+</app-sempione-popup>
+
+<!-- ══ Popup Storico ══ -->
+<app-sempione-popup
+  [(visible)]="isHistoryPopupVisible"
+  [title]="'Storico Comparente — ID ' + historyAraId()"
+  [maxWidth]="960"
+  [maxHeight]="'85vh'"
+  (hidden)="closeHistoryPopup()">
+
+  <div class="popup-layout">
+    <app-sempione-popup-card title="Storico modifiche">
+      <app-sempione-data-grid
+        [dataSource]="historyItems()"
+        [columns]="historyColumns"
+        [isLoading]="isLoadingHistory()"
+        [pageSize]="15"
+        [allowedPageSizes]="[15, 30, 50]"
+        [showEditAction]="false"
+        noDataText="Nessuna voce di storico disponibile.">
+      </app-sempione-data-grid>
+    </app-sempione-popup-card>
+
+    <app-sempione-popup-action-bar
+      cancelText="Chiudi"
+      [showSave]="false"
+      (cancel)="closeHistoryPopup()">
+    </app-sempione-popup-action-bar>
   </div>
-</dx-popup>
+</app-sempione-popup>

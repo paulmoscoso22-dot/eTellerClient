@@ -2,7 +2,7 @@ import { Component, DestroyRef, EventEmitter, Output, inject, isDevMode, signal 
 import { Router } from '@angular/router';
 import { AuthStore } from '../../../features/auth/auth.store';
 import { AuthService } from '../../../features/auth/services/auth.service';
-import { Logo } from './logo/logo.component';
+import { SempioneLogoComponent } from '../../General/sempione-logo/sempione-logo.component';
 import { UserBadge } from './user-badge/user-badge.component';
 import { DxDropDownButtonModule, DxTooltipModule } from 'devextreme-angular';
 import { TranslocoService } from '@jsverse/transloco';
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [Logo, UserBadge, DxDropDownButtonModule, DxTooltipModule, CommonModule],
+  imports: [SempioneLogoComponent, UserBadge, DxDropDownButtonModule, DxTooltipModule, CommonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })

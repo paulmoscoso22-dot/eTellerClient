@@ -510,76 +510,22 @@
 .popup-loading svg { width: 18px; height: 18px; flex-shrink: 0; }
 
 .popup-layout {
-  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background: #f8fafc;
-}
-
-.popup-card {
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.04);
-}
-
-.popup-card-title {
-  background: #f1f5f9;
-  margin: -16px -16px 14px -16px;
-  padding: 9px 16px 9px 13px;
-  font-family: var(--font-ui);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #003366;
-  border-left: 3px solid #003366;
-  border-radius: 8px 8px 0 0;
 }
 
 .popup-fields-grid       { display: grid; gap: 10px 14px; }
 .popup-fields-grid--2col { grid-template-columns: 1fr 1fr; }
 .popup-col-span-2        { grid-column: 1 / -1; }
 
-.popup-field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.popup-field-label {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  letter-spacing: 0;
-  line-height: 1.2;
-}
-
-.req { color: #dc2626; font-weight: 700; }
-
-/* ── Tipografia input popup ── */
-::ng-deep .popup-layout .dx-texteditor-input {
-  font-family: var(--font-ui) !important;
-  font-size: 13px !important;
-  font-weight: 400 !important;
-  color: var(--color-text-primary) !important;
-  line-height: 1.45 !important;
-}
-
-/* ── Checkbox stack ── */
 .checkbox-stack {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding-top: 4px;
+  gap: 8px;
 }
 
-/* ── Save error ── */
-.save-error-message {
+.save-error-msg {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -591,33 +537,9 @@
   color: #991b1b;
   font-size: 12px;
 }
-.save-error-message svg { width: 16px; height: 16px; stroke: #dc2626; flex-shrink: 0; }
 
-/* ══════════════════════════════════════════
-   Popup Action Bar
-   ══════════════════════════════════════════ */
-.popup-action-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding-top: 16px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.popup-actions-secondary { display: flex; gap: 6px; }
-.popup-actions-primary   { display: flex; gap: 6px; }
-
-::ng-deep .popup-actions-primary .btn-fin-primary.dx-button {
-  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.18) !important;
-}
-::ng-deep .popup-actions-primary .btn-fin-primary.dx-button:hover {
-  box-shadow: 0 6px 16px rgba(0, 51, 102, 0.24) !important;
-}
-
-/* ══════════════════════════════════════════
-   Responsive
-   ══════════════════════════════════════════ */
-@media (max-width: 900px) {
-  .toolbar-filters { flex-wrap: wrap; }
+.save-error-msg svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }

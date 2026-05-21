@@ -1,0 +1,30 @@
+:host {
+  display: block;
+}
+
+.display-value {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  background: #f5f6f8;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  border: 1px solid #e9ecef;
+}
+
+.display-value--accent {
+  background: #f0f4f8;
+  color: #003366;
+  font-weight: 700;
+  border-color: #d0daea;
+}
+
+.display-value--resto {
+  background: #fefce8;
+  color: #713f12;
+  font-weight: 700;
+  border-color: #fde68a;
+}

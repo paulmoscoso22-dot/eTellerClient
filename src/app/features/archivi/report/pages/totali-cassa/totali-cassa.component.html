@@ -1,75 +1,93 @@
-<div class="container">
-  <!-- Search Form -->
+<app-sempione-page-header title="Totali Cassa"></app-sempione-page-header>
+
+<div class="page-shell">
+
   <app-totale-cassa-filter
     [isLoading]="isLoading"
     [cassaRequired]="true"
     [dataRequired]="true"
     [tipContoRequired]="true"
     [localitaRequired]="true"
-    (searchClick)="onSearch($event)"
-  ></app-totale-cassa-filter>
+    (searchClick)="onSearch($event)">
+  </app-totale-cassa-filter>
 
-  <!-- Error Message -->
-  @if (error()) {
-    <div class="error-message">
-      {{ error() }}
-    </div>
-  }
+  <section class="card-section">
 
-  <!-- Loading Indicator -->
-  @if (isLoading()) {
-    <div class="loading-message">
-      Caricamento...
-    </div>
-  }
+    <app-header-card title="Totali Cassa" [count]="totaliCassa().length > 0 ? totaliCassa().length : undefined">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+        <path d="M16 3H8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z"></path>
+        <line x1="12" y1="12" x2="12" y2="16"></line>
+        <line x1="10" y1="14" x2="14" y2="14"></line>
+      </svg>
+    </app-header-card>
 
-  <!-- Data Grid -->
-  @if (!isLoading() && totaliCassa().length > 0) {
-    <div class="data-grid-container">
-      <dx-data-grid
-        id="gridContainer"
-        [dataSource]="totaliCassa()"
-        keyExpr="tocCurId"
-        [showBorders]="true"
-        [columnAutoWidth]="true"
-        [allowColumnReordering]="true"
-        [allowColumnResizing]="true"
-      >
-        <dxo-data-grid-filter-row
-          [visible]="showFilterRow"
-          [applyFilter]="currentFilter"
-        ></dxo-data-grid-filter-row>
-        <dxo-data-grid-header-filter
-          [visible]="showHeaderFilter"
-        ></dxo-data-grid-header-filter>
-        <dxo-data-grid-search-panel
-          [visible]="true"
-          [width]="240"
-          placeholder="Cerca..."
-        ></dxo-data-grid-search-panel>
-        <dxo-data-grid-paging [pageSize]="10" [enabled]="true"></dxo-data-grid-paging>
-        <dxo-data-grid-pager
-          [visible]="true"
-          [showPageSizeSelector]="true"
-          [allowedPageSizes]="[10, 25, 50, 100]"
-          [showInfo]="true"
-        ></dxo-data-grid-pager>
-        
-        <dxi-data-grid-column dataField="tocCurId" caption="Unità"></dxi-data-grid-column>
-        <dxi-data-grid-column dataField="tocSaldoIni" caption="Saldo iniziale" dataType="number" format="#,##0.00" alignment="left"></dxi-data-grid-column>
-        <dxi-data-grid-column dataField="tocTotdare" caption="Dare" dataType="number" format="#,##0.00" alignment="left"></dxi-data-grid-column>
-        <dxi-data-grid-column dataField="tocTotdareCtv" caption="Dare CTV" dataType="number" format="#,##0.00" alignment="left"></dxi-data-grid-column>
-        <dxi-data-grid-column dataField="tocTotavere" caption="Avere" dataType="number" format="#,##0.00" alignment="left"></dxi-data-grid-column>
-        <dxi-data-grid-column dataField="tocSaldoFin" caption="Saldo finale" dataType="number" format="#,##0.00" alignment="left"></dxi-data-grid-column>
-      </dx-data-grid>
-    </div>
-  }
+    <div class="card-body card-body--grid">
 
-  @if (!isLoading() && totaliCassa().length === 0 && !error()) {
-    <div class="no-data-message">
-      <div class="no-data-icon">⊘</div>
-      <div class="no-data-title">Nessun risultato trovato</div>
-      <div class="no-data-subtitle">Imposta i filtri e avvia la ricerca per visualizzare i dati.</div>
+      @if (isLoading()) {
+        <div class="state-message state-message--loading">
+          <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          </svg>
+          Caricamento in corso...
+        </div>
+      }
+
+      @if (error()) {
+        <div class="state-message state-message--error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          {{ error() }}
+        </div>
+      }
+
+      @if (!isLoading() && !error() && totaliCassa().length === 0) {
+        <div class="state-message state-message--empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+            <path d="M16 3H8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z"></path>
+          </svg>
+          <span class="state-title">Nessun risultato</span>
+          <span class="state-subtitle">Imposta i filtri e avvia la ricerca per visualizzare i dati.</span>
+        </div>
+      }
+
+      @if (!isLoading() && !error() && totaliCassa().length > 0) {
+        <dx-data-grid
+          id="gridContainer"
+          [dataSource]="totaliCassa()"
+          keyExpr="tocCurId"
+          [showBorders]="false"
+          [columnAutoWidth]="true"
+          [allowColumnReordering]="true"
+          [allowColumnResizing]="true"
+          [rowAlternationEnabled]="true"
+          [hoverStateEnabled]="true"
+          [height]="'100%'">
+
+          <dxo-filter-row [visible]="showFilterRow" [applyFilter]="currentFilter"></dxo-filter-row>
+          <dxo-header-filter [visible]="showHeaderFilter"></dxo-header-filter>
+          <dxo-search-panel [visible]="true" [width]="240" placeholder="Cerca..."></dxo-search-panel>
+          <dxo-paging [pageSize]="20"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
+
+          <dxi-column dataField="tocCurId"     caption="Unità"          [width]="80"  alignment="center"></dxi-column>
+          <dxi-column dataField="tocSaldoIni"  caption="Saldo Iniziale" [width]="130" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+          <dxi-column dataField="tocTotdare"   caption="Dare"           [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+          <dxi-column dataField="tocTotdareCtv" caption="Dare CTV"      [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+          <dxi-column dataField="tocTotavere"  caption="Avere"          [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+          <dxi-column dataField="tocSaldoFin"  caption="Saldo Finale"   [width]="130" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+
+          <dxo-load-panel [enabled]="false"></dxo-load-panel>
+
+        </dx-data-grid>
+      }
+
     </div>
-  }
+
+  </section>
+
 </div>

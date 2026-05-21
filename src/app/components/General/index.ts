@@ -17,3 +17,4 @@ export { SempioneCrudToolbarActionsComponent } from './sempione-crud-toolbar-act
 export { PopupTitlePipe } from './pipes/popup-title.pipe';
 export { SempioneIdDesFilterComponent } from './sempione-id-des-filter/sempione-id-des-filter.component';
 export { SempioneSimpleCrudPopupComponent } from './sempione-simple-crud-popup/sempione-simple-crud-popup.component';
+export { SempioneLogoComponent } from './sempione-logo/sempione-logo.component';

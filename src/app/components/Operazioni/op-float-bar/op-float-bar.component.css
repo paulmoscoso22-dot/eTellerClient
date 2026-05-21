@@ -1,0 +1,48 @@
+:host {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.float-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 6px 0 5px;
+  background: #fff;
+  border-top: 1px solid #dce3ee;
+  box-shadow: 0 -2px 6px rgba(0, 51, 102, 0.06);
+}
+
+:host ::ng-deep .btn-secondary.dx-button {
+  height: 30px;
+  border-color: #c8d3e0;
+  color: #374151;
+}
+
+:host ::ng-deep .btn-secondary.dx-button:hover {
+  border-color: #003366;
+  color: #003366;
+  background: rgba(0, 51, 102, 0.04);
+}
+
+:host ::ng-deep .btn-confirm.dx-button {
+  background-color: #003366;
+  border-color: #003366;
+  color: #fff;
+  height: 32px;
+  margin-left: auto;
+}
+
+:host ::ng-deep .btn-confirm.dx-button:hover {
+  background-color: #004080;
+  border-color: #004080;
+}
+
+:host ::ng-deep .btn-confirm .dx-button-content {
+  padding: 0 24px;
+}
+
+:host ::ng-deep .btn-confirm .dx-icon {
+  color: #fff;
+}

@@ -1,382 +1,196 @@
 <div class="page-shell">
 
-  <!-- ── Titolo pagina ── -->
-  <div class="page-header-row">
-    <h1 class="page-title">Casse</h1>
-  </div>
+  <app-sempione-page-header title="Casse"></app-sempione-page-header>
 
-  <!-- ── Card Main ── -->
-  <section class="card-section">
+  <app-sempione-card>
 
-    <div class="sempione-card-header">
+    <app-sempione-card-header title="Elenco Casse">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="2" y="4" width="20" height="16" rx="2"></rect>
         <path d="M12 8v8M8 12h8"></path>
       </svg>
-      <h2 class="card-title">Elenco Casse</h2>
-    </div>
-    <div class="gold-divider"></div>
+    </app-sempione-card-header>
 
-    <!-- ── Toolbar ── -->
-    <div class="card-toolbar">
-      <div class="toolbar-inner">
+    <app-sempione-toolbar>
 
-        <div class="toolbar-filters">
-          <div class="toolbar-field toolbar-field--search">
-            <dx-text-box
-              [value]="filterSearch()"
-              placeholder="Cerca per ID, IP, MAC o descrizione..."
-              [showClearButton]="true"
-              valueChangeEvent="input"
-              (onValueChanged)="onSearchChanged($event)">
-            </dx-text-box>
-          </div>
-        </div>
-
-        <div class="toolbar-actions">
-          <dx-button
-            icon="search"
-            hint="Cerca"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="onSearch()">
-          </dx-button>
-          <dx-button
-            icon="revert"
-            hint="Ripristina ricerca"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="resetSearch()">
-          </dx-button>
-          <dx-button
-            class="btn-fin-primary action-shadow"
-            text="Nuova Cassa"
-            stylingMode="contained"
-            (onClick)="openNewPopup()">
-          </dx-button>
-        </div>
-
+      <div class="toolbar-field">
+        <dx-text-box
+          labelMode="hidden"
+          placeholder="Cerca per ID, IP, MAC o descrizione..."
+          [showClearButton]="true"
+          [value]="filterSearch()"
+          valueChangeEvent="input"
+          (onValueChanged)="onSearchChanged($event)">
+        </dx-text-box>
       </div>
-    </div>
 
-    <!-- ── Grid ── -->
-    <div class="card-body card-body--grid">
-      <dx-data-grid
-        [dataSource]="filteredCasse()"
-        [showBorders]="false"
-        [showColumnLines]="false"
-        [showRowLines]="true"
-        [columnAutoWidth]="true"
-        [rowAlternationEnabled]="true"
-        [hoverStateEnabled]="true"
-        [height]="'100%'"
-        keyExpr="cliId">
+      <div toolbar-actions>
+        <app-sempione-button
+          icon="revert"
+          hint="Ripristina ricerca"
+          variant="secondary"
+          (clicked)="resetSearch()">
+        </app-sempione-button>
+        <span class="toolbar-sep" toolbar-actions></span>
+        <app-sempione-button
+          text="Nuova Cassa"
+          icon="add"
+          variant="primary"
+          [shadow]="true"
+          (clicked)="openNewPopup()">
+        </app-sempione-button>
+      </div>
 
-        <dxo-selection mode="single"></dxo-selection>
-        <dxo-paging [pageSize]="20"></dxo-paging>
-        <dxo-pager
-          [showInfo]="true"
-          infoText="{2} casse"
-          [showPageSizeSelector]="true"
-          [allowedPageSizes]="[20, 50, 100]"
-          [showNavigationButtons]="true"
-          displayMode="full">
-        </dxo-pager>
+    </app-sempione-toolbar>
 
-        <dxi-column dataField="cliId"     caption="ID"           [width]="80"  alignment="left"></dxi-column>
-        <dxi-column dataField="cliIp"     caption="Indirizzo IP" [width]="140" alignment="left"></dxi-column>
-        <dxi-column dataField="cliBraId"  caption="Filiale"                    alignment="left"   cellTemplate="filialeTemplate"></dxi-column>
-        <dxi-column dataField="cliLingua" caption="Lingua"       [width]="90"  alignment="center" cellTemplate="linguaTemplate"></dxi-column>
-        <dxi-column dataField="cliStatus" caption="Stato"        [width]="100" alignment="center" cellTemplate="statusTemplate"></dxi-column>
-        <dxi-column dataField="inUso"     caption="In Uso"       [width]="80"  alignment="center" [allowSorting]="false" cellTemplate="inUsoTemplate"></dxi-column>
-        <dxi-column dataField="cliCnt"    caption="N° Oper."     [width]="90"  alignment="right"></dxi-column>
-        <dxi-column dataField="cliDes"    caption="Descrizione"               alignment="left"></dxi-column>
+    <app-sempione-data-grid
+      [dataSource]="gridData()"
+      [columns]="gridColumns"
+      keyExpr="cliId"
+      [isLoading]="isLoading()"
+      [error]="error()"
+      [pageSize]="20"
+      [allowedPageSizes]="[20, 50, 100]"
+      [showViewAction]="true"
+      [showEditAction]="true"
+      [showTraceAction]="true"
+      [showDeleteAction]="true"
+      noDataText="Nessuna cassa trovata."
+      (rowView)="onTableAction('view', $event)"
+      (rowEdit)="onTableAction('edit', $event)"
+      (rowTrace)="onRowTrace($event)"
+      (rowDelete)="onRowDelete($event)">
+    </app-sempione-data-grid>
 
-        <dxi-column
-          caption="Azioni"
-          [width]="80"
-          [allowSorting]="false"
-          [allowFiltering]="false"
-          alignment="center"
-          cellTemplate="actionsTemplate">
-        </dxi-column>
+  </app-sempione-card>
 
-        <div *dxTemplate="let cell of 'filialeTemplate'">
-          {{ getBraDes(cell.value) }}
-        </div>
-
-        <div *dxTemplate="let cell of 'linguaTemplate'" class="lang-cell">
-          <span class="lang-badge">{{ cell.value }}</span>
-        </div>
-
-        <div *dxTemplate="let cell of 'statusTemplate'" class="status-cell">
-          <span class="status-pill" [ngClass]="getStatusClass(cell.value)">
-            {{ getStatusDes(cell.value) }}
-          </span>
-        </div>
-
-        <div *dxTemplate="let cell of 'inUsoTemplate'" class="bool-cell">
-          <span class="bool-badge"
-            [class.bool-badge--yes]="cell.value"
-            [class.bool-badge--no]="!cell.value">
-            {{ cell.value ? 'Sì' : 'No' }}
-          </span>
-        </div>
-
-        <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
-          <button class="action-btn action-btn--view" title="Visualizza" (click)="onTableAction('view', cell.data)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
-          </button>
-          <button class="action-btn action-btn--edit" title="Modifica" (click)="onTableAction('edit', cell.data)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-            </svg>
-          </button>
-        </div>
-
-        <dxo-load-panel [enabled]="false"></dxo-load-panel>
-      </dx-data-grid>
-    </div>
-
-  </section>
 </div>
 
-<!-- ══════════════════════════════════════
-     Popup: Dettaglio / Modifica / Nuova Cassa
-     ══════════════════════════════════════ -->
-<dx-popup
+<!-- ── Popup Dettaglio / Modifica / Nuova Cassa ── -->
+<app-sempione-popup
   [(visible)]="isDetailPopupVisible"
-  [showTitle]="true"
-  [title]="popupMode() === 'edit' ? 'Modifica Cassa — ' + selectedLabel()
-         : popupMode() === 'view' ? 'Dettaglio Cassa — ' + selectedLabel()
-         : 'Nuova Cassa'"
-  [dragEnabled]="true"
-  [hideOnOutsideClick]="false"
-  [showCloseButton]="true"
-  [width]="'92%'"
-  [maxWidth]="780"
-  [height]="'auto'"
-  [maxHeight]="'92vh'"
-  (onHidden)="closePopup()">
+  [title]="popupTitle()"
+  [maxWidth]="800"
+  (hidden)="closePopup()">
 
-  <div *dxTemplate="let data of 'content'">
-    <form [formGroup]="cassaForm"
-          class="popup-layout"
-          [class.popup-view-mode]="popupMode() === 'view'">
+  <form [formGroup]="cassaForm" class="popup-layout" [class.popup-view-mode]="popupMode() === 'view'">
 
-      <!-- ── Card 1: Identificazione ── -->
-      <section class="popup-card">
-        <h3 class="popup-card-title">Identificazione</h3>
-        <div class="popup-fields-grid popup-fields-grid--4col">
+    <app-sempione-popup-card title="Identificazione">
+      <div class="popup-fields-grid popup-fields-grid--4col">
 
-          <div class="popup-field-group field-cliid" [class.field-id-locked]="popupMode() !== 'new'">
-            <label class="popup-field-label">ID Cassa *</label>
-            <dx-text-box
-              formControlName="cliId"
-              [readOnly]="popupMode() !== 'new'"
-              placeholder="Es. A01">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-                <dxi-validation-rule type="pattern" [pattern]="'^[0-9A-Z]{3}$'" message="3 caratteri: cifre o lettere maiuscole"></dxi-validation-rule>
-              </dx-validator>
-            </dx-text-box>
-          </div>
+        <app-sempione-field-group label="ID Cassa *" [locked]="popupMode() !== 'new'">
+          <dx-text-box formControlName="cliId" [readOnly]="popupMode() !== 'new'" placeholder="Es. A01" labelMode="hidden">
+            <dx-validator>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
+              <dxi-validation-rule type="pattern" [pattern]="'^[0-9A-Z]{3}$'" message="3 caratteri: cifre o lettere maiuscole"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group" [class.field-id-locked]="popupMode() === 'view'">
-            <label class="popup-field-label">Stato *</label>
-            <dx-select-box
-              formControlName="cliStatus"
-              [dataSource]="statiList()"
-              displayExpr="steDes"
-              valueExpr="steId"
-              [readOnly]="popupMode() === 'view'">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-              </dx-validator>
-            </dx-select-box>
-          </div>
+        <app-sempione-field-group label="Stato *" [locked]="popupMode() === 'view'">
+          <dx-select-box formControlName="cliStatus" [dataSource]="statiList()" displayExpr="steDes" valueExpr="steId" [readOnly]="popupMode() === 'view'" labelMode="hidden">
+            <dx-validator><dxi-validation-rule type="required"></dxi-validation-rule></dx-validator>
+          </dx-select-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group" [class.field-id-locked]="popupMode() === 'view'">
-            <label class="popup-field-label">Lingua *</label>
-            <dx-select-box
-              formControlName="cliLingua"
-              [dataSource]="languagesList()"
-              displayExpr="lanDes"
-              valueExpr="lanId"
-              [readOnly]="popupMode() === 'view'">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-              </dx-validator>
-            </dx-select-box>
-          </div>
+        <app-sempione-field-group label="Lingua *" [locked]="popupMode() === 'view'">
+          <dx-select-box formControlName="cliLingua" [dataSource]="languagesList()" displayExpr="lanDes" valueExpr="lanId" [readOnly]="popupMode() === 'view'" labelMode="hidden">
+            <dx-validator><dxi-validation-rule type="required"></dxi-validation-rule></dx-validator>
+          </dx-select-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group" [class.field-id-locked]="popupMode() === 'view'">
-            <label class="popup-field-label">Ufficio</label>
-            <dx-text-box
-              formControlName="cliOff"
-              [readOnly]="popupMode() === 'view'"
-              placeholder="Codice ufficio">
-            </dx-text-box>
-          </div>
+        <app-sempione-field-group label="Ufficio" [locked]="popupMode() === 'view'">
+          <dx-text-box formControlName="cliOff" [readOnly]="popupMode() === 'view'" placeholder="Codice ufficio" labelMode="hidden"></dx-text-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group popup-col-span-half" [class.field-id-locked]="popupMode() === 'view'">
-            <label class="popup-field-label">Filiale *</label>
-            <dx-select-box
-              formControlName="cliBraId"
-              [dataSource]="branchesList()"
-              displayExpr="braDes"
-              valueExpr="braId"
-              [readOnly]="popupMode() === 'view'"
-              (onValueChanged)="popupMode() !== 'view' && onBranchChanged($event.value)">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-              </dx-validator>
-            </dx-select-box>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ── Card 2: Configurazione Rete ── -->
-      <section class="popup-card">
-        <h3 class="popup-card-title">Configurazione Rete</h3>
-        <div class="popup-fields-grid popup-fields-grid--2col">
-
-          <div class="popup-field-group field-ip" [class.field-id-locked]="popupMode() === 'view'">
-            <label class="popup-field-label">Indirizzo IP *</label>
-            <dx-text-box
-              formControlName="cliIp"
-              [readOnly]="popupMode() === 'view'"
-              placeholder="Es. 192.168.1.10">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-                <dxi-validation-rule
-                  type="pattern"
-                  [pattern]="'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'"
-                  message="Indirizzo IP non valido">
-                </dxi-validation-rule>
-              </dx-validator>
-            </dx-text-box>
-          </div>
-
-          <div class="popup-field-group" [class.field-id-locked]="popupMode() === 'view'">
-            <label class="popup-field-label">Indirizzo MAC *</label>
-            <dx-text-box
-              formControlName="cliMac"
-              [readOnly]="popupMode() === 'view'"
-              placeholder="Es. AA-BB-CC-DD-EE-FF">
-              <dx-validator>
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-                <dxi-validation-rule
-                  type="pattern"
-                  [pattern]="'^[0-9A-F]{2}-[0-9A-F]{2}-[0-9A-F]{2}-[0-9A-F]{2}-[0-9A-F]{2}-[0-9A-F]{2}$'"
-                  message="Formato MAC: XX-XX-XX-XX-XX-XX (maiuscolo)">
-                </dxi-validation-rule>
-              </dx-validator>
-            </dx-text-box>
-          </div>
-
-          <div class="popup-field-group popup-col-span-2" [class.field-id-locked]="popupMode() === 'view'">
-            <label class="popup-field-label">Descrizione</label>
-            <dx-text-area
-              formControlName="cliDes"
-              [readOnly]="popupMode() === 'view'"
-              [height]="60"
-              placeholder="Descrizione della cassa...">
-            </dx-text-area>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ── Card 3: Periferiche Assegnate ── -->
-      <section class="popup-card">
-        <h3 class="popup-card-title">Periferiche Assegnate</h3>
-        <app-control-assign
-          [assignedRoles]="assignedRolesForControl"
-          [possibleRoles]="possibleRolesForControl"
-          [disabled]="popupMode() === 'view'"
-          (rolesChanged)="onRolesChanged($event)">
-        </app-control-assign>
-      </section>
-
-      <!-- ── Card 4: Informazioni di Sistema (view/edit only) ── -->
-      <section *ngIf="popupMode() !== 'new'" class="popup-card popup-card--system">
-        <h3 class="popup-card-title">Informazioni di Sistema</h3>
-        <div class="popup-fields-grid popup-fields-grid--3col">
-
-          <div class="popup-field-group field-id-locked field-cnt">
-            <label class="popup-field-label">N° Operazioni</label>
-            <dx-text-box formControlName="cliCnt" [readOnly]="true"></dx-text-box>
-          </div>
-
-          <div class="popup-field-group field-id-locked">
-            <label class="popup-field-label">Ultimo Reset Counter</label>
-            <dx-text-box formControlName="cliDatcounter" [readOnly]="true"></dx-text-box>
-          </div>
-
-          <div class="popup-field-group">
-            <label class="popup-field-label">In Uso</label>
-            <ng-container *ngIf="popupMode() === 'view'; else checkboxTpl">
-              <div class="bool-cell">
-                <span class="bool-badge"
-                  [class.bool-badge--yes]="cassaForm.get('inUso')?.value"
-                  [class.bool-badge--no]="!cassaForm.get('inUso')?.value">
-                  {{ cassaForm.get('inUso')?.value ? 'Sì' : 'No' }}
-                </span>
-              </div>
-            </ng-container>
-            <ng-template #checkboxTpl>
-              <dx-check-box formControlName="inUso" [readOnly]="true"></dx-check-box>
-            </ng-template>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ── Action Bar ── -->
-      <div class="popup-action-bar">
-
-        <div class="popup-actions-secondary">
-          <dx-button *ngIf="popupMode() === 'edit'"
-            text="Elimina"
-            icon="trash"
-            stylingMode="outlined"
-            class="btn-fin-danger"
-            (onClick)="onDelete()">
-          </dx-button>
-          <dx-button *ngIf="popupMode() !== 'new'"
-            text="Storico"
-            icon="clock"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="onTrace()">
-          </dx-button>
-        </div>
-
-        <div class="popup-actions-primary">
-          <dx-button
-            [text]="popupMode() === 'new' ? 'Annulla' : 'Chiudi'"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="closePopup()">
-          </dx-button>
-          <dx-button *ngIf="popupMode() !== 'view'"
-            [text]="popupMode() === 'new' ? 'Crea Cassa' : 'Salva Modifiche'"
-            [icon]="popupMode() === 'new' ? 'plus' : 'save'"
-            stylingMode="contained"
-            class="btn-fin-primary"
-            (onClick)="popupMode() === 'new' ? onSubmit() : onUpdate()">
-          </dx-button>
-        </div>
+        <app-sempione-field-group label="Filiale *" [locked]="popupMode() === 'view'" class="popup-col-span-2">
+          <dx-select-box formControlName="cliBraId" [dataSource]="branchesList()" displayExpr="braDes" valueExpr="braId" [readOnly]="popupMode() === 'view'" labelMode="hidden"
+            (onValueChanged)="popupMode() !== 'view' && onBranchChanged($event.value)">
+            <dx-validator><dxi-validation-rule type="required"></dxi-validation-rule></dx-validator>
+          </dx-select-box>
+        </app-sempione-field-group>
 
       </div>
+    </app-sempione-popup-card>
 
-    </form>
-  </div>
-</dx-popup>
+    <app-sempione-popup-card title="Configurazione Rete">
+      <div class="popup-fields-grid popup-fields-grid--2col">
 
+        <app-sempione-field-group label="Indirizzo IP *" [locked]="popupMode() === 'view'">
+          <dx-text-box formControlName="cliIp" [readOnly]="popupMode() === 'view'" placeholder="Es. 192.168.1.10" labelMode="hidden">
+            <dx-validator>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
+              <dxi-validation-rule type="pattern"
+                [pattern]="'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'"
+                message="Indirizzo IP non valido">
+              </dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Indirizzo MAC *" [locked]="popupMode() === 'view'">
+          <dx-text-box formControlName="cliMac" [readOnly]="popupMode() === 'view'" placeholder="Es. AA-BB-CC-DD-EE-FF" labelMode="hidden">
+            <dx-validator>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
+              <dxi-validation-rule type="pattern"
+                [pattern]="'^[0-9A-F]{2}-[0-9A-F]{2}-[0-9A-F]{2}-[0-9A-F]{2}-[0-9A-F]{2}-[0-9A-F]{2}$'"
+                message="Formato MAC: XX-XX-XX-XX-XX-XX (maiuscolo)">
+              </dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Descrizione" [locked]="popupMode() === 'view'" class="popup-col-span-2">
+          <dx-text-area formControlName="cliDes" [readOnly]="popupMode() === 'view'" [height]="60" placeholder="Descrizione della cassa..." labelMode="hidden"></dx-text-area>
+        </app-sempione-field-group>
+
+      </div>
+    </app-sempione-popup-card>
+
+    <app-sempione-popup-card title="Periferiche Assegnate">
+      <app-control-assign
+        [assignedRoles]="assignedRolesForControl"
+        [possibleRoles]="possibleRolesForControl"
+        [disabled]="popupMode() === 'view'"
+        (rolesChanged)="onRolesChanged($event)">
+      </app-control-assign>
+    </app-sempione-popup-card>
+
+    @if (popupMode() !== 'new') {
+      <app-sempione-popup-card title="Informazioni di Sistema">
+        <div class="popup-fields-grid popup-fields-grid--3col">
+
+          <app-sempione-field-group label="N° Operazioni" [locked]="true">
+            <dx-text-box formControlName="cliCnt" [readOnly]="true" labelMode="hidden"></dx-text-box>
+          </app-sempione-field-group>
+
+          <app-sempione-field-group label="Ultimo Reset Counter" [locked]="true">
+            <dx-text-box formControlName="cliDatcounter" [readOnly]="true" labelMode="hidden"></dx-text-box>
+          </app-sempione-field-group>
+
+          <app-sempione-field-group label="In Uso" [locked]="true">
+            <dx-check-box formControlName="inUso" [readOnly]="true"></dx-check-box>
+          </app-sempione-field-group>
+
+        </div>
+      </app-sempione-popup-card>
+    }
+
+    <app-sempione-popup-action-bar
+      [cancelText]="popupMode() === 'new' ? 'Annulla' : 'Chiudi'"
+      [saveText]="popupMode() === 'new' ? 'Crea Cassa' : 'Salva Modifiche'"
+      [showSave]="popupMode() !== 'view'"
+      [showStorico]="popupMode() !== 'new'"
+      (save)="popupMode() === 'new' ? onSubmit() : onUpdate()"
+      (cancel)="closePopup()"
+      (storico)="onTrace()">
+      @if (popupMode() === 'edit') {
+        <div secondary-actions>
+          <dx-button text="Elimina" icon="trash" stylingMode="contained" class="btn-fin-danger" (onClick)="onDelete()"></dx-button>
+        </div>
+      }
+    </app-sempione-popup-action-bar>
+
+  </form>
+
+</app-sempione-popup>

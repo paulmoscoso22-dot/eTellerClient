@@ -1,10 +1,14 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { DxTextBoxModule, DxNumberBoxModule } from 'devextreme-angular';
 import {
-  DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
-  DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule
-} from 'devextreme-angular';
+  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+  SempioneDataGridComponent, SempioneGridColumn,
+  SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+} from '../../../../../components/General';
 import notify from 'devextreme/ui/notify';
 
 export interface ISpreadItem {
@@ -19,14 +23,24 @@ export interface ISpreadItem {
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
-    DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule
+    DxTextBoxModule, DxNumberBoxModule,
+    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+    SempioneDataGridComponent, SempionePopupComponent, SempionePopupCardComponent,
+    SempionePopupActionBarComponent, SempioneFieldGroupComponent,
   ],
   templateUrl: './spread.component.html',
   styleUrls: ['./spread.component.css'],
 })
 export class SpreadComponent implements OnInit {
   private fb = inject(FormBuilder);
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'sprCurId',  caption: 'Divisa',    alignment: 'left',  width: 120 },
+    { dataField: 'sprType',   caption: 'Tipo',       alignment: 'left',  width: 140 },
+    { dataField: 'sprValue',  caption: 'Valore',     alignment: 'right', width: 140, dataType: 'number', format: '#,##0.0000' },
+    { dataField: 'sprDatini', caption: 'Valido Dal', alignment: 'left',  width: 140 },
+  ];
 
   spreadList = signal<ISpreadItem[]>([]);
 

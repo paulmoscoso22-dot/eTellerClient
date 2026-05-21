@@ -1,19 +1,25 @@
-import { Component, DestroyRef, inject, OnInit, signal, WritableSignal, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { DxSelectBoxModule } from 'devextreme-angular/ui/select-box';
 import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
 import { DxDateBoxModule } from 'devextreme-angular/ui/date-box';
-import { DxButtonModule } from 'devextreme-angular/ui/button';
-import { DxPopupModule } from 'devextreme-angular/ui/popup';
-import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
-import { DxDataGridComponent } from 'devextreme-angular/ui/data-grid';
-import { DxToastModule } from 'devextreme-angular/ui/toast';
-import { DxTemplateModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import notify from 'devextreme/ui/notify';
+import {
+  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempioneToolbarComponent, SempioneButtonComponent,
+  SempioneDataGridComponent, SempioneGridColumn,
+  SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+} from '../../../../../components/General';
 import { InformazioniService } from '../../services/informazioni.service';
-import { GetTraceAllRequest, TraceResponse, TraceWithFunctionResponse, GetTraceWithFunctionRequest, StTracefunctionResponse, SysUsersActiveAndBlockedResponse, GetTabellaServVarcharRequest, TabellaServVarcharResponse, GetTraceByIdRequest } from '../../models/informazioni.models';
+import {
+  GetTraceAllRequest, TraceResponse, TraceWithFunctionResponse, GetTraceWithFunctionRequest,
+  StTracefunctionResponse, SysUsersActiveAndBlockedResponse,
+  GetTabellaServVarcharRequest, TabellaServVarcharResponse,
+} from '../../models/informazioni.models';
 import { ClientResponse } from '../../../../../core/domain/client.domain';
 
 @Component({
@@ -22,8 +28,11 @@ import { ClientResponse } from '../../../../../core/domain/client.domain';
   imports: [
     CommonModule, ReactiveFormsModule,
     DxSelectBoxModule, DxTextBoxModule, DxDateBoxModule,
-    DxButtonModule, DxDataGridModule, DxPopupModule,
-    DxToastModule, DxTemplateModule,
+    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempioneToolbarComponent, SempioneButtonComponent,
+    SempioneDataGridComponent,
+    SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
   ],
   templateUrl: './trace.component.html',
   styleUrls: ['./trace.component.css'],
@@ -34,26 +43,38 @@ export class TraceComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
 
-  funzioni: WritableSignal<Array<{ tfcId: string | null; tfcDes: string }>> = signal([{ tfcId: null, tfcDes: 'ALL' }]);
-  utenti: WritableSignal<Array<{ usrId: string | null; des: string }>> = signal([{ usrId: null, des: 'ALL' }]);
-  clients: WritableSignal<Array<{ cliId: string | null; cliDes: string | null }>> = signal([{ cliId: null, cliDes: 'ALL' }]);
-  tabellaItems: WritableSignal<Array<{ id: string | null; des: string | null }>> = signal([{ id: null, des: 'ALL' }]);
+  funzioni: WritableSignal<Array<{ tfcId: string | null; tfcDes: string }>> =
+    signal([{ tfcId: null, tfcDes: 'ALL' }]);
+  utenti: WritableSignal<Array<{ usrId: string | null; des: string }>> =
+    signal([{ usrId: null, des: 'ALL' }]);
+  clients: WritableSignal<Array<{ cliId: string | null; cliDes: string | null }>> =
+    signal([{ cliId: null, cliDes: 'ALL' }]);
+  tabellaItems: WritableSignal<Array<{ id: string | null; des: string | null }>> =
+    signal([{ id: null, des: 'ALL' }]);
 
-  errorOptions = [
+  readonly errorOptions = [
     { id: null,  text: 'Tutti' },
-    { id: true,  text: 'YES' },
-    { id: false, text: 'NO' },
+    { id: true,  text: 'Sì'    },
+    { id: false, text: 'No'    },
+  ];
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'traId',      caption: 'ID',           alignment: 'center', width: 70  },
+    { dataField: 'traTime',    caption: 'Data e Ora',    alignment: 'center', width: 160, dataType: 'date', format: 'dd/MM/yyyy HH:mm:ss' },
+    { dataField: 'traUser',    caption: 'Utente',        alignment: 'left',   width: 110 },
+    { dataField: 'traFunCode', caption: 'Funzione',      alignment: 'left'               },
+    { dataField: 'traSubFun',  caption: 'Sottofunzione', alignment: 'left',   width: 130 },
+    { dataField: 'traStation', caption: 'Stazione',      alignment: 'left',   width: 100 },
+    { dataField: 'traTabNam',  caption: 'Tabella',       alignment: 'left'               },
+    { dataField: 'traEntCode', caption: 'Entità',        alignment: 'left',   width: 100 },
+    { dataField: 'traError',   caption: 'Errore',        type: 'bool',        width: 80  },
   ];
 
   filterForm: FormGroup;
-  traces = signal<TraceWithFunctionResponse[]>([]);
+  traces        = signal<TraceWithFunctionResponse[]>([]);
   selectedTrace = signal<TraceWithFunctionResponse | null>(null);
-  detailVisible: WritableSignal<boolean> = signal(false);
-  toastVisible = false;
-  toastMessage: WritableSignal<string> = signal('');
-  toastType: WritableSignal<'success' | 'error' | 'warning' | 'info'> = signal('info');
-
-  @ViewChild('dataGrid') dataGrid?: DxDataGridComponent;
+  isLoading     = signal(false);
+  detailVisible = false;
 
   constructor() {
     const today = new Date();
@@ -76,18 +97,15 @@ export class TraceComponent implements OnInit {
 
   ngOnInit(): void {
     this.applyQueryParamsToPrefillFilters();
-
     this.subscribeToTraces();
     this.subscribeToTraceFunctions();
     this.subscribeToActiveBlockedUsers();
     this.subscribeToClients();
     this.subscribeToTabellaServVarchar();
-
     this.loadTraceFunctions();
     this.loadActiveBlockedUsers();
     this.loadClients();
     this.loadTabellaServVarchar();
-
     this.loadAllTraces(this.buildRequestFromForm() as GetTraceWithFunctionRequest);
   }
 
@@ -101,55 +119,48 @@ export class TraceComponent implements OnInit {
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
-
     this.filterForm.reset({
-      traFunCode: null,
-      traUser:    null,
-      traStation: null,
-      traTabNam:  null,
-      traEntCode: null,
-      traError:   null,
-      dataFrom:   today,
-      dataTo:     tomorrow,
+      traFunCode: null, traUser: null, traStation: null,
+      traTabNam:  null, traEntCode: null, traError: null,
+      dataFrom: today, dataTo: tomorrow,
     });
     this.traces.set([]);
   }
 
   openDetail(trace: TraceWithFunctionResponse): void {
     this.selectedTrace.set(trace);
-    this.detailVisible.set(true);
-  }
-
-  onRowSelectionChanged(e: any): void {
-    const row = e.selectedRowsData?.[0];
-    if (row) {
-      this.openDetail(row);
-    }
+    this.detailVisible = true;
   }
 
   closeDetail(): void {
-    this.detailVisible.set(false);
+    this.detailVisible = false;
     this.selectedTrace.set(null);
+  }
+
+  formatDateTime(value: any): string {
+    if (!value) return '—';
     try {
-      this.dataGrid?.instance.clearSelection();
-    } catch {}
+      return new Date(value).toLocaleString('it-IT', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+      });
+    } catch { return String(value); }
   }
 
   loadAllTraces(request: GetTraceAllRequest): void {
-    const typedReq = request as GetTraceWithFunctionRequest;
+    this.isLoading.set(true);
     this.informazioniService
-      .postGetTraceAll(typedReq)
+      .postGetTraceAll(request as GetTraceWithFunctionRequest)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (resp) => {
-          console.log('Traces loaded', resp);
           this.traces.set(resp.map(item => ({ ...item, tfcDes: '' } as TraceWithFunctionResponse)));
+          this.isLoading.set(false);
         },
         error: (err) => {
           console.error('GetTraceAll failed', err);
-          this.toastMessage.set('Errore nel caricamento delle tracce');
-          this.toastType.set('error');
-          this.toastVisible = true;
+          notify('Errore nel caricamento delle tracce', 'error', 3000);
+          this.isLoading.set(false);
         },
       });
   }
@@ -160,14 +171,9 @@ export class TraceComponent implements OnInit {
       .subscribe((params) => {
         const traTabNam  = params['traTabNam'];
         const traEntCode = params['traEntCode'];
-
         this.filterForm.patchValue({
-          traFunCode: null,
-          traUser:    null,
-          traStation: null,
-          traError:   null,
-          dataFrom:   null,
-          dataTo:     null,
+          traFunCode: null, traUser: null, traStation: null,
+          traError:   null, dataFrom: null, dataTo: null,
           traTabNam:  traTabNam  !== undefined ? traTabNam  : null,
           traEntCode: traEntCode !== undefined ? String(traEntCode) : null,
         });
@@ -250,8 +256,7 @@ export class TraceComponent implements OnInit {
     this.informazioniService.traces$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((v: TraceResponse[]) => {
-        const adapted = v.map(item => ({ ...item, tfcDes: '' } as TraceWithFunctionResponse));
-        this.traces.set(adapted);
+        this.traces.set(v.map(item => ({ ...item, tfcDes: '' } as TraceWithFunctionResponse)));
       });
   }
 }

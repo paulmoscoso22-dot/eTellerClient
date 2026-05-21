@@ -1,363 +1,266 @@
-<div class="page-shell">
+<app-sempione-page-header title="Funzioni di Sistema"></app-sempione-page-header>
 
-  <!-- ── Titolo pagina ── -->
-  <div class="page-header-row">
-    <h1 class="page-title">Funzioni di Sistema</h1>
-  </div>
-
-  <!-- ══ Layout 2/3 + 1/3 ══ -->
-  <div class="content-grid">
+<!-- ══ Layout 2/3 + 1/3 — preserved ══ -->
+<div class="content-grid">
 
   <!-- ══ Card Elenco Funzioni (2/3) ══ -->
-  <section class="card-section card-main">
-
-    <div class="sempione-card-header">
+  <app-sempione-card>
+    <app-sempione-card-header title="Elenco Funzioni">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="8" y1="6" x2="21" y2="6"></line>
-        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line>
         <line x1="8" y1="18" x2="21" y2="18"></line>
-        <line x1="3" y1="6" x2="3.01" y2="6"></line>
-        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+        <line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line>
         <line x1="3" y1="18" x2="3.01" y2="18"></line>
       </svg>
-      <h2 class="card-title">Elenco Funzioni</h2>
-    </div>
-    <div class="gold-divider"></div>
+    </app-sempione-card-header>
 
-    <!-- ── Toolbar: filtri + azioni ── -->
-    <div class="card-toolbar">
-      <div class="toolbar-inner">
+    <app-sempione-toolbar>
+      <dx-text-box
+        [value]="filterFunDescription()"
+        (onValueChanged)="filterFunDescription.set($event.value)"
+        placeholder="Cerca per descrizione..."
+        labelMode="hidden"
+        [showClearButton]="true">
+      </dx-text-box>
+      <dx-text-box
+        [value]="filterFunName()"
+        (onValueChanged)="filterFunName.set($event.value)"
+        placeholder="Cerca per nome funzione..."
+        labelMode="hidden"
+        [showClearButton]="true">
+      </dx-text-box>
 
-        <div class="toolbar-filters">
-          <div class="toolbar-field toolbar-field--lg">
-            <label class="toolbar-lbl">Descrizione</label>
-            <dx-text-box
-              [value]="filterFunDescription()"
-              (onValueChanged)="filterFunDescription.set($event.value)"
-              placeholder="Cerca per descrizione..."
-              [showClearButton]="true">
-            </dx-text-box>
-          </div>
-          <div class="toolbar-field">
-            <label class="toolbar-lbl">Funzione</label>
-            <dx-text-box
-              [value]="filterFunName()"
-              (onValueChanged)="filterFunName.set($event.value)"
-              placeholder="Cerca per nome..."
-              [showClearButton]="true">
-            </dx-text-box>
-          </div>
-        </div>
-
-        <div class="toolbar-actions">
-          <dx-button
-            icon="search"
-            hint="Cerca"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="onSearch()">
-          </dx-button>
-          <dx-button
-            icon="revert"
-            hint="Ripristina filtri"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="resetFilters()">
-          </dx-button>
-          <dx-button
-            icon="print"
-            text="Stampa Utenti"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="onPrintUsers()">
-          </dx-button>
-          <dx-button
-            icon="print"
-            text="Stampa Funzioni"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="onPrintFunctions()">
-          </dx-button>
-          <dx-button
-            class="btn-fin-primary action-shadow"
-            text="Nuovo"
-            stylingMode="contained"
-            (onClick)="onAdd()">
-          </dx-button>
-        </div>
-
+      <div toolbar-actions>
+        <dx-button
+          icon="search"
+          hint="Cerca"
+          stylingMode="outlined"
+          class="btn-fin-secondary"
+          (onClick)="filterFunDescription.set(filterFunDescription())">
+        </dx-button>
+        <dx-button
+          icon="revert"
+          hint="Ripristina filtri"
+          stylingMode="outlined"
+          class="btn-fin-secondary"
+          (onClick)="resetFilters()">
+        </dx-button>
+        <dx-button
+          icon="refresh"
+          hint="Reset selezione"
+          stylingMode="outlined"
+          class="btn-fin-secondary"
+          (onClick)="onReset()">
+        </dx-button>
+        <span class="toolbar-sep"></span>
+        <dx-button
+          text="Nuovo"
+          icon="plus"
+          stylingMode="contained"
+          class="btn-fin-primary"
+          (onClick)="onAdd()">
+        </dx-button>
       </div>
-    </div>
+    </app-sempione-toolbar>
 
-    <!-- ── Grid ── -->
-    <div class="card-body card-body--grid">
-      <dx-data-grid
-        #funzioniGrid
-        [dataSource]="filteredFunctions()"
-        [showBorders]="false"
-        [columnAutoWidth]="true"
-        [rowAlternationEnabled]="true"
-        [hoverStateEnabled]="true"
-        [height]="'100%'"
-        [selection]="{ mode: 'single' }"
-        (onSelectionChanged)="onFunctionSelect($event)">
+    <app-sempione-data-grid
+      [dataSource]="filteredFunctions()"
+      [keyExpr]="'funId'"
+      [columns]="columns"
+      [pageSize]="15"
+      [allowedPageSizes]="[15, 30, 50]"
+      [showEditAction]="true"
+      [showTraceAction]="true"
+      [showDeleteAction]="true"
+      (selectionChanged)="onFunctionSelect($event)"
+      (rowEdit)="openEditPopup($event)"
+      (rowTrace)="onTraceFromRow($event)"
+      (rowDelete)="onDeleteFromRow($event)">
+    </app-sempione-data-grid>
+  </app-sempione-card>
 
-        <dxo-paging [pageSize]="15"></dxo-paging>
-        <dxo-pager
-          [showInfo]="true"
-          infoText="{2} funzioni"
-          [showPageSizeSelector]="true"
-          [allowedPageSizes]="[15, 30, 50]"
-          [showNavigationButtons]="true"
-          displayMode="full">
-        </dxo-pager>
-
-        <dxi-column dataField="funId"          caption="ID"          [width]="65"  alignment="center" dataType="number"></dxi-column>
-        <dxi-column dataField="funDescription" caption="Descrizione"               alignment="left"></dxi-column>
-        <dxi-column dataField="funName"        caption="Funzione"    [width]="180" alignment="left"></dxi-column>
-        <dxi-column dataField="offline"        caption="Offline"     [width]="80"  alignment="center" cellTemplate="offlineTemplate"></dxi-column>
-        <dxi-column dataField="funHostcode"    caption="Host Code"   [width]="100" alignment="center" dataType="number"></dxi-column>
-
-        <dxi-column
-          caption="Azioni"
-          [width]="105"
-          [allowSorting]="false"
-          [allowFiltering]="false"
-          alignment="center"
-          cellTemplate="azioniTemplate">
-        </dxi-column>
-
-        <div *dxTemplate="let cell of 'azioniTemplate'" class="azioni-cell">
-          <button class="action-btn action-btn--edit" title="Modifica" (click)="openEditPopup(cell.data)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-            </svg>
-          </button>
-          <button class="action-btn action-btn--trace" title="Traccia" (click)="onTraceFromRow(cell.data)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 3v5h5"></path>
-              <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"></path>
-              <polyline points="12 7 12 12 15 15"></polyline>
-            </svg>
-          </button>
-          <button class="action-btn action-btn--delete" title="Elimina" (click)="onDeleteFromRow(cell.data)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="3 6 5 6 21 6"></polyline>
-              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
-              <path d="M10 11v6"></path><path d="M14 11v6"></path>
-              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
-            </svg>
-          </button>
-        </div>
-
-        <div *dxTemplate="let cell of 'offlineTemplate'" class="offline-cell">
-          <span class="offline-badge"
-            [class.offline-badge--yes]="cell.data.offline"
-            [class.offline-badge--no]="!cell.data.offline">
-            {{ cell.data.offline ? 'Sì' : 'No' }}
-          </span>
-        </div>
-
-        <dxo-load-panel [enabled]="false"></dxo-load-panel>
-      </dx-data-grid>
-    </div>
-
-  </section>
-
-  <!-- ══ Colonna destra: Ruoli + Utenti (1/3) ══ -->
+  <!-- ══ Colonna destra: Ruoli + Utenti (1/3) — preserved ══ -->
   <div class="cards-right">
 
-    <section class="card-section">
-      <div class="sempione-card-header">
+    <app-sempione-card>
+      <app-sempione-card-header title="Ruoli">
         <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
         </svg>
-        <h2 class="card-title">Ruoli</h2>
-      </div>
-      <div class="gold-divider"></div>
-      <div class="card-body card-body--grid">
-        <app-table-roles
-          [dataSource]="sysRoles()"
+      </app-sempione-card-header>
+      <app-sempione-toolbar>
+        <dx-text-box
+          [value]="searchRoles()"
+          (onValueChanged)="searchRoles.set($event.value)"
+          placeholder="Cerca ruolo..."
+          labelMode="hidden"
+          [showClearButton]="true">
+        </dx-text-box>
+        <div toolbar-actions>
+          <dx-button icon="search" hint="Cerca" stylingMode="outlined" class="btn-fin-secondary" (onClick)="searchRoles.set(searchRoles())"></dx-button>
+          <dx-button icon="revert" hint="Ripristina" stylingMode="outlined" class="btn-fin-secondary" (onClick)="searchRoles.set('')"></dx-button>
+        </div>
+      </app-sempione-toolbar>
+      <div class="card-body--grid">
+        <app-sempione-data-grid
+          #rolesGrid
+          [dataSource]="filteredSysRoles()"
+          [keyExpr]="'roleId'"
+          [columns]="rolesColumns"
           [pageSize]="5"
+          [allowedPageSizes]="[5, 10, 20]"
+          [showEditAction]="false"
+          [showTraceAction]="false"
+          [showDeleteAction]="false"
           (selectionChanged)="onRoleSelect($event)">
-        </app-table-roles>
+        </app-sempione-data-grid>
       </div>
-    </section>
+    </app-sempione-card>
 
-    <section class="card-section">
-      <div class="sempione-card-header">
+    <app-sempione-card>
+      <app-sempione-card-header title="Utenti associati">
         <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
           <circle cx="9" cy="7" r="4"></circle>
           <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
           <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
         </svg>
-        <h2 class="card-title">Utenti associati</h2>
-      </div>
-      <div class="gold-divider"></div>
-      <div class="card-body card-body--grid">
-        <app-table-user-role
-          [dataSource]="usersRoleFunctions()"
+      </app-sempione-card-header>
+      <app-sempione-toolbar>
+        <dx-text-box
+          [value]="searchUsers()"
+          (onValueChanged)="searchUsers.set($event.value)"
+          placeholder="Cerca utente..."
+          labelMode="hidden"
+          [showClearButton]="true">
+        </dx-text-box>
+        <div toolbar-actions>
+          <dx-button icon="search" hint="Cerca" stylingMode="outlined" class="btn-fin-secondary" (onClick)="searchUsers.set(searchUsers())"></dx-button>
+          <dx-button icon="revert" hint="Ripristina" stylingMode="outlined" class="btn-fin-secondary" (onClick)="searchUsers.set('')"></dx-button>
+        </div>
+      </app-sempione-toolbar>
+      <div class="card-body--grid">
+        <app-sempione-data-grid
+          #usersGrid
+          [dataSource]="filteredUsersRoleFunctions()"
+          [keyExpr]="'usrId'"
+          [columns]="usersColumns"
           [pageSize]="5"
+          [allowedPageSizes]="[5, 10, 20]"
+          [showEditAction]="false"
+          [showTraceAction]="false"
+          [showDeleteAction]="false"
           (selectionChanged)="onUserSelect($event)">
-        </app-table-user-role>
+        </app-sempione-data-grid>
       </div>
-    </section>
+    </app-sempione-card>
+
   </div>
-  </div><!-- /content-grid -->
 </div>
 
-<!-- ══════════════════════════════════════
-     Popup: Dettaglio / Modifica Funzione
-     ══════════════════════════════════════ -->
-<dx-popup
+<!-- ══ Popup: Dettaglio / Modifica Funzione ══ -->
+<app-sempione-popup
   [visible]="showDetailPopup()"
-  [showTitle]="true"
-  [title]="(popupMode() === 'view' ? 'Dettaglio Funzione' : 'Modifica Funzione') + ' — ' + selectedFunName()"
-  [dragEnabled]="true"
-  [hideOnOutsideClick]="false"
-  [showCloseButton]="true"
-  [width]="'90%'"
-  [maxWidth]="560"
-  [height]="'auto'"
-  [maxHeight]="'90vh'"
-  (onHiding)="showDetailPopup.set(false)">
+  (visibleChange)="showDetailPopup.set($event)"
+  [title]="(popupMode() === 'edit' ? 'Modifica Funzione' : 'Dettaglio Funzione') + (selectedFunName() ? ' — ' + selectedFunName() : '')"
+  [maxWidth]="560">
 
-  <div *dxTemplate="let data of 'content'">
-    <div class="popup-layout" [class.popup-view-mode]="popupMode() === 'view'">
+  <div class="popup-layout" [class.popup-view-mode]="popupMode() === 'view'">
+    <app-sempione-popup-card title="Dettaglio Funzione">
+      <div class="popup-fields-grid popup-fields-grid--2col">
 
-      <section class="popup-card">
-        <h3 class="popup-card-title">Dettaglio Funzione</h3>
-        <div class="popup-fields-grid popup-fields-grid--2col">
-
-          <div class="popup-field-group popup-col-span-2">
-            <label class="popup-field-label">Nome</label>
+        <div class="popup-col-span-2">
+          <app-sempione-field-group label="Nome">
             <dx-text-box
               [value]="selectedFunName()"
               [readOnly]="popupMode() === 'view'"
               (onValueChanged)="popupMode() === 'edit' && selectedFunName.set($event.value)">
             </dx-text-box>
-          </div>
+          </app-sempione-field-group>
+        </div>
 
-          <div class="popup-field-group">
-            <label class="popup-field-label">Host Code</label>
-            <dx-number-box
-              [value]="selectedFunHostcode()"
-              [readOnly]="popupMode() === 'view'"
-              (onValueChanged)="popupMode() === 'edit' && selectedFunHostcode.set($event.value)">
-            </dx-number-box>
-          </div>
+        <app-sempione-field-group label="Host Code">
+          <dx-number-box
+            [value]="selectedFunHostcode()"
+            [readOnly]="popupMode() === 'view'"
+            (onValueChanged)="popupMode() === 'edit' && selectedFunHostcode.set($event.value)">
+          </dx-number-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group">
-            <label class="popup-field-label">Offline</label>
-            @if (popupMode() === 'view') {
-              <div class="offline-badge-cell">
-                <span class="offline-badge"
-                  [class.offline-badge--yes]="selectedOffline()"
-                  [class.offline-badge--no]="!selectedOffline()">
-                  {{ selectedOffline() ? 'Sì' : 'No' }}
-                </span>
-              </div>
-            } @else {
-              <dx-check-box
-                [value]="selectedOffline()"
-                (onValueChanged)="selectedOffline.set($event.value)"
-                text="Disponibile in modalità offline">
-              </dx-check-box>
-            }
-          </div>
+        <app-sempione-field-group label="Offline">
+          @if (popupMode() === 'view') {
+            <dx-text-box
+              [value]="selectedOffline() ? 'Sì' : 'No'"
+              [readOnly]="true">
+            </dx-text-box>
+          } @else {
+            <dx-check-box
+              [value]="selectedOffline()"
+              (onValueChanged)="selectedOffline.set($event.value)"
+              text="Disponibile in modalità offline">
+            </dx-check-box>
+          }
+        </app-sempione-field-group>
 
-          <div class="popup-field-group popup-col-span-2">
-            <label class="popup-field-label">Descrizione</label>
+        <div class="popup-col-span-2">
+          <app-sempione-field-group label="Descrizione">
             <dx-text-area
               [value]="selectedFunDescription()"
               [readOnly]="popupMode() === 'view'"
               [height]="80"
               (onValueChanged)="popupMode() === 'edit' && selectedFunDescription.set($event.value)">
             </dx-text-area>
-          </div>
+          </app-sempione-field-group>
+        </div>
 
-        </div>
-      </section>
-
-      <div class="popup-action-bar">
-        <div class="popup-actions-secondary">
-          @if (popupMode() === 'edit') {
-            <dx-button
-              text="Cancella"
-              icon="trash"
-              stylingMode="outlined"
-              class="btn-fin-danger"
-              (onClick)="onDelete()">
-            </dx-button>
-          }
-          <dx-button
-            text="Traccia"
-            icon="chart"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="onTrace()">
-          </dx-button>
-        </div>
-        <div class="popup-actions-primary">
-          <dx-button
-            [text]="popupMode() === 'view' ? 'Chiudi' : 'Annulla'"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="showDetailPopup.set(false)">
-          </dx-button>
-          @if (popupMode() === 'view') {
-            <dx-button
-              text="Modifica"
-              icon="edit"
-              stylingMode="contained"
-              class="btn-fin-primary"
-              (onClick)="switchToEditMode()">
-            </dx-button>
-          }
-          @if (popupMode() === 'edit') {
-            <dx-button
-              text="Salva Modifiche"
-              icon="save"
-              stylingMode="contained"
-              class="btn-fin-primary"
-              [disabled]="isLoading()"
-              (onClick)="onSaveDetail()">
-            </dx-button>
-          }
-        </div>
       </div>
+    </app-sempione-popup-card>
 
-    </div>
+    @if (popupMode() === 'view') {
+      <app-sempione-popup-action-bar
+        saveText="Modifica"
+        cancelText="Chiudi"
+        [showStorico]="true"
+        (save)="switchToEditMode()"
+        (cancel)="showDetailPopup.set(false)"
+        (storico)="onTrace()">
+      </app-sempione-popup-action-bar>
+    } @else {
+      <app-sempione-popup-action-bar
+        saveText="Salva Modifiche"
+        cancelText="Annulla"
+        [showStorico]="true"
+        [isSaving]="isLoading()"
+        (save)="onSaveDetail()"
+        (cancel)="showDetailPopup.set(false)"
+        (storico)="onTrace()">
+        <dx-button
+          secondary-actions
+          text="Cancella"
+          icon="trash"
+          stylingMode="outlined"
+          class="btn-fin-danger"
+          (onClick)="onDelete()">
+        </dx-button>
+      </app-sempione-popup-action-bar>
+    }
   </div>
-</dx-popup>
 
-<!-- ══════════════════════════════════════
-     Popup: Aggiungi Funzione
-     ══════════════════════════════════════ -->
-<dx-popup
+</app-sempione-popup>
+
+<!-- ══ Popup: Aggiungi Funzione ══ -->
+<app-sempione-popup
   [visible]="showAddPopup()"
-  [showTitle]="true"
+  (visibleChange)="showAddPopup.set($event)"
   title="Nuova Funzione"
-  [dragEnabled]="true"
-  [hideOnOutsideClick]="false"
-  [showCloseButton]="true"
-  [width]="'90%'"
-  [maxWidth]="560"
-  [height]="'auto'"
-  [maxHeight]="'90vh'"
-  (onHiding)="onCancelAdd()">
+  [maxWidth]="560">
 
-  <div *dxTemplate="let data of 'content'">
-    <form [formGroup]="addForm" class="popup-layout">
+  <form [formGroup]="addForm" class="popup-layout">
+    <app-sempione-popup-card title="Dettagli Funzione">
+      <div class="popup-fields-grid popup-fields-grid--2col">
 
-      <section class="popup-card">
-        <h3 class="popup-card-title">Nuova Funzione</h3>
-        <div class="popup-fields-grid popup-fields-grid--2col">
-
-          <div class="popup-field-group popup-col-span-2">
-            <label class="popup-field-label">Nome *</label>
+        <div class="popup-col-span-2">
+          <app-sempione-field-group label="Nome" [required]="true">
             <dx-text-box
               formControlName="funName"
               placeholder="Nome della funzione"
@@ -366,60 +269,39 @@
             @if (addForm.get('funName')?.invalid && addForm.get('funName')?.touched) {
               <span class="field-error">Nome funzione richiesto</span>
             }
-          </div>
+          </app-sempione-field-group>
+        </div>
 
-          <div class="popup-field-group">
-            <label class="popup-field-label">Host Code</label>
-            <dx-number-box
-              formControlName="funHostcode"
-              [isValid]="!(addForm.get('funHostcode')?.invalid && addForm.get('funHostcode')?.touched)">
-            </dx-number-box>
-            @if (addForm.get('funHostcode')?.invalid && addForm.get('funHostcode')?.touched) {
-              <span class="field-error">Host code richiesto</span>
-            }
-          </div>
+        <app-sempione-field-group label="Host Code">
+          <dx-number-box
+            formControlName="funHostcode"
+            [isValid]="!(addForm.get('funHostcode')?.invalid && addForm.get('funHostcode')?.touched)">
+          </dx-number-box>
+          @if (addForm.get('funHostcode')?.invalid && addForm.get('funHostcode')?.touched) {
+            <span class="field-error">Host code richiesto</span>
+          }
+        </app-sempione-field-group>
 
-          <div class="popup-field-group">
-            <label class="popup-field-label">Offline</label>
-            <dx-check-box formControlName="offline" text="Disponibile in modalità offline"></dx-check-box>
-          </div>
+        <app-sempione-field-group label="Offline">
+          <dx-check-box formControlName="offline" text="Disponibile in modalità offline"></dx-check-box>
+        </app-sempione-field-group>
 
-          <div class="popup-field-group popup-col-span-2">
-            <label class="popup-field-label">Descrizione</label>
+        <div class="popup-col-span-2">
+          <app-sempione-field-group label="Descrizione">
             <dx-text-area formControlName="funDescription" [height]="80"></dx-text-area>
-          </div>
-
+          </app-sempione-field-group>
         </div>
-      </section>
 
-      <div class="popup-action-bar">
-        <div class="popup-actions-secondary"></div>
-        <div class="popup-actions-primary">
-          <dx-button
-            text="Annulla"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="onCancelAdd()">
-          </dx-button>
-          <dx-button
-            text="Crea Funzione"
-            icon="plus"
-            stylingMode="contained"
-            class="btn-fin-primary"
-            [disabled]="isLoading()"
-            (onClick)="onSaveAdd()">
-          </dx-button>
-        </div>
       </div>
+    </app-sempione-popup-card>
 
-    </form>
-  </div>
-</dx-popup>
+    <app-sempione-popup-action-bar
+      saveText="Crea Funzione"
+      cancelText="Annulla"
+      [isSaving]="isLoading()"
+      (save)="onSaveAdd()"
+      (cancel)="onCancelAdd()">
+    </app-sempione-popup-action-bar>
+  </form>
 
-<!-- ── Toast ── -->
-<dx-toast
-  [(visible)]="toastVisible"
-  [type]="toastType()"
-  [message]="toastMessage()"
-  [displayTime]="3000">
-</dx-toast>
+</app-sempione-popup>

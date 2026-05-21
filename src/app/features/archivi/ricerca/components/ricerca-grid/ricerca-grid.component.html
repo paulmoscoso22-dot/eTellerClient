@@ -1,16 +1,11 @@
 <section class="card-section">
 
-  <div class="sempione-card-header">
+  <app-header-card title="Risultati Ricerca" [count]="transactions().length > 0 ? transactions().length : undefined">
     <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="11" cy="11" r="8"></circle>
       <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
     </svg>
-    <h2 class="card-title">Risultati Ricerca</h2>
-    @if (transactions().length > 0) {
-      <span class="result-count-badge">{{ transactions().length }}</span>
-    }
-  </div>
-  <div class="gold-divider"></div>
+  </app-header-card>
 
   <div class="card-body card-body--grid">
 
@@ -62,13 +57,8 @@
         <dxo-filter-row [visible]="showFilterRow" [applyFilter]="currentFilter"></dxo-filter-row>
         <dxo-header-filter [visible]="showHeaderFilter"></dxo-header-filter>
 
-        <dxo-paging [pageSize]="20" [enabled]="true"></dxo-paging>
-        <dxo-pager
-          [visible]="'auto'"
-          [showPageSizeSelector]="true"
-          [allowedPageSizes]="[20, 50, 100]"
-          [showInfo]="true">
-        </dxo-pager>
+        <dxo-paging [pageSize]="20"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
 
         <dxi-column dataField="trxDatope" caption="Data Operazione" dataType="datetime" format="dd.MM.yy" [width]="120" alignment="center"></dxi-column>
         <dxi-column dataField="trxImpope" caption="Importo"         dataType="number"   alignment="right" format="#,##0.00" [width]="120"></dxi-column>

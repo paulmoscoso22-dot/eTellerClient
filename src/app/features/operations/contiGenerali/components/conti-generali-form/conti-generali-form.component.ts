@@ -6,6 +6,7 @@ import {
   DxPopupModule, DxDropDownButtonModule
 } from 'devextreme-angular';
 import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
+import { OpBadgeComponent } from '../../../../../components/Operazioni/op-badge/op-badge.component';
 
 export type ContiGeneraliMode = 'versamento' | 'prelevamento';
 
@@ -19,7 +20,8 @@ const r05 = (v: number) => Math.round(v * 20) / 20;
     DxTextBoxModule, DxNumberBoxModule, DxSelectBoxModule, DxCheckBoxModule,
     DxDateBoxModule, DxTextAreaModule, DxButtonModule,
     DxPopupModule, DxDropDownButtonModule,
-    HeaderCardComponent
+    HeaderCardComponent,
+    OpBadgeComponent
   ],
   templateUrl: './conti-generali-form.component.html',
   styleUrls: ['./conti-generali-form.component.css']

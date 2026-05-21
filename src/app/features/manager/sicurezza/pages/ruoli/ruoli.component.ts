@@ -6,8 +6,6 @@ import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
 import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
 import { DxSelectBoxModule } from 'devextreme-angular/ui/select-box';
 import { DxButtonModule } from 'devextreme-angular/ui/button';
-import { DxPopupModule } from 'devextreme-angular/ui/popup';
-import { DxToastModule } from 'devextreme-angular/ui/toast';
 import { DxTemplateModule } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import { confirm } from 'devextreme/ui/dialog';
@@ -16,14 +14,26 @@ import { Subject, switchMap } from 'rxjs';
 import { ManagerService } from '../../services/sicurezza.service';
 import { ISysRoleResonse, IUserSelectRoleResponse, IInsertRoleRequest, IUpdateRoleRequest, IDeleteRoleRequest } from '../../models/ruoli.models';
 import { IFunctionRoleResponse, IStFunAcctypResponse } from '../../models/function.models';
+import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
+import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneToolbarComponent } from '../../../../../components/General/sempione-toolbar/sempione-toolbar.component';
+import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General/sempione-data-grid/sempione-data-grid.component';
+import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
+import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
+import { SempionePopupCardComponent } from '../../../../../components/General/sempione-popup-card/sempione-popup-card.component';
+import { SempioneFieldGroupComponent } from '../../../../../components/General/sempione-field-group/sempione-field-group.component';
 
 @Component({
   selector: 'app-ruoli',
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxDataGridModule, DxTextBoxModule, DxSelectBoxModule,
-    DxButtonModule, DxPopupModule, DxToastModule, DxTemplateModule,
+    DxDataGridModule, DxTextBoxModule, DxSelectBoxModule, DxButtonModule, DxTemplateModule,
+    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempioneToolbarComponent, SempioneDataGridComponent,
+    SempionePopupComponent, SempionePopupActionBarComponent,
+    SempionePopupCardComponent, SempioneFieldGroupComponent,
   ],
   templateUrl: './ruoli.component.html',
   styleUrls: ['./ruoli.component.css'],
@@ -39,7 +49,6 @@ export class RuoliComponent implements OnInit {
   functionsByRole = signal<IFunctionRoleResponse[]>([]);
   funcAccTyp      = signal<IStFunAcctypResponse[]>([]);
 
-  // ── Ruoli filter ──
   searchRoles = signal<string>('');
   filteredRoles = computed(() => {
     const q = this.searchRoles().toLowerCase().trim();
@@ -50,7 +59,6 @@ export class RuoliComponent implements OnInit {
     );
   });
 
-  // ── Utenti filter ──
   searchUsers = signal<string>('');
   filteredUsersByRole = computed(() => {
     const q = this.searchUsers().toLowerCase().trim();
@@ -61,23 +69,40 @@ export class RuoliComponent implements OnInit {
     );
   });
 
-  // ── Funzioni per Ruolo filter ──
   searchName = signal<string | null>(null);
   searchDes  = signal<string | null>(null);
 
-  // ── Selection state ──
   selectedRoleId   = signal<number>(0);
   selectedRoleName = signal<string>('');
   selectedRoleDes  = signal<string>('');
 
-  // ── UI state ──
   showAddPopup    = signal<boolean>(false);
   showDetailPopup = signal<boolean>(false);
   popupMode       = signal<'view' | 'edit'>('view');
   isLoading       = signal<boolean>(false);
-  toastVisible    = signal<boolean>(false);
-  toastMessage    = signal<string>('');
-  toastType       = signal<'success' | 'error' | 'warning' | 'info'>('success');
+
+  readonly ruoliColumns: SempioneGridColumn[] = [
+    { dataField: 'roleId',   caption: 'ID',         width: 60 },
+    { dataField: 'roleName', caption: 'Nome Ruolo',  width: 180 },
+    { dataField: 'roleDes',  caption: 'Descrizione' },
+  ];
+
+  readonly usersColumns: SempioneGridColumn[] = [
+    { dataField: 'usrId',        caption: 'User ID',    width: 100 },
+    { dataField: 'usrExtref',    caption: 'Riferimento' },
+    { dataField: 'usrBraId',     caption: 'Filiale',    width: 80 },
+    { dataField: 'usrStatusDes', caption: 'Stato',      width: 130, alignment: 'center', type: 'entity-status' },
+  ];
+
+  filteredUsersByRoleMapped = computed(() =>
+    this.filteredUsersByRole().map(u => ({
+      ...u,
+      usrStatusDes:
+        u.usrStatus === 'enabled'  ? 'Attivo'       :
+        u.usrStatus === 'disabled' ? 'Disabilitato' :
+        u.usrStatus === 'blocked'  ? 'Bloccato'     : u.usrStatus,
+    }))
+  );
 
   addForm = new FormGroup({
     roleName: new FormControl('', [Validators.required]),
@@ -161,20 +186,11 @@ export class RuoliComponent implements OnInit {
       .subscribe({ error: (err) => console.error('postGetFunctionRoleByRoleId failed', err) });
   }
 
-  // ── Row selection (aggiorna dati laterali, non apre popup) ──
   onRoleSelectionChanged(e: any): void {
     const selected = e?.selectedRowsData?.[0];
     if (!selected) return;
     this.setSelected(selected);
     this.selectedRole$.next(selected);
-  }
-
-  // ── Popup apertura da colonna Azioni ──
-  openViewPopup(data: ISysRoleResonse): void {
-    this.setSelected(data);
-    this.selectedRole$.next(data);
-    this.popupMode.set('view');
-    this.showDetailPopup.set(true);
   }
 
   openEditPopup(data: ISysRoleResonse): void {
@@ -186,7 +202,6 @@ export class RuoliComponent implements OnInit {
 
   switchToEditMode(): void { this.popupMode.set('edit'); }
 
-  // ── Salva modifica ──
   onSaveDetail(): void {
     if (!this.selectedRoleId()) return;
     const req: IUpdateRoleRequest = {
@@ -202,17 +217,16 @@ export class RuoliComponent implements OnInit {
           this.isLoading.set(false);
           this.showDetailPopup.set(false);
           this.loadAllRoles();
-          this.showNotification('Ruolo modificato con successo', 'success');
+          notify('Ruolo modificato con successo', 'success', 2000);
         },
         error: (err) => {
           this.isLoading.set(false);
-          this.showNotification('Errore durante la modifica del ruolo', 'error');
+          notify('Errore durante la modifica del ruolo', 'error', 2000);
           console.error(err);
         }
       });
   }
 
-  // ── Aggiungi ──
   onAdd(): void { this.showAddPopup.set(true); }
 
   onSaveAdd(): void {
@@ -234,11 +248,11 @@ export class RuoliComponent implements OnInit {
           this.showAddPopup.set(false);
           this.resetAddForm();
           this.loadAllRoles();
-          this.showNotification('Ruolo inserito con successo', 'success');
+          notify('Ruolo inserito con successo', 'success', 2000);
         },
         error: (err) => {
           this.isLoading.set(false);
-          this.showNotification("Errore durante l'inserimento del ruolo", 'error');
+          notify("Errore durante l'inserimento del ruolo", 'error', 2000);
           console.error(err);
         }
       });
@@ -246,7 +260,6 @@ export class RuoliComponent implements OnInit {
 
   onCancelAdd(): void { this.showAddPopup.set(false); this.resetAddForm(); }
 
-  // ── Elimina da riga ──
   onDeleteFromRow(data: ISysRoleResonse): void {
     this.setSelected(data);
     this.onDelete();
@@ -254,7 +267,7 @@ export class RuoliComponent implements OnInit {
 
   onDelete(): void {
     if (!this.selectedRoleId()) {
-      this.showNotification('Selezionare un ruolo da eliminare', 'warning');
+      notify('Selezionare un ruolo da eliminare', 'warning', 2000);
       return;
     }
     confirm(`Eliminare il ruolo "${this.selectedRoleName()}"?`, 'Conferma eliminazione')
@@ -270,27 +283,25 @@ export class RuoliComponent implements OnInit {
               this.functionsByRole.set([]);
               this.showDetailPopup.set(false);
               this.loadAllRoles();
-              this.showNotification('Ruolo cancellato con successo', 'success');
+              notify('Ruolo cancellato con successo', 'success', 2000);
             },
             error: (err) => {
-              this.showNotification('Errore durante la cancellazione del ruolo', 'error');
+              notify('Errore durante la cancellazione del ruolo', 'error', 2000);
               console.error(err);
             }
           });
       });
   }
 
-  // ── Traccia da riga ──
   onTraceFromRow(data: ISysRoleResonse): void {
     this.router.navigate(['/trace'], {
       queryParams: { traTabNam: 'sys_ROLE', traEntCode: String(data.roleId) }
     });
   }
 
-  // ── Traccia da popup ──
   onTrace(): void {
     if (!this.selectedRoleId()) {
-      this.showNotification('Selezionare un ruolo da tracciare', 'warning');
+      notify('Selezionare un ruolo da tracciare', 'warning', 2000);
       return;
     }
     this.showDetailPopup.set(false);
@@ -299,7 +310,6 @@ export class RuoliComponent implements OnInit {
     });
   }
 
-  // ── Ricerca Funzioni per Ruolo (server-side) ──
   onCerca(): void {
     this.managerService
       .postGetFunctionRoleByRoleId({
@@ -313,10 +323,6 @@ export class RuoliComponent implements OnInit {
 
   resetFilters(): void { this.searchRoles.set(''); }
 
-  onStampaLista(): void {}
-  onStampaUtenti(): void {}
-
-  // ── Helpers privati ──
   private setSelected(data: ISysRoleResonse): void {
     this.selectedRoleId.set(data.roleId);
     this.selectedRoleName.set(data.roleName ?? '');
@@ -331,12 +337,5 @@ export class RuoliComponent implements OnInit {
 
   private resetAddForm(): void {
     this.addForm.reset({ roleName: '', roleDes: '' });
-  }
-
-  private showNotification(message: string, type: 'success' | 'error' | 'warning' | 'info'): void {
-    this.toastMessage.set(message);
-    this.toastType.set(type);
-    this.toastVisible.set(true);
-    notify(message, type, 2000);
   }
 }

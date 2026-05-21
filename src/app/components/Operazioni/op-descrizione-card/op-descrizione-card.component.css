@@ -1,0 +1,9 @@
+:host {
+  display: contents;
+}
+
+.field-sep {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 8px 0;
+}

@@ -158,6 +158,14 @@
 :host ::ng-deep .toolbar-textbox      .dx-texteditor-input { padding-left: 30px !important; }
 :host ::ng-deep .toolbar-textbox-wide .dx-texteditor-input { padding-left: 30px !important; }
 
+/* ── Toolbar meta row (last update badge) ── */
+.toolbar-meta {
+  display: flex;
+  align-items: center;
+  padding: 4px 12px 6px;
+  border-top: 1px solid rgba(220, 227, 238, 0.6);
+}
+
 /* ── Last update badge ── */
 .last-update-badge {
   display: inline-flex;

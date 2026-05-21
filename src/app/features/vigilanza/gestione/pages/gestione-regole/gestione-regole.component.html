@@ -5,8 +5,17 @@
     <h1 class="page-title">Gestione Regole Antiriciclaggio</h1>
   </div>
 
-  <!-- ── Main Card ── -->
-  <section class="card-section">
+      <div class="toolbar-field">
+        <dx-select-box
+          formControlName="arlCurTypeId"
+          [dataSource]="currencyTypes()"
+          displayExpr="cutDes"
+          valueExpr="cutId"
+          [showClearButton]="true"
+          placeholder="Tipo divisa..."
+          labelMode="hidden">
+        </dx-select-box>
+      </div>
 
     <div class="sempione-card-header">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -17,9 +26,22 @@
     </div>
     <div class="gold-divider"></div>
 
-    <!-- ── Toolbar ── -->
-    <div class="card-toolbar" [formGroup]="filterForm">
-      <div class="toolbar-inner">
+  <app-sempione-data-grid
+    [dataSource]="rules()"
+    [keyExpr]="'arlId'"
+    [columns]="columns"
+    [isLoading]="isLoading()"
+    [error]="error()"
+    [pageSize]="30"
+    [allowedPageSizes]="[20, 30, 50, 100]"
+    [showEditAction]="true"
+    [showTraceAction]="true"
+    emptyStateText="Nessuna regola trovata. Impostare i filtri e premere Cerca, oppure Mostra tutti per visualizzare tutte le regole."
+    emptyStateIcon="shield"
+    (rowEdit)="openEditPopup($event)"
+    (rowTrace)="openHistoryPopup($event)">
+  </app-sempione-data-grid>
+</app-sempione-card>
 
         <div class="toolbar-filters">
           <div class="toolbar-field toolbar-field--md">
@@ -97,21 +119,18 @@
         </div>
 
       </div>
-    </div>
 
-    <!-- ── Griglia ── -->
-    <div class="card-body card-body--grid">
-
-      @if (error()) {
-        <div class="grid-message grid-message--error">
+      @if (saveError()) {
+        <div class="save-error-msg">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"></circle>
             <line x1="12" y1="8" x2="12" y2="12"></line>
             <line x1="12" y1="16" x2="12.01" y2="16"></line>
           </svg>
-          {{ error() }}
+          {{ saveError() }}
         </div>
       }
+    </app-sempione-popup-card>
 
       @if (isLoading()) {
         <div class="grid-message grid-message--loading">
@@ -402,10 +421,10 @@
     }
 
   </div>
-</dx-popup>
+</app-sempione-popup>
 
 <!-- ══ Popup Storico ══ -->
-<dx-popup
+<app-sempione-popup
   [(visible)]="isHistoryPopupVisible"
   [showTitle]="true"
   [title]="'Storico Regola — ID ' + historyArlId()"
@@ -484,4 +503,4 @@
 
     </div>
   </div>
-</dx-popup>
+</app-sempione-popup>

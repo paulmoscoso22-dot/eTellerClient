@@ -26,6 +26,16 @@ import {
 } from '../../domain/gestione-regole.models';
 import { IStOperationType } from '../../../../../core/domain/stOperationType.domain';
 import { ICurrencyType } from '../../../../../core/domain/currencyType.domain';
+import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
+import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneToolbarComponent } from '../../../../../components/General/sempione-toolbar/sempione-toolbar.component';
+import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General/sempione-data-grid/sempione-data-grid.component';
+import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
+import { SempionePopupCardComponent } from '../../../../../components/General/sempione-popup-card/sempione-popup-card.component';
+import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
+import { SempioneFieldGroupComponent } from '../../../../../components/General/sempione-field-group/sempione-field-group.component';
+import { SempioneCrudToolbarActionsComponent } from '../../../../../components/General/sempione-crud-toolbar-actions/sempione-crud-toolbar-actions.component';
 
 @Component({
   selector: 'app-gestione-regole',

@@ -2,10 +2,14 @@ import { Component, OnInit, inject, signal, computed, DestroyRef } from '@angula
 import { firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DxTextBoxModule, DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule } from 'devextreme-angular';
 import {
-  DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
-  DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule
-} from 'devextreme-angular';
+  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+  SempioneDataGridComponent, SempioneGridColumn,
+  SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+} from '../../../../../components/General';
 import notify from 'devextreme/ui/notify';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
@@ -18,8 +22,12 @@ import { ICurrencyCouple, ICurrencyDv } from '../../models/divisa.models';
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
-    DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule
+    DxTextBoxModule, DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule,
+    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+    SempioneDataGridComponent,
+    SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
   ],
   templateUrl: './coppieDivise.component.html',
   styleUrls: ['./coppieDivise.component.css'],
@@ -30,6 +38,14 @@ export class CoppieDiviseComponent implements OnInit {
   private userService = inject(UserService);
   private router      = inject(Router);
   private destroyRef  = inject(DestroyRef);
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'cucCur1',   caption: 'Divisa 1',        type: 'currency', width: 110 },
+    { dataField: 'cucCur2',   caption: 'Divisa 2',        type: 'currency', width: 110 },
+    { dataField: 'cucLondes', caption: 'Descrizione',      alignment: 'left'            },
+    { dataField: 'cucShodes', caption: 'Des. Abbreviata',  alignment: 'left', width: 150 },
+    { dataField: 'cucSize',   caption: 'Taglio',           alignment: 'center', width: 90, dataType: 'number' },
+  ];
 
   private coppie       = signal<ICurrencyCouple[]>([]);
   currencies           = signal<ICurrencyDv[]>([]);
@@ -83,6 +99,8 @@ export class CoppieDiviseComponent implements OnInit {
     });
   }
 
+  onCerca(): void { this.loadData(); }
+
   openNewPopup(): void {
     this.coppiaForm.reset({ cucSize: 1 });
     this.selectedLabel.set('');
@@ -109,6 +127,9 @@ export class CoppieDiviseComponent implements OnInit {
       case 'view':   this.openViewPopup(data); break;
       case 'edit':   this.openEditPopup(data); break;
       case 'delete': this.onDelete(data);      break;
+      case 'trace':  this.router.navigate(['/trace'], {
+        queryParams: { traTabNam: 'CURRENCY_COUPLE', traEntCode: `${data.cucCur1}_${data.cucCur2}` }
+      }); break;
     }
   }
 

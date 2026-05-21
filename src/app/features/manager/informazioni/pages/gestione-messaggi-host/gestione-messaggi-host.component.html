@@ -1,3 +1,170 @@
-<div class="container">
-  <h1>Gestione Messaggi host</h1>
+<div class="page-shell">
+
+  <app-sempione-page-header title="Gestione Messaggi Host"></app-sempione-page-header>
+
+  <app-sempione-card>
+
+    <app-sempione-card-header title="Messaggi Host">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </app-sempione-card-header>
+
+    <div [formGroup]="filterForm">
+      <app-sempione-toolbar>
+
+        <div class="toolbar-field">
+          <dx-date-box
+            type="date"
+            displayFormat="dd/MM/yyyy"
+            labelMode="hidden"
+            placeholder="Dal..."
+            [showClearButton]="true"
+            [width]="130"
+            [value]="filterForm.get('dataFrom')?.value"
+            (valueChange)="filterForm.get('dataFrom')?.setValue($event)">
+          </dx-date-box>
+        </div>
+
+        <div class="toolbar-field">
+          <dx-date-box
+            type="date"
+            displayFormat="dd/MM/yyyy"
+            labelMode="hidden"
+            placeholder="Al..."
+            [showClearButton]="true"
+            [width]="130"
+            [value]="filterForm.get('dataTo')?.value"
+            (valueChange)="filterForm.get('dataTo')?.setValue($event)">
+          </dx-date-box>
+        </div>
+
+        <div class="toolbar-field">
+          <dx-number-box
+            labelMode="hidden"
+            placeholder="ID Transazione..."
+            [showClearButton]="true"
+            [value]="filterForm.get('trxId')?.value"
+            (valueChange)="filterForm.get('trxId')?.setValue($event)">
+          </dx-number-box>
+        </div>
+
+        <div class="toolbar-field">
+          <dx-number-box
+            labelMode="hidden"
+            placeholder="ID Messaggio..."
+            [showClearButton]="true"
+            [value]="filterForm.get('msgId')?.value"
+            (valueChange)="filterForm.get('msgId')?.setValue($event)">
+          </dx-number-box>
+        </div>
+
+        <div class="toolbar-field">
+          <dx-select-box
+            [items]="statusOptions"
+            displayExpr="text"
+            valueExpr="id"
+            labelMode="hidden"
+            placeholder="Stato..."
+            [value]="filterForm.get('msgStatus')?.value"
+            (valueChange)="filterForm.get('msgStatus')?.setValue($event)">
+          </dx-select-box>
+        </div>
+
+        <div toolbar-actions>
+          <app-sempione-button
+            icon="search"
+            hint="Cerca"
+            variant="secondary"
+            [disabled]="isLoading()"
+            (clicked)="onVisualizza()">
+          </app-sempione-button>
+          <app-sempione-button
+            icon="revert"
+            hint="Reset filtri"
+            variant="secondary"
+            (clicked)="resetFilters()">
+          </app-sempione-button>
+        </div>
+
+      </app-sempione-toolbar>
+    </div>
+
+    <app-sempione-data-grid
+      [dataSource]="messages()"
+      [columns]="gridColumns"
+      keyExpr="msgId"
+      [isLoading]="isLoading()"
+      [pageSize]="15"
+      [allowedPageSizes]="[15, 30, 50, 100]"
+      [showViewAction]="true"
+      [showEditAction]="false"
+      noDataText="Nessun messaggio trovato."
+      (rowView)="openDetail($event)">
+    </app-sempione-data-grid>
+
+  </app-sempione-card>
+
 </div>
+
+<!-- ── Popup Dettaglio Messaggio ── -->
+<app-sempione-popup
+  [(visible)]="detailVisible"
+  [title]="'Dettaglio Messaggio — #' + (selectedMsg()?.msgId ?? '')"
+  [maxWidth]="780"
+  (hidden)="closeDetail()">
+
+  <div class="popup-layout">
+
+    <app-sempione-popup-card title="Informazioni Messaggio">
+      <div class="popup-fields-grid popup-fields-grid--2col">
+
+        <app-sempione-field-group label="ID Messaggio" [locked]="true">
+          <dx-text-box [value]="selectedMsg()?.msgId?.toString() ?? ''" [readOnly]="true" labelMode="hidden"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Stato" [locked]="true">
+          <dx-text-box [value]="selectedMsg()?.msgStatus || '—'" [readOnly]="true" labelMode="hidden"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="ID Transazione" [locked]="true">
+          <dx-text-box [value]="selectedMsg()?.trxId?.toString() ?? ''" [readOnly]="true" labelMode="hidden"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Data Modifica" [locked]="true">
+          <dx-text-box [value]="formatDateTime(selectedMsg()?.msgModifyDate)" [readOnly]="true" labelMode="hidden"></dx-text-box>
+        </app-sempione-field-group>
+
+      </div>
+    </app-sempione-popup-card>
+
+    <app-sempione-popup-card title="Testo Inviato">
+      <dx-text-area
+        [value]="selectedMsg()?.msgTextSend || ''"
+        [readOnly]="true"
+        labelMode="hidden"
+        [height]="160"
+        [autoResizeEnabled]="false">
+      </dx-text-area>
+    </app-sempione-popup-card>
+
+    <app-sempione-popup-card title="Testo Ricevuto">
+      <dx-text-area
+        [value]="selectedMsg()?.msgTextRec || ''"
+        [readOnly]="true"
+        labelMode="hidden"
+        [height]="160"
+        [autoResizeEnabled]="false">
+      </dx-text-area>
+    </app-sempione-popup-card>
+
+    <app-sempione-popup-action-bar
+      [cancelText]="'Chiudi'"
+      [showSave]="false"
+      [showStorico]="false"
+      (cancel)="closeDetail()">
+    </app-sempione-popup-action-bar>
+
+  </div>
+
+</app-sempione-popup>

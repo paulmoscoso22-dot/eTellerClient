@@ -1,61 +1,39 @@
 <div class="page-wrapper" [formGroup]="searchForm">
 
-  <section class="card-section">
-    <h2 class="section-title">Filtri di Selezione</h2>
+  <op-card-section title="Filtri di Selezione">
+    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
 
     <div class="fields-grid fields-grid--4">
 
       <div class="field-group">
         <label class="field-label">Cassa</label>
-        <dx-text-box
-          formControlName="tocCliId"
-          placeholder="Codice Cassa">
-        </dx-text-box>
+        <dx-text-box formControlName="tocCliId" placeholder="Codice Cassa"></dx-text-box>
       </div>
 
       <div class="field-group">
         <label class="field-label">Data</label>
-        <dx-date-box
-          formControlName="tocData"
-          type="date"
-          displayFormat="dd/MM/yyyy">
-        </dx-date-box>
+        <dx-date-box formControlName="tocData" type="date" displayFormat="dd/MM/yyyy"></dx-date-box>
       </div>
 
       <div class="field-group">
         <label class="field-label">Tipo Conto</label>
-        <dx-text-box
-          formControlName="tocCutId"
-          placeholder="Tipo conto">
-        </dx-text-box>
+        <dx-text-box formControlName="tocCutId" placeholder="Tipo conto"></dx-text-box>
       </div>
 
       <div class="field-group">
         <label class="field-label">Località</label>
-        <dx-text-box
-          formControlName="tocBraId"
-          placeholder="Filiale">
-        </dx-text-box>
+        <dx-text-box formControlName="tocBraId" placeholder="Filiale"></dx-text-box>
       </div>
 
     </div>
-  </section>
+  </op-card-section>
 
   <div class="action-bar">
-    <dx-button
-      text="Annulla"
-      icon="remove"
-      stylingMode="outlined"
-      (onClick)="reset()">
-    </dx-button>
-
-    <dx-button
-      text="Ricerca"
-      type="success"
-      icon="search"
-      class="btn-search"
-      [disabled]="isLoading()"
-      (onClick)="search()">
+    <dx-button text="Annulla" icon="remove" stylingMode="outlined" (onClick)="reset()"></dx-button>
+    <dx-button text="Ricerca" icon="search" class="btn-fin-primary btn-fin-shadow"
+      [disabled]="isLoading()" (onClick)="search()">
     </dx-button>
   </div>
 

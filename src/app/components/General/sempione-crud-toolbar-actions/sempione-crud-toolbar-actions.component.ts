@@ -13,6 +13,7 @@ export class SempioneCrudToolbarActionsComponent {
   @Input() showSearch = true;
   @Input() showReset  = true;
   @Input() showAll    = false;
+  @Input() showAdd    = true;
   @Input() newText    = 'Nuovo';
   @Input() isLoading  = false;
 
