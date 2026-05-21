@@ -1,13 +1,4 @@
-/* ══════════════════════════════════════════
-   Info Autorizzazioni — Banca del Sempione
-   Navy #003366  |  Gold #C5A059
-   ══════════════════════════════════════════ */
-
 :host {
-  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --color-text-primary:   #1e293b;
-  --color-text-secondary: #64748b;
-  --color-text-muted:     #94a3b8;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -15,135 +6,7 @@
   overflow: hidden;
 }
 
-.page-shell {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  padding: 12px 16px 0;
-  gap: 10px;
-  overflow: hidden;
-}
-
-/* ── Titolo pagina esterno ── */
-.page-header-row {
-  margin: -12px -16px 0;
-  padding: 7px 20px;
-  background: #f1f5f9;
-  border-bottom: 1px solid rgba(0, 51, 102, 0.25);
-  flex-shrink: 0;
-}
-
-.page-title {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 700;
-  color: rgba(0, 51, 102, 0.75);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-/* ══════════════════════════════════════════
-   Card Base
-   ══════════════════════════════════════════ */
-.card-section {
-  background: #fff;
-  border: 1px solid #dce3ee;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.10);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
-/* ── Card Header Navy ── */
-.sempione-card-header {
-  background: #003366;
-  padding: 8px 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.gold-divider {
-  height: 2px;
-  background: #C5A059;
-  flex-shrink: 0;
-}
-
-.card-icon {
-  width: 18px;
-  height: 18px;
-  color: #ffffff;
-  flex-shrink: 0;
-}
-
-.card-title {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #fff;
-  flex: 1;
-}
-
-/* ══════════════════════════════════════════
-   Card Toolbar — Filtri inline
-   ══════════════════════════════════════════ */
-.card-toolbar {
-  padding: 10px 14px;
-  border-bottom: 1px solid #f1f5f9;
-  flex-shrink: 0;
-}
-
-.toolbar-inner {
-  display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.toolbar-filters {
-  display: flex;
-  gap: 10px;
-  flex: 1;
-  flex-wrap: wrap;
-}
-
-.toolbar-field {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 140px;
-}
-
-.toolbar-field--lg {
-  flex: 1;
-  min-width: 180px;
-}
-
-.toolbar-lbl {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  letter-spacing: 0;
-}
-
-.toolbar-actions {
-  display: flex;
-  gap: 6px;
-  align-items: flex-end;
-  flex-shrink: 0;
-}
-
-/* ══════════════════════════════════════════
-   Card Body — Griglia
-   ══════════════════════════════════════════ */
+/* ── Card body grid wrapper ── */
 .card-body--grid {
   padding: 0;
   flex: 1 1 auto;
@@ -152,92 +15,7 @@
   flex-direction: column;
 }
 
-/* ══════════════════════════════════════════
-   DX Inputs
-   ══════════════════════════════════════════ */
-:host ::ng-deep .card-toolbar .dx-texteditor                    { height: 28px; border-radius: 6px; }
-:host ::ng-deep .card-toolbar .dx-texteditor-input              { min-height: unset; height: 26px; padding-top: 3px; padding-bottom: 3px; font-size: 13px; }
-:host ::ng-deep .card-toolbar .dx-texteditor-input::placeholder  { font-size: 11px; font-style: italic; color: #b0b7c3; }
-:host ::ng-deep .card-toolbar .dx-texteditor-buttons-container   { height: 26px; }
-:host ::ng-deep .dx-button                                       { height: 28px; }
-
-:host ::ng-deep .card-toolbar .dx-texteditor.dx-state-focused {
-  border-color: #003366 !important;
-  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.08) !important;
-}
-:host ::ng-deep .card-toolbar .dx-texteditor.dx-state-focused .dx-texteditor-container {
-  border-color: #003366 !important;
-}
-
-/* ══════════════════════════════════════════
-   Sistema Utility Bottoni — btn-fin-*
-   ══════════════════════════════════════════ */
-
-/* ── Primary: Navy filled ── */
-:host ::ng-deep .btn-fin-primary.dx-button,
-::ng-deep .btn-fin-primary.dx-button {
-  background-color: #003366 !important;
-  border-color: #003366 !important;
-  border-radius: 6px;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-:host ::ng-deep .btn-fin-primary.dx-button:hover,
-::ng-deep .btn-fin-primary.dx-button:hover {
-  background-color: #004080 !important;
-  border-color: #004080 !important;
-}
-:host ::ng-deep .btn-fin-primary .dx-button-text,
-:host ::ng-deep .btn-fin-primary .dx-icon,
-::ng-deep .btn-fin-primary .dx-button-text,
-::ng-deep .btn-fin-primary .dx-icon { color: #ffffff !important; }
-
-/* ── Secondary: light border, dark text ── */
-:host ::ng-deep .btn-fin-secondary.dx-button,
-::ng-deep .btn-fin-secondary.dx-button {
-  border-color: #cbd5e1 !important;
-  color: #1e293b !important;
-  border-radius: 6px;
-  background: transparent !important;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
-:host ::ng-deep .btn-fin-secondary.dx-button:hover,
-::ng-deep .btn-fin-secondary.dx-button:hover {
-  border-color: #94a3b8 !important;
-  background: rgba(15, 23, 42, 0.04) !important;
-}
-:host ::ng-deep .btn-fin-secondary .dx-button-text,
-:host ::ng-deep .btn-fin-secondary .dx-icon,
-::ng-deep .btn-fin-secondary .dx-button-text,
-::ng-deep .btn-fin-secondary .dx-icon { color: #1e293b !important; }
-
-/* ── Danger: red accent outlined ── */
-:host ::ng-deep .btn-fin-danger.dx-button,
-::ng-deep .btn-fin-danger.dx-button {
-  border-color: rgba(225, 29, 72, 0.35) !important;
-  color: #e11d48 !important;
-  border-radius: 6px;
-  background: transparent !important;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
-:host ::ng-deep .btn-fin-danger.dx-button:hover,
-::ng-deep .btn-fin-danger.dx-button:hover {
-  border-color: #e11d48 !important;
-  background: rgba(225, 29, 72, 0.04) !important;
-}
-:host ::ng-deep .btn-fin-danger .dx-button-text,
-:host ::ng-deep .btn-fin-danger .dx-icon,
-::ng-deep .btn-fin-danger .dx-button-text,
-::ng-deep .btn-fin-danger .dx-icon { color: #e11d48 !important; }
-
-/* ── action-shadow: ombra morbida Navy per btn toolbar ── */
-:host ::ng-deep .action-shadow.dx-button,
-::ng-deep .action-shadow.dx-button {
-  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.15) !important;
-}
-
-/* ══════════════════════════════════════════
-   DX Grid — Header Colonne
-   ══════════════════════════════════════════ */
+/* ── Grid header ── */
 :host ::ng-deep .dx-datagrid-headers {
   border-bottom: 2px solid rgba(0, 51, 102, 0.65) !important;
 }
@@ -257,15 +35,12 @@
   background-color: #e3eaf3 !important;
 }
 
-/* ══════════════════════════════════════════
-   DX Grid — Righe
-   ══════════════════════════════════════════ */
+/* ── Grid rows ── */
 :host ::ng-deep .dx-data-row > td {
   padding: 8px 10px !important;
-  font-family: var(--font-ui) !important;
   font-size: 13px !important;
   font-weight: 400 !important;
-  color: var(--color-text-primary) !important;
+  color: #1e293b !important;
   vertical-align: middle !important;
   line-height: 1.45 !important;
 }
@@ -274,63 +49,15 @@
   border-bottom: 1px solid #f1f5f9 !important;
 }
 
-:host ::ng-deep .dx-data-row.dx-row-alt > td {
-  background-color: #f9fafb !important;
-}
-
-:host ::ng-deep .dx-data-row.dx-state-hover > td {
-  background-color: rgba(0, 51, 102, 0.025) !important;
-}
-
+:host ::ng-deep .dx-data-row.dx-row-alt > td { background-color: #f9fafb !important; }
+:host ::ng-deep .dx-data-row.dx-state-hover > td { background-color: rgba(0, 51, 102, 0.025) !important; }
 :host ::ng-deep .dx-selection.dx-data-row > td {
   background-color: rgba(0, 51, 102, 0.10) !important;
   color: #003366 !important;
   font-weight: 600 !important;
 }
 
-/* ══════════════════════════════════════════
-   Badge — Ruolo
-   ══════════════════════════════════════════ */
-.role-badge {
-  display: inline-block;
-  padding: 2px 9px;
-  border-radius: 12px;
-  font-size: 10.5px;
-  font-weight: 600;
-  white-space: nowrap;
-  background: #f3f4f6;
-  color: #374151;
-  border: 1px solid #e5e7eb;
-}
-
-.role-badge.role--admin    { background:#fef2f2; color:#991b1b; border-color:#fecaca; }
-.role-badge.role--manager  { background:#eff6ff; color:#1e3a8a; border-color:#bfdbfe; }
-.role-badge.role--operator { background:#f0fdf4; color:#166534; border-color:#bbf7d0; }
-.role-badge.role--default  { background:#f3f4f6; color:#374151; border-color:#e5e7eb; }
-
-/* ══════════════════════════════════════════
-   Badge — Tipo di Accesso
-   ══════════════════════════════════════════ */
-.access-badge {
-  display: inline-block;
-  padding: 2px 9px;
-  border-radius: 12px;
-  font-size: 10.5px;
-  font-weight: 600;
-  white-space: nowrap;
-  background: #f3f4f6;
-  color: #374151;
-  border: 1px solid #e5e7eb;
-}
-
-.access-badge.access--view    { background:#eff6ff; color:#1e40af; border-color:#bfdbfe; }
-.access-badge.access--edit    { background:#fffbeb; color:#92400e; border-color:#fde68a; }
-.access-badge.access--full    { background:#f0fdf4; color:#166534; border-color:#bbf7d0; }
-.access-badge.access--default { background:#f3f4f6; color:#374151; border-color:#e5e7eb; }
-
-/* ══════════════════════════════════════════
-   Pager — Sticky + Sempione
-   ══════════════════════════════════════════ */
+/* ── Pager ── */
 :host ::ng-deep .dx-datagrid-pager {
   position: sticky;
   bottom: 0;
@@ -343,9 +70,7 @@
 :host ::ng-deep .dx-datagrid-pager .dx-pager {
   display: flex !important;
   align-items: center !important;
-  flex-wrap: nowrap;
   gap: 4px;
-  width: 100%;
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-info {
@@ -360,7 +85,6 @@
 :host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page {
   min-width: 22px !important;
   height: 22px !important;
-  line-height: normal !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -390,24 +114,12 @@
 :host ::ng-deep .dx-datagrid-pager .dx-navigate-button {
   width: 22px !important;
   height: 22px !important;
-  line-height: normal !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  vertical-align: middle !important;
   border-radius: 5px !important;
   border: 1px solid transparent !important;
   transition: background 0.15s, color 0.15s;
-}
-
-:host ::ng-deep .dx-datagrid-pager .dx-navigate-button > *,
-:host ::ng-deep .dx-datagrid-pager .dx-navigate-button::before,
-:host ::ng-deep .dx-datagrid-pager .dx-navigate-button::after {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  line-height: 1 !important;
-  margin: 0 !important;
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-navigate-button:hover {
@@ -416,20 +128,14 @@
   border-color: #dce3ee !important;
 }
 
-:host ::ng-deep .dx-datagrid-pager .dx-navigate-button.dx-button-disable {
-  opacity: 0.35;
-}
-
 :host ::ng-deep .dx-datagrid-pager .dx-page-size {
   font-size: 11px !important;
   height: 22px !important;
-  line-height: 22px !important;
   padding: 0 8px !important;
   border-radius: 5px !important;
   border: 1px solid #dce3ee !important;
   color: #374151 !important;
   background: transparent !important;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-page-size:hover {
@@ -445,3 +151,38 @@
   border-color: rgba(0, 51, 102, 0.3) !important;
 }
 
+/* ── Badge: Ruolo ── */
+.role-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 12px;
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+
+.role-badge.role--admin    { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+.role-badge.role--manager  { background: #eff6ff; color: #1e3a8a; border-color: #bfdbfe; }
+.role-badge.role--operator { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+.role-badge.role--default  { background: #f3f4f6; color: #374151; border-color: #e5e7eb; }
+
+/* ── Badge: Tipo di Accesso ── */
+.access-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 12px;
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+
+.access-badge.access--view    { background: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
+.access-badge.access--edit    { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+.access-badge.access--full    { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+.access-badge.access--default { background: #f3f4f6; color: #374151; border-color: #e5e7eb; }

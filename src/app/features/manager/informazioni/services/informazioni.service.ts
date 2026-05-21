@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiService } from '../../../../services/api.service';
-import { GetTraceAllRequest, GetTraceByIdRequest, TraceResponse, StTracefunctionResponse, SysUsersActiveAndBlockedResponse, GetTabellaServVarcharRequest, GetTabellaServVarcharByIdRequest, TabellaServVarcharResponse } from '../models/informazioni.models';
+import { GetTraceAllRequest, GetTraceByIdRequest, TraceResponse, StTracefunctionResponse, SysUsersActiveAndBlockedResponse, GetTabellaServVarcharRequest, GetTabellaServVarcharByIdRequest, TabellaServVarcharResponse, GetMsg2HostRequest, Msg2HostResponse } from '../models/informazioni.models';
 import { ClientResponse } from '../../../../core/domain/client.domain';
 
 @Injectable({
@@ -24,6 +24,8 @@ export class InformazioniService {
 
   private _tabellaServVarcharsingle = new BehaviorSubject<TabellaServVarcharResponse | null>(null);
   public tabellaServVarcharsingle$ = this._tabellaServVarcharsingle.asObservable();
+  private _msg2host = new BehaviorSubject<Msg2HostResponse[]>([]);
+  public msg2host$ = this._msg2host.asObservable();
 
   constructor(private api: ApiService) {}
 
@@ -91,6 +93,13 @@ export class InformazioniService {
   }
   getTabellaServVarcharValue(): TabellaServVarcharResponse[] {
     return this._tabellaServVarchar.value;
+  }
+
+  postGetMsg2Host(request: GetMsg2HostRequest): Observable<Msg2HostResponse[]> {
+    const url = `/Informazioni/GetMsg2Host`;
+    return this.api.post<Msg2HostResponse[]>(url, request).pipe(
+      tap((res: Msg2HostResponse[]) => this._msg2host.next(res))
+    );
   }
 
   postGetTraceById(request: GetTraceByIdRequest): Observable<TraceResponse> {

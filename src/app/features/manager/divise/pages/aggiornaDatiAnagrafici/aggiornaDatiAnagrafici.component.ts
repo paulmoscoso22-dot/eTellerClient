@@ -1,10 +1,14 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DxTextBoxModule, DxValidatorModule, DxNumberBoxModule } from 'devextreme-angular';
 import {
-  DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
-  DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule
-} from 'devextreme-angular';
+  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+  SempioneDataGridComponent, SempioneGridColumn,
+  SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+} from '../../../../../components/General';
 import notify from 'devextreme/ui/notify';
 import { DiviseService } from '../../services/divise.service';
 import { Router } from '@angular/router';
@@ -18,8 +22,12 @@ export type { IDivisaAnagrafica } from '../../models/divisa.models';
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
-    DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule
+    DxTextBoxModule, DxValidatorModule, DxNumberBoxModule,
+    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+    SempioneDataGridComponent,
+    SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
   ],
   templateUrl: './aggiornaDatiAnagrafici.component.html',
   styleUrls: ['./aggiornaDatiAnagrafici.component.css'],
@@ -28,6 +36,17 @@ export class AggiornaDAtiAnagraficiComponent implements OnInit {
   private fb = inject(FormBuilder);
   private diviseService = inject(DiviseService);
   private router = inject(Router);
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'curId',      caption: 'Divisa',          type: 'currency',  width: 100 },
+    { dataField: 'curCutId',   caption: 'Tipo',             type: 'tipo-pill', width: 90  },
+    { dataField: 'curShodes',  caption: 'Des. Abbreviata',  alignment: 'left', width: 140 },
+    { dataField: 'curLondes',  caption: 'Descrizione',      alignment: 'left'             },
+    { dataField: 'curMinamn',  caption: 'Taglio min.',      alignment: 'right', width: 110, dataType: 'number', format: '#,##0.##'   },
+    { dataField: 'curTolrat',  caption: 'Tolleranza %',     alignment: 'right', width: 110, dataType: 'number', format: '#,##0.0000' },
+    { dataField: 'curFinezza', caption: 'Finezza',          alignment: 'center', width: 90 },
+    { dataField: 'curModdat',  caption: 'Data modifica',    alignment: 'left',  width: 140 },
+  ];
 
   private divise = signal<IDivisaAnagrafica[]>([]);
 
@@ -112,8 +131,11 @@ export class AggiornaDAtiAnagraficiComponent implements OnInit {
 
   onTableAction(action: string, data: IDivisaAnagrafica): void {
     switch (action) {
-      case 'view': this.openViewPopup(data); break;
-      case 'edit': this.openEditPopup(data); break;
+      case 'view':  this.openViewPopup(data); break;
+      case 'edit':  this.openEditPopup(data); break;
+      case 'trace': this.router.navigate(['/trace'], {
+        queryParams: { traTabNam: 'CURRENCY', traEntCode: `${data.curId}_${data.curCutId}` }
+      }); break;
     }
   }
 

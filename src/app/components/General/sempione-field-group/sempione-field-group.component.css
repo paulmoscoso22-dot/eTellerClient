@@ -17,6 +17,18 @@
 
 .req { color: #dc2626; }
 
+.field-group--inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-group--inline .field-label {
+  font-size: 13px;
+  color: #374151;
+  white-space: nowrap;
+}
+
 /* ── Locked key field (edit mode) ── */
 :host ::ng-deep .field-id-locked .dx-texteditor,
 :host ::ng-deep .field-id-locked .dx-dropdowneditor {

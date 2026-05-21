@@ -1,23 +1,7 @@
 <div class="page-shell">
 
   <!-- ── Op bar ── -->
-  <div class="op-bar">
-    <span class="op-badge op-badge--{{ mode }}">
-      @if (mode === 'versamento') {
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" class="badge-icon">
-          <path d="M8 14V2M3 7l5-5 5 5"/>
-        </svg>
-      } @else {
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" class="badge-icon">
-          <path d="M8 2v12M3 9l5 5 5-5"/>
-        </svg>
-      }
-      {{ pageTitle }}
-      @if (operazioneNr()) {
-        &mdash; N.&nbsp;<strong>{{ operazioneNr() }}</strong>
-      }
-    </span>
-  </div>
+  <op-badge [mode]="mode" [title]="pageTitle" [operazioneNr]="operazioneNr()"></op-badge>
 
   <!-- ══ Two-column grid ══ -->
   <div class="two-col-grid">

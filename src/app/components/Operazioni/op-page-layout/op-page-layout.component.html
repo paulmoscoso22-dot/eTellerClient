@@ -1,0 +1,35 @@
+<div class="page-shell">
+
+  <!-- ── Op bar ── -->
+  <div class="op-bar">
+    <span class="op-badge op-badge--{{ mode }}">
+      @if (mode === 'acquisto') {
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" class="badge-icon">
+          <path d="M8 14V2M3 7l5-5 5 5"/>
+        </svg>
+      } @else {
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" class="badge-icon">
+          <path d="M8 2v12M3 9l5 5 5-5"/>
+        </svg>
+      }
+      {{ title }}
+      @if (operazioneNr) {
+        &mdash; N.&nbsp;<strong>{{ operazioneNr }}</strong>
+      }
+    </span>
+  </div>
+
+  <!-- ══ Two-column grid ══ -->
+  <div class="two-col-grid">
+    <div class="col-main">
+      <ng-content select="[left]"></ng-content>
+    </div>
+    <div class="col-side">
+      <ng-content select="[right]"></ng-content>
+    </div>
+  </div>
+
+  <!-- ── Action area ── -->
+  <ng-content select="[actions]"></ng-content>
+
+</div>

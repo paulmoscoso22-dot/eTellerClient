@@ -1,0 +1,48 @@
+<op-card-section title="Descrizione Operazione" [fill]="true">
+  <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+    <polyline points="14 2 14 8 20 8"></polyline>
+    <line x1="16" y1="13" x2="8" y2="13"></line>
+    <line x1="16" y1="17" x2="8" y2="17"></line>
+  </svg>
+
+  <op-form-row label="Data valuta">
+    <dx-date-box
+      [value]="dataValuta"
+      (onValueChanged)="dataValutaChange.emit($event.value)"
+      displayFormat="dd/MM/yyyy">
+    </dx-date-box>
+  </op-form-row>
+
+  <op-form-row label="Data operazione">
+    <op-display-value>{{ dataOperazione | date:'dd/MM/yyyy' }}</op-display-value>
+  </op-form-row>
+
+  <div class="field-sep"></div>
+
+  <op-form-row label="Nome e Cognome">
+    <dx-text-box
+      [value]="nomeCognome"
+      (onValueChanged)="nomeCognomeChange.emit($event.value)">
+    </dx-text-box>
+  </op-form-row>
+
+  <op-form-row label="Testo" [alignTop]="true">
+    <dx-text-area
+      [value]="testo"
+      [height]="62"
+      (onValueChanged)="testoChange.emit($event.value)">
+    </dx-text-area>
+  </op-form-row>
+
+  <op-form-row label="Commento" [alignTop]="true">
+    <dx-text-area
+      [value]="commento"
+      [height]="62"
+      (onValueChanged)="commentoChange.emit($event.value)">
+    </dx-text-area>
+  </op-form-row>
+
+  <ng-content></ng-content>
+
+</op-card-section>

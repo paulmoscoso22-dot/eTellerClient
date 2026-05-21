@@ -22,36 +22,6 @@
   overflow: hidden;
 }
 
-/* ══════════════════════════════════════════
-   Op bar
-   ══════════════════════════════════════════ */
-
-.op-bar {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.op-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 12px 3px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #fff;
-}
-
-.op-badge--versamento   { background: #14532d; }
-.op-badge--prelevamento { background: #7f1d1d; }
-
-.badge-icon {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-}
 
 /* Confirm button — primary navy (top right) */
 :host ::ng-deep .btn-confirm.dx-button {

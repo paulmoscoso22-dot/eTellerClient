@@ -7,5 +7,7 @@
 @if (showAll) {
   <app-sempione-button icon="checklist" hint="Mostra tutti" variant="secondary" [disabled]="isLoading" (clicked)="listAll.emit()"></app-sempione-button>
 }
-<span class="toolbar-sep"></span>
-<app-sempione-button [text]="newText" icon="add" variant="primary" [shadow]="true" (clicked)="add.emit()"></app-sempione-button>
+@if (showAdd) {
+  <span class="toolbar-sep"></span>
+  <app-sempione-button [text]="newText" icon="add" variant="primary" [shadow]="true" (clicked)="add.emit()"></app-sempione-button>
+}

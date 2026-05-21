@@ -2,14 +2,12 @@
 
   <section class="card-section">
 
-    <div class="sempione-card-header">
+    <app-header-card title="Filtri Di Ricerca">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
-      <h2 class="card-title">Filtri Di Ricerca</h2>
-    </div>
-    <div class="gold-divider"></div>
+    </app-header-card>
 
     <div class="card-body">
 
@@ -135,45 +133,26 @@
 
       <div class="section-divider"></div>
 
-      <!-- ── Sezione 3: Opzioni + Azioni ── -->
+      <!-- ── Sezione 3: Opzioni ── -->
       <div class="section-heading">Opzioni</div>
-      <div class="options-and-actions">
-
-        <div class="options-group">
-          <dx-check-box
-            formControlName="trxReverse"
-            text="Transazioni Inverse"
-            class="filter-check">
-          </dx-check-box>
-          <dx-check-box
-            formControlName="arcForced"
-            text="Forzato"
-            class="filter-check">
-          </dx-check-box>
-        </div>
-
-        <div class="actions-group">
-          <dx-button
-            class="btn-annulla"
-            text="Annulla"
-            icon="revert"
-            stylingMode="outlined"
-            (onClick)="reset()">
-          </dx-button>
-          <dx-button
-            class="btn-search"
-            text="Ricerca"
-            type="default"
-            stylingMode="contained"
-            icon="search"
-            [disabled]="isLoading()"
-            (onClick)="search()">
-          </dx-button>
-        </div>
-
+      <div class="options-group">
+        <dx-check-box formControlName="trxReverse" text="Transazioni Inverse" class="filter-check"></dx-check-box>
+        <dx-check-box formControlName="arcForced" text="Forzato" class="filter-check"></dx-check-box>
       </div>
 
     </div>
+
+    <div class="action-bar">
+      <dx-button text="Annulla" icon="revert" stylingMode="outlined" (onClick)="reset()"></dx-button>
+      <dx-button
+        text="Ricerca"
+        icon="search"
+        class="btn-fin-primary btn-fin-shadow"
+        [disabled]="isLoading()"
+        (onClick)="search()">
+      </dx-button>
+    </div>
+
   </section>
 
 </div>

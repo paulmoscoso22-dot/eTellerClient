@@ -5,11 +5,12 @@
   [title]="title"
   [dragEnabled]="dragEnabled"
   [hideOnOutsideClick]="false"
-  [showCloseButton]="true"
+  [showCloseButton]="showCloseButton"
   [width]="'90%'"
   [maxWidth]="maxWidth"
   [height]="'auto'"
   [maxHeight]="maxHeight"
+  [wrapperAttr]="{ class: 'sempione-popup' }"
   (onHidden)="onHidden()">
 
   <div *dxTemplate="let _ of 'content'" class="popup-content-shell">

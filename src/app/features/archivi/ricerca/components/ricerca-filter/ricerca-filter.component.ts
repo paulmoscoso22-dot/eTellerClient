@@ -14,6 +14,7 @@ import { Currency } from '../../../../../core/domain/currency.domain';
 import { Branch } from '../../../../../core/domain/branch.domain';
 import { ICurrencyType } from '../../../../../core/domain/currencyType.domain';
 import { IStOperationType } from '../../../../../core/domain/stOperationType.domain';
+import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
 
 @Component({
   selector: 'app-ricerca-filter',
@@ -27,6 +28,7 @@ import { IStOperationType } from '../../../../../core/domain/stOperationType.dom
     DxButtonModule,
     DxCheckBoxModule,
     DxSelectBoxModule,
+    HeaderCardComponent,
   ],
   templateUrl: './ricerca-filter.component.html',
   styleUrls: ['./ricerca-filter.component.css']

@@ -1,0 +1,40 @@
+:host {
+  display: contents;
+}
+
+.field-sep {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 8px 0;
+}
+
+.aml-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  background: #fff8e1;
+  border-left: 3px solid #ffc107;
+  border-radius: 4px;
+}
+
+.aml-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.aml-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffc107;
+  flex-shrink: 0;
+}
+
+.aml-status {
+  font-size: 12px;
+  font-weight: 600;
+  color: #78350f;
+}

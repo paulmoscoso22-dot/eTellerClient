@@ -1,0 +1,17 @@
+<div class="op-bar" [class.op-bar--in]="isIncoming" [class.op-bar--out]="!isIncoming">
+  <span class="op-badge">
+    @if (isIncoming) {
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" class="badge-icon">
+        <path d="M8 14V2M3 7l5-5 5 5"/>
+      </svg>
+    } @else {
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" class="badge-icon">
+        <path d="M8 2v12M3 9l5 5 5-5"/>
+      </svg>
+    }
+    {{ title }}
+  </span>
+  @if (operazioneNr) {
+    <span class="op-nr">N.&nbsp;{{ operazioneNr }}</span>
+  }
+</div>

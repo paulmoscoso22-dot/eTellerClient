@@ -7,6 +7,8 @@ import { ReportFacade } from '../../services/report.facade';
 import { GetTotaleCassaResponse } from '../../domain/totale-cassa.models';
 import { TotaleCassaFilterComponent } from '../../components/totale-cassa-filter/totale-cassa-filter.component';
 import { ApplyFilterMode } from 'devextreme/common/grids';
+import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
+import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
 
 @Component({
   selector: 'app-totali-cassa',
@@ -14,7 +16,9 @@ import { ApplyFilterMode } from 'devextreme/common/grids';
   imports: [
     CommonModule,
     DxDataGridModule,
-    TotaleCassaFilterComponent
+    TotaleCassaFilterComponent,
+    HeaderCardComponent,
+    SempionePageHeaderComponent,
   ],
   templateUrl: './totali-cassa.component.html',
   styleUrls: ['./totali-cassa.component.css'],

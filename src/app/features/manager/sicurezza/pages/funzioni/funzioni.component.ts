@@ -2,16 +2,11 @@ import { Component, signal, computed, inject, OnInit, DestroyRef, ViewChild } fr
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { DxDataGridModule, DxDataGridComponent } from 'devextreme-angular/ui/data-grid';
 import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
 import { DxNumberBoxModule } from 'devextreme-angular/ui/number-box';
 import { DxTextAreaModule } from 'devextreme-angular/ui/text-area';
 import { DxButtonModule } from 'devextreme-angular/ui/button';
-import { DxPopupModule } from 'devextreme-angular/ui/popup';
-import { DxFormModule } from 'devextreme-angular/ui/form';
 import { DxCheckBoxModule } from 'devextreme-angular/ui/check-box';
-import { DxToastModule } from 'devextreme-angular/ui/toast';
-import { DxTemplateModule } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import { confirm } from 'devextreme/ui/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -21,19 +16,27 @@ import {
   GetUsersRoleFunIdRequest, UsersRoleFunctionResponse,
   InsertSysFunctionRequest, UpdateSysFunctionRequest, DeleteSysFunctionRequest
 } from '../../models/manager.models';
-import { TableRolesComponent } from '../../components/table-roles/table-roles.component';
-import { TableUserRoleComponent } from '../../components/table-user-role/table-user-role.component';
 import { AuthFacade, AuthTemp } from '../../../../auth/auth.facade';
+import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
+import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneToolbarComponent } from '../../../../../components/General/sempione-toolbar/sempione-toolbar.component';
+import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General/sempione-data-grid/sempione-data-grid.component';
+import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
+import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
+import { SempionePopupCardComponent } from '../../../../../components/General/sempione-popup-card/sempione-popup-card.component';
+import { SempioneFieldGroupComponent } from '../../../../../components/General/sempione-field-group/sempione-field-group.component';
 
 @Component({
   selector: 'app-funzioni',
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxDataGridModule, DxTextBoxModule, DxNumberBoxModule, DxTextAreaModule,
-    DxButtonModule, DxPopupModule, DxFormModule, DxCheckBoxModule, DxToastModule,
-    DxTemplateModule,
-    TableRolesComponent, TableUserRoleComponent
+    DxTextBoxModule, DxNumberBoxModule, DxTextAreaModule, DxButtonModule, DxCheckBoxModule,
+    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempioneToolbarComponent, SempioneDataGridComponent,
+    SempionePopupComponent, SempionePopupActionBarComponent,
+    SempionePopupCardComponent, SempioneFieldGroupComponent,
   ],
   templateUrl: './funzioni.component.html',
   styleUrls: ['./funzioni.component.css'],
@@ -45,11 +48,27 @@ export class FunzioniComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly authTemp = new AuthTemp();
 
-  sysFunctions = signal<SysFunctionsResponse[]>([]);
-  sysRoles = signal<SysRoleResponse[]>([]);
+  sysFunctions       = signal<SysFunctionsResponse[]>([]);
+  sysRoles           = signal<SysRoleResponse[]>([]);
   usersRoleFunctions = signal<UsersRoleFunctionResponse[]>([]);
 
-  // ── Filter state ──
+  searchRoles = signal<string>('');
+  filteredSysRoles = computed(() => {
+    const q = this.searchRoles().toLowerCase().trim();
+    if (!q) return this.sysRoles();
+    return this.sysRoles().filter(r => r.roleName?.toLowerCase().includes(q));
+  });
+
+  searchUsers = signal<string>('');
+  filteredUsersRoleFunctions = computed(() => {
+    const q = this.searchUsers().toLowerCase().trim();
+    if (!q) return this.usersRoleFunctions();
+    return this.usersRoleFunctions().filter(u =>
+      (u.usrId ?? '').toLowerCase().includes(q) ||
+      (u.usrExtref ?? '').toLowerCase().includes(q)
+    );
+  });
+
   filterFunId          = signal<number | null>(null);
   filterFunName        = signal<string>('');
   filterFunDescription = signal<string>('');
@@ -68,29 +87,43 @@ export class FunzioniComponent implements OnInit {
     return data;
   });
 
-  selectedFunId = signal<number>(0);
-  selectedFunName = signal<string>('');
+  selectedFunId          = signal<number>(0);
+  selectedFunName        = signal<string>('');
   selectedFunDescription = signal<string>('');
-  selectedFunHostcode = signal<number>(0);
-  selectedOffline = signal<boolean>(false);
+  selectedFunHostcode    = signal<number>(0);
+  selectedOffline        = signal<boolean>(false);
 
-  showAddPopup = signal<boolean>(false);
+  showAddPopup    = signal<boolean>(false);
   showDetailPopup = signal<boolean>(false);
-  popupMode = signal<'view' | 'edit'>('view');
-  isLoading = signal<boolean>(false);
-  toastVisible = signal<boolean>(false);
-  toastMessage = signal<string>('');
-  toastType = signal<'success' | 'error' | 'warning' | 'info'>('success');
+  popupMode       = signal<'view' | 'edit'>('view');
+  isLoading       = signal<boolean>(false);
 
-  @ViewChild('funzioniGrid') private funzioniGrid?: DxDataGridComponent;
-  @ViewChild(TableRolesComponent) private rolesTable?: TableRolesComponent;
-  @ViewChild(TableUserRoleComponent) private userRoleTable?: TableUserRoleComponent;
+  @ViewChild('rolesGrid')  private rolesGrid?: SempioneDataGridComponent;
+  @ViewChild('usersGrid')  private usersGrid?: SempioneDataGridComponent;
+
+  readonly rolesColumns: SempioneGridColumn[] = [
+    { dataField: 'roleId',   caption: 'ID',    width: 65, alignment: 'center', dataType: 'number' },
+    { dataField: 'roleName', caption: 'Ruolo' },
+  ];
+
+  readonly usersColumns: SempioneGridColumn[] = [
+    { dataField: 'usrExtref', caption: 'Utente' },
+    { dataField: 'usrId',     caption: 'ID', width: 70, alignment: 'center' },
+  ];
+
+  readonly columns: SempioneGridColumn[] = [
+    { dataField: 'funId',          caption: 'ID',          width: 65,  alignment: 'center', dataType: 'number' },
+    { dataField: 'funDescription', caption: 'Descrizione' },
+    { dataField: 'funName',        caption: 'Funzione',    width: 180 },
+    { dataField: 'offline',        caption: 'Offline',     width: 80,  type: 'bool-text' },
+    { dataField: 'funHostcode',    caption: 'Host Code',   width: 100, alignment: 'center', dataType: 'number' },
+  ];
 
   addForm = new FormGroup({
-    funName: new FormControl('', [Validators.required]),
+    funName:        new FormControl('', [Validators.required]),
     funDescription: new FormControl(''),
-    funHostcode: new FormControl<number>(0, [Validators.required]),
-    offline: new FormControl<boolean>(false)
+    funHostcode:    new FormControl<number>(0, [Validators.required]),
+    offline:        new FormControl<boolean>(false),
   });
 
   ngOnInit(): void {
@@ -108,23 +141,11 @@ export class FunzioniComponent implements OnInit {
       .subscribe({ error: (err) => console.error('Error fetching sys functions:', err) });
   }
 
-  // ── Row selection: updates selection state + side cards (no popup) ──
   onFunctionSelect(e: any): void {
     const selected = e?.selectedRowsData?.[0];
-    if (!selected) {
-      this.clearSelectedFunction();
-      return;
-    }
+    if (!selected) { this.clearSelectedFunction(); return; }
     this.setSelectedFunction(selected);
     this.loadRelatedData(selected.funId);
-  }
-
-  // ── Open popup from action column ──
-  openViewPopup(data: SysFunctionsResponse): void {
-    this.setSelectedFunction(data);
-    this.popupMode.set('view');
-    this.showDetailPopup.set(true);
-    this.loadRelatedData(data.funId);
   }
 
   openEditPopup(data: SysFunctionsResponse): void {
@@ -134,20 +155,17 @@ export class FunzioniComponent implements OnInit {
     this.loadRelatedData(data.funId);
   }
 
-  switchToEditMode(): void {
-    this.popupMode.set('edit');
-  }
+  switchToEditMode(): void { this.popupMode.set('edit'); }
 
-  // ── Save / Cancel ──
   onSaveDetail(): void {
     const request: UpdateSysFunctionRequest = {
-      traUser: this.authTemp.User,
-      traStation: this.authTemp.Cassa,
-      funId: this.selectedFunId(),
-      funName: this.selectedFunName(),
+      traUser:        this.authTemp.User,
+      traStation:     this.authTemp.Cassa,
+      funId:          this.selectedFunId(),
+      funName:        this.selectedFunName(),
       funDescription: this.selectedFunDescription(),
-      funHostcode: this.selectedFunHostcode(),
-      offline: this.selectedOffline()
+      funHostcode:    this.selectedFunHostcode(),
+      offline:        this.selectedOffline(),
     };
     this.isLoading.set(true);
     this.managerService.updateSysFunction(request)
@@ -157,24 +175,21 @@ export class FunzioniComponent implements OnInit {
           result, 'Funzione modificata con successo', 'Errore durante la modifica della funzione',
           () => this.showDetailPopup.set(false)
         ),
-        error: (err) => this.handleOperationError(err, 'Errore durante la modifica della funzione')
+        error: (err) => this.handleOperationError(err, 'Errore durante la modifica della funzione'),
       });
   }
 
-  // ── Add ──
-  onAdd(): void {
-    this.showAddPopup.set(true);
-  }
+  onAdd(): void { this.showAddPopup.set(true); }
 
   onSaveAdd(): void {
     if (this.addForm.invalid) { this.addForm.markAllAsTouched(); return; }
     const request: InsertSysFunctionRequest = {
-      traUser: this.authTemp.User,
-      traStation: this.authTemp.Cassa,
-      funName: this.addForm.value.funName ?? '',
+      traUser:        this.authTemp.User,
+      traStation:     this.authTemp.Cassa,
+      funName:        this.addForm.value.funName ?? '',
       funDescription: this.addForm.value.funDescription ?? '',
-      funHostcode: this.addForm.value.funHostcode ?? 0,
-      offline: this.addForm.value.offline ?? false
+      funHostcode:    this.addForm.value.funHostcode ?? 0,
+      offline:        this.addForm.value.offline ?? false,
     };
     this.isLoading.set(true);
     this.managerService.insertSysFunction(request)
@@ -184,13 +199,12 @@ export class FunzioniComponent implements OnInit {
           result, 'Funzione inserita con successo', "Errore durante l'inserimento della funzione",
           () => { this.showAddPopup.set(false); this.resetAddForm(); }
         ),
-        error: (err) => this.handleOperationError(err, "Errore durante l'inserimento della funzione")
+        error: (err) => this.handleOperationError(err, "Errore durante l'inserimento della funzione"),
       });
   }
 
   onCancelAdd(): void { this.showAddPopup.set(false); this.resetAddForm(); }
 
-  // ── Trace from row icon ──
   onTraceFromRow(data: SysFunctionsResponse): void {
     this.setSelectedFunction(data);
     this.router.navigate(['/trace'], {
@@ -198,22 +212,20 @@ export class FunzioniComponent implements OnInit {
     });
   }
 
-  // ── Delete from row icon ──
   onDeleteFromRow(data: SysFunctionsResponse): void {
     this.setSelectedFunction(data);
     this.onDelete();
   }
 
-  // ── Delete ──
   onDelete(): void {
     if (!this.requireSelection('Selezionare una funzione da eliminare')) return;
     confirm(`Eliminare la funzione "${this.selectedFunName()}"?`, 'Conferma eliminazione')
       .then((confirmed) => {
         if (!confirmed) return;
         const request: DeleteSysFunctionRequest = {
-          traUser: this.authTemp.User,
+          traUser:    this.authTemp.User,
           traStation: this.authTemp.Cassa,
-          funId: this.selectedFunId()
+          funId:      this.selectedFunId(),
         };
         this.isLoading.set(true);
         this.managerService.deleteSysFunction(request)
@@ -223,12 +235,11 @@ export class FunzioniComponent implements OnInit {
               result, 'Funzione eliminata con successo', "Errore durante l'eliminazione della funzione",
               () => this.clearSelectedFunction()
             ),
-            error: (err) => this.handleOperationError(err, "Errore durante l'eliminazione della funzione")
+            error: (err) => this.handleOperationError(err, "Errore durante l'eliminazione della funzione"),
           });
       });
   }
 
-  // ── Trace ──
   onTrace(): void {
     if (!this.requireSelection('Selezionare una funzione da tracciare')) return;
     this.showDetailPopup.set(false);
@@ -237,7 +248,6 @@ export class FunzioniComponent implements OnInit {
     });
   }
 
-  // ── Reset ──
   resetFilters(): void {
     this.filterFunId.set(null);
     this.filterFunName.set('');
@@ -248,18 +258,13 @@ export class FunzioniComponent implements OnInit {
   onReset(): void {
     this.resetFilters();
     this.clearSelectedFunction();
-    try { this.funzioniGrid?.instance?.clearSelection(); } catch {}
-    try { this.rolesTable?.clearSelection(); } catch {}
-    try { this.userRoleTable?.clearSelection(); } catch {}
+    try { this.rolesGrid?.clearSelection(); } catch {}
+    try { this.usersGrid?.clearSelection(); } catch {}
   }
 
-  onSearch(): void {}
-  onRoleSelect(e: any): void {}
-  onUserSelect(e: any): void {}
-  onPrintFunctions(): void {}
-  onPrintUsers(): void {}
+  onRoleSelect(_e: any): void {}
+  onUserSelect(_e: any): void {}
 
-  // ── Private helpers ──
   private setSelectedFunction(data: SysFunctionsResponse): void {
     this.selectedFunId.set(data.funId ?? 0);
     this.selectedFunName.set(data.funName ?? '');
@@ -292,33 +297,26 @@ export class FunzioniComponent implements OnInit {
   }
 
   private requireSelection(message: string): boolean {
-    if (!this.selectedFunId()) { this.showNotification(message, 'warning'); return false; }
+    if (!this.selectedFunId()) { notify(message, 'warning', 2000); return false; }
     return true;
   }
 
   private handleOperationSuccess(result: unknown, successMsg: string, errorMsg: string, afterSuccess?: () => void): void {
     this.isLoading.set(false);
     if (result) {
-      this.showNotification(successMsg, 'success');
+      notify(successMsg, 'success', 2000);
       afterSuccess?.();
       this.managerService.getSysFunctions()
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({ error: (err) => console.error('Error reloading functions:', err) });
     } else {
-      this.showNotification(errorMsg, 'error');
+      notify(errorMsg, 'error', 2000);
     }
   }
 
   private handleOperationError(err: unknown, errorMsg: string): void {
     this.isLoading.set(false);
-    this.showNotification(errorMsg, 'error');
+    notify(errorMsg, 'error', 2000);
     console.error(errorMsg, err);
-  }
-
-  private showNotification(message: string, type: 'success' | 'error' | 'warning' | 'info'): void {
-    this.toastMessage.set(message);
-    this.toastType.set(type);
-    this.toastVisible.set(true);
-    notify(message, type, 2000);
   }
 }

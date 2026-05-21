@@ -2,6 +2,7 @@ import { Component, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DxDataGridModule } from 'devextreme-angular';
 import { ApplyFilterMode } from 'devextreme/common/grids';
+import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
 
 import { GetTransactionGiornaleCassaResponse } from '../../domain/transaction.models';
 
@@ -10,7 +11,8 @@ import { GetTransactionGiornaleCassaResponse } from '../../domain/transaction.mo
   standalone: true,
   imports: [
     CommonModule,
-    DxDataGridModule
+    DxDataGridModule,
+    HeaderCardComponent,
   ],
   templateUrl: './giornale-cassa-grid.component.html',
   styleUrls: ['./giornale-cassa-grid.component.css']

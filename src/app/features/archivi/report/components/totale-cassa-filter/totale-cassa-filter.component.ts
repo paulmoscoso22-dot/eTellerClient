@@ -6,6 +6,7 @@ import {
   DxDateBoxModule,
   DxButtonModule
 } from 'devextreme-angular';
+import { OpCardSectionComponent } from '../../../../../components/Operazioni/op-card-section/op-card-section.component';
 
 /**
  * Reusable Totale Cassa Filter Component
@@ -19,7 +20,8 @@ import {
     ReactiveFormsModule,
     DxTextBoxModule,
     DxDateBoxModule,
-    DxButtonModule
+    DxButtonModule,
+    OpCardSectionComponent
   ],
   templateUrl: './totale-cassa-filter.component.html',
   styleUrls: ['./totale-cassa-filter.component.css']

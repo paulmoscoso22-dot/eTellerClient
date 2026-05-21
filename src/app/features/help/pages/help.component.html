@@ -1,46 +1,104 @@
-<div class="help-container">
-  <h2 class="page-title">Informazioni Sistema</h2>
+<app-sempione-page-header title="Informazioni Sistema"></app-sempione-page-header>
+
+<div class="help-body">
 
   @if (isLoading()) {
-    <div class="loading-wrapper">
-      <dx-load-indicator [visible]="true" />
+    <div class="help-loading">
+      <dx-load-indicator [visible]="true"></dx-load-indicator>
     </div>
   }
 
   @if (loadError()) {
-    <div class="error-message">{{ loadError() }}</div>
+    <div class="help-error">{{ loadError() }}</div>
   }
 
   @if (!isLoading() && !loadError() && helpInfo()) {
-    <!-- Sezione: Informazioni Cassa -->
-    <div class="info-section">
-      <h3 class="section-title">Informazioni Cassa</h3>
-      <dx-form [formData]="helpInfo()" [readOnly]="true" labelLocation="left">
-        <dxi-item dataField="lastUser" [label]="{ text: 'Ultimo Utente' }" editorType="dxTextBox" />
-        <dxi-item dataField="lastLogoutDate" [label]="{ text: 'Data Ultimo Logout' }" editorType="dxTextBox" />
-        <dxi-item dataField="systemLanguage" [label]="{ text: 'Lingua Sistema' }" editorType="dxTextBox" />
-        <dxi-item dataField="fichesPrinter" [label]="{ text: 'Stampante Fiche' }" editorType="dxTextBox" />
-        <dxi-item dataField="isTwinSafeEnabled" [label]="{ text: 'TwinSafe Abilitato' }" editorType="dxCheckBox" />
-        <dxi-item dataField="isCassaOperationsEnabled" [label]="{ text: 'Operazioni Cassa Abilitate' }" editorType="dxCheckBox" />
-      </dx-form>
+
+    <!-- ══ Informazioni Cassa ══ -->
+    <op-card-section title="Informazioni Cassa">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+        <line x1="2" y1="10" x2="22" y2="10"></line>
+      </svg>
+
+      <div class="popup-fields-grid popup-fields-grid--2col">
+
+        <app-sempione-field-group label="Ultimo Utente">
+          <dx-text-box [value]="helpInfo()?.lastUser ?? '—'" [readOnly]="true"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Data Ultimo Logout">
+          <dx-text-box [value]="helpInfo()?.lastLogoutDate ?? '—'" [readOnly]="true"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Lingua Sistema">
+          <dx-text-box [value]="helpInfo()?.systemLanguage ?? '—'" [readOnly]="true"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Stampante Fiche">
+          <dx-text-box [value]="helpInfo()?.fichesPrinter ?? '—'" [readOnly]="true"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="TwinSafe Abilitato" [inline]="true">
+          <dx-check-box [value]="helpInfo()?.isTwinSafeEnabled" [readOnly]="true"></dx-check-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Operazioni Cassa Abilitate" [inline]="true">
+          <dx-check-box [value]="helpInfo()?.isCassaOperationsEnabled" [readOnly]="true"></dx-check-box>
+        </app-sempione-field-group>
+
+      </div>
+    </op-card-section>
+
+    <div class="help-bottom-row">
+
+      <!-- ══ Host ══ -->
+      <op-card-section title="Host">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="2" width="20" height="8" rx="2"></rect>
+          <rect x="2" y="14" width="20" height="8" rx="2"></rect>
+          <line x1="6" y1="6" x2="6.01" y2="6"></line>
+          <line x1="6" y1="18" x2="6.01" y2="18"></line>
+        </svg>
+
+        <div class="popup-fields-grid popup-fields-grid--2col">
+
+          <app-sempione-field-group label="Utente Host">
+            <dx-text-box [value]="helpInfo()?.hostUser ?? '—'" [readOnly]="true"></dx-text-box>
+          </app-sempione-field-group>
+
+          <app-sempione-field-group label="Versione Host">
+            <dx-text-box [value]="helpInfo()?.hostVersion != null ? '' + helpInfo()!.hostVersion : '—'" [readOnly]="true"></dx-text-box>
+          </app-sempione-field-group>
+
+          <div class="popup-col-span-2">
+            <app-sempione-field-group label="Data Compilazione Host">
+              <dx-text-box [value]="helpInfo()?.hostCompileDate ?? '—'" [readOnly]="true"></dx-text-box>
+            </app-sempione-field-group>
+          </div>
+
+        </div>
+      </op-card-section>
+
+      <!-- ══ Applicativo Web ══ -->
+      <op-card-section title="Applicativo Web">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+
+        <div class="popup-fields-grid popup-fields-grid--1col">
+
+          <app-sempione-field-group label="Versione Applicativo">
+            <dx-text-box [value]="helpInfo()?.webApplicationVersion ?? '—'" [readOnly]="true"></dx-text-box>
+          </app-sempione-field-group>
+
+        </div>
+      </op-card-section>
+
     </div>
 
-    <!-- Sezione: Applicativo Web -->
-    <div class="info-section">
-      <h3 class="section-title">Applicativo Web</h3>
-      <dx-form [formData]="helpInfo()" [readOnly]="true" labelLocation="left">
-        <dxi-item dataField="webApplicationVersion" [label]="{ text: 'Versione Applicativo' }" editorType="dxTextBox" />
-      </dx-form>
-    </div>
-
-    <!-- Sezione: Host -->
-    <div class="info-section">
-      <h3 class="section-title">Host</h3>
-      <dx-form [formData]="helpInfo()" [readOnly]="true" labelLocation="left">
-        <dxi-item dataField="hostUser" [label]="{ text: 'Utente Host' }" editorType="dxTextBox" />
-        <dxi-item dataField="hostVersion" [label]="{ text: 'Versione Host' }" editorType="dxTextBox" />
-        <dxi-item dataField="hostCompileDate" [label]="{ text: 'Data Compilazione Host' }" editorType="dxTextBox" />
-      </dx-form>
-    </div>
   }
+
 </div>

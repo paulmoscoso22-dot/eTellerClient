@@ -17,6 +17,7 @@ export class SempionePopupComponent {
   @Input() maxWidth: number = 500;
   @Input() maxHeight: string = '92vh';
   @Input() dragEnabled: boolean = true;
+  @Input() showCloseButton: boolean = true;
 
   @Output() hidden = new EventEmitter<void>();
 

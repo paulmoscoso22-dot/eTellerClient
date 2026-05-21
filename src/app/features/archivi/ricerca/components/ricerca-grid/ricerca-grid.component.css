@@ -1,8 +1,3 @@
-/* ══════════════════════════════════════════
-   Ricerca Grid — Banca del Sempione Style
-   Brand navy : #003366  |  Gold : #C5A059
-   ══════════════════════════════════════════ */
-
 :host {
   display: flex;
   flex-direction: column;
@@ -19,58 +14,8 @@
   background: #fff;
   border: 1px solid #dce3ee;
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.12);
   overflow: hidden;
-}
-
-/* ── Sempione Card Header ── */
-.sempione-card-header {
-  background: #003366;
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.gold-divider {
-  height: 2px;
-  background: #C5A059;
-  flex-shrink: 0;
-}
-
-.card-icon {
-  width: 15px;
-  height: 15px;
-  color: #fff;
-  opacity: 0.9;
-  flex-shrink: 0;
-}
-
-.card-title {
-  margin: 0;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: #fff;
-  flex: 1;
-}
-
-.result-count-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 22px;
-  height: 18px;
-  padding: 0 6px;
-  border-radius: 9px;
-  background: rgba(197, 160, 89, 0.25);
-  border: 1px solid rgba(197, 160, 89, 0.5);
-  color: #C5A059;
-  font-size: 10px;
-  font-weight: 700;
-  font-family: monospace;
 }
 
 /* ── Card body ── */
@@ -81,78 +26,6 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
-
-/* ── Grid headers ── */
-:host ::ng-deep .dx-datagrid-headers .dx-header-row td {
-  background-color: #f8fafd !important;
-  color: #374151 !important;
-  font-size: 10px !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  border-bottom: 2px solid #003366 !important;
-}
-
-/* ── Compact rows ── */
-:host ::ng-deep .dx-data-row > td {
-  padding: 5px 10px !important;
-  font-size: 12px !important;
-  vertical-align: middle !important;
-}
-
-:host ::ng-deep .dx-data-row.dx-row-alt > td {
-  background-color: #f8fafc !important;
-}
-
-:host ::ng-deep .dx-data-row.dx-state-hover > td {
-  background-color: rgba(0, 51, 102, 0.04) !important;
-}
-
-:host ::ng-deep .dx-selection.dx-data-row > td {
-  background-color: rgba(0, 51, 102, 0.10) !important;
-  color: #003366 !important;
-  font-weight: 600 !important;
-}
-
-/* ── Pager ── */
-:host ::ng-deep .dx-datagrid-pager {
-  border-top: 1px solid #e5e7eb;
-  padding: 3px 8px;
-  background: #fafbfc;
-}
-
-:host ::ng-deep .dx-pager {
-  font-size: 11px;
-  color: #6b7280;
-}
-
-:host ::ng-deep .dx-pager .dx-page,
-:host ::ng-deep .dx-pager .dx-navigate-button {
-  font-size: 11px;
-  min-width: 22px;
-  height: 22px;
-  line-height: 22px;
-  border-radius: 4px;
-}
-
-:host ::ng-deep .dx-pager .dx-page.dx-selection {
-  background-color: #003366;
-  border-color: #003366;
-  color: #fff;
-  font-weight: 700;
-}
-
-:host ::ng-deep .dx-pager .dx-page:not(.dx-selection):hover,
-:host ::ng-deep .dx-pager .dx-navigate-button:hover {
-  background-color: rgba(0, 51, 102, 0.08);
-  color: #003366;
-}
-
-:host ::ng-deep .dx-pager .dx-info {
-  font-size: 11px;
-  color: #6b7280;
-  line-height: 22px;
 }
 
 /* ── State messages ── */
@@ -187,13 +60,9 @@
   opacity: 0.7;
 }
 
-.spin-icon {
-  animation: spin 0.9s linear infinite;
-}
+.spin-icon { animation: spin 0.9s linear infinite; }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 .state-message--error {
   flex-direction: row;
@@ -222,13 +91,5 @@
   flex: 1;
 }
 
-.state-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #6b7280;
-}
-
-.state-subtitle {
-  font-size: 12px;
-  color: #9ca3af;
-}
+.state-title  { font-size: 14px; font-weight: 600; color: #6b7280; }
+.state-subtitle { font-size: 12px; color: #9ca3af; }

@@ -16,6 +16,7 @@ export class SempionePopupActionBarComponent {
   @Input() isSaving: boolean = false;
   @Input() showSave: boolean = true;
   @Input() showStorico: boolean = false;
+  @Input() saveIcon: string = 'save';
 
   @Output() save = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();

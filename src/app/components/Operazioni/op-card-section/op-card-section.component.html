@@ -1,0 +1,8 @@
+<section class="card-section" [class.card-fill]="fill">
+  <app-header-card [title]="title">
+    <ng-content select=".card-icon"></ng-content>
+  </app-header-card>
+  <div class="card-body">
+    <ng-content></ng-content>
+  </div>
+</section>
