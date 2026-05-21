@@ -6,6 +6,7 @@ import {
   DxPopupModule
 } from 'devextreme-angular';
 import { HeaderCardComponent } from '../../../../components/header-card/header-card.component';
+import { OpBadgeComponent } from '../../../../components/Operazioni/op-badge/op-badge.component';
 
 const round05 = (v: number) => Math.round(v * 20) / 20;
 
@@ -17,7 +18,8 @@ const round05 = (v: number) => Math.round(v * 20) / 20;
     DxTextBoxModule, DxNumberBoxModule, DxSelectBoxModule, DxCheckBoxModule,
     DxDateBoxModule, DxTextAreaModule, DxButtonModule, DxDropDownButtonModule,
     DxPopupModule,
-    HeaderCardComponent
+    HeaderCardComponent,
+    OpBadgeComponent
   ],
   templateUrl: './incasso-assegni.component.html',
   styleUrls: ['./incasso-assegni.component.css']

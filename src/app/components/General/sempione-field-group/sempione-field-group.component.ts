@@ -13,4 +13,6 @@ export class SempioneFieldGroupComponent {
   @Input() required: boolean = false;
   /** Applies the locked read-only style (key fields in edit mode) */
   @Input() locked: boolean = false;
+  /** Renders label and content on the same row (for checkboxes/toggles) */
+  @Input() inline: boolean = false;
 }

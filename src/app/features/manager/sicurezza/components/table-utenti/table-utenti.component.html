@@ -13,9 +13,9 @@
     <dxo-paging [pageSize]="12"></dxo-paging>
     <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[12, 25, 50, 100]" [showInfo]="true"></dxo-pager>
 
-    <!-- Colonna Status Pill (Attivo / Inattivo) -->
+    <!-- Colonna Online/Offline -->
     <dxi-column
-      [caption]="'utenti.colAttivo' | transloco"
+      caption="Online"
       [width]="110"
       [allowSorting]="false"
       [allowFiltering]="false"
@@ -24,39 +24,33 @@
 
     <div *dxTemplate="let cell of 'statusPillTemplate'" class="status-cell">
       @if (cell.data.isOnline) {
-        <span class="status-pill status-pill--online"
-              [title]="'utenti.statusActive' | transloco">
-          {{ 'utenti.statusActive' | transloco }}
-        </span>
+        <span class="status-pill status-pill--online" title="Attivo">Attivo</span>
       } @else {
-        <span class="status-pill status-pill--offline"
-              [title]="'utenti.statusInactive' | transloco">
-          {{ 'utenti.statusInactive' | transloco }}
-        </span>
+        <span class="status-pill status-pill--offline" title="Non attivo">Non attivo</span>
       }
     </div>
 
     <!-- Colonne dati -->
-    <dxi-column dataField="usrId"     [caption]="'utenti.colUsrId'  | transloco" alignment="left"></dxi-column>
-    <dxi-column dataField="usrHostId" [caption]="'utenti.colHostId' | transloco" alignment="left"></dxi-column>
+    <dxi-column dataField="usrId"     caption="User ID"     alignment="left"></dxi-column>
+    <dxi-column dataField="usrHostId" caption="Host ID"     alignment="left"></dxi-column>
 
-    <dxi-column dataField="usrBraId" [caption]="'utenti.colBraId' | transloco">
+    <dxi-column dataField="usrBraId" caption="Filiale">
       <dxo-lookup [dataSource]="branches()" valueExpr="braId" displayExpr="braDes"></dxo-lookup>
     </dxi-column>
 
-    <dxi-column dataField="usrStatus" [caption]="'utenti.colStatus' | transloco">
+    <dxi-column dataField="usrStatus" caption="Stato">
       <dxo-lookup [dataSource]="statiEntita()" valueExpr="steId" displayExpr="steDes"></dxo-lookup>
     </dxi-column>
 
-    <dxi-column dataField="usrExtref" [caption]="'utenti.colExtref' | transloco"></dxi-column>
+    <dxi-column dataField="usrExtref" caption="Riferimento"></dxi-column>
 
-    <dxi-column dataField="usrLingua" [caption]="'utenti.colLingua' | transloco">
+    <dxi-column dataField="usrLingua" caption="Lingua">
       <dxo-lookup [dataSource]="languages()" valueExpr="lanId" displayExpr="lanDes"></dxo-lookup>
     </dxi-column>
 
     <!-- Colonna Azioni -->
     <dxi-column
-      [caption]="'utenti.colAzioni' | transloco"
+      caption="Azioni"
       [width]="100"
       [allowSorting]="false"
       [allowFiltering]="false"
@@ -65,17 +59,13 @@
     </dxi-column>
 
     <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
-      <button class="action-btn action-btn--view"
-              [title]="'utenti.actionView' | transloco"
-              (click)="onAction('view', cell.data)">
+      <button class="action-btn action-btn--view" title="Visualizza" (click)="onAction('view', cell.data)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
           <circle cx="12" cy="12" r="3"></circle>
         </svg>
       </button>
-      <button class="action-btn action-btn--edit"
-              [title]="'utenti.actionEdit' | transloco"
-              (click)="onAction('edit', cell.data)">
+      <button class="action-btn action-btn--edit" title="Modifica" (click)="onAction('edit', cell.data)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
           <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -83,8 +73,8 @@
       </button>
       <dx-drop-down-button
         icon="overflow"
-        [hint]="'utenti.actionMore' | transloco"
-        [items]="moreActions()"
+        hint="Altro"
+        [items]="moreActions"
         displayExpr="text"
         keyExpr="id"
         [showArrowIcon]="false"

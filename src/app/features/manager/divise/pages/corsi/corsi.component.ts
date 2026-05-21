@@ -1,10 +1,14 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DxTextBoxModule, DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule, DxDateBoxModule } from 'devextreme-angular';
 import {
-  DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
-  DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule, DxDateBoxModule
-} from 'devextreme-angular';
+  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+  SempioneDataGridComponent, SempioneGridColumn,
+  SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+} from '../../../../../components/General';
 import notify from 'devextreme/ui/notify';
 import { CorsiService } from '../../services/corsi.service';
 import { ICorsoResponse, ICorsiRequest } from '../../models/corso.models';
@@ -14,8 +18,12 @@ import { ICorsoResponse, ICorsiRequest } from '../../models/corso.models';
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
-    DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule, DxDateBoxModule
+    DxTextBoxModule, DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule, DxDateBoxModule,
+    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+    SempioneDataGridComponent,
+    SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
   ],
   templateUrl: './corsi.component.html',
   styleUrls: ['./corsi.component.css'],
@@ -23,6 +31,18 @@ import { ICorsoResponse, ICorsiRequest } from '../../models/corso.models';
 export class CorsiComponent implements OnInit {
   private fb = inject(FormBuilder);
   private corsiService = inject(CorsiService);
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'cprCurId1',   caption: 'Div. CTP',    type: 'currency',  width: 100 },
+    { dataField: 'cprCurId2',   caption: 'Div. BASE',   type: 'currency',  width: 100 },
+    { dataField: 'cprCutId',    caption: 'Tipo',         type: 'tipo-pill', width: 90  },
+    { dataField: 'curHostcod',  caption: 'Cod. HOST',    alignment: 'left', width: 110 },
+    { dataField: 'cprRateBuy',  caption: 'Cambio BUY',   alignment: 'right', width: 120, dataType: 'number', format: '#,##0.0000' },
+    { dataField: 'cprRateSell', caption: 'Cambio SELL',  alignment: 'right', width: 120, dataType: 'number', format: '#,##0.0000' },
+    { dataField: 'cprValdat',   caption: 'Data Valuta',  alignment: 'left', width: 140 },
+    { dataField: 'cprDatreg',   caption: 'Data Reg.',    alignment: 'left', width: 140 },
+    { dataField: 'curLondes',   caption: 'Descrizione',  alignment: 'left'             },
+  ];
 
   private corsi = signal<ICorsoResponse[]>([]);
   isLoading = signal<boolean>(false);

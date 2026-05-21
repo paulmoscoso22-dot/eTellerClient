@@ -192,6 +192,56 @@
   border-color: rgba(0, 51, 102, 0.28) !important;
 }
 
+/* ── Currency badge ── */
+.currency-cell { display: flex; align-items: center; justify-content: center; }
+.currency-badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  background: #EDF2F7;
+  color: #003366;
+  letter-spacing: 0.04em;
+}
+
+/* ── Entity status pill ── */
+.entity-status-cell { display: flex; align-items: center; justify-content: center; }
+.entity-status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: #6b7280;
+  white-space: nowrap;
+}
+.entity-status-pill--green  { background: #dcfce7; color: #166534; }
+.entity-status-pill--red    { background: #fee2e2; color: #991b1b; }
+.entity-status-pill--yellow { background: #fef9c3; color: #854d0e; }
+
+/* ── Tipo pill (BB / MM / TR) ── */
+.tipo-cell { display: flex; align-items: center; justify-content: center; }
+.tipo-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: #64748b;
+  letter-spacing: 0.02em;
+}
+.tipo-pill--bb { background: #dbeafe; color: #1d4ed8; }
+.tipo-pill--mm { background: #dcfce7; color: #15803d; }
+.tipo-pill--tr { background: #fef9c3; color: #854d0e; }
+.tipo-pill--a  { background: #dcfce7; color: #166534; }
+.tipo-pill--i  { background: #f3f4f6; color: #374151; }
+.tipo-pill--s  { background: #fef9c3; color: #854d0e; }
+
 /* ── Status pill ── */
 .status-pill {
   display: inline-flex;
@@ -207,6 +257,26 @@
 
 .status-pill--active   { background: #dcfce7; color: #166534; }
 .status-pill--inactive { background: #f3f4f6; color: #374151; }
+
+/* ── Bool-text pill (Sì/No with colors) ── */
+.bool-text-cell { display: flex; align-items: center; justify-content: center; }
+.bool-text-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid;
+  white-space: nowrap;
+  background: #f1f5f9;
+  color: #64748b;
+  border-color: #e2e8f0;
+}
+.bool-text-pill--yes     { background: #d1fae5; color: #065f46; border-color: #a7f3d0; }
+.bool-text-pill--no      { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+.bool-text-pill--yes-inv { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+.bool-text-pill--no-inv  { background: #d1fae5; color: #065f46; border-color: #a7f3d0; }
 
 /* ── Bool / Segno badges ── */
 .bool-cell, .segno-cell { display: flex; align-items: center; justify-content: center; }
@@ -225,3 +295,29 @@
 
 /* ── Actions column ── */
 .actions-cell { display: flex; align-items: center; justify-content: center; }
+
+/* ── Empty state ── */
+.grid-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  padding: 48px 20px;
+  gap: 16px;
+}
+
+.grid-empty svg {
+  width: 52px;
+  height: 52px;
+  color: #cbd5e1;
+}
+
+.grid-empty p {
+  margin: 0;
+  font-size: 13px;
+  color: #94a3b8;
+  text-align: center;
+  max-width: 380px;
+  line-height: 1.6;
+}

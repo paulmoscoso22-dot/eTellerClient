@@ -41,6 +41,10 @@
 .ra-btn--delete:hover      { background: rgba(220, 38, 38, 0.08); }
 .ra-btn--delete:hover svg  { stroke: #dc2626; }
 
+.ra-btn--force svg         { stroke: rgba(220, 38, 38, 0.55); }
+.ra-btn--force:hover       { background: rgba(220, 38, 38, 0.08); }
+.ra-btn--force:hover svg   { stroke: #dc2626; }
+
 /* ── Overflow menu trigger ── */
 .ra-more-trigger {
   cursor: pointer;
@@ -94,3 +98,5 @@
 .ra-more-item--trace:hover { background: rgba(217, 119, 6, 0.07); color: #92400e; }
 .ra-more-item--danger { color: #dc2626; }
 .ra-more-item--danger:hover { background: rgba(220, 38, 38, 0.07); color: #b91c1c; }
+.ra-more-item--force { color: #dc2626; }
+.ra-more-item--force:hover { background: rgba(220, 38, 38, 0.07); color: #b91c1c; }

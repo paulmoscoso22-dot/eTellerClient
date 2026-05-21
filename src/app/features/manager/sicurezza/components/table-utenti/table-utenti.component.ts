@@ -4,7 +4,6 @@ import { DxDataGridComponent, DxDataGridModule, DxDropDownButtonModule } from 'd
 import { Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ISysUsersActiveAndBlockedResponse } from '../../models/utenti.models';
-import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Service } from '../../../../../core/services/service';
 import { ISTStatoEntitaResponse } from '../../../../../core/domain/stato-entita.domain';
 import { Branch } from '../../../../../core/domain/branch.domain';
@@ -13,7 +12,7 @@ import { ISTLanguageResponse } from '../../../../../core/domain/laguage.domain';
 @Component({
   selector: 'app-table-utenti',
   standalone: true,
-  imports: [CommonModule, DxDataGridModule, DxDropDownButtonModule, TranslocoPipe],
+  imports: [CommonModule, DxDataGridModule, DxDropDownButtonModule],
   templateUrl: './table-utenti.component.html',
   styleUrls: ['./table-utenti.component.css']
 })
@@ -23,20 +22,23 @@ export class TableUtentiComponent {
   @Input() users$: Observable<ISysUsersActiveAndBlockedResponse[]> | null = null;
   @Input() filterValue: any = null;
   @Input() set searchValue(val: string) {
-    // defer so the grid instance is ready
     setTimeout(() => this.dataGrid?.instance?.searchByText(val ?? ''));
   }
-  @Output() userSelected = new EventEmitter<any>();
+  @Output() userSelected  = new EventEmitter<any>();
   @Output() actionClicked = new EventEmitter<{ action: string; data: any }>();
 
-  private coreService  = inject(Service);
-  private destroyRef   = inject(DestroyRef);
-  private transloco    = inject(TranslocoService);
+  private coreService = inject(Service);
+  private destroyRef  = inject(DestroyRef);
 
-  statiEntita  = signal<ISTStatoEntitaResponse[]>([]);
-  branches     = signal<Branch[]>([]);
-  languages    = signal<ISTLanguageResponse[]>([]);
-  moreActions  = signal<{ id: string; text: string; icon: string }[]>([]);
+  statiEntita = signal<ISTStatoEntitaResponse[]>([]);
+  branches    = signal<Branch[]>([]);
+  languages   = signal<ISTLanguageResponse[]>([]);
+
+  readonly moreActions = [
+    { id: 'resetPwd', text: 'Reset Password', icon: 'key'   },
+    { id: 'storico',  text: 'Storico',         icon: 'clock' },
+    { id: 'print',    text: 'Stampa',           icon: 'print' },
+  ];
 
   constructor() {
     this.coreService.allStatiEntita$
@@ -48,19 +50,6 @@ export class TableUtentiComponent {
     this.coreService.languages$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(d => this.languages.set(d));
-
-    this.buildMoreActions();
-    this.transloco.langChanges$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.buildMoreActions());
-  }
-
-  private buildMoreActions(): void {
-    this.moreActions.set([
-      { id: 'resetPwd', text: this.transloco.translate('utenti.actionResetPwd'), icon: 'key'   },
-      { id: 'storico',  text: this.transloco.translate('utenti.actionStorico'),  icon: 'clock' },
-      { id: 'print',    text: this.transloco.translate('utenti.actionPrint'),    icon: 'print' },
-    ]);
   }
 
   onSelectionChanged(e: any): void {

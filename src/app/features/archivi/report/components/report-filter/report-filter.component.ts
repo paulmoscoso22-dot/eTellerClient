@@ -1,12 +1,13 @@
 import { Component, Input, Output, EventEmitter, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { 
-  DxTextBoxModule, 
-  DxDateBoxModule, 
-  DxNumberBoxModule, 
+import {
+  DxTextBoxModule,
+  DxDateBoxModule,
+  DxNumberBoxModule,
   DxButtonModule
 } from 'devextreme-angular';
+import { OpCardSectionComponent } from '../../../../../components/Operazioni/op-card-section/op-card-section.component';
 
 /**
  * Reusable Report Filter Component
@@ -21,7 +22,8 @@ import {
     DxTextBoxModule,
     DxDateBoxModule,
     DxNumberBoxModule,
-    DxButtonModule
+    DxButtonModule,
+    OpCardSectionComponent
   ],
   templateUrl: './report-filter.component.html',
   styleUrls: ['./report-filter.component.css']

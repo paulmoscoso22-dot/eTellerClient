@@ -10,6 +10,7 @@ import {
   DxRadioGroupModule
 } from 'devextreme-angular';
 import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
+import { OpBadgeComponent } from '../../../../../components/Operazioni/op-badge/op-badge.component';
 
 export type MoneteMetalliMode = 'acquisto' | 'vendita';
 
@@ -31,7 +32,8 @@ export interface MetalOption {
     DxDateBoxModule,
     DxTextAreaModule,
     DxRadioGroupModule,
-    HeaderCardComponent
+    HeaderCardComponent,
+    OpBadgeComponent
   ],
   templateUrl: './monete-metalli-form.component.html',
   styleUrls: ['./monete-metalli-form.component.css']

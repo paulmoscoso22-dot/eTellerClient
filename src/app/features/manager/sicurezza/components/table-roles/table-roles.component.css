@@ -1,15 +1,27 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .table-roles { width: 100%; }
 
 /* ── Grid Header ── */
+:host ::ng-deep .dx-datagrid-headers {
+  border-bottom: 2px solid rgba(0, 51, 102, 0.65) !important;
+}
+
 :host ::ng-deep .dx-datagrid-headers .dx-header-row td {
   background-color: #EDF2F7 !important;
   color: #003366 !important;
-  font-size: 10px !important;
+  font-size: 11px !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.06em !important;
+  letter-spacing: 0.02em !important;
   border-bottom: none !important;
-  transition: background-color 0.15s !important;
+  white-space: nowrap !important;
 }
 
 :host ::ng-deep .dx-datagrid-headers .dx-header-row td:hover {

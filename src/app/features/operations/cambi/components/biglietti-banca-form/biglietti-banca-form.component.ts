@@ -9,6 +9,7 @@ import {
   DxTextAreaModule
 } from 'devextreme-angular';
 import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
+import { OpBadgeComponent } from '../../../../../components/Operazioni/op-badge/op-badge.component';
 
 export type BigliettiBancaMode = 'acquisto' | 'vendita';
 
@@ -23,7 +24,8 @@ export type BigliettiBancaMode = 'acquisto' | 'vendita';
     DxCheckBoxModule,
     DxDateBoxModule,
     DxTextAreaModule,
-    HeaderCardComponent
+    HeaderCardComponent,
+    OpBadgeComponent
   ],
   templateUrl: './biglietti-banca-form.component.html',
   styleUrls: ['./biglietti-banca-form.component.css']

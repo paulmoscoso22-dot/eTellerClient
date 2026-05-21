@@ -1,20 +1,23 @@
 import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  DxFormModule,
-  DxLoadIndicatorModule,
-} from 'devextreme-angular';
+import { DxLoadIndicatorModule } from 'devextreme-angular';
+import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
+import { DxCheckBoxModule } from 'devextreme-angular/ui/check-box';
 import { HelpService } from '../services/help.service';
 import { IHelpInfoResponse } from '../models/help.models';
+import { SempionePageHeaderComponent } from '../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempioneFieldGroupComponent } from '../../../components/General/sempione-field-group/sempione-field-group.component';
+import { OpCardSectionComponent } from '../../../components/Operazioni/op-card-section/op-card-section.component';
 
 @Component({
   selector: 'app-help',
   standalone: true,
   imports: [
     CommonModule,
-    DxFormModule,
-    DxLoadIndicatorModule,
+    DxLoadIndicatorModule, DxTextBoxModule, DxCheckBoxModule,
+    SempionePageHeaderComponent, OpCardSectionComponent,
+    SempioneFieldGroupComponent,
   ],
   templateUrl: './help.component.html',
   styleUrls: ['./help.component.css'],

@@ -11,13 +11,14 @@ import { AuthStore } from '../auth.store';
 import { AuthService } from '../services/auth.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { ForceLoginComponent } from './force-login.component';
+import { SempioneLogoComponent } from '../../../components/General/sempione-logo/sempione-logo.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [DxFormModule, DxButtonModule, DxLoadIndicatorModule, DxTextBoxModule, ForceLoginComponent],
+  imports: [DxFormModule, DxButtonModule, DxLoadIndicatorModule, DxTextBoxModule, ForceLoginComponent, SempioneLogoComponent],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  styleUrls: ['./auth-card.css', './login.component.css'],
 })
 export class LoginComponent {
   private readonly authService = inject(AuthService);

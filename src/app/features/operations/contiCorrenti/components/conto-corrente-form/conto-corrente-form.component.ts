@@ -12,6 +12,7 @@ import {
   DxDropDownButtonModule
 } from 'devextreme-angular';
 import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
+import { OpBadgeComponent } from '../../../../../components/Operazioni/op-badge/op-badge.component';
 import { RicercaContoTable } from '../ricerca-conto-table/ricerca-conto-table';
 
 export type ContoCorrenteMode = 'versamento' | 'prelevamento';
@@ -31,7 +32,8 @@ export type ContoCorrenteMode = 'versamento' | 'prelevamento';
     DxPopupModule,
     DxDropDownButtonModule,
     HeaderCardComponent,
-    RicercaContoTable
+    RicercaContoTable,
+    OpBadgeComponent
   ],
   templateUrl: './conto-corrente-form.component.html',
   styleUrls: ['./conto-corrente-form.component.css']

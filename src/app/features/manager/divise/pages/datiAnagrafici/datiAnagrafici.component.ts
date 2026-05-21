@@ -1,10 +1,14 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DxTextBoxModule, DxValidatorModule, DxNumberBoxModule } from 'devextreme-angular';
 import {
-  DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
-  DxValidatorModule, DxNumberBoxModule
-} from 'devextreme-angular';
+  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+  SempioneDataGridComponent, SempioneGridColumn,
+  SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
+  SempioneFieldGroupComponent,
+} from '../../../../../components/General';
 import notify from 'devextreme/ui/notify';
 import { IDivisaAnagraficaResponse, IDivisaAnagraficaRequest, UpdateDivisaRequest } from '../../models/divisa.models';
 import { DiviseService } from '../../services/divise.service';
@@ -14,8 +18,12 @@ import { DiviseService } from '../../services/divise.service';
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxDataGridModule, DxTextBoxModule, DxButtonModule, DxPopupModule,
-    DxValidatorModule, DxNumberBoxModule
+    DxTextBoxModule, DxValidatorModule, DxNumberBoxModule,
+    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+    SempioneDataGridComponent,
+    SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
+    SempioneFieldGroupComponent,
   ],
   templateUrl: './datiAnagrafici.component.html',
   styleUrls: ['./datiAnagrafici.component.css'],
@@ -23,6 +31,15 @@ import { DiviseService } from '../../services/divise.service';
 export class DatiAnagraficiComponent implements OnInit {
   private fb = inject(FormBuilder);
   private diviseService = inject(DiviseService);
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'curId',      caption: 'ID',             type: 'currency',  width: 100 },
+    { dataField: 'curCutId',   caption: 'Genere',          type: 'tipo-pill', width: 90  },
+    { dataField: 'curShodes',  caption: 'Descrizione',     alignment: 'left'             },
+    { dataField: 'curMinamn',  caption: 'Imp. Minimo',     alignment: 'right', width: 120, dataType: 'number', format: '#,##0.##' },
+    { dataField: 'curModdat',  caption: 'Data modifica',   alignment: 'left',  width: 150 },
+    { dataField: 'curHostcod', caption: 'Host code',       alignment: 'left',  width: 120 },
+  ];
 
   private divise = signal<IDivisaAnagraficaResponse[]>([]);
 

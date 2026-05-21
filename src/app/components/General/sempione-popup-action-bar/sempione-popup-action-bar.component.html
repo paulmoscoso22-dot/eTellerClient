@@ -15,7 +15,7 @@
     @if (showSave) {
       <dx-button
         [text]="isSaving ? 'Salvataggio...' : saveText"
-        icon="save"
+        [icon]="saveIcon"
         stylingMode="contained"
         class="btn-fin-primary"
         [disabled]="isSaving"

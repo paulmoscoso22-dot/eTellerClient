@@ -1,0 +1,99 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 10px 16px 0;
+  overflow: hidden;
+}
+
+/* ── Op bar ── */
+.op-bar {
+  flex: 0 0 auto;
+  margin-bottom: 8px;
+}
+
+.op-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #fff;
+}
+
+.op-badge--acquisto { background: #14532d; }
+.op-badge--vendita  { background: #7f1d1d; }
+
+.badge-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* ── Two-column grid ── */
+.two-col-grid {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 62fr 38fr;
+  align-content: start;
+  gap: 10px;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 8px;
+}
+
+.two-col-grid::-webkit-scrollbar       { width: 4px; }
+.two-col-grid::-webkit-scrollbar-track { background: transparent; }
+.two-col-grid::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+
+.col-main,
+.col-side {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Compact DevExtreme inputs (applies to all projected content) ── */
+:host ::ng-deep .dx-texteditor {
+  height: 28px;
+}
+
+:host ::ng-deep .dx-texteditor-input {
+  min-height: unset;
+  height: 26px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 13px;
+}
+
+:host ::ng-deep .dx-texteditor-buttons-container {
+  height: 26px;
+}
+
+:host ::ng-deep .dx-button {
+  height: 28px;
+}
+
+/* ── Field separator (shared utility) ── */
+:host ::ng-deep .field-sep {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 8px 0;
+}
+
+@media (max-width: 900px) {
+  .two-col-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -2,6 +2,10 @@ import { Component, signal, inject, OnInit, OnDestroy, DestroyRef } from '@angul
 import { CommonModule } from '@angular/common';
 import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
 import { DxButtonModule, DxTextBoxModule, DxTemplateModule } from 'devextreme-angular';
+import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
+import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneToolbarComponent } from '../../../../../components/General/sempione-toolbar/sempione-toolbar.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ManagerService } from '../../services/sicurezza.service';
 import { GetAllUsersByUsrIdRequest, InfoAutorizzazioneUtenteResponse } from '../../models/manager.models';
@@ -11,7 +15,10 @@ import { AuthFacade } from '../../../../auth/auth.facade';
 @Component({
   selector: 'app-info-autorizzazioni',
   standalone: true,
-  imports: [CommonModule, DxDataGridModule, DxButtonModule, DxTextBoxModule, DxTemplateModule],
+  imports: [
+    CommonModule, DxDataGridModule, DxButtonModule, DxTextBoxModule, DxTemplateModule,
+    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent, SempioneToolbarComponent,
+  ],
   templateUrl: './info-autorizzazioni.component.html',
   styleUrls: ['./info-autorizzazioni.component.css'],
 })

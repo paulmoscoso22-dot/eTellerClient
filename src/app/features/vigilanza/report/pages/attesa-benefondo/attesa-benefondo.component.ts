@@ -6,10 +6,12 @@ import {
   DxTextBoxModule,
   DxDateBoxModule,
   DxButtonModule,
-  DxPopupModule,
   DxToastModule,
   DxTemplateModule,
 } from 'devextreme-angular';
+import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
+import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
+import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
 import { ReportFacade } from '../../../../archivi/report/services/report.facade';
@@ -26,9 +28,11 @@ import { TransactionStatus } from '../../../../archivi/report/domain/transaction
     DxTextBoxModule,
     DxDateBoxModule,
     DxButtonModule,
-    DxPopupModule,
     DxToastModule,
     DxTemplateModule,
+    HeaderCardComponent,
+    SempionePopupComponent,
+    SempionePopupActionBarComponent,
   ],
   templateUrl: './attesa-benefondo.component.html',
   styleUrls: ['./attesa-benefondo.component.css'],

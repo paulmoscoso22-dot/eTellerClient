@@ -7,13 +7,16 @@ import { AUTH_RESULT_CODE, IChangePasswordRequest } from '../domain/auth.models'
 import { AuthStore } from '../auth.store';
 import { AuthService } from '../services/auth.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { SempioneFieldGroupComponent } from '../../../components/General/sempione-field-group/sempione-field-group.component';
+import { SempioneAlertComponent } from '../../../components/General/sempione-alert/sempione-alert.component';
 import notify from 'devextreme/ui/notify';
 
 @Component({
   selector: 'app-change-password',
   standalone: true,
-  imports: [DxTextBoxModule, DxButtonModule, DxLoadIndicatorModule],
+  imports: [DxTextBoxModule, DxButtonModule, DxLoadIndicatorModule, SempioneFieldGroupComponent, SempioneAlertComponent],
   templateUrl: './change-password.component.html',
+  styleUrls: ['./auth-card.css', './change-password.component.css'],
 })
 export class ChangePasswordComponent {
   private readonly route = inject(ActivatedRoute);
@@ -22,7 +25,6 @@ export class ChangePasswordComponent {
   private readonly authStore = inject(AuthStore);
   private readonly errorHandler = inject(ErrorHandlerService);
 
-  // Leggi ?reason dal query param
   private readonly reason = toSignal(
     this.route.queryParamMap.pipe(map(p => p.get('reason') ?? '')),
     { initialValue: '' }

@@ -10,7 +10,7 @@
   background: #fff;
   border: 1px solid #dce3ee;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.10);
+  box-shadow: 0 1px 6px rgba(0, 51, 102, 0.09);
   overflow: hidden;
   display: flex;
   flex-direction: column;

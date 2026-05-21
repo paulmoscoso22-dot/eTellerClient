@@ -2,7 +2,7 @@
   display: contents;
 }
 
-.card-header {
+.sempione-card-header {
   background: #003366;
   padding: 8px 14px;
   display: flex;
@@ -13,11 +13,11 @@
 
 .card-title {
   margin: 0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #fff !important;
+  letter-spacing: 0.05em;
+  color: #fff;
   flex: 1;
 }
 
@@ -29,8 +29,8 @@
 
 /* Icon projected via ng-content — overrides global 24px */
 :host ::ng-deep .card-icon {
-  width: 18px !important;
-  height: 18px !important;
+  width: 16px;
+  height: 16px;
   color: #fff;
   flex-shrink: 0;
 }

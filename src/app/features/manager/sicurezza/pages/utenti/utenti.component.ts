@@ -1,9 +1,8 @@
 import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule, DxPopupModule, DxRadioGroupModule } from 'devextreme-angular';
+import { DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
-import { TranslocoPipe } from '@jsverse/transloco';
 import { ManagerService } from '../../services/sicurezza.service';
 import { ISysUsersActiveAndBlockedResponse, GetUsersByUserIdRequest, InsertUserResponse, IUpdateUserRequest } from '../../models/utenti.models';
 import { ISysRoleResonse, GetRoleByUsrIdRequest, IGetRoleNotForUsrIdRquest } from '../../models/ruoli.models';
@@ -15,22 +14,35 @@ import { ISTLanguageResponse } from '../../../../../core/domain/laguage.domain';
 import { Branch } from '../../../../../core/domain/branch.domain';
 import { ISTStatoEntitaResponse } from '../../../../../core/domain/stato-entita.domain';
 import { Router } from '@angular/router';
+import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
+import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneToolbarComponent } from '../../../../../components/General/sempione-toolbar/sempione-toolbar.component';
+import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
+import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
+import { SempionePopupCardComponent } from '../../../../../components/General/sempione-popup-card/sempione-popup-card.component';
+import { SempioneFieldGroupComponent } from '../../../../../components/General/sempione-field-group/sempione-field-group.component';
 
 @Component({
   selector: 'app-utenti',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslocoPipe,
+  imports: [
+    CommonModule, ReactiveFormsModule,
     DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule,
-    DxSelectBoxModule, DxValidatorModule, DxPopupModule, DxRadioGroupModule,
-    TableUtentiComponent, ControlAssignComponent],
+    DxSelectBoxModule, DxValidatorModule,
+    TableUtentiComponent, ControlAssignComponent,
+    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempioneToolbarComponent, SempionePopupComponent, SempionePopupActionBarComponent,
+    SempionePopupCardComponent, SempioneFieldGroupComponent,
+  ],
   templateUrl: './utenti.component.html',
   styleUrls: ['./utenti.component.css'],
 })
 export class UtentiComponent implements OnInit {
   private readonly managerService = inject(ManagerService);
-  private readonly coreService = inject(Service);
-  private fb = inject(FormBuilder);
-  private readonly router = inject(Router);
+  private readonly coreService    = inject(Service);
+  private fb                      = inject(FormBuilder);
+  private readonly router         = inject(Router);
 
   readonly filterItems = [
     { value: 'activeBlocked', label: 'Attivi / Bloccati' },
@@ -38,56 +50,51 @@ export class UtentiComponent implements OnInit {
   ];
   selectedFilter = signal<string>('activeBlocked');
 
-  // Status codes returned by GetUserActiveBlocked — used to rebuild the grid filter
   private activeblockedStatusIds: string[] = [];
   gridFilterValue = signal<any>(null);
 
   public users$: Observable<ISysUsersActiveAndBlockedResponse[]> = this.managerService.usersActiveBlocked$;
-  public rolesByUser$: Observable<ISysRoleResonse[]> = this.managerService.rolesByUser$;
-  public rolesNotForUser$: Observable<ISysRoleResonse[]> = this.managerService.rolesNotForUser$;
+  public rolesByUser$: Observable<ISysRoleResonse[]>             = this.managerService.rolesByUser$;
+  public rolesNotForUser$: Observable<ISysRoleResonse[]>         = this.managerService.rolesNotForUser$;
 
-  // Array locali per i select box: evitano il problema di timing con l'async pipe
-  statiEntitaList: ISTStatoEntitaResponse[] = [];
-  branchesList: Branch[] = [];
-  languagesList: ISTLanguageResponse[] = [];
+  statiEntitaList = signal<ISTStatoEntitaResponse[]>([]);
+  branchesList    = signal<Branch[]>([]);
+  languagesList   = signal<ISTLanguageResponse[]>([]);
 
-  public assignedRoles = signal<ISysRoleResonse[]>([]);
-  public possibleRoles = signal<ISysRoleResonse[]>([]);
+  public assignedRoles             = signal<ISysRoleResonse[]>([]);
+  public possibleRoles             = signal<ISysRoleResonse[]>([]);
   public selectedAssignedRoleKeys: number[] = [];
   public selectedPossibleRoleKeys: number[] = [];
-
-
-  public movedToLeft: number[] = [];
+  public movedToLeft:  number[] = [];
   public movedToRight: number[] = [];
 
   public selectedUserId = signal<string | null>(null);
-  popupMode   = signal<'new' | 'view' | 'edit'>('new');
-  searchValue = signal<string>('');
+  popupMode             = signal<'new' | 'view' | 'edit'>('new');
+  searchValue           = signal<string>('');
 
-  isDetailPopupVisible = false;
-  public isResetPasswordPopupVisible = false;
+  showDetailPopup = signal<boolean>(false);
+  showResetPopup  = signal<boolean>(false);
 
   @ViewChild(TableUtentiComponent) tableUtenti!: TableUtentiComponent;
 
   userForm: FormGroup = this.fb.group({
-    usrId: ['', Validators.required],
+    usrId:     ['', Validators.required],
     usrStatus: ['', Validators.required],
     usrExtref: [''],
     usrHostId: ['', Validators.required],
-    usrBraId: ['', Validators.required],
+    usrBraId:  ['', Validators.required],
     usrChgPas: [false],
-    usrLingua: ['', Validators.required]
+    usrLingua: ['', Validators.required],
   });
 
   resetPasswordForm: FormGroup = this.fb.group({
-    password: ['', Validators.required],
-    confirmPassword: ['', Validators.required]
+    password:        ['', Validators.required],
+    confirmPassword: ['', Validators.required],
   }, { validators: this.passwordMatchValidator });
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
-    const password = control.get('password');
+    const password        = control.get('password');
     const confirmPassword = control.get('confirmPassword');
-    
     if (password && confirmPassword && password.value !== confirmPassword.value) {
       return { passwordMismatch: true };
     }
@@ -131,16 +138,15 @@ export class UtentiComponent implements OnInit {
     this.coreService.getBranches().subscribe();
     this.coreService.GetAllStatiEntita().subscribe();
 
-    this.coreService.languages$.subscribe(data => { if (data?.length) this.languagesList = data; });
-    this.coreService.branches$.subscribe(data => { if (data?.length) this.branchesList = data; });
-    this.coreService.allStatiEntita$.subscribe(data => { if (data?.length) this.statiEntitaList = data; });
+    this.coreService.languages$.subscribe(data     => { if (data?.length) this.languagesList.set(data); });
+    this.coreService.branches$.subscribe(data      => { if (data?.length) this.branchesList.set(data); });
+    this.coreService.allStatiEntita$.subscribe(data => { if (data?.length) this.statiEntitaList.set(data); });
 
-    this.managerService.rolesByUser$.subscribe((roles) => {
+    this.managerService.rolesByUser$.subscribe(roles => {
       this.assignedRoles.set(roles ? [...roles] : []);
       this.selectedAssignedRoleKeys = [];
     });
-
-    this.managerService.rolesNotForUser$.subscribe((roles) => {
+    this.managerService.rolesNotForUser$.subscribe(roles => {
       this.possibleRoles.set(roles ? [...roles] : []);
       this.selectedPossibleRoleKeys = [];
     });
@@ -152,7 +158,7 @@ export class UtentiComponent implements OnInit {
     this.assignedRoles.set([]);
     this.possibleRoles.set([]);
     this.popupMode.set('new');
-    this.isDetailPopupVisible = true;
+    this.showDetailPopup.set(true);
   }
 
   openViewPopup(data: any): void {
@@ -162,7 +168,7 @@ export class UtentiComponent implements OnInit {
     this.loadUserRoles(userId);
     this.loadRolesNotForUser(userId);
     this.popupMode.set('view');
-    this.isDetailPopupVisible = true;
+    this.showDetailPopup.set(true);
   }
 
   openEditPopup(data: any): void {
@@ -172,35 +178,23 @@ export class UtentiComponent implements OnInit {
     this.loadUserRoles(userId);
     this.loadRolesNotForUser(userId);
     this.popupMode.set('edit');
-    this.isDetailPopupVisible = true;
+    this.showDetailPopup.set(true);
   }
 
-   onTableAction(event: { action: string; data: any }): void {
-     switch (event.action) {
-       case 'view':
-         this.openViewPopup(event.data);
-         break;
-       case 'edit':
-         this.openEditPopup(event.data);
-         break;
-       case 'resetPwd':
-         this.selectedUserId.set(event.data.usrId || event.data.UsrId);
-         this.openResetPasswordPopup();
-         break;
-       case 'storico':
-         this.selectedUserId.set(event.data.usrId || event.data.UsrId);
-         this.onTrace();
-         break;
-       case 'print':
-         break;
-     }
-   }
+  onTableAction(event: { action: string; data: any }): void {
+    switch (event.action) {
+      case 'view':     this.openViewPopup(event.data);                                              break;
+      case 'edit':     this.openEditPopup(event.data);                                              break;
+      case 'resetPwd': this.selectedUserId.set(event.data.usrId || event.data.UsrId);
+                       this.openResetPasswordPopup();                                               break;
+      case 'storico':  this.selectedUserId.set(event.data.usrId || event.data.UsrId);
+                       this.onTrace();                                                              break;
+    }
+  }
 
   onStampaLista(): void {
     if (typeof window !== 'undefined' && (window as any).print) {
       (window as any).print();
-    } else {
-      console.log('Stampa lista utenti richiesta');
     }
   }
 
@@ -213,41 +207,43 @@ export class UtentiComponent implements OnInit {
     }
   }
 
+  onDetailPopupVisibleChange(visible: boolean): void {
+    this.showDetailPopup.set(visible);
+    if (!visible) this.onClear();
+  }
+
   loadRolesNotForUser(userId: string): void {
     const request: IGetRoleNotForUsrIdRquest = { usrId: userId };
     this.managerService.GetRoleNotForUsrId(request).subscribe({
-      error: (err) => console.error('Error fetching unassigned roles', err)
+      error: (err) => console.error('Error fetching unassigned roles', err),
     });
   }
 
   loadUserRoles(userId: string): void {
     const request: GetRoleByUsrIdRequest = { usrId: userId };
     this.managerService.GetRoleByUsrId(request).subscribe({
-      error: (err) => console.error('Error fetching user roles', err)
+      error: (err) => console.error('Error fetching user roles', err),
     });
   }
 
   loadUserData(userId: string): void {
     const request: GetUsersByUserIdRequest = { usrId: userId };
-    
     this.managerService.GetUserByUserId(request).subscribe({
       next: (response: any) => {
-        // Handles case where response might be wrapped in an array or 'data' property
         const data = Array.isArray(response) ? response[0] : (response?.data || response);
-        
         if (data) {
           this.userForm.patchValue({
-            usrId: data.usrId || data.UsrId,
+            usrId:     data.usrId     || data.UsrId,
             usrStatus: data.usrStatus || data.UsrStatus,
             usrExtref: data.usrExtref || data.UsrExtref,
             usrHostId: data.usrHostId || data.UsrHostId,
-            usrBraId: data.usrBraId || data.UsrBraId,
+            usrBraId:  data.usrBraId  || data.UsrBraId,
             usrChgPas: data.usrChgPas || data.UsrChgPas || false,
-            usrLingua: data.usrLingua || data.UsrLingua
+            usrLingua: data.usrLingua || data.UsrLingua,
           });
         }
       },
-      error: (err) => console.error('Error fetching user', err)
+      error: (err) => console.error('Error fetching user', err),
     });
   }
 
@@ -255,30 +251,28 @@ export class UtentiComponent implements OnInit {
     if (this.userForm.valid) {
       const formValue = this.userForm.getRawValue();
       const request: InsertUserResponse = {
-        usrId: formValue.usrId || '',
-        usrHostId: formValue.usrHostId || '',
-        usrBraId: formValue.usrBraId || '',
-        usrStatus: formValue.usrStatus || '',
-        usrExtref: formValue.usrExtref || '',
-        usrLingua: formValue.usrLingua || '',
-        traUser: formValue.usrId || '',
-        traStation: formValue.usrHostId || ''
+        usrId:      formValue.usrId      || '',
+        usrHostId:  formValue.usrHostId  || '',
+        usrBraId:   formValue.usrBraId   || '',
+        usrStatus:  formValue.usrStatus  || '',
+        usrExtref:  formValue.usrExtref  || '',
+        usrLingua:  formValue.usrLingua  || '',
+        traUser:    formValue.usrId      || '',
+        traStation: formValue.usrHostId  || '',
       };
-      //console.log('Submitting user data:', request);
       this.managerService.insertUser(request).subscribe({
         next: (success) => {
           if (success) {
-            notify('User inserted successfully', 'success', 3000);
-            // Optionally, refresh list or reset form
+            notify('Utente inserito con successo', 'success', 3000);
             this.managerService.GetUserActiveBlocked().subscribe();
           } else {
-            notify('Failed to insert user', 'error', 3000);
+            notify("Errore durante l'inserimento dell'utente", 'error', 3000);
           }
         },
         error: (err) => {
           console.error('Error inserting user', err);
-          notify('Error inserting user', 'error', 3000);
-        }
+          notify("Errore durante l'inserimento dell'utente", 'error', 3000);
+        },
       });
     }
   }
@@ -287,91 +281,81 @@ export class UtentiComponent implements OnInit {
     if (this.userForm.valid) {
       const formValue = this.userForm.getRawValue();
       const request: IUpdateUserRequest = {
-        usrId: formValue.usrId || '',
-        usrHostId: formValue.usrHostId || '',
-        usrBraId: formValue.usrBraId || '',
-        usrStatus: formValue.usrStatus || '',
-        usrExtref: formValue.usrExtref || '',
-        usrLingua: formValue.usrLingua || '',
-        addIdRoles: this.movedToLeft || [],
-        delIdRoles: this.movedToRight || []
+        usrId:      formValue.usrId     || '',
+        usrHostId:  formValue.usrHostId || '',
+        usrBraId:   formValue.usrBraId  || '',
+        usrStatus:  formValue.usrStatus || '',
+        usrExtref:  formValue.usrExtref || '',
+        usrLingua:  formValue.usrLingua || '',
+        addIdRoles: this.movedToLeft    || [],
+        delIdRoles: this.movedToRight   || [],
       };
-
-      
-      console.log('Updating user data:', request);
       this.managerService.UpdateUser(request).subscribe({
         next: (response) => {
           if (response) {
-            notify('User updated successfully', 'success', 3000);
-            this.movedToLeft = [];
+            notify('Utente aggiornato con successo', 'success', 3000);
+            this.movedToLeft  = [];
             this.movedToRight = [];
             this.managerService.GetUserActiveBlocked().subscribe();
           } else {
-            notify('Failed to update user', 'error', 3000);
+            notify("Errore durante l'aggiornamento dell'utente", 'error', 3000);
           }
         },
         error: (err) => {
           console.error('Error updating user', err);
-          notify('Error updating user', 'error', 3000);
-        }
+          notify("Errore durante l'aggiornamento dell'utente", 'error', 3000);
+        },
       });
     }
   }
 
   onClear(): void {
     this.userForm.reset();
-    if (this.tableUtenti) {
-      this.tableUtenti.clearSelection();
-    }
+    if (this.tableUtenti) { this.tableUtenti.clearSelection(); }
     this.selectedUserId.set(null);
     this.assignedRoles.set([]);
     this.possibleRoles.set([]);
     this.selectedAssignedRoleKeys = [];
     this.selectedPossibleRoleKeys = [];
-    this.isDetailPopupVisible = false;
+    this.showDetailPopup.set(false);
   }
 
   onRolesChanged(event: any): void {
-    this.movedToLeft = event.movedToLeft;
+    this.movedToLeft  = event.movedToLeft;
     this.movedToRight = event.movedToRight;
   }
 
-   onTrace(): void {
+  onTrace(): void {
     const userId = this.selectedUserId();
     if (!userId) {
       notify('Selezionare un utente da tracciare', 'warning', 3000);
       return;
     }
     this.router.navigate(['/trace'], {
-      queryParams: {
-        ENTNAME: 'sys_USERS',
-        traEntCode: userId
-      }
+      queryParams: { ENTNAME: 'sys_USERS', traEntCode: userId },
     });
   }
 
   openResetPasswordPopup(): void {
     if (this.selectedUserId()) {
       this.resetPasswordForm.reset();
-      this.isResetPasswordPopupVisible = true;
+      this.showResetPopup.set(true);
     }
   }
 
   cancelResetPassword(): void {
-    this.isResetPasswordPopupVisible = false;
+    this.showResetPopup.set(false);
     this.resetPasswordForm.reset();
   }
 
   changePassword(): void {
     if (this.resetPasswordForm.valid) {
       const userId = this.selectedUserId();
-      // TODO: this.managerService.resetPassword(userId, this.resetPasswordForm.get('password')?.value).subscribe(...)
       notify(`Password cambiata con successo per ${userId}`, 'success', 3000);
-      this.isResetPasswordPopupVisible = false;
+      this.showResetPopup.set(false);
       this.resetPasswordForm.reset();
     } else {
       notify('Controlla che le password coincidano e non siano vuote', 'error', 3000);
     }
   }
-
 }

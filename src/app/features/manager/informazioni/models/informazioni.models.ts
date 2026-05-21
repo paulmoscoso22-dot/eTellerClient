@@ -90,4 +90,20 @@ export class TabellaServVarcharResponse {
 	des: string | null = null;
 }
 
+export class GetMsg2HostRequest {
+  dataFrom: Date | null = null;
+  dataTo: Date | null = null;
+  trxId: number | null = null;
+  msgId: number | null = null;
+  msgStatus: string | null = null;
+}
+
+export class Msg2HostResponse {
+  msgId: number = 0;
+  msgStatus: string = '';
+  trxId: number = 0;
+  msgModifyDate: Date = new Date();
+  msgTextSend: string | null = null;
+  msgTextRec: string | null = null;
+}
 

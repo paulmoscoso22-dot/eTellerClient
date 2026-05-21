@@ -12,17 +12,20 @@ export class SempioneRowActionsComponent {
   showEdit   = input(false);
   showTrace  = input(false);
   showDelete = input(false);
+  showForce  = input(false);
 
   view   = output<void>();
   edit   = output<void>();
   trace  = output<void>();
   delete = output<void>();
+  force  = output<void>();
 
   protected readonly actionCount = computed(() =>
     (this.showView()   ? 1 : 0) +
     (this.showEdit()   ? 1 : 0) +
     (this.showTrace()  ? 1 : 0) +
-    (this.showDelete() ? 1 : 0)
+    (this.showDelete() ? 1 : 0) +
+    (this.showForce()  ? 1 : 0)
   );
 
   protected readonly useOverflow = computed(() => this.actionCount() > 3);

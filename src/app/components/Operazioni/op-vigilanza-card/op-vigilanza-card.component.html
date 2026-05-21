@@ -1,0 +1,25 @@
+<op-card-section title="Vigilanza">
+  <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+  </svg>
+
+  <op-form-row label="Forza vigilanza">
+    <dx-check-box
+      [value]="forzaVigilanza"
+      (onValueChanged)="forzaVigilanzaChange.emit($event.value)">
+    </dx-check-box>
+  </op-form-row>
+
+  <div class="field-sep"></div>
+
+  <div class="aml-row">
+    <div class="aml-info">
+      <span class="aml-dot"></span>
+      <span class="aml-status">Anti-Riciclaggio (AML)</span>
+    </div>
+    <dx-button text="Dettaglio" stylingMode="outlined" (onClick)="showAml.emit()"></dx-button>
+  </div>
+
+  <ng-content></ng-content>
+
+</op-card-section>

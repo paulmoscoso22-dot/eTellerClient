@@ -1,15 +1,12 @@
 import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {
-  DxDataGridModule,
-  DxTextBoxModule,
-  DxDateBoxModule,
-  DxButtonModule,
-  DxPopupModule,
-  DxSelectBoxModule,
-  DxCheckBoxModule,
-} from 'devextreme-angular';
+import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
+import { DxDateBoxModule } from 'devextreme-angular/ui/date-box';
+import { DxButtonModule } from 'devextreme-angular/ui/button';
+import { DxSelectBoxModule } from 'devextreme-angular/ui/select-box';
+import { DxCheckBoxModule } from 'devextreme-angular/ui/check-box';
+import { DxLoadIndicatorModule } from 'devextreme-angular/ui/load-indicator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
 import { GestioneComparentiAdeService } from '../../services/gestione-comparenti-ade.service';
@@ -23,6 +20,15 @@ import {
   DeleteAraRequest,
 } from '../../domain/gestione-comparenti-ade.models';
 import { CountryResponse } from '../../domain/country.models';
+import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
+import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneToolbarComponent } from '../../../../../components/General/sempione-toolbar/sempione-toolbar.component';
+import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General/sempione-data-grid/sempione-data-grid.component';
+import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
+import { SempionePopupCardComponent } from '../../../../../components/General/sempione-popup-card/sempione-popup-card.component';
+import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
+import { SempioneFieldGroupComponent } from '../../../../../components/General/sempione-field-group/sempione-field-group.component';
 
 @Component({
   selector: 'app-gestione-comparenti-ade',
@@ -30,13 +36,10 @@ import { CountryResponse } from '../../domain/country.models';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DxDataGridModule,
-    DxTextBoxModule,
-    DxDateBoxModule,
-    DxButtonModule,
-    DxPopupModule,
-    DxSelectBoxModule,
-    DxCheckBoxModule,
+    DxTextBoxModule, DxDateBoxModule, DxButtonModule, DxSelectBoxModule, DxCheckBoxModule, DxLoadIndicatorModule,
+    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempioneToolbarComponent, SempioneDataGridComponent,
+    SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent, SempioneFieldGroupComponent,
   ],
   templateUrl: './gestione-comparenti-ade.component.html',
   styleUrls: ['./gestione-comparenti-ade.component.css'],
@@ -48,6 +51,29 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
   private readonly countryService = inject(CountryService);
 
   private subscription: Subscription | null = null;
+
+  readonly columns: SempioneGridColumn[] = [
+    { dataField: 'araName',        caption: 'Nome e cognome',  alignment: 'left' },
+    { dataField: 'araRepresents',  caption: 'Rappresentanza',  alignment: 'left',   width: 130 },
+    { dataField: 'araBirthdate',   caption: 'Data nascita',    alignment: 'center', width: 105, dataType: 'date', format: 'dd.MM.yyyy' },
+    { dataField: 'araNationality', caption: 'Nazionalità',     alignment: 'left',   width: 110 },
+    { dataField: 'araAddress',     caption: 'Domicilio',       alignment: 'left',   width: 160 },
+    { dataField: 'araIddocnum',    caption: 'Nr doc identità', alignment: 'left',   width: 130 },
+    { dataField: 'araDocexpdate',  caption: 'Scad. doc.',      alignment: 'center', width: 100, dataType: 'date', format: 'dd.MM.yyyy' },
+    { dataField: 'araRecComplete', caption: 'Completo',        alignment: 'center', width: 85,  type: 'bool-text' },
+  ];
+
+  readonly historyColumns: SempioneGridColumn[] = [
+    { dataField: 'hisDate',        caption: 'Data modifica',  alignment: 'center', width: 140, dataType: 'datetime', format: 'dd.MM.yyyy HH:mm' },
+    { dataField: 'araName',        caption: 'Nome e cognome', alignment: 'left' },
+    { dataField: 'araRepresents',  caption: 'Rappresentanza', alignment: 'left',   width: 120 },
+    { dataField: 'araBirthdate',   caption: 'Data nascita',   alignment: 'center', width: 105, dataType: 'date', format: 'dd.MM.yyyy' },
+    { dataField: 'araNationality', caption: 'Nazionalità',    alignment: 'left',   width: 110 },
+    { dataField: 'araAddress',     caption: 'Domicilio',      alignment: 'left',   width: 140 },
+    { dataField: 'araIddocnum',    caption: 'Nr doc',         alignment: 'left',   width: 110 },
+    { dataField: 'araDocexpdate',  caption: 'Scad. doc.',     alignment: 'center', width: 100, dataType: 'date', format: 'dd.MM.yyyy' },
+    { dataField: 'araRecComplete', caption: 'Completo',       alignment: 'center', width: 80,  type: 'bool-text' },
+  ];
 
   // ── Grid data ──
   appearers = signal<AppearerAllResponse[]>([]);

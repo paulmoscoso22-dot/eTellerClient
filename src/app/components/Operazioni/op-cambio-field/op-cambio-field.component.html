@@ -1,0 +1,19 @@
+<div class="form-row">
+  <label class="form-lbl">{{ label }}</label>
+  <div class="form-fld form-fld--row">
+    <dx-number-box
+      [value]="$any(cambio)"
+      format="#,##0.0000"
+      (onValueChanged)="cambioChange.emit($event.value)">
+    </dx-number-box>
+    <dx-button
+      icon="money"
+      hint="Pannello cambio"
+      (onClick)="pannelloClick.emit()">
+    </dx-button>
+    <div class="display-value sys-rate">
+      <span class="sys-label">SYS</span>
+      {{ cambioSys != null ? (cambioSys | number:'1.4-4') : '—' }}
+    </div>
+  </div>
+</div>

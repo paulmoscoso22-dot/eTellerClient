@@ -1,284 +1,213 @@
 <div class="page-shell">
 
-  <!-- ── Titolo pagina ── -->
-  <div class="page-header-row">
-    <h1 class="page-title">Storico Trace</h1>
-  </div>
+  <app-sempione-page-header title="Storico Trace"></app-sempione-page-header>
 
-  <!-- ── Main Card ── -->
-  <section class="card-section">
+  <app-sempione-card>
 
-    <div class="sempione-card-header">
+    <app-sempione-card-header title="Registro delle Tracce">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M3 3v5h5"></path>
         <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"></path>
         <polyline points="12 7 12 12 15 15"></polyline>
       </svg>
-      <h2 class="card-title">Registro delle Tracce</h2>
-    </div>
-    <div class="gold-divider"></div>
+    </app-sempione-card-header>
 
-    <!-- ── Filtri ── -->
-    <div class="card-toolbar">
-      <form [formGroup]="filterForm">
-        <div class="toolbar-inner">
+    <div [formGroup]="filterForm">
+      <app-sempione-toolbar>
 
-          <div class="toolbar-filters">
-
-            <div class="toolbar-field">
-              <label class="toolbar-lbl">Funzione</label>
-              <dx-select-box
-                [items]="funzioni()"
-                displayExpr="tfcDes"
-                valueExpr="tfcId"
-                [searchEnabled]="true"
-                placeholder="Funzione"
-                [value]="filterForm.get('traFunCode')?.value"
-                (valueChange)="filterForm.get('traFunCode')?.setValue($event)">
-              </dx-select-box>
-            </div>
-
-            <div class="toolbar-field">
-              <label class="toolbar-lbl">Utente</label>
-              <dx-select-box
-                [items]="utenti()"
-                displayExpr="usrId"
-                valueExpr="usrId"
-                [searchEnabled]="true"
-                placeholder="Utente"
-                [value]="filterForm.get('traUser')?.value"
-                (valueChange)="filterForm.get('traUser')?.setValue($event)">
-              </dx-select-box>
-            </div>
-
-            <div class="toolbar-field">
-              <label class="toolbar-lbl">Cassa</label>
-              <dx-select-box
-                [items]="clients()"
-                displayExpr="cliId"
-                valueExpr="cliId"
-                [searchEnabled]="true"
-                placeholder="Cassa"
-                [value]="filterForm.get('traStation')?.value"
-                (valueChange)="filterForm.get('traStation')?.setValue($event)">
-              </dx-select-box>
-            </div>
-
-            <div class="toolbar-field">
-              <label class="toolbar-lbl">Tabella</label>
-              <dx-select-box
-                [items]="tabellaItems()"
-                displayExpr="des"
-                valueExpr="id"
-                [searchEnabled]="true"
-                placeholder="Tabella"
-                [value]="filterForm.get('traTabNam')?.value"
-                (valueChange)="filterForm.get('traTabNam')?.setValue($event)">
-              </dx-select-box>
-            </div>
-
-            <div class="toolbar-field">
-              <label class="toolbar-lbl">Id Entità</label>
-              <dx-text-box
-                placeholder="Id Entità"
-                [value]="filterForm.get('traEntCode')?.value"
-                (valueChange)="filterForm.get('traEntCode')?.setValue($event)">
-              </dx-text-box>
-            </div>
-
-            <div class="toolbar-field">
-              <label class="toolbar-lbl">Errore</label>
-              <dx-select-box
-                [items]="errorOptions"
-                displayExpr="text"
-                valueExpr="id"
-                placeholder="Errore"
-                [value]="filterForm.get('traError')?.value"
-                (valueChange)="filterForm.get('traError')?.setValue($event)">
-              </dx-select-box>
-            </div>
-
-            <div class="toolbar-field">
-              <label class="toolbar-lbl">Dal</label>
-              <dx-date-box
-                type="date"
-                displayFormat="dd/MM/yyyy"
-                placeholder="Dal"
-                [value]="filterForm.get('dataFrom')?.value"
-                (valueChange)="filterForm.get('dataFrom')?.setValue($event)">
-              </dx-date-box>
-            </div>
-
-            <div class="toolbar-field">
-              <label class="toolbar-lbl">Al</label>
-              <dx-date-box
-                type="date"
-                displayFormat="dd/MM/yyyy"
-                placeholder="Al"
-                [value]="filterForm.get('dataTo')?.value"
-                (valueChange)="filterForm.get('dataTo')?.setValue($event)">
-              </dx-date-box>
-            </div>
-
-          </div>
-
-          <div class="toolbar-actions">
-            <dx-button
-              class="btn-outline"
-              icon="revert"
-              hint="Ripristina filtri"
-              stylingMode="outlined"
-              (onClick)="resetFilters()">
-            </dx-button>
-            <dx-button
-              class="btn-new"
-              text="Visualizza"
-              type="default"
-              stylingMode="contained"
-              icon="search"
-              (onClick)="onVisualizza()">
-            </dx-button>
-          </div>
-
-        </div>
-      </form>
-    </div>
-
-    <!-- ── Griglia ── -->
-    <div class="card-body card-body--grid">
-      <dx-data-grid
-        #dataGrid
-        [dataSource]="traces()"
-        [showBorders]="false"
-        [columnAutoWidth]="false"
-        [rowAlternationEnabled]="true"
-        [hoverStateEnabled]="true"
-        [height]="'100%'"
-        [selection]="{ mode: 'single' }"
-        (onSelectionChanged)="onRowSelectionChanged($event)">
-
-        <dxo-paging [pageSize]="30"></dxo-paging>
-        <dxo-pager
-          [showInfo]="true"
-          [showPageSizeSelector]="true"
-          [allowedPageSizes]="[20, 30, 50, 100]"
-          [showNavigationButtons]="true"
-          displayMode="full">
-        </dxo-pager>
-
-        <dxi-column dataField="traId"       caption="ID"            [width]="70"  alignment="center"></dxi-column>
-        <dxi-column dataField="traTime"     caption="Data e Ora"    [width]="150" alignment="center" dataType="date" format="dd/MM/yyyy HH:mm:ss"></dxi-column>
-        <dxi-column dataField="traUser"     caption="Utente"        [width]="110" alignment="left"></dxi-column>
-        <dxi-column dataField="traFunCode"  caption="Funzione"                    alignment="left"></dxi-column>
-        <dxi-column dataField="traSubFun"   caption="Sottofunzione" [width]="120" alignment="left"></dxi-column>
-        <dxi-column dataField="traStation"  caption="Stazione"      [width]="100" alignment="left"></dxi-column>
-        <dxi-column dataField="traTabNam"   caption="Tabella"                     alignment="left"></dxi-column>
-        <dxi-column dataField="traEntCode"  caption="Entità"        [width]="100" alignment="left"></dxi-column>
-
-        <dxi-column
-          dataField="traError"
-          caption="Errore"
-          [width]="80"
-          alignment="center"
-          cellTemplate="errorTemplate">
-        </dxi-column>
-
-        <div *dxTemplate="let cell of 'errorTemplate'" class="error-cell">
-          <span class="offline-badge"
-            [class.offline-badge--no]="cell.value === true"
-            [class.offline-badge--yes]="cell.value === false || cell.value == null">
-            {{ cell.value ? 'Sì' : 'No' }}
-          </span>
+        <div class="toolbar-field">
+          <dx-select-box
+            [items]="funzioni()"
+            displayExpr="tfcDes"
+            valueExpr="tfcId"
+            [searchEnabled]="true"
+            labelMode="hidden"
+            placeholder="Funzione..."
+            [value]="filterForm.get('traFunCode')?.value"
+            (valueChange)="filterForm.get('traFunCode')?.setValue($event)">
+          </dx-select-box>
         </div>
 
-        <dxo-load-panel [enabled]="false"></dxo-load-panel>
+        <div class="toolbar-field">
+          <dx-select-box
+            [items]="utenti()"
+            displayExpr="des"
+            valueExpr="usrId"
+            [searchEnabled]="true"
+            labelMode="hidden"
+            placeholder="Utente..."
+            [value]="filterForm.get('traUser')?.value"
+            (valueChange)="filterForm.get('traUser')?.setValue($event)">
+          </dx-select-box>
+        </div>
 
-      </dx-data-grid>
+        <div class="toolbar-field">
+          <dx-select-box
+            [items]="clients()"
+            displayExpr="cliDes"
+            valueExpr="cliId"
+            [searchEnabled]="true"
+            labelMode="hidden"
+            placeholder="Cassa..."
+            [value]="filterForm.get('traStation')?.value"
+            (valueChange)="filterForm.get('traStation')?.setValue($event)">
+          </dx-select-box>
+        </div>
+
+        <div class="toolbar-field">
+          <dx-select-box
+            [items]="tabellaItems()"
+            displayExpr="des"
+            valueExpr="id"
+            [searchEnabled]="true"
+            labelMode="hidden"
+            placeholder="Tabella..."
+            [value]="filterForm.get('traTabNam')?.value"
+            (valueChange)="filterForm.get('traTabNam')?.setValue($event)">
+          </dx-select-box>
+        </div>
+
+        <div class="toolbar-field">
+          <dx-text-box
+            labelMode="hidden"
+            placeholder="Id Entità..."
+            [showClearButton]="true"
+            [value]="filterForm.get('traEntCode')?.value"
+            (valueChange)="filterForm.get('traEntCode')?.setValue($event)">
+          </dx-text-box>
+        </div>
+
+        <div class="toolbar-field">
+          <dx-select-box
+            [items]="errorOptions"
+            displayExpr="text"
+            valueExpr="id"
+            labelMode="hidden"
+            placeholder="Errore..."
+            [value]="filterForm.get('traError')?.value"
+            (valueChange)="filterForm.get('traError')?.setValue($event)">
+          </dx-select-box>
+        </div>
+
+        <div class="toolbar-field">
+          <dx-date-box
+            type="date"
+            displayFormat="dd/MM/yyyy"
+            labelMode="hidden"
+            placeholder="Dal..."
+            [showClearButton]="true"
+            [width]="130"
+            [value]="filterForm.get('dataFrom')?.value"
+            (valueChange)="filterForm.get('dataFrom')?.setValue($event)">
+          </dx-date-box>
+        </div>
+
+        <div class="toolbar-field">
+          <dx-date-box
+            type="date"
+            displayFormat="dd/MM/yyyy"
+            labelMode="hidden"
+            placeholder="Al..."
+            [showClearButton]="true"
+            [width]="130"
+            [value]="filterForm.get('dataTo')?.value"
+            (valueChange)="filterForm.get('dataTo')?.setValue($event)">
+          </dx-date-box>
+        </div>
+
+        <div toolbar-actions>
+          <app-sempione-button
+            icon="search"
+            hint="Cerca"
+            variant="secondary"
+            [disabled]="isLoading()"
+            (clicked)="onVisualizza()">
+          </app-sempione-button>
+          <app-sempione-button
+            icon="revert"
+            hint="Reset filtri"
+            variant="secondary"
+            (clicked)="resetFilters()">
+          </app-sempione-button>
+        </div>
+
+      </app-sempione-toolbar>
     </div>
 
-  </section>
+    <app-sempione-data-grid
+      [dataSource]="traces()"
+      [columns]="gridColumns"
+      [isLoading]="isLoading()"
+      [pageSize]="30"
+      [allowedPageSizes]="[20, 30, 50, 100]"
+      [showViewAction]="true"
+      [showEditAction]="false"
+      noDataText="Nessuna traccia trovata."
+      (rowView)="openDetail($event)">
+    </app-sempione-data-grid>
+
+  </app-sempione-card>
 
 </div>
 
-<!-- ── Popup Dettaglio ── -->
-<dx-popup
-  [visible]="detailVisible()"
-  [showTitle]="true"
-  [title]="'Dettaglio Trace — #' + (selectedTrace()?.traId ?? '')"
-  [dragEnabled]="true"
-  [hideOnOutsideClick]="true"
-  [showCloseButton]="true"
-  [width]="580"
-  [height]="'auto'"
-  (onHiding)="closeDetail()">
+<!-- ── Popup Dettaglio Traccia ── -->
+<app-sempione-popup
+  [(visible)]="detailVisible"
+  [title]="'Dettaglio Traccia — #' + (selectedTrace()?.traId ?? '')"
+  [maxWidth]="680"
+  (hidden)="closeDetail()">
 
-  <div class="popup-form">
-    @if (selectedTrace(); as trace) {
+  <div class="popup-layout">
 
-      <div class="detail-grid">
-        <div class="detail-field">
-          <span class="detail-label">ID</span>
-          <span class="detail-value mono">{{ trace.traId }}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Data e Ora</span>
-          <span class="detail-value">{{ trace.traTime | date:'dd/MM/yyyy HH:mm:ss' }}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Utente</span>
-          <span class="detail-value">{{ trace.traUser || '—' }}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Stazione</span>
-          <span class="detail-value mono">{{ trace.traStation || '—' }}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Funzione</span>
-          <span class="detail-value">{{ trace.traFunCode || '—' }}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Sottofunzione</span>
-          <span class="detail-value">{{ trace.traSubFun || '—' }}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Tabella</span>
-          <span class="detail-value mono">{{ trace.traTabNam || '—' }}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Id Entità</span>
-          <span class="detail-value mono">{{ trace.traEntCode || '—' }}</span>
-        </div>
-        <div class="detail-field detail-field--full">
-          <span class="detail-label">Errore</span>
-          <span class="detail-value">
-            <span class="offline-badge"
-              [class.offline-badge--no]="trace.traError === true"
-              [class.offline-badge--yes]="trace.traError === false || trace.traError == null">
-              {{ trace.traError ? 'Sì' : 'No' }}
-            </span>
-          </span>
-        </div>
+    <app-sempione-popup-card title="Informazioni Traccia">
+      <div class="popup-fields-grid popup-fields-grid--2col">
+
+        <app-sempione-field-group label="ID" [locked]="true">
+          <dx-text-box [value]="selectedTrace()?.traId?.toString() ?? ''" [readOnly]="true" labelMode="hidden"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Data e Ora" [locked]="true">
+          <dx-text-box [value]="formatDateTime(selectedTrace()?.traTime)" [readOnly]="true" labelMode="hidden"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Utente" [locked]="true">
+          <dx-text-box [value]="selectedTrace()?.traUser || '—'" [readOnly]="true" labelMode="hidden"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Stazione" [locked]="true">
+          <dx-text-box [value]="selectedTrace()?.traStation || '—'" [readOnly]="true" labelMode="hidden"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Funzione" [locked]="true">
+          <dx-text-box [value]="selectedTrace()?.traFunCode || '—'" [readOnly]="true" labelMode="hidden"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Sottofunzione" [locked]="true">
+          <dx-text-box [value]="selectedTrace()?.traSubFun || '—'" [readOnly]="true" labelMode="hidden"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Tabella" [locked]="true">
+          <dx-text-box [value]="selectedTrace()?.traTabNam || '—'" [readOnly]="true" labelMode="hidden"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Id Entità" [locked]="true">
+          <dx-text-box [value]="selectedTrace()?.traEntCode || '—'" [readOnly]="true" labelMode="hidden"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Errore" [locked]="true">
+          <dx-text-box [value]="selectedTrace()?.traError ? 'Sì' : 'No'" [readOnly]="true" labelMode="hidden"></dx-text-box>
+        </app-sempione-field-group>
+
       </div>
+    </app-sempione-popup-card>
 
-      <div class="popup-actions">
-        <div class="popup-actions-left"></div>
-        <div class="popup-actions-right">
-          <dx-button
-            text="Chiudi"
-            stylingMode="outlined"
-            (onClick)="closeDetail()">
-          </dx-button>
-        </div>
-      </div>
+    <app-sempione-popup-action-bar
+      [cancelText]="'Chiudi'"
+      [showSave]="false"
+      [showStorico]="false"
+      (cancel)="closeDetail()">
+    </app-sempione-popup-action-bar>
 
-    }
   </div>
-</dx-popup>
 
-<!-- ── Toast ── -->
-<dx-toast
-  [(visible)]="toastVisible"
-  [type]="toastType()"
-  [message]="toastMessage()"
-  [displayTime]="3000">
-</dx-toast>
+</app-sempione-popup>

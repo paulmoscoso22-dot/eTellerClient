@@ -14,6 +14,7 @@ import {
 } from '../../report/domain/transaction.models';
 import { RicercaFilterComponent } from '../components/ricerca-filter/ricerca-filter.component';
 import { RicercaGridComponent } from '../components/ricerca-grid/ricerca-grid.component';
+import { SempionePageHeaderComponent } from '../../../../components/General/sempione-page-header/sempione-page-header.component';
 
 @Component({
   selector: 'app-ricerca',
@@ -21,7 +22,8 @@ import { RicercaGridComponent } from '../components/ricerca-grid/ricerca-grid.co
   imports: [
     CommonModule,
     RicercaFilterComponent,
-    RicercaGridComponent
+    RicercaGridComponent,
+    SempionePageHeaderComponent,
   ],
   templateUrl: './ricerca.component.html',
   styleUrls: ['./ricerca.component.css'],
