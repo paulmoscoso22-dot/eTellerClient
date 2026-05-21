@@ -16,6 +16,19 @@ export class ReportFacade {
 
   constructor(private http: HttpClient) {}
 
+  private normalizeString(value: string | null | undefined): string | null {
+    const normalized = value?.trim();
+    return normalized ? normalized : null;
+  }
+
+  private normalizeDate(value: Date | string | null | undefined): Date | null {
+    return value ? new Date(value) : null;
+  }
+
+  private normalizeNumber(value: number | null | undefined): number | null {
+    return value ?? null;
+  }
+
   /**
    * Get transactions waiting for BEF processing
    * 
@@ -27,18 +40,18 @@ export class ReportFacade {
    * @returns Observable of transactions waiting for BEF
    */
   getTransactionWaitingForBef(
-    trxCassa: string,
-    trxDataDal: Date,
-    trxDataAl: Date,
-    trxStatus: number,
-    trxBraId: string
+    trxCassa: string | null,
+    trxDataDal: Date | null,
+    trxDataAl: Date | null,
+    trxStatus: number | null,
+    trxBraId: string | null
   ): Observable<GetTransactionWaitingForBefResponse[]> {
     const payload: GetTransactionWaitingForBefRequest = {
-      trxCassa,
-      trxDataDal,
-      trxDataAl,
-      trxStatus,
-      trxBraId
+      trxCassa: this.normalizeString(trxCassa),
+      trxDataDal: this.normalizeDate(trxDataDal),
+      trxDataAl: this.normalizeDate(trxDataAl),
+      trxStatus: this.normalizeNumber(trxStatus),
+      trxBraId: this.normalizeString(trxBraId)
     };
 
     return this.http.post<GetTransactionWaitingForBefResponse[]>(
@@ -58,18 +71,18 @@ export class ReportFacade {
    * @returns Observable of transactions filtered for journal
    */
   getTransactionWithFiltersForGiornale(
-    trxCassa: string,
-    trxDataDal: Date,
-    trxDataAl: Date,
-    trxStatus: number,
-    trxBraId: string
+    trxCassa: string | null,
+    trxDataDal: Date | null,
+    trxDataAl: Date | null,
+    trxStatus: number | null,
+    trxBraId: string | null
   ): Observable<GetTransactionWithFiltersForGiornaleResponse[]> {
     const payload: GetTransactionWithFiltersForGiornaleRequest = {
-      trxCassa,
-      trxDataDal,
-      trxDataAl,
-      trxStatus,
-      trxBraId
+      trxCassa: this.normalizeString(trxCassa),
+      trxDataDal: this.normalizeDate(trxDataDal),
+      trxDataAl: this.normalizeDate(trxDataAl),
+      trxStatus: this.normalizeNumber(trxStatus),
+      trxBraId: this.normalizeString(trxBraId)
     };
 
     return this.http.post<GetTransactionWithFiltersForGiornaleResponse[]>(
@@ -89,18 +102,18 @@ export class ReportFacade {
    * @returns Observable of giornale cassa transactions
    */
   getTransactionGiornaleCassa(
-    trxCassa: string,
-    trxDataDal: Date,
-    trxDataAl: Date,
-    trxStatus: number,
-    trxBraId: string
+    trxCassa: string | null,
+    trxDataDal: Date | null,
+    trxDataAl: Date | null,
+    trxStatus: number | null,
+    trxBraId: string | null
   ): Observable<GetTransactionGiornaleCassaResponse[]> {
     const payload: GetTransactionWithFiltersRequest = {
-      trxCassa,
-      trxDataDal,
-      trxDataAl,
-      trxStatus,
-      trxBraId
+      trxCassa: this.normalizeString(trxCassa),
+      trxDataDal: this.normalizeDate(trxDataDal),
+      trxDataAl: this.normalizeDate(trxDataAl),
+      trxStatus: this.normalizeNumber(trxStatus),
+      trxBraId: this.normalizeString(trxBraId)
     };
 
     return this.http.post<GetTransactionGiornaleCassaResponse[]>(
@@ -120,18 +133,18 @@ export class ReportFacade {
    * @returns Observable of operazioni annullate transactions
    */
   getTransactionOperazioniAnnullate(
-    trxCassa: string,
-    trxDataDal: Date,
-    trxDataAl: Date,
-    trxStatus: number,
-    trxBraId: string
+    trxCassa: string | null,
+    trxDataDal: Date | null,
+    trxDataAl: Date | null,
+    trxStatus: number | null,
+    trxBraId: string | null
   ): Observable<GetTransactionOperazioniAnnulateResponse[]> {
     const payload: GetTransactionWithFiltersRequest = {
-      trxCassa,
-      trxDataDal,
-      trxDataAl,
-      trxStatus,
-      trxBraId
+      trxCassa: this.normalizeString(trxCassa),
+      trxDataDal: this.normalizeDate(trxDataDal),
+      trxDataAl: this.normalizeDate(trxDataAl),
+      trxStatus: this.normalizeNumber(trxStatus),
+      trxBraId: this.normalizeString(trxBraId)
     };
 
     return this.http.post<GetTransactionOperazioniAnnulateResponse[]>(
@@ -151,18 +164,18 @@ export class ReportFacade {
    * @returns Observable of transactions with filters applied
    */
   getTransactionWithFilters(
-    trxCassa: string,
-    trxDataDal: Date,
-    trxDataAl: Date,
-    trxStatus: number,
-    trxBraId: string
+    trxCassa: string | null,
+    trxDataDal: Date | null,
+    trxDataAl: Date | null,
+    trxStatus: number | null,
+    trxBraId: string | null
   ): Observable<GetTransactionWithFiltersResponse[]> {
     const payload: GetTransactionWithFiltersRequest = {
-      trxCassa,
-      trxDataDal,
-      trxDataAl,
-      trxStatus,
-      trxBraId
+      trxCassa: this.normalizeString(trxCassa),
+      trxDataDal: this.normalizeDate(trxDataDal),
+      trxDataAl: this.normalizeDate(trxDataAl),
+      trxStatus: this.normalizeNumber(trxStatus),
+      trxBraId: this.normalizeString(trxBraId)
     };
 
     return this.http.post<GetTransactionWithFiltersResponse[]>(

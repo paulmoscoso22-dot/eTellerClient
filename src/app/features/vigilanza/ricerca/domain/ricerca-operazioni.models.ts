@@ -2,17 +2,17 @@
  * Request interface for RicercaOperazioni (Operations Search)
  */
 export interface RicercaOperazioniRequest {
-  trxCassa: string;
-  trxLocalita: string;
+  trxCassa: string | null;
+  trxLocalita: string | null;
   trxDataDal: Date | null;
   trxDataAl: Date | null;
   trxReverse: boolean | null;
-  trxCutId: string;
-  trxOptId: string;
-  trxDivope: string;
+  trxCutId: string | null;
+  trxOptId: string | null;
+  trxDivope: string | null;
   trxImpopeDA: number | null;
   trxImpopeA: number | null;
-  arcAppName: string;
+  arcAppName: string | null;
   arcForced: boolean | null;
 }
 
@@ -21,7 +21,8 @@ export interface RicercaOperazioniRequest {
  */
 export interface RicercaOperazioniResponse {
   trxId: number;
-  trxDate: string;
+  trxAptId?: string;
+  trxDate: string | Date;
   cutDes: string;
   trxCutId: string;
   optDes: string;
@@ -33,6 +34,22 @@ export interface RicercaOperazioniResponse {
   trxRate: number;
   appearerName: string;
   beneficiaryName: string;
-  trxStatus: string;
+  trxStatus: string | number;
   staDes: string;
+}
+
+export interface RicercaOperazioniFiltersState {
+  trxCassa: string;
+  trxLocalita: string;
+  trxDataDal: string | null;
+  trxDataAl: string | null;
+  trxReverse: boolean;
+  trxCutId: string;
+  trxOptId: string;
+  trxDivope: string;
+  trxImpopeDA: number | null;
+  trxImpopeA: number | null;
+  arcAppName: string;
+  arcForced: boolean;
+  pageSize: number;
 }

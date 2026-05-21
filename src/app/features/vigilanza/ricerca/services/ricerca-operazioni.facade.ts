@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { RicercaOperazioniService } from './ricerca-operazioni.service';
 import { 
   RicercaOperazioniRequest, 
-  RicercaOperazioniResponse 
+  RicercaOperazioniResponse
 } from '../domain/ricerca-operazioni.models';
 
 /**
@@ -32,35 +32,7 @@ export class RicercaOperazioniFacade {
    * @param arcForced - Show only forced surveillance transactions
    * @returns Observable of operations matching the filters
    */
-  searchOperazioni(
-    trxCassa: string,
-    trxLocalita: string,
-    trxDataDal: Date | null,
-    trxDataAl: Date | null,
-    trxReverse: boolean | null,
-    trxCutId: string,
-    trxOptId: string,
-    trxDivope: string,
-    trxImpopeDA: number | null,
-    trxImpopeA: number | null,
-    arcAppName: string,
-    arcForced: boolean | null
-  ): Observable<RicercaOperazioniResponse[]> {
-    const request: RicercaOperazioniRequest = {
-      trxCassa,
-      trxLocalita,
-      trxDataDal,
-      trxDataAl,
-      trxReverse,
-      trxCutId,
-      trxOptId,
-      trxDivope,
-      trxImpopeDA,
-      trxImpopeA,
-      arcAppName,
-      arcForced
-    };
-
+  searchOperazioni(request: RicercaOperazioniRequest): Observable<RicercaOperazioniResponse[]> {
     return this.ricercaOperazioniService.searchOperazioni(request);
   }
 }

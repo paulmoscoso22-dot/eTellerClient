@@ -4,7 +4,7 @@ import { DxDataGridModule } from 'devextreme-angular';
 import { ApplyFilterMode } from 'devextreme/common/grids';
 import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
 
-import { GetTransactionWithFiltersResponse } from '../../domain/transaction.models';
+import { GetTransactionWaitingForBefResponse } from '../../domain/transaction.models';
 
 @Component({
   selector: 'app-attesa-benefondo-grid',
@@ -18,7 +18,7 @@ import { GetTransactionWithFiltersResponse } from '../../domain/transaction.mode
   styleUrls: ['./attesa-benefondo-grid.component.css']
 })
 export class AttesaBenefondoGridComponent {
-  @Input() transactions = signal<GetTransactionWithFiltersResponse[]>([]);
+  @Input() transactions = signal<GetTransactionWaitingForBefResponse[]>([]);
   @Input() isLoading = signal(false);
   @Input() error = signal<string | null>(null);
   showFilterRow = true;

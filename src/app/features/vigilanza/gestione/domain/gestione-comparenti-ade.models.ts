@@ -35,6 +35,8 @@ export interface GetAppearerByParametersRequest {
 }
 
 export interface InsertAraRequest {
+  traUser: string;
+  traStation: string;
   AraRecdate: Date | string;
   AraName: string;
   AraBirthdate?: Date | string | null;
@@ -48,6 +50,8 @@ export interface InsertAraRequest {
 }
 
 export interface UpdateAraRequest {
+  traUser: string;
+  traStation: string;
   AraId: number;
   AraName: string;
   AraBirthdate?: Date | string | null;
@@ -62,6 +66,8 @@ export interface UpdateAraRequest {
 }
 
 export interface DeleteAraRequest {
+  traUser: string;
+  traStation: string;
   AraId: number;
 }
 

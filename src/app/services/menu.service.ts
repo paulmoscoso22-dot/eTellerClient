@@ -200,7 +200,7 @@ export class MenuService  {
           icon: 'toolbox',
           isVisible: true,
           children: [
-            { label: 'menu.gestioneRegole', url: 'gestione-regole', icon: 'preferences', isVisible: true },
+            { label: 'menu.gestioneRegole', url: 'gestione-regole', icon: 'cleared', isVisible: true },
             { label: 'menu.gestioneComparentiAde', url: 'gestione-comparenti-ade', icon: 'group', isVisible: true }
           ]
         }

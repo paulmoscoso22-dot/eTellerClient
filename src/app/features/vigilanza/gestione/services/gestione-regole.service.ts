@@ -1,77 +1,54 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../../../../services/api.service';
-
-export interface AntiRecRuleSearchParams {
-  arlOpTypeId: string;
-  arlCurTypeId: string;
-  arlAcctId: string;
-  arlAcctType: string;
-}
-
-export interface AntiRecRule {
-  arlId: number;
-  arlOpTypeId: string;
-  arlCurTypeId: string;
-  arlAcctId?: string;
-  arlAcctType?: string;
-  arlLimit: number;
-  arlExclude: boolean;
-  arlRecDate: Date;
-  arlValStart: Date;
-  arlValEnd: Date;
-  arlIscanceled: boolean;
-  arlIsinternal: boolean;
-  optDes: string;
-  cutDes: string;
-}
-
-export interface AntiRecRuleUpsert {
-  arlId?: number;
-  arlOpTypeId: string;
-  arlCurTypeId: string;
-  arlAcctId: string;
-  arlAcctType: string;
-  arlLimit: number;
-  arlExclude: boolean;
-  arlValStart: Date;
-  arlValEnd: Date;
-  arlIsinternal: boolean;
-}
-
-export interface AntiRecRuleHistory {
-  hisDate: Date;
-  arlId: number;
-  optDes: string;
-  cutDes: string;
-  arlAcctId: string;
-  arlAcctType: string;
-  arlLimit: number;
-  arlValStart: Date;
-  arlValEnd: Date;
-  arlIsinternal: boolean;
-  arlExclude: boolean;
-}
+import {
+  IAntirecRuleResponse,
+  IAntirecRulesSearchParams,
+  IInsertAntirecRuleRequest,
+  IUpdateAntirecRuleRequest,
+  IDeleteAntirecRuleRequest,
+  IHistoryItem,
+} from '../domain/gestione-regole.models';
+import { IStOperationType } from '../../../../core/domain/stOperationType.domain';
+import { ICurrencyType } from '../../../../core/domain/currencyType.domain';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GestioneRegoleService {
-  private readonly apiService = inject(ApiService);
+  private readonly api = inject(ApiService);
 
-  GetSpAntirecRulesParameters(params: AntiRecRuleSearchParams): Observable<AntiRecRule[]> {
-    return this.apiService.post<AntiRecRule[]>('Vigilanza/GetSpAntirecRulesParameters', params);
+  getByParameters(request: IAntirecRulesSearchParams): Observable<IAntirecRuleResponse[]> {
+    return this.api.post<IAntirecRuleResponse[]>('Vigilanza/GetSpAntirecRulesParameters', request);
   }
 
-  InsertAntirecRule(params: AntiRecRuleUpsert): Observable<boolean> {
-    return this.apiService.post<boolean>('Vigilanza/InsertAntirecRule', params);
+  getById(arlId: number): Observable<IAntirecRuleResponse> {
+    return this.api.post<IAntirecRuleResponse>('Vigilanza/GetAntirecRulesById', { arlId });
   }
 
-  UpdateAntirecRule(params: AntiRecRuleUpsert): Observable<boolean> {
-    return this.apiService.post<boolean>('Vigilanza/UpdateAntirecRule', params);
+  insertRule(request: IInsertAntirecRuleRequest): Observable<number> {
+    return this.api.put<number>('Vigilanza/InsertAntirecRule', request);
   }
 
-  GetAntirecRuleHistory(arlId: number): Observable<AntiRecRuleHistory[]> {
-    return this.apiService.post<AntiRecRuleHistory[]>('Vigilanza/GetAntirecRuleHistory', { arlId });
+  updateRule(request: IUpdateAntirecRuleRequest): Observable<boolean> {
+    return this.api.put<boolean>('Vigilanza/UpdateAntirecRule', request);
+  }
+
+  deleteRule(request: IDeleteAntirecRuleRequest): Observable<boolean> {
+    return this.api.deleteWithBody<boolean>('Vigilanza/DeleteAntirecRule', request);
+  }
+
+  getHistory(arlId: number): Observable<IHistoryItem[]> {
+    return this.api.post<IHistoryItem[]>('Vigilanza/GetAntirecRulesHistory', { arlId });
+  }
+
+  /** Lookup: tipi operazione */
+  getOperationTypes(): Observable<IStOperationType[]> {
+    return this.api.post<IStOperationType[]>('manager/Tabelle/GetOperationTypes', {});
+  }
+
+  /** Lookup: tipi divisa */
+  getCurrencyTypes(): Observable<ICurrencyType[]> {
+    return this.api.post<ICurrencyType[]>('CurrencyType/GetCurrencyTypes', {});
   }
 }

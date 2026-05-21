@@ -61,7 +61,7 @@ export class Service {
   }
 
   getAllCurrency(): Observable<Currency[]> {
-    return this.http.post<Currency[]>(`${environment.apiUrl}/Currency`, {});
+    return this.http.post<Currency[]>(`${environment.apiUrl}/Currency/GetAllCurrencies`, {});
   }
   
   getCurrencyTypes(): Observable<ICurrencyType[]> {

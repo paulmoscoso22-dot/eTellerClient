@@ -1,9 +1,8 @@
-import { Component, OnInit, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
+import { Component, OnInit, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
-import { GetTransactionWithFiltersResponse } from '../../domain/transaction.models';
+import { GetTransactionWaitingForBefResponse } from '../../domain/transaction.models';
 import { TransactionStatus } from '../../domain/transaction-status.enum';
 import { ReportFilterComponent } from '../../components/report-filter/report-filter.component';
 import { AttesaBenefondoGridComponent } from '../../components/attesa-benefondo-grid/attesa-benefondo-grid.component';
@@ -21,11 +20,10 @@ import { SempionePageHeaderComponent } from '../../../../../components/General/s
   templateUrl: './attesa-benefondo.component.html',
   styleUrls: ['./attesa-benefondo.component.css'],
 })
-export class AttesaBenefondoComponent implements OnInit, OnDestroy {
+export class AttesaBenefondoComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
-  private subscription: Subscription | null = null;
-  
-  transactions = signal<GetTransactionWithFiltersResponse[]>([]);
+
+  transactions = signal<GetTransactionWaitingForBefResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
   statusDefaultValue = TransactionStatus.AttesaBEF;
@@ -39,21 +37,17 @@ export class AttesaBenefondoComponent implements OnInit, OnDestroy {
     // Component initialized - filter will trigger search when ready
   }
 
-  /**
-   * Angular lifecycle hook - Cleanup and manage memory leak
-   */
-  ngOnDestroy(): void {
-    this.destroy();
+  private normalizeSearchValue(value: unknown): string | null {
+    if (typeof value !== 'string') {
+      return null;
+    }
+
+    const normalized = value.trim();
+    return normalized ? normalized : null;
   }
 
-  /**
-   * Manually destroy and cleanup subscriptions
-   */
-  private destroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-      this.subscription = null;
-    }
+  private normalizeSearchDate(value: unknown): Date | null {
+    return value instanceof Date ? value : null;
   }
 
   /**
@@ -61,17 +55,18 @@ export class AttesaBenefondoComponent implements OnInit, OnDestroy {
    */
   onSearch(filterData: any): void {
     const { trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId } = filterData;
-    
-    if (!trxDataDal || !trxDataAl) {
-      this.error.set('Please fill in all required fields correctly');
-      return;
-    }
-    
-    this.getTransactionWithFilters(trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId);
+
+    this.getTransactionWaitingForBef(
+      this.normalizeSearchValue(trxCassa),
+      this.normalizeSearchDate(trxDataDal),
+      this.normalizeSearchDate(trxDataAl),
+      trxStatus ?? null,
+      this.normalizeSearchValue(trxBraId)
+    );
   }
 
   /**
-   * Get transactions with filters
+   * Get transactions waiting for BEF
    * 
    * @param trxCassa - Transaction cash register identifier
    * @param trxDataDal - Start date for transaction range
@@ -79,18 +74,17 @@ export class AttesaBenefondoComponent implements OnInit, OnDestroy {
    * @param trxStatus - Status filter for transactions
    * @param trxBraId - Branch identifier
    */
-  getTransactionWithFilters(
-    trxCassa: string,
-    trxDataDal: Date,
-    trxDataAl: Date,
-    trxStatus: number,
-    trxBraId: string
+  getTransactionWaitingForBef(
+    trxCassa: string | null,
+    trxDataDal: Date | null,
+    trxDataAl: Date | null,
+    trxStatus: number | null,
+    trxBraId: string | null
   ): void {
-    this.destroy(); // Clean up previous subscription
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.subscription = this.reportFacade.getTransactionWithFilters(
+    this.reportFacade.getTransactionWaitingForBef(
       trxCassa,
       trxDataDal,
       trxDataAl,
@@ -100,14 +94,12 @@ export class AttesaBenefondoComponent implements OnInit, OnDestroy {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (data) => {
-        this.transactions.set(data as GetTransactionWithFiltersResponse[]);
+        this.transactions.set(data);
         this.isLoading.set(false);
-        console.log('Transazioni con filtri:', data, this.isLoading());
       },
       error: (error: any) => {
         this.error.set(error.message || 'Errore nel recupero transazioni');
         this.isLoading.set(false);
-        console.error('Errore nel recupero transazioni:', error);
       }
     });
   }

@@ -132,12 +132,15 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label">Nome Applicazione</label>
+        <label class="field-label">Nome Applicazione</label>
+        <div style="display:flex; gap:8px; align-items:center;">
           <dx-text-box
             formControlName="arcAppName"
             placeholder="App name..."
             [showClearButton]="true">
           </dx-text-box>
+          <dx-button text="..." icon="search" stylingMode="outlined" (onClick)="openAppearerPopup()"></dx-button>
+        </div>
         </div>
 
       </div>
@@ -151,23 +154,40 @@
         <div class="options-group">
           <dx-check-box
             formControlName="trxReverse"
-            text="Transazioni Inverse"
+            text="Solo stornate"
             class="filter-check">
           </dx-check-box>
           <dx-check-box
             formControlName="arcForced"
-            text="Forzato"
+            text="Solo forzate"
             class="filter-check">
           </dx-check-box>
         </div>
 
         <div class="actions-group">
+          <div class="field-group" style="min-width: 120px;">
+            <label class="field-label">Page size</label>
+            <dx-number-box
+              [value]="pageSize()"
+              [min]="1"
+              [max]="1000"
+              [showSpinButtons]="true"
+              (onValueChanged)="onPageSizeChanged($event)">
+            </dx-number-box>
+          </div>
           <dx-button
             class="btn-annulla"
             text="Annulla"
             icon="revert"
             stylingMode="outlined"
             (onClick)="resetFilters()">
+          </dx-button>
+          <dx-button
+            class="btn-print"
+            text="Stampa"
+            icon="print"
+            stylingMode="outlined"
+            (onClick)="printResults()">
           </dx-button>
           <dx-button
             class="btn-search"
@@ -203,7 +223,7 @@
     <div class="gold-divider"></div>
 
     <!-- Card Body -->
-    <div class="card-body card-body--grid">
+      <div class="card-body card-body--grid">
 
       @if (error()) {
         <div class="grid-message grid-message--error">
@@ -229,33 +249,35 @@
         <dx-data-grid
           [dataSource]="operations()"
           [showBorders]="false"
-          [columnAutoWidth]="true"
+          [columnAutoWidth]="false"
+          [allowColumnResizing]="true"
           [rowAlternationEnabled]="true"
           [hoverStateEnabled]="true"
           [height]="'100%'"
+          (onOptionChanged)="onGridOptionChanged($event)"
           keyExpr="trxId">
 
           <dxo-selection mode="single"></dxo-selection>
-          <dxo-paging [pageSize]="30"></dxo-paging>
+          <dxo-paging [pageSize]="pageSize()"></dxo-paging>
           <dxo-pager
             [showInfo]="true"
             infoText="{2} operazioni"
             [showPageSizeSelector]="true"
-            [allowedPageSizes]="[20, 30, 50, 100]"
+            [allowedPageSizes]="[10, 20, 30, 50, 100, 200]"
             [showNavigationButtons]="true"
             displayMode="full">
           </dxo-pager>
 
-          <dxi-column dataField="trxId"           caption="Nop"          [width]="80"  alignment="center"></dxi-column>
+          <dxi-column dataField="trxId"           caption="Nop / TrxId"  [width]="90"  alignment="center"></dxi-column>
           <dxi-column dataField="trxDate"         caption="Data"         [width]="100" alignment="center" dataType="date" format="dd.MM.yy"></dxi-column>
           <dxi-column dataField="cutDes"          caption="Utente/Cassa" [width]="140" alignment="left"></dxi-column>
-          <dxi-column dataField="optDes"          caption="Operazione"   [width]="160" alignment="left"></dxi-column>
+          <dxi-column dataField="optDes"          caption="Operazione"   [minWidth]="160" alignment="left"></dxi-column>
           <dxi-column dataField="trxReport"       caption="N. Rapporto"  [width]="110" alignment="center"></dxi-column>
-          <dxi-column dataField="trxCurId"        caption="Div"          [width]="60"  alignment="center" cellTemplate="curTemplate"></dxi-column>
-          <dxi-column dataField="trxAmount"       caption="Imp. CTP"     [width]="110" alignment="right"  dataType="number" format="#,##0.00"></dxi-column>
+          <dxi-column dataField="trxCurId"        caption="Divisa"       [width]="70"  alignment="center" cellTemplate="curTemplate"></dxi-column>
+          <dxi-column dataField="trxAmount"       caption="Importo"      [width]="110" alignment="right"  dataType="number" format="#,##0.00"></dxi-column>
           <dxi-column dataField="trxRate"         caption="Cambio"       [width]="100" alignment="right"  dataType="number" format="#,##0.0000"></dxi-column>
           <dxi-column dataField="appearerName"    caption="Comparente"   [width]="160" alignment="left"></dxi-column>
-          <dxi-column dataField="beneficiaryName" caption="Beneficiario" [width]="160" alignment="left"></dxi-column>
+          <dxi-column dataField="beneficiaryName" caption="Beneficiario" [minWidth]="160" alignment="left"></dxi-column>
           <dxi-column dataField="staDes"          caption="Stato"        [width]="100" alignment="center" cellTemplate="statoTemplate"></dxi-column>
 
           <dxi-column caption="Dettaglio" [width]="80" [allowSorting]="false" [allowFiltering]="false" alignment="center" cellTemplate="actionsTemplate"></dxi-column>
@@ -269,12 +291,7 @@
           </div>
 
           <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
-            <button class="action-btn action-btn--view" title="Visualizza dettaglio" (click)="openViewPopup(cell.data)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </button>
+            <dx-button icon="info" stylingMode="text" hint="Informazioni" (onClick)="openViewPopup(cell.data)"></dx-button>
           </div>
 
           <dxo-load-panel [enabled]="false"></dxo-load-panel>
@@ -301,7 +318,7 @@
 
 <!-- ── Popup Dettaglio Operazione ── -->
 <dx-popup
-  [(visible)]="isDetailPopupVisible"
+  [visible]="isDetailPopupVisible()"
   [showTitle]="true"
   [title]="'Dettaglio Operazione — Nop ' + (selectedOperation()?.trxId ?? '')"
   [dragEnabled]="true"
@@ -311,7 +328,7 @@
   [maxWidth]="740"
   [height]="'auto'"
   [maxHeight]="'88vh'"
-  (onHidden)="closePopup()">
+  (onHidden)="onDetailPopupHidden()">
 
   <div *dxTemplate="let data of 'content'">
     @if (selectedOperation(); as op) {
@@ -325,8 +342,12 @@
               <div class="popup-field-value">{{ op.trxId }}</div>
             </div>
             <div class="popup-field-group">
+              <label class="popup-field-label">TrxId</label>
+              <div class="popup-field-value mono">{{ op.trxId }}</div>
+            </div>
+            <div class="popup-field-group">
               <label class="popup-field-label">Data</label>
-              <div class="popup-field-value">{{ op.trxDate | date:'dd.MM.yyyy HH:mm' }}</div>
+              <div class="popup-field-value">{{ formatDate(op.trxDate) }}</div>
             </div>
             <div class="popup-field-group">
               <label class="popup-field-label">Stato</label>
@@ -339,12 +360,30 @@
               <div class="popup-field-value">{{ op.cutDes }}</div>
             </div>
             <div class="popup-field-group">
+              <label class="popup-field-label">Utente/Cassa</label>
+              <div class="popup-field-value">{{ op.cutDes }}</div>
+            </div>
+            <div class="popup-field-group">
               <label class="popup-field-label">Tipo Operazione</label>
               <div class="popup-field-value">{{ op.optDes }}</div>
             </div>
+            @if (op.trxAptId) {
+              <div class="popup-field-group">
+                <label class="popup-field-label">AptId</label>
+                <div class="popup-field-value mono">{{ op.trxAptId }}</div>
+              </div>
+            }
             <div class="popup-field-group">
               <label class="popup-field-label">N. Rapporto</label>
               <div class="popup-field-value mono">{{ op.trxReport || '—' }}</div>
+            </div>
+            <div class="popup-field-group">
+              <label class="popup-field-label">Comparente</label>
+              <div class="popup-field-value">{{ op.appearerName || '—' }}</div>
+            </div>
+            <div class="popup-field-group">
+              <label class="popup-field-label">Beneficiario</label>
+              <div class="popup-field-value">{{ op.beneficiaryName || '—' }}</div>
             </div>
           </div>
         </section>
@@ -369,20 +408,6 @@
           </div>
         </section>
 
-        <section class="popup-card">
-          <h3 class="popup-card-title">Parti Coinvolte</h3>
-          <div class="popup-fields-grid popup-fields-grid--2col">
-            <div class="popup-field-group">
-              <label class="popup-field-label">Comparente</label>
-              <div class="popup-field-value">{{ op.appearerName || '—' }}</div>
-            </div>
-            <div class="popup-field-group">
-              <label class="popup-field-label">Beneficiario</label>
-              <div class="popup-field-value">{{ op.beneficiaryName || '—' }}</div>
-            </div>
-          </div>
-        </section>
-
         <div class="popup-action-bar">
           <div class="popup-actions-secondary"></div>
           <div class="popup-actions-primary">
@@ -392,5 +417,71 @@
 
       </div>
     }
+  </div>
+</dx-popup>
+
+<dx-popup
+  [visible]="isAppearerPopupVisible()"
+  [showTitle]="true"
+  title="Seleziona comparente"
+  [dragEnabled]="true"
+  [hideOnOutsideClick]="true"
+  [showCloseButton]="true"
+  [width]="'80%'"
+  [maxWidth]="900"
+  [height]="'80vh'"
+  (onHidden)="onAppearerPopupHidden()">
+
+  <div *dxTemplate="let data of 'content'">
+    <div class="popup-layout popup-view-mode">
+      <section class="popup-card">
+        <h3 class="popup-card-title">Cerca comparente</h3>
+        <div class="popup-fields-grid popup-fields-grid--2col">
+          <div class="popup-field-group">
+            <label class="popup-field-label">Nome</label>
+            <dx-text-box [value]="searchForm.value.arcAppName" [showClearButton]="true" (onValueChanged)="searchForm.patchValue({ arcAppName: $event.value ?? '' }, { emitEvent: false })"></dx-text-box>
+          </div>
+          <div class="popup-field-group" style="display:flex; align-items:flex-end; gap: 8px;">
+            <dx-button text="Cerca" icon="search" type="default" (onClick)="searchAppearers()"></dx-button>
+            <dx-button text="Chiudi" icon="close" stylingMode="outlined" (onClick)="closeAppearerPopup()"></dx-button>
+          </div>
+        </div>
+      </section>
+
+      <section class="popup-card">
+        <h3 class="popup-card-title">Risultati</h3>
+        @if (isAppearerLoading()) {
+          <div class="grid-message grid-message--loading">Ricerca comparente in corso...</div>
+        }
+        @if (!isAppearerLoading() && appearers().length > 0) {
+          <dx-data-grid
+            [dataSource]="appearers()"
+            [showBorders]="false"
+            [columnAutoWidth]="true"
+            [hoverStateEnabled]="true"
+            [rowAlternationEnabled]="true"
+            keyExpr="araId">
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-pager [showInfo]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 50]"></dxo-pager>
+            <dxi-column dataField="araName" caption="Nome"></dxi-column>
+            <dxi-column dataField="araBirthdate" caption="Nascita" cellTemplate="birthTemplate"></dxi-column>
+            <dxi-column dataField="araNationality" caption="Nazionalità"></dxi-column>
+            <dxi-column dataField="araRecComplete" caption="Completo" [width]="100"></dxi-column>
+            <dxi-column caption="Seleziona" [width]="120" cellTemplate="selectTemplate"></dxi-column>
+
+            <div *dxTemplate="let cell of 'birthTemplate'">{{ formatDate(cell.value) }}</div>
+            <div *dxTemplate="let cell of 'selectTemplate'">
+              <dx-button text="Usa" icon="check" stylingMode="outlined" (onClick)="selectAppearer(cell.data)"></dx-button>
+            </div>
+          </dx-data-grid>
+        }
+        @if (!isAppearerLoading() && appearers().length === 0) {
+          <div class="grid-empty">
+            <h3 class="empty-title">Nessun comparente trovato</h3>
+          </div>
+        }
+      </section>
+    </div>
   </div>
 </dx-popup>
