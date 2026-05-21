@@ -2,7 +2,6 @@ import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core'
 import { CommonModule } from '@angular/common';
 import { DxDataGridModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable, Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
 import { GetTotaleCassaResponse } from '../../domain/totale-cassa.models';
 import { TotaleCassaFilterComponent } from '../../components/totale-cassa-filter/totale-cassa-filter.component';
@@ -66,14 +65,7 @@ export class TotaliCassaComponent implements OnDestroy {
     this.isLoading.set(true);
     this.error.set(null);
 
-    const data$: Observable<GetTotaleCassaResponse[]> = this.reportFacade.getTotaliCassa(
-      tocCliId,
-      tocData,
-      tocCutId,
-      tocBraId
-    );
-
-    this.subscription = data$.pipe(
+    this.reportFacade.getTotaliCassa(tocCliId, tocData, tocCutId, tocBraId).pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (data) => {

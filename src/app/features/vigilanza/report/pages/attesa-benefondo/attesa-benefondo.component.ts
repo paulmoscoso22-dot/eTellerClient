@@ -1,4 +1,4 @@
-import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
+import { Component, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -14,7 +14,6 @@ import { SempionePageHeaderComponent } from '../../../../../components/General/s
 import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
 import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subscription } from 'rxjs';
 import { ReportFacade } from '../../../../archivi/report/services/report.facade';
 import { GetTransactionWaitingForBefResponse } from '../../../../archivi/report/domain/transaction.models';
 import { TransactionStatus } from '../../../../archivi/report/domain/transaction-status.enum';
@@ -39,10 +38,9 @@ import { TransactionStatus } from '../../../../archivi/report/domain/transaction
   templateUrl: './attesa-benefondo.component.html',
   styleUrls: ['./attesa-benefondo.component.css'],
 })
-export class VigilanzaAttesaBenefondoComponent implements OnDestroy {
+export class VigilanzaAttesaBenefondoComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
-  private subscription: Subscription | null = null;
 
   transactions = signal<GetTransactionWaitingForBefResponse[]>([]);
   isLoading = signal(false);
@@ -60,22 +58,32 @@ export class VigilanzaAttesaBenefondoComponent implements OnDestroy {
 
   constructor(private facade: ReportFacade) {}
 
+  private normalizeSearchValue(value: unknown): string | null {
+    if (typeof value !== 'string') {
+      return null;
+    }
+
+    const normalized = value.trim();
+    return normalized ? normalized : null;
+  }
+
+  private normalizeSearchDate(value: unknown): Date | null {
+    return value instanceof Date ? value : null;
+  }
+
   search(): void {
     const { trxData, trxCassa } = this.searchForm.value;
-    const base = trxData ? new Date(trxData) : new Date();
-    const dal = new Date(base); dal.setHours(0, 0, 0, 0);
-    const al  = new Date(base); al.setHours(23, 59, 59, 999);
+    const dal = this.normalizeSearchDate(trxData);
 
-    this.destroy();
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.subscription = this.facade.getTransactionWaitingForBef(
-      trxCassa ?? '',
+    this.facade.getTransactionWaitingForBef(
+      this.normalizeSearchValue(trxCassa),
       dal,
-      al,
+      dal,
       TransactionStatus.AttesaBEF,
-      ''
+      null
     ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         this.transactions.set(data);
@@ -93,7 +101,7 @@ export class VigilanzaAttesaBenefondoComponent implements OnDestroy {
   }
 
   resetFilters(): void {
-    this.searchForm.reset({ trxData: new Date(), trxCassa: '' });
+    this.searchForm.reset({ trxData: null, trxCassa: '' });
     this.transactions.set([]);
     this.error.set(null);
   }
@@ -117,10 +125,4 @@ export class VigilanzaAttesaBenefondoComponent implements OnDestroy {
     }
   }
 
-  ngOnDestroy(): void { this.destroy(); }
-
-  private destroy(): void {
-    this.subscription?.unsubscribe();
-    this.subscription = null;
-  }
 }

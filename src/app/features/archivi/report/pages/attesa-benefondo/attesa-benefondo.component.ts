@@ -1,9 +1,8 @@
 import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
-import { GetTransactionWithFiltersResponse } from '../../domain/transaction.models';
+import { GetTransactionWaitingForBefResponse } from '../../domain/transaction.models';
 import { TransactionStatus } from '../../domain/transaction-status.enum';
 import { ReportFilterComponent } from '../../components/report-filter/report-filter.component';
 import { AttesaBenefondoGridComponent } from '../../components/attesa-benefondo-grid/attesa-benefondo-grid.component';
@@ -65,7 +64,7 @@ export class AttesaBenefondoComponent implements OnDestroy {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.subscription = this.reportFacade.getTransactionWithFilters(
+    this.reportFacade.getTransactionWaitingForBef(
       trxCassa,
       trxDataDal,
       trxDataAl,
@@ -75,7 +74,7 @@ export class AttesaBenefondoComponent implements OnDestroy {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (data) => {
-        this.transactions.set(data as GetTransactionWithFiltersResponse[]);
+        this.transactions.set(data);
         this.isLoading.set(false);
       },
       error: (error: any) => {

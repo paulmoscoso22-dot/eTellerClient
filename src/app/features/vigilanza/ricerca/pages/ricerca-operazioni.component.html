@@ -124,12 +124,15 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label">Nome Applicazione</label>
+        <label class="field-label">Nome Applicazione</label>
+        <div style="display:flex; gap:8px; align-items:center;">
           <dx-text-box
             formControlName="arcAppName"
             placeholder="App name..."
             [showClearButton]="true">
           </dx-text-box>
+          <dx-button text="..." icon="search" stylingMode="outlined" (onClick)="openAppearerPopup()"></dx-button>
+        </div>
         </div>
 
       </div>
@@ -203,33 +206,35 @@
         <dx-data-grid
           [dataSource]="operations()"
           [showBorders]="false"
-          [columnAutoWidth]="true"
+          [columnAutoWidth]="false"
+          [allowColumnResizing]="true"
           [rowAlternationEnabled]="true"
           [hoverStateEnabled]="true"
           [height]="'100%'"
+          (onOptionChanged)="onGridOptionChanged($event)"
           keyExpr="trxId">
 
           <dxo-selection mode="single"></dxo-selection>
-          <dxo-paging [pageSize]="30"></dxo-paging>
+          <dxo-paging [pageSize]="pageSize()"></dxo-paging>
           <dxo-pager
             [showInfo]="true"
             infoText="{2} operazioni"
             [showPageSizeSelector]="true"
-            [allowedPageSizes]="[20, 30, 50, 100]"
+            [allowedPageSizes]="[10, 20, 30, 50, 100, 200]"
             [showNavigationButtons]="true"
             displayMode="full">
           </dxo-pager>
 
-          <dxi-column dataField="trxId"           caption="Nop"          [width]="80"  alignment="center"></dxi-column>
+          <dxi-column dataField="trxId"           caption="Nop / TrxId"  [width]="90"  alignment="center"></dxi-column>
           <dxi-column dataField="trxDate"         caption="Data"         [width]="100" alignment="center" dataType="date" format="dd.MM.yy"></dxi-column>
           <dxi-column dataField="cutDes"          caption="Utente/Cassa" [width]="140" alignment="left"></dxi-column>
-          <dxi-column dataField="optDes"          caption="Operazione"   [width]="160" alignment="left"></dxi-column>
+          <dxi-column dataField="optDes"          caption="Operazione"   [minWidth]="160" alignment="left"></dxi-column>
           <dxi-column dataField="trxReport"       caption="N. Rapporto"  [width]="110" alignment="center"></dxi-column>
-          <dxi-column dataField="trxCurId"        caption="Div"          [width]="60"  alignment="center" cellTemplate="curTemplate"></dxi-column>
-          <dxi-column dataField="trxAmount"       caption="Imp. CTP"     [width]="110" alignment="right"  dataType="number" format="#,##0.00"></dxi-column>
+          <dxi-column dataField="trxCurId"        caption="Divisa"       [width]="70"  alignment="center" cellTemplate="curTemplate"></dxi-column>
+          <dxi-column dataField="trxAmount"       caption="Importo"      [width]="110" alignment="right"  dataType="number" format="#,##0.00"></dxi-column>
           <dxi-column dataField="trxRate"         caption="Cambio"       [width]="100" alignment="right"  dataType="number" format="#,##0.0000"></dxi-column>
           <dxi-column dataField="appearerName"    caption="Comparente"   [width]="160" alignment="left"></dxi-column>
-          <dxi-column dataField="beneficiaryName" caption="Beneficiario" [width]="160" alignment="left"></dxi-column>
+          <dxi-column dataField="beneficiaryName" caption="Beneficiario" [minWidth]="160" alignment="left"></dxi-column>
           <dxi-column dataField="staDes"          caption="Stato"        [width]="100" alignment="center" cellTemplate="statoTemplate"></dxi-column>
 
           <dxi-column caption="Dettaglio" [width]="80" [allowSorting]="false" [allowFiltering]="false" alignment="center" cellTemplate="actionsTemplate"></dxi-column>
@@ -243,12 +248,7 @@
           </div>
 
           <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
-            <button class="action-btn action-btn--view" title="Visualizza dettaglio" (click)="openViewPopup(cell.data)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </button>
+            <dx-button icon="info" stylingMode="text" hint="Informazioni" (onClick)="openViewPopup(cell.data)"></dx-button>
           </div>
 
           <dxo-load-panel [enabled]="false"></dxo-load-panel>

@@ -1,7 +1,6 @@
 import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable, Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
 import { GetTransactionGiornaleCassaResponse } from '../../domain/transaction.models';
 import { TransactionStatus } from '../../domain/transaction-status.enum';
@@ -65,15 +64,13 @@ export class GiornaleCassaComponent implements OnDestroy {
     this.isLoading.set(true);
     this.error.set(null);
 
-    const data$: Observable<GetTransactionGiornaleCassaResponse[]> = this.reportFacade.getTransactionGiornaleCassa(
+    this.reportFacade.getTransactionGiornaleCassa(
       trxCassa,
       trxDataDal,
       trxDataAl,
       trxStatus,
       trxBraId
-    );
-
-    this.subscription = data$.pipe(
+    ).pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (data) => {

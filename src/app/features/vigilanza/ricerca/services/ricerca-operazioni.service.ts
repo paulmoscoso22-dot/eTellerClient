@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../../environments/environment';
+import { ApiService } from '../../../../services/api.service';
 import { 
   RicercaOperazioniRequest, 
   RicercaOperazioniResponse 
@@ -14,7 +13,7 @@ import {
   providedIn: 'root',
 })
 export class RicercaOperazioniService {
-  constructor(private http: HttpClient) {}
+  constructor(private readonly apiService: ApiService) {}
 
   /**
    * Search operations with filters
@@ -25,9 +24,6 @@ export class RicercaOperazioniService {
   searchOperazioni(
     request: RicercaOperazioniRequest
   ): Observable<RicercaOperazioniResponse[]> {
-    return this.http.post<RicercaOperazioniResponse[]>(
-      `${environment.apiUrl}/Vigilanza/TransactionsForGiornaleAntiriciclaggio`,
-      request
-    );
+    return this.apiService.post<RicercaOperazioniResponse[]>('Vigilanza/TransactionsForGiornaleAntiriciclaggio', request);
   }
 }

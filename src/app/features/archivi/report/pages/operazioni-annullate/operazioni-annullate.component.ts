@@ -1,7 +1,6 @@
 import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
 import { GetTransactionOperazioniAnnulateResponse } from '../../domain/transaction.models';
 import { TransactionStatus } from '../../domain/transaction-status.enum';
@@ -65,7 +64,7 @@ export class OperazioniAnnullateComponent implements OnDestroy {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.subscription = this.reportFacade.getTransactionOperazioniAnnullate(
+    this.reportFacade.getTransactionOperazioniAnnullate(
       trxCassa,
       trxDataDal,
       trxDataAl,
