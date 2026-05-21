@@ -384,6 +384,10 @@
 .action-btn--history:hover     { background: rgba(0, 51, 102, 0.08); }
 .action-btn--history:hover svg { stroke: #003366; }
 
+.action-btn--delete { color: #e74c3c; }
+.action-btn--delete:hover { background: #fde8e8; }
+.action-btn--delete:hover svg { stroke: #e74c3c; }
+
 /* ══════════════════════════════════════════
    Pager — Sticky + Sempione
    ══════════════════════════════════════════ */

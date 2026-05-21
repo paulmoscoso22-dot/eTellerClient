@@ -11,7 +11,9 @@ import {
   DxCheckBoxModule,
 } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import notify from 'devextreme/ui/notify';
 import { Subscription } from 'rxjs';
+import { AuthStore } from '../../../../auth/auth.store';
 import { GestioneComparentiAdeService } from '../../services/gestione-comparenti-ade.service';
 import { CountryService } from '../../services/country.service';
 import {
@@ -46,6 +48,7 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly service = inject(GestioneComparentiAdeService);
   private readonly countryService = inject(CountryService);
+  private readonly authStore = inject(AuthStore);
 
   private subscription: Subscription | null = null;
 
@@ -188,6 +191,8 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
 
     if (this.isEditMode()) {
       const req: UpdateAraRequest = {
+        traUser:        this.authStore.currentUser()?.userId ?? '',
+        traStation:     window.location.hostname,
         AraId:          this.selectedAraId()!,
         AraName:        v.araName,
         AraBirthdate:   v.araBirthdate  ? this.toDateString(v.araBirthdate) : null,
@@ -201,11 +206,13 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
         AraIsupdated:   v.araIsupdated  ?? false,
       };
       this.service.updateAra(req).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-        next: () => { this.isSaving.set(false); this.isFormPopupVisible = false; this.search(); },
+        next: () => { notify('Comparente aggiornato con successo', 'success', 3000); this.isSaving.set(false); this.isFormPopupVisible = false; this.search(); },
         error: (err: any) => { this.isSaving.set(false); this.saveError.set(err.message || 'Errore durante il salvataggio'); }
       });
     } else {
       const req: InsertAraRequest = {
+        traUser:        this.authStore.currentUser()?.userId ?? '',
+        traStation:     window.location.hostname,
         AraRecdate:     new Date(),
         AraName:        v.araName,
         AraBirthdate:   v.araBirthdate  ? this.toDateString(v.araBirthdate) : null,
@@ -218,7 +225,7 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
         AraRecComplete: v.araRecComplete ?? false,
       };
       this.service.insertAra(req).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-        next: () => { this.isSaving.set(false); this.isFormPopupVisible = false; this.search(); },
+        next: () => { notify('Comparente inserito con successo', 'success', 3000); this.isSaving.set(false); this.isFormPopupVisible = false; this.search(); },
         error: (err: any) => { this.isSaving.set(false); this.saveError.set(err.message || 'Errore durante il salvataggio'); }
       });
     }
@@ -241,6 +248,31 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
 
   closeHistoryPopup(): void {
     this.isHistoryPopupVisible = false;
+  }
+
+  // ── Delete ──
+
+  openDeletePopup(row: AppearerAllResponse): void {
+    const confirmed = confirm(`Eliminare il comparente "${row.araName}"?`);
+    if (!confirmed) return;
+
+    const req: DeleteAraRequest = {
+      traUser:    this.authStore.currentUser()?.userId ?? '',
+      traStation: window.location.hostname,
+      AraId:      row.araId,
+    };
+
+    this.service.deleteAra(req)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          notify('Comparente eliminato con successo', 'success', 3000);
+          this.search();
+        },
+        error: () => {
+          notify('Errore durante l\'eliminazione', 'error', 3000);
+        }
+      });
   }
 
   // ── Utils ──

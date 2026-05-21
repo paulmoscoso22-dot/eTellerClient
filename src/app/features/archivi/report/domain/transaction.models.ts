@@ -35,33 +35,33 @@ export interface GetTransactionGiornaleCassaResponse {
  * Request interface for GetTransactionWaitingForBef
  */
 export interface GetTransactionWaitingForBefRequest {
-  trxCassa: string;
-  trxDataDal: Date;
-  trxDataAl: Date;
-  trxStatus: number;
-  trxBraId: string;
+  trxCassa: string | null;
+  trxDataDal: Date | null;
+  trxDataAl: Date | null;
+  trxStatus: number | null;
+  trxBraId: string | null;
 }
 
 /**
  * Request interface for WithFiltersForGiornale
  */
 export interface GetTransactionWithFiltersForGiornaleRequest {
-  trxCassa: string;
-  trxDataDal: Date;
-  trxDataAl: Date;
-  trxStatus: number;
-  trxBraId: string;
+  trxCassa: string | null;
+  trxDataDal: Date | null;
+  trxDataAl: Date | null;
+  trxStatus: number | null;
+  trxBraId: string | null;
 }
 
 /**
  * Request interface for GetTransactionWithFilters
  */
 export interface GetTransactionWithFiltersRequest {
-  trxCassa: string;
-  trxDataDal: Date;
-  trxDataAl: Date;
-  trxStatus: number;
-  trxBraId: string;
+  trxCassa: string | null;
+  trxDataDal: Date | null;
+  trxDataAl: Date | null;
+  trxStatus: number | null;
+  trxBraId: string | null;
 }
 
 /**

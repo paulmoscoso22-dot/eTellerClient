@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════
-   Gestione Regole — Banca del Sempione
+   Gestione Regole Antiriciclaggio — Banca del Sempione
    Navy #003366  |  Gold #C5A059
    ══════════════════════════════════════════ */
 
@@ -124,7 +124,8 @@
   flex: 1;
 }
 
-.toolbar-field--lg { flex: 2; min-width: 180px; }
+.toolbar-field--md { flex: 1; min-width: 160px; }
+.toolbar-field--sm { flex: 0.7; min-width: 120px; }
 
 .toolbar-lbl {
   font-family: var(--font-ui);
@@ -370,6 +371,13 @@
 .action-btn--history:hover     { background: rgba(0, 51, 102, 0.08); }
 .action-btn--history:hover svg { stroke: #003366; }
 
+.action-btn--delete { color: #e74c3c; }
+.action-btn--delete:hover { background: #fde8e8; }
+.action-btn--delete:hover svg { stroke: #e74c3c; }
+
+.action-btn--trace:hover     { background: rgba(0, 51, 102, 0.08); }
+.action-btn--trace:hover svg { stroke: #003366; }
+
 /* ══════════════════════════════════════════
    Pager — Sticky + Sempione
    ══════════════════════════════════════════ */
@@ -490,6 +498,17 @@
 /* ══════════════════════════════════════════
    Popup — pattern funzioni
    ══════════════════════════════════════════ */
+.popup-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 48px;
+  color: #374151;
+  font-size: 13px;
+}
+.popup-loading svg { width: 18px; height: 18px; flex-shrink: 0; }
+
 .popup-layout {
   padding: 20px;
   display: flex;
@@ -523,6 +542,7 @@
 
 .popup-fields-grid       { display: grid; gap: 10px 14px; }
 .popup-fields-grid--2col { grid-template-columns: 1fr 1fr; }
+.popup-col-span-2        { grid-column: 1 / -1; }
 
 .popup-field-group {
   display: flex;

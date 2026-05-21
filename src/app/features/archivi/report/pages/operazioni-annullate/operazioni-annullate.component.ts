@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
+import { Component, OnInit, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
 import { GetTransactionOperazioniAnnulateResponse } from '../../domain/transaction.models';
 import { TransactionStatus } from '../../domain/transaction-status.enum';
@@ -19,10 +18,9 @@ import { OperazioniAnnullateGridComponent } from '../../components/operazioni-an
   templateUrl: './operazioni-annullate.component.html',
   styleUrls: ['./operazioni-annullate.component.css'],
 })
-export class OperazioniAnnullateComponent implements OnInit, OnDestroy {
+export class OperazioniAnnullateComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
-  private subscription: Subscription | null = null;
-  
+
   transactions = signal<GetTransactionOperazioniAnnulateResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
@@ -35,23 +33,6 @@ export class OperazioniAnnullateComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // Component initialized - filter will trigger search when ready
-  }
-
-  /**
-   * Angular lifecycle hook - Cleanup and manage memory leak
-   */
-  ngOnDestroy(): void {
-    this.destroy();
-  }
-
-  /**
-   * Manually destroy and cleanup subscriptions
-   */
-  private destroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-      this.subscription = null;
-    }
   }
 
   /**
@@ -84,11 +65,10 @@ export class OperazioniAnnullateComponent implements OnInit, OnDestroy {
     trxStatus: number,
     trxBraId: string
   ): void {
-    this.destroy(); // Clean up previous subscription
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.subscription = this.reportFacade.getTransactionOperazioniAnnullate(
+    this.reportFacade.getTransactionOperazioniAnnullate(
       trxCassa,
       trxDataDal,
       trxDataAl,
@@ -100,12 +80,10 @@ export class OperazioniAnnullateComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.transactions.set(data as GetTransactionOperazioniAnnulateResponse[]);
         this.isLoading.set(false);
-        console.log('Transazioni Operazioni Annullate:', data, this.isLoading());
       },
       error: (error: any) => {
         this.error.set(error.message || 'Errore nel recupero transazioni');
         this.isLoading.set(false);
-        console.error('Errore nel recupero transazioni:', error);
       }
     });
   }
