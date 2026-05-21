@@ -1,6 +1,7 @@
 import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
 import { GetTransactionWaitingForBefResponse } from '../../domain/transaction.models';
 import { TransactionStatus } from '../../domain/transaction-status.enum';
@@ -24,7 +25,7 @@ export class AttesaBenefondoComponent implements OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
   private subscription: Subscription | null = null;
 
-  transactions = signal<GetTransactionWithFiltersResponse[]>([]);
+  transactions = signal<GetTransactionWaitingForBefResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
   statusDefaultValue = TransactionStatus.AttesaBEF;

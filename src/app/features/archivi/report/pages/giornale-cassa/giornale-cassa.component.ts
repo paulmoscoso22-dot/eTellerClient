@@ -1,6 +1,7 @@
 import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
 import { GetTransactionGiornaleCassaResponse } from '../../domain/transaction.models';
 import { TransactionStatus } from '../../domain/transaction-status.enum';

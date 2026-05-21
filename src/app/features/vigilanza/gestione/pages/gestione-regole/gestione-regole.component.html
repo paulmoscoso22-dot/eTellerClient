@@ -1,51 +1,138 @@
+<app-sempione-page-header title="Gestione Regole Antiriciclaggio"></app-sempione-page-header>
+
 <div class="page-shell">
 
-  <!-- ── Titolo pagina ── -->
-  <div class="page-header-row">
-    <h1 class="page-title">Gestione Regole Antiriciclaggio</h1>
-  </div>
-
-      <div class="toolbar-field">
-        <dx-select-box
-          formControlName="arlCurTypeId"
-          [dataSource]="currencyTypes()"
-          displayExpr="cutDes"
-          valueExpr="cutId"
-          [showClearButton]="true"
-          placeholder="Tipo divisa..."
-          labelMode="hidden">
-        </dx-select-box>
-      </div>
-
-    <div class="sempione-card-header">
+  <app-sempione-card>
+    <app-sempione-card-header title="Regole Antiriciclaggio">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
       </svg>
-      <h2 class="card-title">Regole Antiriciclaggio</h2>
+    </app-sempione-card-header>
+
+    <div [formGroup]="filterForm">
+      <app-sempione-toolbar>
+
+        <div class="toolbar-field">
+          <dx-select-box
+            formControlName="arlOpTypeId"
+            [dataSource]="operationTypes()"
+            displayExpr="optDes"
+            valueExpr="optId"
+            [showClearButton]="true"
+            [searchEnabled]="true"
+            placeholder="Tipo operazione..."
+            labelMode="hidden">
+          </dx-select-box>
+        </div>
+
+        <div class="toolbar-field">
+          <dx-select-box
+            formControlName="arlCurTypeId"
+            [dataSource]="currencyTypes()"
+            displayExpr="cutDes"
+            valueExpr="cutId"
+            [showClearButton]="true"
+            [searchEnabled]="true"
+            placeholder="Tipo divisa..."
+            labelMode="hidden">
+          </dx-select-box>
+        </div>
+
+        <div class="toolbar-field">
+          <dx-text-box
+            formControlName="arlAcctId"
+            [showClearButton]="true"
+            placeholder="Conto..."
+            labelMode="hidden">
+          </dx-text-box>
+        </div>
+
+        <div class="toolbar-field">
+          <dx-text-box
+            formControlName="arlAcctType"
+            [showClearButton]="true"
+            placeholder="Tipo conto..."
+            labelMode="hidden">
+          </dx-text-box>
+        </div>
+
+        <div toolbar-actions>
+          <app-sempione-button
+            icon="search"
+            hint="Cerca"
+            variant="secondary"
+            [disabled]="isLoading()"
+            (clicked)="search()">
+          </app-sempione-button>
+          <app-sempione-button
+            icon="revert"
+            hint="Mostra tutti"
+            variant="secondary"
+            (clicked)="resetFilters()">
+          </app-sempione-button>
+          <app-sempione-button
+            icon="add"
+            text="Aggiungi"
+            variant="primary"
+            (clicked)="openAddPopup()">
+          </app-sempione-button>
+        </div>
+
+      </app-sempione-toolbar>
     </div>
-    <div class="gold-divider"></div>
 
-  <app-sempione-data-grid
-    [dataSource]="rules()"
-    [keyExpr]="'arlId'"
-    [columns]="columns"
-    [isLoading]="isLoading()"
-    [error]="error()"
-    [pageSize]="30"
-    [allowedPageSizes]="[20, 30, 50, 100]"
-    [showEditAction]="true"
-    [showTraceAction]="true"
-    emptyStateText="Nessuna regola trovata. Impostare i filtri e premere Cerca, oppure Mostra tutti per visualizzare tutte le regole."
-    emptyStateIcon="shield"
-    (rowEdit)="openEditPopup($event)"
-    (rowTrace)="openHistoryPopup($event)">
-  </app-sempione-data-grid>
-</app-sempione-card>
+    <app-sempione-data-grid
+      [dataSource]="rules()"
+      [keyExpr]="'arlId'"
+      [columns]="columns"
+      [isLoading]="isLoading()"
+      [error]="error()"
+      [pageSize]="30"
+      [allowedPageSizes]="[20, 30, 50, 100]"
+      [showViewAction]="true"
+      [showEditAction]="true"
+      [showTraceAction]="true"
+      [showDeleteAction]="true"
+      emptyStateText="Nessuna regola trovata. Impostare i filtri e premere Cerca."
+      emptyStateIcon="shield"
+      (rowView)="openTracePopup($event)"
+      (rowEdit)="openEditPopup($event)"
+      (rowTrace)="openHistoryPopup($event)"
+      (rowDelete)="openDeletePopup($event)">
+    </app-sempione-data-grid>
 
-        <div class="toolbar-filters">
-          <div class="toolbar-field toolbar-field--md">
-            <label class="toolbar-lbl">Tipo operazione</label>
+  </app-sempione-card>
+
+</div>
+
+<!-- ══ Popup Aggiungi / Modifica / Visualizza ══ -->
+<app-sempione-popup
+  [(visible)]="isFormPopupVisible"
+  [title]="
+    isViewMode() ? ('Dettaglio Regola — ID ' + selectedArlId()) :
+    isEditMode() ? ('Modifica Regola — ID ' + selectedArlId()) :
+    'Nuova Regola Antiriciclaggio'
+  "
+  [maxWidth]="720"
+  (hidden)="closeFormPopup()">
+
+  @if (isLoadingForm()) {
+    <div class="popup-loading">
+      <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+      </svg>
+      Caricamento...
+    </div>
+  }
+
+  @if (!isLoadingForm()) {
+    <div class="popup-layout" [formGroup]="editForm">
+
+      <app-sempione-popup-card title="Dettaglio Regola">
+        <div class="popup-fields-grid popup-fields-grid--2col">
+
+          <app-sempione-field-group label="Tipo operazione" [required]="true">
             <dx-select-box
               formControlName="arlOpTypeId"
               [dataSource]="operationTypes()"
@@ -53,13 +140,13 @@
               valueExpr="optId"
               [showClearButton]="true"
               [searchEnabled]="true"
+              [readOnly]="isViewMode()"
               placeholder="Selezionare..."
               labelMode="hidden">
             </dx-select-box>
-          </div>
+          </app-sempione-field-group>
 
-          <div class="toolbar-field toolbar-field--md">
-            <label class="toolbar-lbl">Tipo divisa</label>
+          <app-sempione-field-group label="Tipo divisa" [required]="true">
             <dx-select-box
               formControlName="arlCurTypeId"
               [dataSource]="currencyTypes()"
@@ -67,440 +154,131 @@
               valueExpr="cutId"
               [showClearButton]="true"
               [searchEnabled]="true"
+              [readOnly]="isViewMode()"
               placeholder="Selezionare..."
               labelMode="hidden">
             </dx-select-box>
-          </div>
+          </app-sempione-field-group>
 
-          <div class="toolbar-field toolbar-field--md">
-            <label class="toolbar-lbl">Conto</label>
+          <app-sempione-field-group label="Inizio validità" [required]="true">
+            <dx-date-box
+              formControlName="arlValStart"
+              type="date"
+              displayFormat="dd.MM.yyyy"
+              [showClearButton]="true"
+              [readOnly]="isViewMode()"
+              labelMode="hidden">
+            </dx-date-box>
+          </app-sempione-field-group>
+
+          <app-sempione-field-group label="Fine validità" [required]="true">
+            <dx-date-box
+              formControlName="arlValEnd"
+              type="date"
+              displayFormat="dd.MM.yyyy"
+              [showClearButton]="true"
+              [readOnly]="isViewMode()"
+              labelMode="hidden">
+            </dx-date-box>
+          </app-sempione-field-group>
+
+          <app-sempione-field-group label="Conto">
             <dx-text-box
               formControlName="arlAcctId"
               [showClearButton]="true"
-              placeholder="Conto..."
+              [readOnly]="isViewMode()"
               labelMode="hidden">
             </dx-text-box>
-          </div>
+          </app-sempione-field-group>
 
-          <div class="toolbar-field toolbar-field--sm">
-            <label class="toolbar-lbl">Categoria conto</label>
+          <app-sempione-field-group label="Categoria conto">
             <dx-text-box
               formControlName="arlAcctType"
               [showClearButton]="true"
-              placeholder="Tipo conto..."
+              [readOnly]="isViewMode()"
               labelMode="hidden">
             </dx-text-box>
+          </app-sempione-field-group>
+
+          <app-sempione-field-group label="Limite vigilanza" [required]="true">
+            <dx-number-box
+              formControlName="arlLimit"
+              [min]="0"
+              [showClearButton]="true"
+              [readOnly]="isViewMode()"
+              labelMode="hidden">
+            </dx-number-box>
+          </app-sempione-field-group>
+
+          <app-sempione-field-group label="Opzioni">
+            <div class="checkbox-stack">
+              <dx-check-box
+                formControlName="arlIsinternal"
+                text="Regola interna"
+                [readOnly]="isViewMode()">
+              </dx-check-box>
+              <dx-check-box
+                formControlName="arlExclude"
+                text="Escludi regola"
+                [readOnly]="isViewMode()">
+              </dx-check-box>
+            </div>
+          </app-sempione-field-group>
+
+        </div>
+
+        @if (saveError()) {
+          <div class="save-error-msg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            {{ saveError() }}
           </div>
-        </div>
+        }
+      </app-sempione-popup-card>
 
-        <div class="toolbar-actions">
-          <dx-button
-            icon="search"
-            hint="Cerca"
-            stylingMode="contained"
-            class="btn-fin-primary action-shadow"
-            [disabled]="isLoading()"
-            (onClick)="search()">
-          </dx-button>
-          <dx-button
-            icon="revert"
-            hint="Mostra tutti"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="resetFilters()">
-          </dx-button>
-          <dx-button
-            icon="add"
-            text="Aggiungi"
-            stylingMode="contained"
-            class="btn-fin-primary"
-            (onClick)="openAddPopup()">
-          </dx-button>
-        </div>
-
-      </div>
-
-      @if (saveError()) {
-        <div class="save-error-msg">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
-          {{ saveError() }}
-        </div>
-      }
-    </app-sempione-popup-card>
-
-      @if (isLoading()) {
-        <div class="grid-message grid-message--loading">
-          <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-          </svg>
-          Caricamento in corso...
-        </div>
-      }
-
-      @if (!isLoading() && !error()) {
-        <dx-data-grid
-          [dataSource]="rules()"
-          [showBorders]="false"
-          [columnAutoWidth]="false"
-          [rowAlternationEnabled]="true"
-          [hoverStateEnabled]="true"
-          [height]="'100%'"
-          keyExpr="arlId">
-
-          <dxo-selection mode="single"></dxo-selection>
-          <dxo-paging [pageSize]="30"></dxo-paging>
-          <dxo-pager
-            [showPageSizeSelector]="true"
-            [allowedPageSizes]="[20, 30, 50, 100]"
-            [showInfo]="true"
-            [showNavigationButtons]="true"
-            displayMode="full">
-          </dxo-pager>
-
-          <dxi-column dataField="arlId"        caption="ID"              alignment="left"   [width]="60"></dxi-column>
-          <dxi-column dataField="optDes"       caption="Tipo operazione" alignment="left"   [width]="140"></dxi-column>
-          <dxi-column dataField="cutDes"       caption="Tipo divisa"     alignment="left"   [width]="120"></dxi-column>
-          <dxi-column dataField="arlAcctId"    caption="Conto"           alignment="left"   [width]="120"></dxi-column>
-          <dxi-column dataField="arlAcctType"  caption="Cat. conto"      alignment="left"   [width]="100"></dxi-column>
-          <dxi-column dataField="arlLimit"     caption="Limite vigilanza" alignment="right"  [width]="130" dataType="number" format="#,##0.00"></dxi-column>
-          <dxi-column dataField="arlValStart"  caption="Inizio validità" alignment="center" [width]="110" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="arlValEnd"    caption="Fine validità"   alignment="center" [width]="110" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="arlRecDate"   caption="Data registrazione" alignment="center" [width]="110" dataType="date" format="dd.MM.yyyy"></dxi-column>
-          <dxi-column dataField="arlIsinternal" caption="Interna"        alignment="center" [width]="80"  cellTemplate="boolTemplate"></dxi-column>
-          <dxi-column dataField="arlExclude"   caption="Escludi"         alignment="center" [width]="80"  cellTemplate="boolTemplate"></dxi-column>
-
-          <dxi-column
-            caption="Azioni"
-            [width]="160"
-            [allowSorting]="false"
-            [allowFiltering]="false"
-            alignment="center"
-            cellTemplate="actionsTemplate">
-          </dxi-column>
-
-          <div *dxTemplate="let cell of 'boolTemplate'" class="bool-cell">
-            @if (cell.value) {
-              <span class="bool-badge bool-badge--yes">Sì</span>
-            } @else {
-              <span class="bool-badge bool-badge--no">No</span>
-            }
-          </div>
-
-          <div *dxTemplate="let cell of 'actionsTemplate'" class="actions-cell">
-            <button class="action-btn action-btn--edit" title="Modifica" (click)="openEditPopup(cell.data)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-              </svg>
-            </button>
-            <button class="action-btn action-btn--history" title="Storico" (click)="openHistoryPopup(cell.data)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-            </button>
-            <button class="action-btn action-btn--delete" title="Elimina" (click)="openDeletePopup(cell.data)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                <line x1="10" y1="11" x2="10" y2="17"></line>
-                <line x1="14" y1="11" x2="14" y2="17"></line>
-              </svg>
-            </button>
-            <button class="action-btn action-btn--trace" title="Traccia" (click)="openTracePopup(cell.data)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </button>
-          </div>
-
-          <dxo-load-panel [enabled]="false"></dxo-load-panel>
-
-        </dx-data-grid>
-      }
-
-      @if (!isLoading() && !error() && rules().length === 0) {
-        <div class="grid-empty">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-          </svg>
-          <p>Nessuna regola trovata. Inserire i criteri di ricerca e premere <strong>Cerca</strong>.</p>
-        </div>
-      }
+      <app-sempione-popup-action-bar
+        saveText="Salva"
+        cancelText="Annulla"
+        [showSave]="!isViewMode()"
+        [isSaving]="isSaving()"
+        (save)="save()"
+        (cancel)="closeFormPopup()">
+      </app-sempione-popup-action-bar>
 
     </div>
+  }
 
-  </section>
-
-</div>
-
-<!-- ══ Popup Aggiungi / Modifica / Traccia ══ -->
-<dx-popup
-  [(visible)]="isFormPopupVisible"
-  [showTitle]="true"
-  [title]="
-    isViewMode() ? ('Dettaglio Regola — ID ' + selectedArlId()) :
-    isEditMode() ? ('Modifica Regola — ID ' + selectedArlId()) :
-    'Nuova Regola Antiriciclaggio'
-  "
-  [dragEnabled]="true"
-  [hideOnOutsideClick]="false"
-  [showCloseButton]="true"
-  [width]="'90%'"
-  [maxWidth]="720"
-  [height]="'auto'"
-  [maxHeight]="'92vh'"
-  (onHidden)="closeFormPopup()">
-
-  <div *dxTemplate="let data of 'content'">
-
-    @if (isLoadingForm()) {
-      <div class="popup-loading">
-        <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-        </svg>
-        Caricamento...
-      </div>
-    }
-
-    @if (!isLoadingForm()) {
-      <div class="popup-layout" [formGroup]="editForm">
-
-        <!-- ── Card: Dettaglio Regola ── -->
-        <section class="popup-card">
-          <h3 class="popup-card-title">Dettaglio Regola</h3>
-          <div class="popup-fields-grid popup-fields-grid--2col">
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Tipo operazione <span class="req">*</span></label>
-              <dx-select-box
-                formControlName="arlOpTypeId"
-                [dataSource]="operationTypes()"
-                displayExpr="optDes"
-                valueExpr="optId"
-                [showClearButton]="true"
-                [searchEnabled]="true"
-                [disabled]="isViewMode()"
-                placeholder="Selezionare..."
-                labelMode="hidden">
-              </dx-select-box>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Tipo divisa <span class="req">*</span></label>
-              <dx-select-box
-                formControlName="arlCurTypeId"
-                [dataSource]="currencyTypes()"
-                displayExpr="cutDes"
-                valueExpr="cutId"
-                [showClearButton]="true"
-                [searchEnabled]="true"
-                [disabled]="isViewMode()"
-                placeholder="Selezionare..."
-                labelMode="hidden">
-              </dx-select-box>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Inizio validità <span class="req">*</span></label>
-              <dx-date-box
-                formControlName="arlValStart"
-                type="date"
-                displayFormat="dd.MM.yyyy"
-                [showClearButton]="true"
-                [disabled]="isViewMode()"
-                labelMode="hidden">
-              </dx-date-box>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Fine validità <span class="req">*</span></label>
-              <dx-date-box
-                formControlName="arlValEnd"
-                type="date"
-                displayFormat="dd.MM.yyyy"
-                [showClearButton]="true"
-                [disabled]="isViewMode()"
-                labelMode="hidden">
-              </dx-date-box>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Conto</label>
-              <dx-text-box
-                formControlName="arlAcctId"
-                [showClearButton]="true"
-                [disabled]="isViewMode()"
-                labelMode="hidden">
-              </dx-text-box>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Categoria conto</label>
-              <dx-text-box
-                formControlName="arlAcctType"
-                [showClearButton]="true"
-                [disabled]="isViewMode()"
-                labelMode="hidden">
-              </dx-text-box>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Limite vigilanza <span class="req">*</span></label>
-              <dx-number-box
-                formControlName="arlLimit"
-                [min]="0"
-                [showClearButton]="true"
-                [disabled]="isViewMode()"
-                labelMode="hidden">
-              </dx-number-box>
-            </div>
-
-            <div class="popup-field-group">
-              <label class="popup-field-label">Opzioni</label>
-              <div class="checkbox-stack">
-                <dx-check-box
-                  formControlName="arlIsinternal"
-                  text="Regola interna"
-                  [disabled]="isViewMode()">
-                </dx-check-box>
-                <dx-check-box
-                  formControlName="arlExclude"
-                  text="Escludi regola"
-                  [disabled]="isViewMode()">
-                </dx-check-box>
-              </div>
-            </div>
-
-          </div>
-
-          @if (saveError()) {
-            <div class="save-error-message">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
-              {{ saveError() }}
-            </div>
-          }
-        </section>
-
-        <!-- ── Action bar ── -->
-        <div class="popup-action-bar">
-          <div class="popup-actions-secondary">
-            <dx-button
-              text="Annulla"
-              icon="close"
-              stylingMode="outlined"
-              class="btn-fin-secondary"
-              (onClick)="closeFormPopup()">
-            </dx-button>
-          </div>
-          @if (!isViewMode()) {
-            <div class="popup-actions-primary">
-              <dx-button
-                [text]="isSaving() ? 'Salvataggio...' : 'Salva'"
-                icon="save"
-                stylingMode="contained"
-                class="btn-fin-primary"
-                [disabled]="isSaving()"
-                (onClick)="save()">
-              </dx-button>
-            </div>
-          }
-        </div>
-
-      </div>
-    }
-
-  </div>
 </app-sempione-popup>
 
 <!-- ══ Popup Storico ══ -->
 <app-sempione-popup
   [(visible)]="isHistoryPopupVisible"
-  [showTitle]="true"
   [title]="'Storico Regola — ID ' + historyArlId()"
-  [dragEnabled]="true"
-  [hideOnOutsideClick]="true"
-  [showCloseButton]="true"
-  [width]="'94%'"
   [maxWidth]="960"
-  [height]="'auto'"
   [maxHeight]="'85vh'"
-  (onHidden)="closeHistoryPopup()">
+  (hidden)="closeHistoryPopup()">
 
-  <div *dxTemplate="let data of 'content'">
-    <div class="popup-layout">
+  <div class="popup-layout">
+    <app-sempione-popup-card title="Storico modifiche">
+      <app-sempione-data-grid
+        [dataSource]="historyItems()"
+        [columns]="historyColumns"
+        [isLoading]="isLoadingHistory()"
+        [pageSize]="15"
+        [allowedPageSizes]="[15, 30, 50]"
+        [showEditAction]="false"
+        noDataText="Nessuna voce di storico disponibile.">
+      </app-sempione-data-grid>
+    </app-sempione-popup-card>
 
-      @if (isLoadingHistory()) {
-        <div class="grid-message grid-message--loading">
-          <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-          </svg>
-          Caricamento storico...
-        </div>
-      }
-
-      @if (!isLoadingHistory()) {
-        <section class="popup-card">
-          <h3 class="popup-card-title">Storico modifiche</h3>
-          <dx-data-grid
-            [dataSource]="historyItems()"
-            [showBorders]="false"
-            [columnAutoWidth]="false"
-            [rowAlternationEnabled]="true"
-            [height]="400"
-            noDataText="Nessuna voce di storico disponibile">
-
-            <dxo-paging [pageSize]="15"></dxo-paging>
-            <dxo-pager [showInfo]="true" [showNavigationButtons]="true" displayMode="full"></dxo-pager>
-
-            <dxi-column dataField="hisDate"      caption="Data modifica"    alignment="center" [width]="140" dataType="datetime" format="dd.MM.yyyy HH:mm"></dxi-column>
-            <dxi-column dataField="optDes"       caption="Tipo operazione" alignment="left"   [width]="130"></dxi-column>
-            <dxi-column dataField="cutDes"       caption="Tipo divisa"     alignment="left"   [width]="120"></dxi-column>
-            <dxi-column dataField="arlAcctId"    caption="Conto"           alignment="left"   [width]="110"></dxi-column>
-            <dxi-column dataField="arlAcctType"  caption="Cat. conto"      alignment="left"   [width]="100"></dxi-column>
-            <dxi-column dataField="arlLimit"     caption="Limite"          alignment="right"  [width]="110" dataType="number" format="#,##0.00"></dxi-column>
-            <dxi-column dataField="arlValStart"  caption="Inizio validità" alignment="center" [width]="110" dataType="date" format="dd.MM.yyyy"></dxi-column>
-            <dxi-column dataField="arlValEnd"    caption="Fine validità"   alignment="center" [width]="110" dataType="date" format="dd.MM.yyyy"></dxi-column>
-            <dxi-column dataField="arlIsinternal" caption="Interna"        alignment="center" [width]="75"  cellTemplate="histBoolTemplate"></dxi-column>
-            <dxi-column dataField="arlExclude"   caption="Escludi"         alignment="center" [width]="75"  cellTemplate="histBoolTemplate"></dxi-column>
-
-            <div *dxTemplate="let cell of 'histBoolTemplate'" class="bool-cell">
-              @if (cell.value) {
-                <span class="bool-badge bool-badge--yes">Sì</span>
-              } @else {
-                <span class="bool-badge bool-badge--no">No</span>
-              }
-            </div>
-
-            <dxo-load-panel [enabled]="false"></dxo-load-panel>
-
-          </dx-data-grid>
-        </section>
-      }
-
-      <div class="popup-action-bar">
-        <div class="popup-actions-secondary"></div>
-        <div class="popup-actions-primary">
-          <dx-button
-            text="Chiudi"
-            icon="close"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="closeHistoryPopup()">
-          </dx-button>
-        </div>
-      </div>
-
-    </div>
+    <app-sempione-popup-action-bar
+      cancelText="Chiudi"
+      [showSave]="false"
+      (cancel)="closeHistoryPopup()">
+    </app-sempione-popup-action-bar>
   </div>
+
 </app-sempione-popup>
