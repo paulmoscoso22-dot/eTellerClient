@@ -59,6 +59,6 @@ export class SempioneDataGridComponent {
     const count = [this.showViewAction, this.showEditAction, this.showTraceAction, this.showDeleteAction, this.showForceAction].filter(Boolean).length;
     if (count >= 3) return 90;
     if (count === 2) return 70;
-    return 50;
+    return 60;
   }
 }

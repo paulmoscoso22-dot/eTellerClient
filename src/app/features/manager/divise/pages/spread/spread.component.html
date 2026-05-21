@@ -1,10 +1,10 @@
-<div class="page-shell">
+<app-sempione-page-header title="Spread"></app-sempione-page-header>
 
-  <app-sempione-page-header title="Spread"></app-sempione-page-header>
+<div class="page-shell">
 
   <app-sempione-card>
 
-    <app-sempione-card-header title="Spread">
+    <app-sempione-card-header title="Elenco Spread">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
       </svg>
@@ -47,7 +47,7 @@
       [dataSource]="filteredSpread()"
       [columns]="gridColumns"
       [keyExpr]="['sprCurId', 'sprType']"
-
+      [isLoading]="isLoading()"
       [pageSize]="20"
       [allowedPageSizes]="[20, 50, 100]"
       noDataText="Nessuno spread trovato."
@@ -111,22 +111,22 @@
         </app-sempione-field-group>
 
         <app-sempione-field-group label="Valido Dal">
-          <dx-text-box
+          <dx-date-box
             formControlName="sprDatini"
             [readOnly]="popupMode() === 'view'"
             labelMode="hidden"
-            placeholder="YYYY-MM-DD">
-          </dx-text-box>
+            displayFormat="dd/MM/yyyy"
+            type="date">
+          </dx-date-box>
         </app-sempione-field-group>
 
       </div>
     </app-sempione-popup-card>
 
     <app-sempione-popup-action-bar
-      [cancelText]="'Chiudi'"
+      cancelText="Chiudi"
       [saveText]="popupMode() === 'new' ? 'Aggiungi' : 'Salva'"
       [showSave]="popupMode() !== 'view'"
-      [showStorico]="false"
       (save)="onSave()"
       (cancel)="closePopup()">
     </app-sempione-popup-action-bar>
@@ -134,3 +134,12 @@
   </form>
 
 </app-sempione-popup>
+
+<!-- ── Popup Conferma Eliminazione ── -->
+<app-sempione-confirm-delete
+  [(visible)]="isConfirmDeleteVisible"
+  entityLabel="lo spread"
+  [entityName]="pendingDeleteData() ? pendingDeleteData()!.sprCurId + ' ' + pendingDeleteData()!.sprType : ''"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-sempione-confirm-delete>

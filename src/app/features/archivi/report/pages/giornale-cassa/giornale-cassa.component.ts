@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, DestroyRef, inject } from '@angular/core';
+import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReportFacade } from '../../services/report.facade';
@@ -20,8 +20,9 @@ import { SempionePageHeaderComponent } from '../../../../../components/General/s
   templateUrl: './giornale-cassa.component.html',
   styleUrls: ['./giornale-cassa.component.css'],
 })
-export class GiornaleCassaComponent implements OnInit {
+export class GiornaleCassaComponent implements OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
+  private subscription: Subscription | null = null;
 
   transactions = signal<GetTransactionGiornaleCassaResponse[]>([]);
   isLoading = signal(false);
@@ -30,36 +31,28 @@ export class GiornaleCassaComponent implements OnInit {
 
   constructor(private reportFacade: ReportFacade) {}
 
-  /**
-   * Angular lifecycle hook - Initialize component
-   */
-  ngOnInit(): void {
-    // Component initialized - filter will trigger search when ready
+  ngOnDestroy(): void {
+    this.destroy();
   }
 
-  /**
-   * Handle search event from filter component
-   */
+  private destroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      this.subscription = null;
+    }
+  }
+
   onSearch(filterData: any): void {
     const { trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId } = filterData;
-    
+
     if (!trxDataDal || !trxDataAl) {
-      this.error.set('Please fill in all required fields correctly');
+      this.error.set('Compila tutti i campi obbligatori');
       return;
     }
-    
+
     this.getTransactionWithFilters(trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId);
   }
 
-  /**
-   * Get transactions with filters
-   * 
-   * @param trxCassa - Transaction cash register identifier
-   * @param trxDataDal - Start date for transaction range
-   * @param trxDataAl - End date for transaction range
-   * @param trxStatus - Status filter for transactions
-   * @param trxBraId - Branch identifier
-   */
   getTransactionWithFilters(
     trxCassa: string,
     trxDataDal: Date,
@@ -67,6 +60,7 @@ export class GiornaleCassaComponent implements OnInit {
     trxStatus: number,
     trxBraId: string
   ): void {
+    this.destroy();
     this.isLoading.set(true);
     this.error.set(null);
 

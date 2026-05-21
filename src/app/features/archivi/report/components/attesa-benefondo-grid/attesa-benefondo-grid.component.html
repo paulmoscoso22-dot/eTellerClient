@@ -1,56 +1,13 @@
-<!-- Data Grid -->
-@if (!isLoading() && transactions().length > 0) {
-  <div class="data-grid-container">
-    <dx-data-grid
-      id="gridContainer"
-      [dataSource]="transactions()"
-      keyExpr="trxId"
-      [showBorders]="true"
-      [columnAutoWidth]="true"
-      [allowColumnReordering]="true"
-      [allowColumnResizing]="true"
-    >
-      <dxo-data-grid-filter-row
-        [visible]="showFilterRow"
-        [applyFilter]="currentFilter"
-      ></dxo-data-grid-filter-row>
-      <dxo-data-grid-header-filter
-        [visible]="showHeaderFilter"
-      ></dxo-data-grid-header-filter>
-      <dxo-data-grid-search-panel
-        [visible]="true"
-        [width]="240"
-        placeholder="Cerca..."
-      ></dxo-data-grid-search-panel>
-      <dxo-data-grid-paging [pageSize]="10" [enabled]="true"></dxo-data-grid-paging>
-      <dxo-data-grid-pager
-        [visible]="true"
-        [showPageSizeSelector]="true"
-        [allowedPageSizes]="[10, 25, 50, 100]"
-        [showInfo]="true"
-      ></dxo-data-grid-pager>
-      <dxi-data-grid-column dataField="trxId" caption="ID" alignment="left"></dxi-data-grid-column>
-      <dxi-data-grid-column dataField="trxDatope" caption="Data operazione"></dxi-data-grid-column>
-      <dxi-data-grid-column dataField="trxBefstatus" caption="Stato BEF"></dxi-data-grid-column>
-      <dxi-data-grid-column dataField="trxCassa" caption="Cassa"></dxi-data-grid-column>
-      <dxi-data-grid-column dataField="trxUsrId" caption="Utente"></dxi-data-grid-column>
-      <dxi-data-grid-column dataField="trxOptId" caption="Operazione"></dxi-data-grid-column>
-      <dxi-data-grid-column dataField="trxDivope" caption="Divisa op." ></dxi-data-grid-column>
-      <dxi-data-grid-column dataField="trxImpope" caption="Importo"></dxi-data-grid-column>
-      <dxi-data-grid-column dataField="trxBefhost" caption="Host BEF"></dxi-data-grid-column>
-      <dxi-data-grid-column dataField="trxText1" caption="Testo"></dxi-data-grid-column>
-    </dx-data-grid>
-  </div>
-}
+<app-sempione-card>
 
-  <app-header-card title="Attesa Benefondo" [count]="transactions().length > 0 ? transactions().length : undefined">
+  <app-sempione-card-header title="Attesa Benefondo" [count]="transactions().length > 0 ? transactions().length : undefined">
     <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="12" cy="12" r="10"></circle>
       <polyline points="12 6 12 12 16 14"></polyline>
     </svg>
-  </app-header-card>
+  </app-sempione-card-header>
 
-  <div class="card-body card-body--grid">
+  <div class="card-body--grid">
 
     @if (isLoading()) {
       <div class="state-message state-message--loading">
@@ -96,9 +53,6 @@
         [hoverStateEnabled]="true"
         [height]="'100%'">
 
-        <dxo-filter-row [visible]="showFilterRow" [applyFilter]="currentFilter"></dxo-filter-row>
-        <dxo-header-filter [visible]="showHeaderFilter"></dxo-header-filter>
-        <dxo-search-panel [visible]="true" [width]="240" placeholder="Cerca..."></dxo-search-panel>
         <dxo-paging [pageSize]="20"></dxo-paging>
         <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
 
@@ -117,4 +71,4 @@
 
   </div>
 
-</section>
+</app-sempione-card>

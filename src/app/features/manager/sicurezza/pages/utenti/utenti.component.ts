@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule } from 'devextreme-angular';
@@ -6,22 +6,19 @@ import notify from 'devextreme/ui/notify';
 import { ManagerService } from '../../services/sicurezza.service';
 import { ISysUsersActiveAndBlockedResponse, GetUsersByUserIdRequest, InsertUserResponse, IUpdateUserRequest } from '../../models/utenti.models';
 import { ISysRoleResonse, GetRoleByUsrIdRequest, IGetRoleNotForUsrIdRquest } from '../../models/ruoli.models';
-import { Observable } from 'rxjs';
-import { TableUtentiComponent } from '../../components/table-utenti/table-utenti.component';
 import { ControlAssignComponent } from '../../../../../components/control-assign/control-assign.component';
 import { Service } from '../../../../../core/services/service';
 import { ISTLanguageResponse } from '../../../../../core/domain/laguage.domain';
 import { Branch } from '../../../../../core/domain/branch.domain';
 import { ISTStatoEntitaResponse } from '../../../../../core/domain/stato-entita.domain';
 import { Router } from '@angular/router';
-import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
-import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
-import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
-import { SempioneToolbarComponent } from '../../../../../components/General/sempione-toolbar/sempione-toolbar.component';
-import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
-import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
-import { SempionePopupCardComponent } from '../../../../../components/General/sempione-popup-card/sempione-popup-card.component';
-import { SempioneFieldGroupComponent } from '../../../../../components/General/sempione-field-group/sempione-field-group.component';
+import {
+  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempioneToolbarComponent, SempioneButtonComponent,
+  SempionePopupComponent, SempionePopupActionBarComponent,
+  SempionePopupCardComponent, SempioneFieldGroupComponent,
+  SempioneDataGridComponent, SempioneGridColumn,
+} from '../../../../../components/General';
 
 @Component({
   selector: 'app-utenti',
@@ -30,10 +27,12 @@ import { SempioneFieldGroupComponent } from '../../../../../components/General/s
     CommonModule, ReactiveFormsModule,
     DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule,
     DxSelectBoxModule, DxValidatorModule,
-    TableUtentiComponent, ControlAssignComponent,
+    ControlAssignComponent,
     SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-    SempioneToolbarComponent, SempionePopupComponent, SempionePopupActionBarComponent,
+    SempioneToolbarComponent, SempioneButtonComponent,
+    SempionePopupComponent, SempionePopupActionBarComponent,
     SempionePopupCardComponent, SempioneFieldGroupComponent,
+    SempioneDataGridComponent,
   ],
   templateUrl: './utenti.component.html',
   styleUrls: ['./utenti.component.css'],
@@ -49,13 +48,43 @@ export class UtentiComponent implements OnInit {
     { value: 'all',           label: 'Tutti' },
   ];
   selectedFilter = signal<string>('activeBlocked');
+  searchValue    = signal<string>('');
 
-  private activeblockedStatusIds: string[] = [];
-  gridFilterValue = signal<any>(null);
+  private rawUsers        = signal<ISysUsersActiveAndBlockedResponse[]>([]);
+  private activeBlockedIds = signal<string[]>([]);
 
-  public users$: Observable<ISysUsersActiveAndBlockedResponse[]> = this.managerService.usersActiveBlocked$;
-  public rolesByUser$: Observable<ISysRoleResonse[]>             = this.managerService.rolesByUser$;
-  public rolesNotForUser$: Observable<ISysRoleResonse[]>         = this.managerService.rolesNotForUser$;
+  gridData = computed(() => {
+    const all    = this.rawUsers();
+    const filter = this.selectedFilter();
+    const search = this.searchValue().toLowerCase().trim();
+    const ids    = this.activeBlockedIds();
+
+    let result = all;
+    if (filter === 'activeBlocked' && ids.length) {
+      result = result.filter(u => ids.includes(u.usrStatus));
+    }
+    if (search) {
+      result = result.filter(u =>
+        (u.usrId    ?? '').toLowerCase().includes(search) ||
+        (u.usrExtref ?? '').toLowerCase().includes(search)
+      );
+    }
+    return result.map(u => ({
+      ...u,
+      usrStatusDes:
+        u.usrStatus === 'enabled'  ? 'Attivo'       :
+        u.usrStatus === 'disabled' ? 'Disabilitato' :
+        u.usrStatus === 'blocked'  ? 'Bloccato'     : u.usrStatus,
+    }));
+  });
+
+  readonly gridColumns: SempioneGridColumn[] = [
+    { dataField: 'usrId',        caption: 'ID Utente',  width: 130 },
+    { dataField: 'usrExtref',    caption: 'Riferimento' },
+    { dataField: 'usrHostId',    caption: 'Host ID',    width: 120 },
+    { dataField: 'usrBraId',     caption: 'Filiale',    width: 100 },
+    { dataField: 'usrStatusDes', caption: 'Stato',      width: 130, type: 'entity-status' },
+  ];
 
   statiEntitaList = signal<ISTStatoEntitaResponse[]>([]);
   branchesList    = signal<Branch[]>([]);
@@ -70,12 +99,9 @@ export class UtentiComponent implements OnInit {
 
   public selectedUserId = signal<string | null>(null);
   popupMode             = signal<'new' | 'view' | 'edit'>('new');
-  searchValue           = signal<string>('');
 
   showDetailPopup = signal<boolean>(false);
   showResetPopup  = signal<boolean>(false);
-
-  @ViewChild(TableUtentiComponent) tableUtenti!: TableUtentiComponent;
 
   userForm: FormGroup = this.fb.group({
     usrId:     ['', Validators.required],
@@ -102,13 +128,7 @@ export class UtentiComponent implements OnInit {
   }
 
   onFilterChanged(e: any): void {
-    const value = e.value as string;
-    this.selectedFilter.set(value);
-    if (value === 'all') {
-      this.gridFilterValue.set(null);
-    } else {
-      this.gridFilterValue.set(this.buildActiveblockedFilter());
-    }
+    this.selectedFilter.set(e.value as string);
     this.onClear();
   }
 
@@ -116,23 +136,11 @@ export class UtentiComponent implements OnInit {
     this.searchValue.set(e.value ?? '');
   }
 
-  private buildActiveblockedFilter(): any {
-    if (this.activeblockedStatusIds.length === 0) return null;
-    if (this.activeblockedStatusIds.length === 1) {
-      return ['usrStatus', '=', this.activeblockedStatusIds[0]];
-    }
-    return this.activeblockedStatusIds
-      .map(id => ['usrStatus', '=', id] as any[])
-      .reduce((acc: any, curr: any) => [acc, 'or', curr]);
-  }
-
   ngOnInit(): void {
     this.managerService.GetUserActiveBlocked().subscribe();
     this.managerService.usersActiveBlocked$.subscribe(data => {
-      this.activeblockedStatusIds = [...new Set(data.map(u => u.usrStatus))];
-      if (this.selectedFilter() === 'activeBlocked') {
-        this.gridFilterValue.set(this.buildActiveblockedFilter());
-      }
+      this.rawUsers.set(data);
+      this.activeBlockedIds.set([...new Set(data.map(u => u.usrStatus))]);
     });
     this.coreService.GetLanguages().subscribe();
     this.coreService.getBranches().subscribe();
@@ -181,15 +189,9 @@ export class UtentiComponent implements OnInit {
     this.showDetailPopup.set(true);
   }
 
-  onTableAction(event: { action: string; data: any }): void {
-    switch (event.action) {
-      case 'view':     this.openViewPopup(event.data);                                              break;
-      case 'edit':     this.openEditPopup(event.data);                                              break;
-      case 'resetPwd': this.selectedUserId.set(event.data.usrId || event.data.UsrId);
-                       this.openResetPasswordPopup();                                               break;
-      case 'storico':  this.selectedUserId.set(event.data.usrId || event.data.UsrId);
-                       this.onTrace();                                                              break;
-    }
+  onRowTrace(data: ISysUsersActiveAndBlockedResponse): void {
+    this.selectedUserId.set(data.usrId || (data as any).UsrId);
+    this.onTrace();
   }
 
   onStampaLista(): void {
@@ -311,7 +313,6 @@ export class UtentiComponent implements OnInit {
 
   onClear(): void {
     this.userForm.reset();
-    if (this.tableUtenti) { this.tableUtenti.clearSelection(); }
     this.selectedUserId.set(null);
     this.assignedRoles.set([]);
     this.possibleRoles.set([]);

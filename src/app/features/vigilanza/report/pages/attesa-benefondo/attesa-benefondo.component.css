@@ -16,24 +16,6 @@
   overflow: hidden;
 }
 
-/* ── Titolo pagina esterno ── */
-.page-header-row {
-  margin: -12px -16px 0;
-  padding: 7px 20px;
-  background: #f1f5f9;
-  border-bottom: 1px solid rgba(0, 51, 102, 0.25);
-  flex-shrink: 0;
-}
-
-.page-title {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 700;
-  color: rgba(0, 51, 102, 0.75);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
 /* ── Card shell ── */
 .card-section {
   display: flex;

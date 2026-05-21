@@ -1,11 +1,11 @@
-<div class="page-shell">
+<app-sempione-page-header title="Coppie Divise"></app-sempione-page-header>
 
-  <app-sempione-page-header title="Coppie Divise"></app-sempione-page-header>
+<div class="page-shell">
 
   <app-sempione-card>
 
-    <app-sempione-card-header title="Coppie Divise">
-      <svg class="card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <app-sempione-card-header title="Elenco Coppie">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <line x1="8" y1="6" x2="21" y2="6"></line>
         <line x1="8" y1="12" x2="21" y2="12"></line>
         <line x1="8" y1="18" x2="21" y2="18"></line>
@@ -144,7 +144,7 @@
     </app-sempione-popup-card>
 
     <app-sempione-popup-action-bar
-      [cancelText]="'Chiudi'"
+      cancelText="Chiudi"
       [saveText]="popupMode() === 'new' ? 'Aggiungi' : 'Salva'"
       [showSave]="popupMode() !== 'view'"
       [showStorico]="popupMode() !== 'new'"
@@ -156,3 +156,12 @@
   </form>
 
 </app-sempione-popup>
+
+<!-- ── Popup Conferma Eliminazione ── -->
+<app-sempione-confirm-delete
+  [(visible)]="isConfirmDeleteVisible"
+  entityLabel="la coppia"
+  [entityName]="pendingDeleteData() ? pendingDeleteData()!.cucCur1 + '/' + pendingDeleteData()!.cucCur2 : ''"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-sempione-confirm-delete>

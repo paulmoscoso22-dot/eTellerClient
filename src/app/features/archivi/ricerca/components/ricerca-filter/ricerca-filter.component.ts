@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { 
+import {
   DxTextBoxModule,
   DxDateBoxModule,
   DxNumberBoxModule,
@@ -14,7 +14,8 @@ import { Currency } from '../../../../../core/domain/currency.domain';
 import { Branch } from '../../../../../core/domain/branch.domain';
 import { ICurrencyType } from '../../../../../core/domain/currencyType.domain';
 import { IStOperationType } from '../../../../../core/domain/stOperationType.domain';
-import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
+import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
+import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
 
 @Component({
   selector: 'app-ricerca-filter',
@@ -28,7 +29,8 @@ import { HeaderCardComponent } from '../../../../../components/header-card/heade
     DxButtonModule,
     DxCheckBoxModule,
     DxSelectBoxModule,
-    HeaderCardComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
   ],
   templateUrl: './ricerca-filter.component.html',
   styleUrls: ['./ricerca-filter.component.css']
@@ -65,42 +67,26 @@ export class RicercaFilterComponent {
 
   search(): void {
     const formValue = this.searchForm.value;
-    
-    // Log raw form values
-    console.log('Raw form values:', formValue);
-    
-    // Convert empty date and number inputs to null (keep text fields as empty strings)
-    const trxDataDal = !formValue.trxDataDal || formValue.trxDataDal === '' ? null : formValue.trxDataDal;
-    const trxDataAl = !formValue.trxDataAl || formValue.trxDataAl === '' ? null : formValue.trxDataAl;
-    const trxImpopeDA = !formValue.trxImpopeDA || formValue.trxImpopeDA === '' ? null : formValue.trxImpopeDA;
-    const trxImpopeA = !formValue.trxImpopeA || formValue.trxImpopeA === '' ? null : formValue.trxImpopeA;
-    
-    // Ensure string fields are empty strings if null or undefined
-    const trxCassa = formValue.trxCassa === null || formValue.trxCassa === undefined ? '' : formValue.trxCassa;
-    const trxLocalita = formValue.trxLocalita === null || formValue.trxLocalita === undefined ? '' : formValue.trxLocalita;
-    const trxCutId = formValue.trxCutId === null || formValue.trxCutId === undefined ? '' : formValue.trxCutId;
-    const trxOptId = formValue.trxOptId === null || formValue.trxOptId === undefined ? '' : formValue.trxOptId;
-    const trxDivope = formValue.trxDivope === null || formValue.trxDivope === undefined ? '' : formValue.trxDivope;
-    const arcAppName = formValue.arcAppName === null || formValue.arcAppName === undefined ? '' : formValue.arcAppName;
 
-    // Log all request properties
-    const requestParams = {
-      trxCassa: trxCassa,
-      trxLocalita: trxLocalita,
-      trxDataDal : trxDataDal,
-      trxDataAl : trxDataAl,
-      trxReverse: formValue.trxReverse,
-      trxCutId: trxCutId,
-      trxOptId: trxOptId,
-      trxDivope: trxDivope,
-      trxImpopeDA: trxImpopeDA,
-      trxImpopeA: trxImpopeA,
-      arcAppName: arcAppName,
-      arcForced: formValue.arcForced
-    };
-    
-    console.log('Search Request Parameters (Emitted):', requestParams);
-    this.searchClick.emit(requestParams);
+    const trxDataDal = !formValue.trxDataDal || formValue.trxDataDal === '' ? null : formValue.trxDataDal;
+    const trxDataAl  = !formValue.trxDataAl  || formValue.trxDataAl  === '' ? null : formValue.trxDataAl;
+    const trxImpopeDA = !formValue.trxImpopeDA || formValue.trxImpopeDA === '' ? null : formValue.trxImpopeDA;
+    const trxImpopeA  = !formValue.trxImpopeA  || formValue.trxImpopeA  === '' ? null : formValue.trxImpopeA;
+
+    this.searchClick.emit({
+      trxCassa:    formValue.trxCassa    ?? '',
+      trxLocalita: formValue.trxLocalita ?? '',
+      trxDataDal,
+      trxDataAl,
+      trxReverse:  formValue.trxReverse,
+      trxCutId:    formValue.trxCutId    ?? '',
+      trxOptId:    formValue.trxOptId    ?? '',
+      trxDivope:   formValue.trxDivope   ?? '',
+      trxImpopeDA,
+      trxImpopeA,
+      arcAppName:  formValue.arcAppName  ?? '',
+      arcForced:   formValue.arcForced
+    });
   }
 
   /**

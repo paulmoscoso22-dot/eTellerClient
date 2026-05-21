@@ -22,20 +22,8 @@
           [showClearButton]="true">
         </dx-text-box>
         <div toolbar-actions>
-          <dx-button
-            icon="revert"
-            hint="Ripristina filtri"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="resetFilters()">
-          </dx-button>
-          <dx-button
-            text="Nuovo"
-            icon="plus"
-            stylingMode="contained"
-            class="btn-fin-primary"
-            (onClick)="onAdd()">
-          </dx-button>
+          <app-sempione-button icon="revert" hint="Ripristina filtri" variant="secondary" (clicked)="resetFilters()"></app-sempione-button>
+          <app-sempione-button text="Nuovo" icon="plus" variant="primary" [shadow]="true" (clicked)="onAdd()"></app-sempione-button>
         </div>
       </app-sempione-toolbar>
 
@@ -75,13 +63,7 @@
           [showClearButton]="true">
         </dx-text-box>
         <div toolbar-actions>
-          <dx-button
-            icon="revert"
-            hint="Ripristina filtri"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="searchUsers.set('')">
-          </dx-button>
+          <app-sempione-button icon="revert" hint="Ripristina filtri" variant="secondary" (clicked)="searchUsers.set('')"></app-sempione-button>
         </div>
       </app-sempione-toolbar>
 
@@ -131,20 +113,8 @@
           [showClearButton]="true">
         </dx-text-box>
         <div toolbar-actions>
-          <dx-button
-            icon="search"
-            hint="Cerca"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="onCerca()">
-          </dx-button>
-          <dx-button
-            icon="revert"
-            hint="Ripristina filtri"
-            stylingMode="outlined"
-            class="btn-fin-secondary"
-            (onClick)="searchName.set(null); searchDes.set(null)">
-          </dx-button>
+          <app-sempione-button icon="search" hint="Cerca" variant="secondary" (clicked)="onCerca()"></app-sempione-button>
+          <app-sempione-button icon="revert" hint="Ripristina filtri" variant="secondary" (clicked)="searchName.set(null); searchDes.set(null)"></app-sempione-button>
         </div>
       </app-sempione-toolbar>
 
@@ -196,7 +166,7 @@
   [title]="(popupMode() === 'edit' ? 'Modifica Ruolo' : 'Dettaglio Ruolo') + (selectedRoleName() ? ' — ' + selectedRoleName() : '')"
   [maxWidth]="480">
 
-  <div class="popup-layout" [class.popup-view-mode]="popupMode() === 'view'">
+  <div class="popup-layout">
     <app-sempione-popup-card title="Dettaglio Ruolo">
       <div class="popup-fields-grid popup-fields-grid--2col">
 
@@ -251,7 +221,7 @@
           icon="trash"
           stylingMode="outlined"
           class="btn-fin-danger"
-          (onClick)="onDelete()">
+          (onClick)="requestDelete()">
         </dx-button>
       </app-sempione-popup-action-bar>
     }
@@ -298,3 +268,12 @@
   </form>
 
 </app-sempione-popup>
+
+<!-- ══ Popup Conferma Eliminazione ══ -->
+<app-sempione-confirm-delete
+  [(visible)]="isConfirmDeleteVisible"
+  entityLabel="il ruolo"
+  [entityName]="pendingDeleteRole()?.roleName ?? ''"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-sempione-confirm-delete>

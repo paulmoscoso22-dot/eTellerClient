@@ -1,6 +1,6 @@
-<div class="page-shell">
+<app-sempione-page-header title="Aggiorna Dati Anagrafici Divise"></app-sempione-page-header>
 
-  <app-sempione-page-header title="Aggiorna Dati Anagrafici Divise"></app-sempione-page-header>
+<div class="page-shell">
 
   <app-sempione-card>
 
@@ -146,8 +146,8 @@
     </app-sempione-popup-card>
 
     <app-sempione-popup-action-bar
-      [cancelText]="'Chiudi'"
-      [saveText]="'Salva'"
+      cancelText="Chiudi"
+      saveText="Salva"
       [showSave]="popupMode() === 'edit'"
       [showStorico]="true"
       (save)="onUpdate()"

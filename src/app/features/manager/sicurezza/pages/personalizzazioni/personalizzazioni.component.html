@@ -1,5 +1,7 @@
 <app-sempione-page-header title="Personalizzazioni"></app-sempione-page-header>
 
+<div class="page-shell">
+
 <app-sempione-card>
   <app-sempione-card-header title="Elenco Personalizzazioni">
     <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -29,26 +31,9 @@
     </dx-text-box>
 
     <div toolbar-actions>
-      <dx-button
-        icon="revert"
-        hint="Ripristina filtri"
-        stylingMode="outlined"
-        class="btn-fin-secondary"
-        (onClick)="resetFilters()">
-      </dx-button>
-      <dx-button
-        icon="print"
-        text="Stampa"
-        stylingMode="outlined"
-        class="btn-fin-secondary">
-      </dx-button>
-      <dx-button
-        text="Nuovo"
-        icon="plus"
-        stylingMode="contained"
-        class="btn-fin-primary"
-        (onClick)="onAdd()">
-      </dx-button>
+      <app-sempione-button icon="revert" hint="Ripristina filtri" variant="secondary" (clicked)="resetFilters()"></app-sempione-button>
+      <app-sempione-button icon="print" text="Stampa" variant="secondary"></app-sempione-button>
+      <app-sempione-button text="Nuovo" icon="plus" variant="primary" [shadow]="true" (clicked)="onAdd()"></app-sempione-button>
     </div>
   </app-sempione-toolbar>
 
@@ -68,6 +53,8 @@
   </app-sempione-data-grid>
 </app-sempione-card>
 
+</div>
+
 <!-- ══ Popup: Dettaglio / Modifica Personalizzazione ══ -->
 <app-sempione-popup
   [visible]="showDetailPopup()"
@@ -75,7 +62,7 @@
   [title]="(popupMode() === 'edit' ? 'Modifica Personalizzazione' : 'Dettaglio Personalizzazione') + (selectedParId() ? ' — ' + selectedParId() : '')"
   [maxWidth]="520">
 
-  <div class="popup-layout" [class.popup-view-mode]="popupMode() === 'view'">
+  <div class="popup-layout">
     <app-sempione-popup-card title="Dettaglio Personalizzazione">
       <div class="popup-fields-grid popup-fields-grid--1col">
 
@@ -130,7 +117,7 @@
           icon="trash"
           stylingMode="outlined"
           class="btn-fin-danger"
-          (onClick)="onDelete()">
+          (onClick)="requestDelete()">
         </dx-button>
       </app-sempione-popup-action-bar>
     }
@@ -178,3 +165,12 @@
   </form>
 
 </app-sempione-popup>
+
+<!-- ══ Popup Conferma Eliminazione ══ -->
+<app-sempione-confirm-delete
+  [(visible)]="isConfirmDeleteVisible"
+  entityLabel="la personalizzazione"
+  [entityName]="pendingDeleteParId()"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-sempione-confirm-delete>

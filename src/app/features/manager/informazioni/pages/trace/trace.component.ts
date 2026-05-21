@@ -1,7 +1,6 @@
 import { Component, DestroyRef, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { DxSelectBoxModule } from 'devextreme-angular/ui/select-box';
 import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
 import { DxDateBoxModule } from 'devextreme-angular/ui/date-box';
@@ -22,11 +21,14 @@ import {
 } from '../../models/informazioni.models';
 import { ClientResponse } from '../../../../../core/domain/client.domain';
 
+function makeToday(): Date    { const d = new Date(); d.setHours(0, 0, 0, 0); return d; }
+function makeTomorrow(): Date { const d = makeToday(); d.setDate(d.getDate() + 1); return d; }
+
 @Component({
   selector: 'app-trace',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule,
+    CommonModule,
     DxSelectBoxModule, DxTextBoxModule, DxDateBoxModule,
     SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneButtonComponent,
@@ -39,9 +41,8 @@ import { ClientResponse } from '../../../../../core/domain/client.domain';
 })
 export class TraceComponent implements OnInit {
   private readonly informazioniService = inject(InformazioniService);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly route = inject(ActivatedRoute);
-  private readonly fb = inject(FormBuilder);
+  private readonly destroyRef          = inject(DestroyRef);
+  private readonly route               = inject(ActivatedRoute);
 
   funzioni: WritableSignal<Array<{ tfcId: string | null; tfcDes: string }>> =
     signal([{ tfcId: null, tfcDes: 'ALL' }]);
@@ -70,30 +71,19 @@ export class TraceComponent implements OnInit {
     { dataField: 'traError',   caption: 'Errore',        type: 'bool',        width: 80  },
   ];
 
-  filterForm: FormGroup;
+  filterFunCode  = signal<string | null>(null);
+  filterUser     = signal<string | null>(null);
+  filterStation  = signal<string | null>(null);
+  filterTabNam   = signal<string | null>(null);
+  filterEntCode  = signal<string | null>(null);
+  filterError    = signal<boolean | null>(null);
+  filterDateFrom = signal<Date | null>(makeToday());
+  filterDateTo   = signal<Date | null>(makeTomorrow());
+
   traces        = signal<TraceWithFunctionResponse[]>([]);
   selectedTrace = signal<TraceWithFunctionResponse | null>(null);
   isLoading     = signal(false);
   detailVisible = false;
-
-  constructor() {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
-
-    this.filterForm = this.fb.group({
-      traFunCode: [null],
-      traUser:    [null],
-      traStation: [null],
-      traTabNam:  [null],
-      traEntCode: [null],
-      traError:   [null],
-      dataFrom:   [today],
-      dataTo:     [tomorrow],
-    });
-  }
 
   ngOnInit(): void {
     this.applyQueryParamsToPrefillFilters();
@@ -106,24 +96,22 @@ export class TraceComponent implements OnInit {
     this.loadActiveBlockedUsers();
     this.loadClients();
     this.loadTabellaServVarchar();
-    this.loadAllTraces(this.buildRequestFromForm() as GetTraceWithFunctionRequest);
+    this.loadAllTraces(this.buildRequest() as GetTraceWithFunctionRequest);
   }
 
   onVisualizza(): void {
-    this.loadAllTraces(this.buildRequestFromForm());
+    this.loadAllTraces(this.buildRequest() as GetTraceWithFunctionRequest);
   }
 
   resetFilters(): void {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
-    this.filterForm.reset({
-      traFunCode: null, traUser: null, traStation: null,
-      traTabNam:  null, traEntCode: null, traError: null,
-      dataFrom: today, dataTo: tomorrow,
-    });
+    this.filterFunCode.set(null);
+    this.filterUser.set(null);
+    this.filterStation.set(null);
+    this.filterTabNam.set(null);
+    this.filterEntCode.set(null);
+    this.filterError.set(null);
+    this.filterDateFrom.set(makeToday());
+    this.filterDateTo.set(makeTomorrow());
     this.traces.set([]);
   }
 
@@ -147,10 +135,10 @@ export class TraceComponent implements OnInit {
     } catch { return String(value); }
   }
 
-  loadAllTraces(request: GetTraceAllRequest): void {
+  loadAllTraces(request: GetTraceWithFunctionRequest): void {
     this.isLoading.set(true);
     this.informazioniService
-      .postGetTraceAll(request as GetTraceWithFunctionRequest)
+      .postGetTraceAll(request)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (resp) => {
@@ -169,14 +157,35 @@ export class TraceComponent implements OnInit {
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
-        const traTabNam  = params['traTabNam'];
-        const traEntCode = params['traEntCode'];
-        this.filterForm.patchValue({
-          traFunCode: null, traUser: null, traStation: null,
-          traError:   null, dataFrom: null, dataTo: null,
-          traTabNam:  traTabNam  !== undefined ? traTabNam  : null,
-          traEntCode: traEntCode !== undefined ? String(traEntCode) : null,
-        });
+        this.filterFunCode.set(null);
+        this.filterUser.set(null);
+        this.filterStation.set(null);
+        this.filterError.set(null);
+        this.filterDateFrom.set(null);
+        this.filterDateTo.set(null);
+        this.filterTabNam.set(params['traTabNam']  !== undefined ? params['traTabNam']          : null);
+        this.filterEntCode.set(params['traEntCode'] !== undefined ? String(params['traEntCode']) : null);
+      });
+  }
+
+  private buildRequest(): GetTraceAllRequest {
+    const req    = new GetTraceAllRequest();
+    req.traFunCode = this.filterFunCode();
+    req.traUser    = this.filterUser();
+    req.traStation = this.filterStation();
+    req.traTabNam  = this.filterTabNam();
+    req.traEntCode = this.filterEntCode();
+    req.traError   = this.filterError();
+    req.dataFrom   = this.filterDateFrom();
+    req.dataTo     = this.filterDateTo();
+    return req;
+  }
+
+  private subscribeToTraces(): void {
+    this.informazioniService.traces$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((v: TraceResponse[]) => {
+        this.traces.set(v.map(item => ({ ...item, tfcDes: '' } as TraceWithFunctionResponse)));
       });
   }
 
@@ -236,27 +245,5 @@ export class TraceComponent implements OnInit {
     this.informazioniService.postGetTabellaServVarchar(req)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({ error: (err) => console.error('postGetTabellaServVarchar failed', err) });
-  }
-
-  private buildRequestFromForm(): GetTraceAllRequest {
-    const v = this.filterForm.value;
-    const req = new GetTraceAllRequest();
-    req.traFunCode = v.traFunCode ?? null;
-    req.traUser    = v.traUser    ?? null;
-    req.traStation = v.traStation ?? null;
-    req.traTabNam  = v.traTabNam  ?? null;
-    req.traEntCode = v.traEntCode ?? null;
-    req.traError   = v.traError === undefined ? null : v.traError;
-    req.dataFrom   = v.dataFrom ?? null;
-    req.dataTo     = v.dataTo   ?? null;
-    return req;
-  }
-
-  private subscribeToTraces(): void {
-    this.informazioniService.traces$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((v: TraceResponse[]) => {
-        this.traces.set(v.map(item => ({ ...item, tfcDes: '' } as TraceWithFunctionResponse)));
-      });
   }
 }

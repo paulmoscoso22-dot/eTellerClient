@@ -6,7 +6,8 @@ import {
   DxDateBoxModule,
   DxButtonModule
 } from 'devextreme-angular';
-import { OpCardSectionComponent } from '../../../../../components/Operazioni/op-card-section/op-card-section.component';
+import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
+import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
 
 /**
  * Reusable Totale Cassa Filter Component
@@ -21,7 +22,8 @@ import { OpCardSectionComponent } from '../../../../../components/Operazioni/op-
     DxTextBoxModule,
     DxDateBoxModule,
     DxButtonModule,
-    OpCardSectionComponent
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
   ],
   templateUrl: './totale-cassa-filter.component.html',
   styleUrls: ['./totale-cassa-filter.component.css']

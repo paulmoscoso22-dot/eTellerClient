@@ -1,6 +1,6 @@
-<div class="page-shell">
+<app-sempione-page-header title="Gestione Messaggi Host"></app-sempione-page-header>
 
-  <app-sempione-page-header title="Gestione Messaggi Host"></app-sempione-page-header>
+<div class="page-shell">
 
   <app-sempione-card>
 
@@ -10,85 +10,81 @@
       </svg>
     </app-sempione-card-header>
 
-    <div [formGroup]="filterForm">
-      <app-sempione-toolbar>
+    <app-sempione-toolbar>
 
-        <div class="toolbar-field">
-          <dx-date-box
-            type="date"
-            displayFormat="dd/MM/yyyy"
-            labelMode="hidden"
-            placeholder="Dal..."
-            [showClearButton]="true"
-            [width]="130"
-            [value]="filterForm.get('dataFrom')?.value"
-            (valueChange)="filterForm.get('dataFrom')?.setValue($event)">
-          </dx-date-box>
-        </div>
+      <div class="toolbar-field">
+        <dx-date-box
+          type="date"
+          displayFormat="dd/MM/yyyy"
+          labelMode="hidden"
+          placeholder="Dal..."
+          [showClearButton]="true"
+          [value]="filterDateFrom()"
+          (onValueChanged)="filterDateFrom.set($event.value)">
+        </dx-date-box>
+      </div>
 
-        <div class="toolbar-field">
-          <dx-date-box
-            type="date"
-            displayFormat="dd/MM/yyyy"
-            labelMode="hidden"
-            placeholder="Al..."
-            [showClearButton]="true"
-            [width]="130"
-            [value]="filterForm.get('dataTo')?.value"
-            (valueChange)="filterForm.get('dataTo')?.setValue($event)">
-          </dx-date-box>
-        </div>
+      <div class="toolbar-field">
+        <dx-date-box
+          type="date"
+          displayFormat="dd/MM/yyyy"
+          labelMode="hidden"
+          placeholder="Al..."
+          [showClearButton]="true"
+          [value]="filterDateTo()"
+          (onValueChanged)="filterDateTo.set($event.value)">
+        </dx-date-box>
+      </div>
 
-        <div class="toolbar-field">
-          <dx-number-box
-            labelMode="hidden"
-            placeholder="ID Transazione..."
-            [showClearButton]="true"
-            [value]="filterForm.get('trxId')?.value"
-            (valueChange)="filterForm.get('trxId')?.setValue($event)">
-          </dx-number-box>
-        </div>
+      <div class="toolbar-field">
+        <dx-number-box
+          labelMode="hidden"
+          placeholder="ID Transazione..."
+          [showClearButton]="true"
+          [value]="$any(filterTrxId())"
+          (onValueChanged)="filterTrxId.set($event.value || null)">
+        </dx-number-box>
+      </div>
 
-        <div class="toolbar-field">
-          <dx-number-box
-            labelMode="hidden"
-            placeholder="ID Messaggio..."
-            [showClearButton]="true"
-            [value]="filterForm.get('msgId')?.value"
-            (valueChange)="filterForm.get('msgId')?.setValue($event)">
-          </dx-number-box>
-        </div>
+      <div class="toolbar-field">
+        <dx-number-box
+          labelMode="hidden"
+          placeholder="ID Messaggio..."
+          [showClearButton]="true"
+          [value]="$any(filterMsgId())"
+          (onValueChanged)="filterMsgId.set($event.value || null)">
+        </dx-number-box>
+      </div>
 
-        <div class="toolbar-field">
-          <dx-select-box
-            [items]="statusOptions"
-            displayExpr="text"
-            valueExpr="id"
-            labelMode="hidden"
-            placeholder="Stato..."
-            [value]="filterForm.get('msgStatus')?.value"
-            (valueChange)="filterForm.get('msgStatus')?.setValue($event)">
-          </dx-select-box>
-        </div>
+      <div class="toolbar-field">
+        <dx-select-box
+          [items]="statusOptions"
+          displayExpr="text"
+          valueExpr="id"
+          labelMode="hidden"
+          placeholder="Stato..."
+          [value]="filterStatus()"
+          (onValueChanged)="filterStatus.set($event.value)">
+        </dx-select-box>
+      </div>
 
-        <div toolbar-actions>
-          <app-sempione-button
-            icon="search"
-            hint="Cerca"
-            variant="secondary"
-            [disabled]="isLoading()"
-            (clicked)="onVisualizza()">
-          </app-sempione-button>
-          <app-sempione-button
-            icon="revert"
-            hint="Reset filtri"
-            variant="secondary"
-            (clicked)="resetFilters()">
-          </app-sempione-button>
-        </div>
+      <div toolbar-actions>
+        <app-sempione-button
+          icon="search"
+          hint="Cerca"
+          variant="secondary"
+          [disabled]="isLoading()"
+          (clicked)="onVisualizza()">
+        </app-sempione-button>
+        <app-sempione-button
+          icon="revert"
+          hint="Reset filtri"
+          variant="secondary"
+          (clicked)="resetFilters()">
+        </app-sempione-button>
+      </div>
 
-      </app-sempione-toolbar>
-    </div>
+    </app-sempione-toolbar>
 
     <app-sempione-data-grid
       [dataSource]="messages()"
@@ -98,7 +94,6 @@
       [pageSize]="15"
       [allowedPageSizes]="[15, 30, 50, 100]"
       [showViewAction]="true"
-      [showEditAction]="false"
       noDataText="Nessun messaggio trovato."
       (rowView)="openDetail($event)">
     </app-sempione-data-grid>
@@ -159,9 +154,8 @@
     </app-sempione-popup-card>
 
     <app-sempione-popup-action-bar
-      [cancelText]="'Chiudi'"
+      cancelText="Chiudi"
       [showSave]="false"
-      [showStorico]="false"
       (cancel)="closeDetail()">
     </app-sempione-popup-action-bar>
 

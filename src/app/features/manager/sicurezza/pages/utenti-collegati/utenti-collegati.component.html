@@ -1,5 +1,7 @@
 <app-sempione-page-header title="Utenti Collegati"></app-sempione-page-header>
 
+<div class="page-shell">
+
 <app-sempione-card>
   <app-sempione-card-header title="Elenco Utenti Collegati">
     <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -20,20 +22,8 @@
     </dx-text-box>
 
     <div toolbar-actions>
-      <dx-button
-        icon="revert"
-        hint="Ripristina"
-        stylingMode="outlined"
-        class="btn-fin-secondary"
-        (onClick)="searchText.set('')">
-      </dx-button>
-      <dx-button
-        icon="refresh"
-        text="Aggiorna"
-        stylingMode="outlined"
-        class="btn-fin-secondary"
-        (onClick)="onRefresh()">
-      </dx-button>
+      <app-sempione-button icon="revert" hint="Ripristina" variant="secondary" (clicked)="searchText.set('')"></app-sempione-button>
+      <app-sempione-button icon="refresh" text="Aggiorna" variant="secondary" (clicked)="onRefresh()"></app-sempione-button>
       <dx-button
         icon="remove"
         text="Forza Uscita"
@@ -58,3 +48,5 @@
     (rowForce)="forzaUscitaFromRow($event)">
   </app-sempione-data-grid>
 </app-sempione-card>
+
+</div>

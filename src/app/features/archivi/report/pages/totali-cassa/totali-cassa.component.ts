@@ -1,12 +1,12 @@
-import { Component, OnInit, signal, DestroyRef, inject } from '@angular/core';
+import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DxDataGridModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReportFacade } from '../../services/report.facade';
 import { GetTotaleCassaResponse } from '../../domain/totale-cassa.models';
 import { TotaleCassaFilterComponent } from '../../components/totale-cassa-filter/totale-cassa-filter.component';
-import { ApplyFilterMode } from 'devextreme/common/grids';
-import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
+import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
+import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
 import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
 
 @Component({
@@ -16,59 +16,52 @@ import { SempionePageHeaderComponent } from '../../../../../components/General/s
     CommonModule,
     DxDataGridModule,
     TotaleCassaFilterComponent,
-    HeaderCardComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
     SempionePageHeaderComponent,
   ],
   templateUrl: './totali-cassa.component.html',
   styleUrls: ['./totali-cassa.component.css'],
 })
-export class TotaliCassaComponent implements OnInit {
+export class TotaliCassaComponent implements OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
+  private subscription: Subscription | null = null;
 
   totaliCassa = signal<GetTotaleCassaResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
-  showFilterRow = true;
-  showHeaderFilter = true;
-  currentFilter: ApplyFilterMode = 'auto';
 
   constructor(private reportFacade: ReportFacade) {}
 
-  /**
-   * Angular lifecycle hook - Initialize component
-   */
-  ngOnInit(): void {
-    // Initialize without search - user will trigger it
+  ngOnDestroy(): void {
+    this.destroy();
   }
 
-  /**
-   * Handle search event from filter component
-   */
+  private destroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      this.subscription = null;
+    }
+  }
+
   onSearch(filterData: any): void {
     const { tocCliId, tocData, tocCutId, tocBraId } = filterData;
 
     if (!tocCliId || !tocData || !tocCutId || !tocBraId) {
-      this.error.set('Per favore, compila tutti i campi obbligatori');
+      this.error.set('Compila tutti i campi obbligatori');
       return;
     }
 
     this.getTotaliCassa(tocCliId, tocData, tocCutId, tocBraId);
   }
 
-  /**
-   * Get totali cassa with filters
-   * 
-   * @param tocCliId - Cassa ID
-   * @param tocData - Data
-   * @param tocCutId - Currency Type ID
-   * @param tocBraId - Branch ID
-   */
   getTotaliCassa(
     tocCliId: string,
     tocData: Date,
     tocCutId: string,
     tocBraId: string
   ): void {
+    this.destroy();
     this.isLoading.set(true);
     this.error.set(null);
 
@@ -86,4 +79,3 @@ export class TotaliCassaComponent implements OnInit {
     });
   }
 }
-

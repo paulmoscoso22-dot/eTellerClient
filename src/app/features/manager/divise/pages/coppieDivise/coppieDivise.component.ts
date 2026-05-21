@@ -8,7 +8,7 @@ import {
   SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
-  SempioneFieldGroupComponent,
+  SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
 } from '../../../../../components/General';
 import notify from 'devextreme/ui/notify';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -27,7 +27,7 @@ import { ICurrencyCouple, ICurrencyDv } from '../../models/divisa.models';
     SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
-    SempioneFieldGroupComponent,
+    SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
   ],
   templateUrl: './coppieDivise.component.html',
   styleUrls: ['./coppieDivise.component.css'],
@@ -51,8 +51,10 @@ export class CoppieDiviseComponent implements OnInit {
   currencies           = signal<ICurrencyDv[]>([]);
   searchValue          = signal<string>('');
   popupMode            = signal<'new' | 'view' | 'edit'>('new');
-  isDetailPopupVisible = false;
-  isLoading            = signal<boolean>(false);
+  isDetailPopupVisible   = false;
+  isLoading              = signal<boolean>(false);
+  isConfirmDeleteVisible = signal(false);
+  pendingDeleteData      = signal<ICurrencyCouple | null>(null);
   selectedLabel        = signal<string>('');
 
   readonly taglioOptions = [1, 100];
@@ -126,14 +128,22 @@ export class CoppieDiviseComponent implements OnInit {
     switch (action) {
       case 'view':   this.openViewPopup(data); break;
       case 'edit':   this.openEditPopup(data); break;
-      case 'delete': this.onDelete(data);      break;
+      case 'delete': this.requestDelete(data);  break;
       case 'trace':  this.router.navigate(['/trace'], {
         queryParams: { traTabNam: 'CURRENCY_COUPLE', traEntCode: `${data.cucCur1}_${data.cucCur2}` }
       }); break;
     }
   }
 
-  async onDelete(data: ICurrencyCouple): Promise<void> {
+  requestDelete(data: ICurrencyCouple): void {
+    this.pendingDeleteData.set(data);
+    this.isConfirmDeleteVisible.set(true);
+  }
+
+  async confirmDelete(): Promise<void> {
+    const data = this.pendingDeleteData();
+    if (!data) return;
+    this.cancelDelete();
     const user = await firstValueFrom(this.userService.getCurrentUser());
     this.isLoading.set(true);
     this.service.delete(data.cucCur1, data.cucCur2, user.userId ?? '', user.station ?? '')
@@ -146,6 +156,11 @@ export class CoppieDiviseComponent implements OnInit {
         },
         error: () => { notify('Errore durante la cancellazione', 'error', 3000); this.isLoading.set(false); }
       });
+  }
+
+  cancelDelete(): void {
+    this.isConfirmDeleteVisible.set(false);
+    this.pendingDeleteData.set(null);
   }
 
   async onInsert(): Promise<void> {

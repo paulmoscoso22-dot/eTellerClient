@@ -1,10 +1,10 @@
-<div class="page-shell">
+<app-sempione-page-header title="Tipo Conto"></app-sempione-page-header>
 
-  <app-sempione-page-header title="Tipo Conto"></app-sempione-page-header>
+<div class="page-shell">
 
   <app-sempione-card>
 
-    <app-sempione-card-header title="Tipi Conto (ST_ACCOUNTTYPE)">
+    <app-sempione-card-header title="Tipi Conto">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
@@ -40,7 +40,7 @@
       [error]="error()"
       [showEditAction]="true"
       [showTraceAction]="true"
-      noDataText="Nessun risultato trovato."
+      noDataText="Nessun tipo conto trovato."
       (rowEdit)="openEditPopup($event)"
       (rowTrace)="onTrace($event.id)">
     </app-sempione-data-grid>

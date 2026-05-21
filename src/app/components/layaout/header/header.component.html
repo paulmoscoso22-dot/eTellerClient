@@ -41,6 +41,19 @@
 
   <div class="logo-sep"></div>
 
+  <div class="session-info-wrapper">
+    <div class="session-info-row">
+      <i class="bi bi-person-fill session-info-icon"></i>
+      <span class="session-info-primary">{{ hostUser() }}</span>
+    </div>
+    <div class="session-info-row">
+      <i class="bi bi-printer-fill session-info-icon"></i>
+      <span class="session-info-secondary">{{ fichesPrinter() }}</span>
+    </div>
+  </div>
+
+  <div class="logo-sep"></div>
+
   <dx-drop-down-button
     class="lang-selector"
     [items]="languages"

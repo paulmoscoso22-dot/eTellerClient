@@ -1,5 +1,11 @@
-.page-wrapper {
-  padding-bottom: 72px;
+:host {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ── Filter body ── */
+.filter-body {
+  padding: 14px 18px;
 }
 
 /* ── Griglia campi ── */
@@ -9,9 +15,7 @@
   gap: 12px 24px;
 }
 
-.fields-grid--3 {
-  grid-template-columns: 1fr 1fr 1fr;
-}
+.fields-grid--3 { grid-template-columns: 1fr 1fr 1fr; }
 
 .field-group {
   display: flex;
@@ -45,24 +49,21 @@
 .status-badge--70 { background: #fef2f2; color: #b91c1c; border-left-color: #ef4444; }
 
 /* ── Compact DX inputs ── */
-:host ::ng-deep .dx-texteditor               { height: 28px; }
-:host ::ng-deep .dx-texteditor-input         { min-height: unset; height: 26px; padding-top: 3px; padding-bottom: 3px; font-size: 13px; }
-:host ::ng-deep .dx-texteditor-buttons-container { height: 26px; }
-:host ::ng-deep .dx-button                   { height: 28px; }
+:host ::ng-deep .filter-body .dx-texteditor                   { height: 28px; }
+:host ::ng-deep .filter-body .dx-texteditor-input             { min-height: unset; height: 26px; padding-top: 3px; padding-bottom: 3px; font-size: 13px; }
+:host ::ng-deep .filter-body .dx-texteditor-buttons-container { height: 26px; }
+:host ::ng-deep .action-bar .dx-button                        { height: 28px; }
 
-/* ── Action Bar sticky ── */
+/* ── Action bar ── */
 .action-bar {
-  position: sticky;
-  bottom: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 0;
-  background: #fff;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 7px 12px;
   border-top: 1px solid #dce3ee;
-  box-shadow: 0 -2px 6px rgba(0, 51, 102, 0.06);
-  z-index: 100;
+  background: rgba(237, 242, 247, 0.5);
+  flex-shrink: 0;
 }
 
 /* ── Responsive ── */
@@ -73,5 +74,4 @@
 @media (max-width: 480px) {
   .fields-grid,
   .fields-grid--3 { grid-template-columns: 1fr; }
-  .action-bar { flex-wrap: wrap; gap: 8px; }
 }

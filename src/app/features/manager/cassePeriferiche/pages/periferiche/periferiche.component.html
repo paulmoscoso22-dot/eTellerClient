@@ -1,10 +1,10 @@
-<div class="page-shell">
+<app-sempione-page-header title="Periferiche"></app-sempione-page-header>
 
-  <app-sempione-page-header title="Periferiche"></app-sempione-page-header>
+<div class="page-shell">
 
   <app-sempione-card>
 
-    <app-sempione-card-header title="Periferiche">
+    <app-sempione-card-header title="Elenco Periferiche">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="3" y="6" width="18" height="13" rx="2"></rect>
         <path d="M3 10h18M8 6V4M16 6V4"></path>
@@ -24,22 +24,12 @@
         </dx-text-box>
       </div>
 
-      <div toolbar-actions>
-        <app-sempione-button
-          icon="revert"
-          hint="Ripristina ricerca"
-          variant="secondary"
-          (clicked)="resetSearch()">
-        </app-sempione-button>
-        <span class="toolbar-sep" toolbar-actions></span>
-        <app-sempione-button
-          text="Nuova Periferica"
-          icon="add"
-          variant="primary"
-          [shadow]="true"
-          (clicked)="openNewPopup()">
-        </app-sempione-button>
-      </div>
+      <app-sempione-crud-toolbar-actions
+        [showSearch]="false"
+        newText="Nuova Periferica"
+        (reset)="resetSearch()"
+        (add)="openNewPopup()">
+      </app-sempione-crud-toolbar-actions>
 
     </app-sempione-toolbar>
 
@@ -73,7 +63,7 @@
   [maxWidth]="680"
   (hidden)="closePopup()">
 
-  <form [formGroup]="deviceForm" class="popup-layout" [class.popup-view-mode]="popupMode() === 'view'">
+  <form [formGroup]="deviceForm" class="popup-layout">
 
     <app-sempione-popup-card title="Configurazione">
       <div class="popup-fields-grid popup-fields-grid--2col">
@@ -131,16 +121,27 @@
       (save)="onSave()"
       (cancel)="closePopup()"
       (storico)="onTrace()">
-      <div secondary-actions>
-        @if (popupMode() === 'edit' && !selectedDevice()?.inUso) {
-          <dx-button text="Elimina" icon="trash" stylingMode="contained" class="btn-fin-danger" (onClick)="onDelete()"></dx-button>
-        }
-        @if (popupMode() === 'edit' && selectedDevice()?.inUso) {
-          <dx-button text="Rilascia" icon="unlock" stylingMode="outlined" class="btn-fin-secondary" (onClick)="onRelease()"></dx-button>
-        }
-      </div>
+      @if (popupMode() === 'edit') {
+        <div secondary-actions>
+          @if (!selectedDevice()?.inUso) {
+            <dx-button text="Elimina" icon="trash" stylingMode="contained" class="btn-fin-danger" (onClick)="requestDelete()"></dx-button>
+          }
+          @if (selectedDevice()?.inUso) {
+            <dx-button text="Rilascia" icon="unlock" stylingMode="outlined" class="btn-fin-secondary" (onClick)="onRelease()"></dx-button>
+          }
+        </div>
+      }
     </app-sempione-popup-action-bar>
 
   </form>
 
 </app-sempione-popup>
+
+<!-- ── Popup Conferma Eliminazione ── -->
+<app-sempione-confirm-delete
+  [(visible)]="isConfirmDeleteVisible"
+  entityLabel="la periferica"
+  [entityName]="pendingDeleteDevice()?.devName ?? ''"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-sempione-confirm-delete>

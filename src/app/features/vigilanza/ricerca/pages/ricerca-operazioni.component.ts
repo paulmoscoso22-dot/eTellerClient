@@ -10,8 +10,12 @@ import {
   DxButtonModule,
   DxCheckBoxModule,
   DxSelectBoxModule,
-  DxPopupModule
+  DxTemplateModule
 } from 'devextreme-angular';
+import { HeaderCardComponent } from '../../../../components/header-card/header-card.component';
+import { SempionePageHeaderComponent } from '../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempionePopupComponent } from '../../../../components/General/sempione-popup/sempione-popup.component';
+import { SempionePopupActionBarComponent } from '../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import type { ValueChangedEvent as DateBoxValueChangedEvent } from 'devextreme/ui/date_box';
@@ -46,7 +50,11 @@ const DEFAULT_PAGE_SIZE = 30;
     DxButtonModule,
     DxCheckBoxModule,
     DxSelectBoxModule,
-    DxPopupModule
+    DxTemplateModule,
+    HeaderCardComponent,
+    SempionePageHeaderComponent,
+    SempionePopupComponent,
+    SempionePopupActionBarComponent,
   ],
   templateUrl: './ricerca-operazioni.component.html',
   styleUrls: ['./ricerca-operazioni.component.css'],

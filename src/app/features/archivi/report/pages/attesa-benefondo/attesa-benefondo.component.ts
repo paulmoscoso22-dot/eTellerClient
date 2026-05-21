@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, DestroyRef, inject } from '@angular/core';
+import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReportFacade } from '../../services/report.facade';
@@ -20,67 +20,47 @@ import { SempionePageHeaderComponent } from '../../../../../components/General/s
   templateUrl: './attesa-benefondo.component.html',
   styleUrls: ['./attesa-benefondo.component.css'],
 })
-export class AttesaBenefondoComponent implements OnInit {
+export class AttesaBenefondoComponent implements OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
+  private subscription: Subscription | null = null;
 
-  transactions = signal<GetTransactionWaitingForBefResponse[]>([]);
+  transactions = signal<GetTransactionWithFiltersResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
   statusDefaultValue = TransactionStatus.AttesaBEF;
 
   constructor(private reportFacade: ReportFacade) {}
 
-  /**
-   * Angular lifecycle hook - Initialize component
-   */
-  ngOnInit(): void {
-    // Component initialized - filter will trigger search when ready
+  ngOnDestroy(): void {
+    this.destroy();
   }
 
-  private normalizeSearchValue(value: unknown): string | null {
-    if (typeof value !== 'string') {
-      return null;
+  private destroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      this.subscription = null;
     }
-
-    const normalized = value.trim();
-    return normalized ? normalized : null;
   }
 
-  private normalizeSearchDate(value: unknown): Date | null {
-    return value instanceof Date ? value : null;
-  }
-
-  /**
-   * Handle search event from filter component
-   */
   onSearch(filterData: any): void {
     const { trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId } = filterData;
 
-    this.getTransactionWaitingForBef(
-      this.normalizeSearchValue(trxCassa),
-      this.normalizeSearchDate(trxDataDal),
-      this.normalizeSearchDate(trxDataAl),
-      trxStatus ?? null,
-      this.normalizeSearchValue(trxBraId)
-    );
+    if (!trxDataDal || !trxDataAl) {
+      this.error.set('Compila tutti i campi obbligatori');
+      return;
+    }
+
+    this.getTransactionWithFilters(trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId);
   }
 
-  /**
-   * Get transactions waiting for BEF
-   * 
-   * @param trxCassa - Transaction cash register identifier
-   * @param trxDataDal - Start date for transaction range
-   * @param trxDataAl - End date for transaction range
-   * @param trxStatus - Status filter for transactions
-   * @param trxBraId - Branch identifier
-   */
-  getTransactionWaitingForBef(
-    trxCassa: string | null,
-    trxDataDal: Date | null,
-    trxDataAl: Date | null,
-    trxStatus: number | null,
-    trxBraId: string | null
+  getTransactionWithFilters(
+    trxCassa: string,
+    trxDataDal: Date,
+    trxDataAl: Date,
+    trxStatus: number,
+    trxBraId: string
   ): void {
+    this.destroy();
     this.isLoading.set(true);
     this.error.set(null);
 

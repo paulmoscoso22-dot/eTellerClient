@@ -157,12 +157,10 @@ export class RicercaComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.transactions.set(data as GetTransactionWithFiltersForGiornaleAntiriciclaggioResponse[]);
         this.isLoading.set(false);
-        console.log('Transazioni con filtri:', data, this.isLoading());
       },
       error: (error: any) => {
         this.error.set(error.message || 'Errore nel recupero transazioni');
         this.isLoading.set(false);
-        console.error('Errore nel recupero transazioni:', error);
       }
     });
   }

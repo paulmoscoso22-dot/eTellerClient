@@ -14,10 +14,11 @@ import { DeviceResponse, IDevice } from '../../models/device.models';
 import { ICassa } from '../../models/casa.models';
 import {
   SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-  SempioneToolbarComponent, SempioneButtonComponent,
+  SempioneToolbarComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
-  SempioneFieldGroupComponent,
+  SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
+  SempioneCrudToolbarActionsComponent,
 } from '../../../../../components/General';
 
 @Component({
@@ -29,10 +30,11 @@ import {
     DxSelectBoxModule, DxTextAreaModule, DxCheckBoxModule,
     ControlAssignComponent,
     SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-    SempioneToolbarComponent, SempioneButtonComponent,
+    SempioneToolbarComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
-    SempioneFieldGroupComponent,
+    SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
+    SempioneCrudToolbarActionsComponent,
   ],
   templateUrl: './casse.component.html',
   styleUrls: ['./casse.component.css'],
@@ -52,6 +54,9 @@ export class CasseComponent implements OnInit {
   popupMode           = signal<'new' | 'view' | 'edit'>('new');
   isDetailPopupVisible = false;
   selectedLabel       = signal<string>('');
+
+  isConfirmDeleteVisible = signal(false);
+  pendingDeleteId        = signal<string | null>(null);
 
   popupAssigned           = signal<IDevice[]>([]);
   assignedRolesForControl = signal<any[]>([]);
@@ -241,6 +246,7 @@ export class CasseComponent implements OnInit {
     switch (action) {
       case 'view': this.openViewPopup(data); break;
       case 'edit': this.openEditPopup(data); break;
+      case 'delete': this.onRowDelete(data); break;
     }
   }
 
@@ -312,17 +318,30 @@ export class CasseComponent implements OnInit {
     this.closePopup();
   }
 
-  onDelete(): void {
+  requestDeleteFromPopup(): void {
     const id = this.cassaForm.get('cliId')?.value;
+    if (!id) return;
+    this.pendingDeleteId.set(id);
+    this.isConfirmDeleteVisible.set(true);
+  }
+
+  confirmDelete(): void {
+    const id = this.pendingDeleteId();
     if (!id) return;
     this.casse$.deleteClient({ cliId: id, traUser: 'SYSTEM', traStation: 'WEB' }).subscribe({
       next: () => {
         this.casse.update(list => list.filter(c => c.cliId !== id));
         notify(`Cassa "${id}" eliminata`, 'success', 3000);
+        this.cancelDelete();
         this.closePopup();
       },
       error: (err) => notify(err?.error ?? 'Errore durante l\'eliminazione della cassa', 'error', 4000)
     });
+  }
+
+  cancelDelete(): void {
+    this.isConfirmDeleteVisible.set(false);
+    this.pendingDeleteId.set(null);
   }
 
   onTrace(): void {
@@ -335,13 +354,8 @@ export class CasseComponent implements OnInit {
   }
 
   onRowDelete(data: ICassa): void {
-    this.casse$.deleteClient({ cliId: data.cliId, traUser: 'SYSTEM', traStation: 'WEB' }).subscribe({
-      next: () => {
-        this.casse.update(list => list.filter(c => c.cliId !== data.cliId));
-        notify(`Cassa "${data.cliId}" eliminata`, 'success', 3000);
-      },
-      error: (err) => notify(err?.error ?? 'Errore durante l\'eliminazione della cassa', 'error', 4000)
-    });
+    this.pendingDeleteId.set(data.cliId);
+    this.isConfirmDeleteVisible.set(true);
   }
 
   closePopup(): void {

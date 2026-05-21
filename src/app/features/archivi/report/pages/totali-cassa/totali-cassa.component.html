@@ -11,18 +11,18 @@
     (searchClick)="onSearch($event)">
   </app-totale-cassa-filter>
 
-  <section class="card-section">
+  <app-sempione-card>
 
-    <app-header-card title="Totali Cassa" [count]="totaliCassa().length > 0 ? totaliCassa().length : undefined">
+    <app-sempione-card-header title="Totali Cassa" [count]="totaliCassa().length > 0 ? totaliCassa().length : undefined">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="2" y="7" width="20" height="14" rx="2"></rect>
         <path d="M16 3H8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z"></path>
         <line x1="12" y1="12" x2="12" y2="16"></line>
         <line x1="10" y1="14" x2="14" y2="14"></line>
       </svg>
-    </app-header-card>
+    </app-sempione-card-header>
 
-    <div class="card-body card-body--grid">
+    <div class="card-body--grid">
 
       @if (isLoading()) {
         <div class="state-message state-message--loading">
@@ -68,9 +68,6 @@
           [hoverStateEnabled]="true"
           [height]="'100%'">
 
-          <dxo-filter-row [visible]="showFilterRow" [applyFilter]="currentFilter"></dxo-filter-row>
-          <dxo-header-filter [visible]="showHeaderFilter"></dxo-header-filter>
-          <dxo-search-panel [visible]="true" [width]="240" placeholder="Cerca..."></dxo-search-panel>
           <dxo-paging [pageSize]="20"></dxo-paging>
           <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
 
@@ -88,6 +85,6 @@
 
     </div>
 
-  </section>
+  </app-sempione-card>
 
 </div>

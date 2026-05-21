@@ -3,24 +3,9 @@
   flex-shrink: 0;
 }
 
-.filter-shell {
-  display: block;
-}
-
-/* ── Card shell ── */
-.card-section {
-  background: #fff;
-  border: 1px solid #dce3ee;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ── Card body ── */
-.card-body {
-  padding: 12px 16px 10px;
+/* ── Filter body ── */
+.filter-body {
+  padding: 14px 18px;
 }
 
 /* ── Section headings ── */
@@ -43,7 +28,7 @@
 /* ── Filter grid ── */
 .filter-grid {
   display: grid;
-  gap: 6px 14px;
+  gap: 12px 24px;
 }
 
 .filter-grid--5 {
@@ -53,7 +38,7 @@
 .field-group {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
 }
 
 .field-label {
@@ -61,7 +46,7 @@
   font-weight: 600;
   color: #003366;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
 
 /* ── Options group ── */
@@ -76,20 +61,20 @@
   color: #374151;
 }
 
-/* ── Compact DevExtreme inputs ── */
-:host ::ng-deep .dx-texteditor               { height: 28px; }
-:host ::ng-deep .dx-texteditor-input         { min-height: unset; height: 26px; padding-top: 3px; padding-bottom: 3px; font-size: 13px; }
-:host ::ng-deep .dx-texteditor-buttons-container { height: 26px; }
+/* ── Compact DX inputs ── */
+:host ::ng-deep .filter-body .dx-texteditor                   { height: 28px; }
+:host ::ng-deep .filter-body .dx-texteditor-input             { min-height: unset; height: 26px; padding-top: 3px; padding-bottom: 3px; font-size: 13px; }
+:host ::ng-deep .filter-body .dx-texteditor-buttons-container { height: 26px; }
 
-/* ── Action Bar ── */
+/* ── Action bar ── */
 .action-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 8px 16px;
-  background: #fff;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 7px 12px;
   border-top: 1px solid #dce3ee;
+  background: rgba(237, 242, 247, 0.5);
   flex-shrink: 0;
 }
 
@@ -102,5 +87,4 @@
 
 @media (max-width: 680px) {
   .filter-grid--5 { grid-template-columns: repeat(2, 1fr); }
-  .action-bar { flex-wrap: wrap; }
 }

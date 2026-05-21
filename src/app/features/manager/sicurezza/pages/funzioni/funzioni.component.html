@@ -31,35 +31,11 @@
       </dx-text-box>
 
       <div toolbar-actions>
-        <dx-button
-          icon="search"
-          hint="Cerca"
-          stylingMode="outlined"
-          class="btn-fin-secondary"
-          (onClick)="filterFunDescription.set(filterFunDescription())">
-        </dx-button>
-        <dx-button
-          icon="revert"
-          hint="Ripristina filtri"
-          stylingMode="outlined"
-          class="btn-fin-secondary"
-          (onClick)="resetFilters()">
-        </dx-button>
-        <dx-button
-          icon="refresh"
-          hint="Reset selezione"
-          stylingMode="outlined"
-          class="btn-fin-secondary"
-          (onClick)="onReset()">
-        </dx-button>
+        <app-sempione-button icon="search" hint="Cerca" variant="secondary" (clicked)="filterFunDescription.set(filterFunDescription())"></app-sempione-button>
+        <app-sempione-button icon="revert" hint="Ripristina filtri" variant="secondary" (clicked)="resetFilters()"></app-sempione-button>
+        <app-sempione-button icon="refresh" hint="Reset selezione" variant="secondary" (clicked)="onReset()"></app-sempione-button>
         <span class="toolbar-sep"></span>
-        <dx-button
-          text="Nuovo"
-          icon="plus"
-          stylingMode="contained"
-          class="btn-fin-primary"
-          (onClick)="onAdd()">
-        </dx-button>
+        <app-sempione-button text="Nuovo" icon="plus" variant="primary" [shadow]="true" (clicked)="onAdd()"></app-sempione-button>
       </div>
     </app-sempione-toolbar>
 
@@ -97,8 +73,8 @@
           [showClearButton]="true">
         </dx-text-box>
         <div toolbar-actions>
-          <dx-button icon="search" hint="Cerca" stylingMode="outlined" class="btn-fin-secondary" (onClick)="searchRoles.set(searchRoles())"></dx-button>
-          <dx-button icon="revert" hint="Ripristina" stylingMode="outlined" class="btn-fin-secondary" (onClick)="searchRoles.set('')"></dx-button>
+          <app-sempione-button icon="search" hint="Cerca" variant="secondary" (clicked)="searchRoles.set(searchRoles())"></app-sempione-button>
+          <app-sempione-button icon="revert" hint="Ripristina" variant="secondary" (clicked)="searchRoles.set('')"></app-sempione-button>
         </div>
       </app-sempione-toolbar>
       <div class="card-body--grid">
@@ -135,8 +111,8 @@
           [showClearButton]="true">
         </dx-text-box>
         <div toolbar-actions>
-          <dx-button icon="search" hint="Cerca" stylingMode="outlined" class="btn-fin-secondary" (onClick)="searchUsers.set(searchUsers())"></dx-button>
-          <dx-button icon="revert" hint="Ripristina" stylingMode="outlined" class="btn-fin-secondary" (onClick)="searchUsers.set('')"></dx-button>
+          <app-sempione-button icon="search" hint="Cerca" variant="secondary" (clicked)="searchUsers.set(searchUsers())"></app-sempione-button>
+          <app-sempione-button icon="revert" hint="Ripristina" variant="secondary" (clicked)="searchUsers.set('')"></app-sempione-button>
         </div>
       </app-sempione-toolbar>
       <div class="card-body--grid">
@@ -165,7 +141,7 @@
   [title]="(popupMode() === 'edit' ? 'Modifica Funzione' : 'Dettaglio Funzione') + (selectedFunName() ? ' — ' + selectedFunName() : '')"
   [maxWidth]="560">
 
-  <div class="popup-layout" [class.popup-view-mode]="popupMode() === 'view'">
+  <div class="popup-layout">
     <app-sempione-popup-card title="Dettaglio Funzione">
       <div class="popup-fields-grid popup-fields-grid--2col">
 
@@ -240,7 +216,7 @@
           icon="trash"
           stylingMode="outlined"
           class="btn-fin-danger"
-          (onClick)="onDelete()">
+          (onClick)="requestDelete()">
         </dx-button>
       </app-sempione-popup-action-bar>
     }
@@ -305,3 +281,12 @@
   </form>
 
 </app-sempione-popup>
+
+<!-- ══ Popup Conferma Eliminazione ══ -->
+<app-sempione-confirm-delete
+  [(visible)]="isConfirmDeleteVisible"
+  entityLabel="la funzione"
+  [entityName]="pendingDeleteFun()?.funName ?? ''"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-sempione-confirm-delete>

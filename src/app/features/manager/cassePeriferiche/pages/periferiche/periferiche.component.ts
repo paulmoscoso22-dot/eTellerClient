@@ -8,10 +8,11 @@ import {
 import notify from 'devextreme/ui/notify';
 import {
   SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-  SempioneToolbarComponent, SempioneButtonComponent,
+  SempioneToolbarComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
-  SempioneFieldGroupComponent,
+  SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
+  SempioneCrudToolbarActionsComponent,
 } from '../../../../../components/General';
 
 export interface IPeriferica {
@@ -31,10 +32,11 @@ export interface IPeriferica {
     CommonModule, ReactiveFormsModule,
     DxTextBoxModule, DxButtonModule, DxValidatorModule, DxSelectBoxModule,
     SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-    SempioneToolbarComponent, SempioneButtonComponent,
+    SempioneToolbarComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
-    SempioneFieldGroupComponent,
+    SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
+    SempioneCrudToolbarActionsComponent,
   ],
   templateUrl: './periferiche.component.html',
   styleUrls: ['./periferiche.component.css'],
@@ -54,6 +56,9 @@ export class PerifericheComponent implements OnInit {
   isDetailPopupVisible = false;
   selectedLabel        = signal<string>('');
   selectedDevice       = signal<IPeriferica | null>(null);
+
+  isConfirmDeleteVisible = signal(false);
+  pendingDeleteDevice    = signal<IPeriferica | null>(null);
 
   readonly tipoList = [
     { dtyId: 'PRN', dtyDes: 'Stampante ricevute'  },
@@ -210,13 +215,26 @@ export class PerifericheComponent implements OnInit {
     this.closePopup();
   }
 
-  onDelete(): void {
+  requestDelete(): void {
     const dev = this.selectedDevice();
-    if (!dev || dev.inUso) { notify('Impossibile eliminare: il device è in uso', 'error', 3000); return; }
+    if (!dev || dev.inUso) return;
+    this.pendingDeleteDevice.set(dev);
+    this.isConfirmDeleteVisible.set(true);
+  }
+
+  confirmDelete(): void {
+    const dev = this.pendingDeleteDevice();
+    if (!dev) return;
     // TODO: call backend delete
     this.devices.update(list => list.filter(d => d.devId !== dev.devId));
     notify(`Device "${dev.devName}" eliminato`, 'success', 3000);
+    this.cancelDelete();
     this.closePopup();
+  }
+
+  cancelDelete(): void {
+    this.isConfirmDeleteVisible.set(false);
+    this.pendingDeleteDevice.set(null);
   }
 
   onRelease(): void {
@@ -239,9 +257,8 @@ export class PerifericheComponent implements OnInit {
 
   onRowDelete(data: IPeriferica): void {
     if (data.inUso) { notify('Impossibile eliminare: il device è in uso', 'error', 3000); return; }
-    // TODO: call backend delete
-    this.devices.update(list => list.filter(d => d.devId !== data.devId));
-    notify(`Device "${data.devName}" eliminato`, 'success', 3000);
+    this.pendingDeleteDevice.set(data);
+    this.isConfirmDeleteVisible.set(true);
   }
 
   closePopup(): void {

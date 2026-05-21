@@ -9,6 +9,7 @@ import { TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { interval } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { HelpService } from '../../../features/help/services/help.service';
 
 @Component({
   selector: 'app-header',
@@ -21,11 +22,12 @@ export class HeaderComponent {
   @Output() menuIconClicked = new EventEmitter<void>();
   @Output() userIconClicked = new EventEmitter<void>();
 
-  private transloco   = inject(TranslocoService);
-  private destroyRef  = inject(DestroyRef);
-  private authStore   = inject(AuthStore);
-  private authService = inject(AuthService);
-  private router      = inject(Router);
+  private transloco     = inject(TranslocoService);
+  private destroyRef    = inject(DestroyRef);
+  private authStore     = inject(AuthStore);
+  private authService   = inject(AuthService);
+  private router        = inject(Router);
+  private helpService   = inject(HelpService);
 
   languages = [
     { code: 'it', label: 'IT' },
@@ -38,6 +40,8 @@ export class HeaderComponent {
   isOnline      = signal(false);
   lastUpdated   = signal<Date>(new Date());
   relativeTime  = signal<string>('adesso');
+  hostUser      = signal<string>('—');
+  fichesPrinter = signal<string>('—');
 
   get absoluteTimestamp(): string {
     return this.lastUpdated().toISOString();
@@ -58,6 +62,19 @@ export class HeaderComponent {
     interval(30_000)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.updateRelativeTime());
+
+    this.helpService.helpInfo$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(info => {
+        if (info) {
+          this.hostUser.set(info.hostUser ?? '—');
+          this.fichesPrinter.set(info.fichesPrinter ?? '—');
+        }
+      });
+
+    this.helpService.getInfoBase()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({ error: () => {} });
   }
 
   private updateRelativeTime(): void {

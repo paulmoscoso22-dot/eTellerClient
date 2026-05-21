@@ -1,14 +1,14 @@
-<section class="card-section">
+<app-sempione-card>
 
-  <app-header-card title="Operazioni Annullate" [count]="transactions().length > 0 ? transactions().length : undefined">
+  <app-sempione-card-header title="Operazioni Annullate" [count]="transactions().length > 0 ? transactions().length : undefined">
     <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="15" y1="9" x2="9" y2="15"></line>
       <line x1="9" y1="9" x2="15" y2="15"></line>
     </svg>
-  </app-header-card>
+  </app-sempione-card-header>
 
-  <div class="card-body card-body--grid">
+  <div class="card-body--grid">
 
     @if (isLoading()) {
       <div class="state-message state-message--loading">
@@ -55,9 +55,6 @@
         [hoverStateEnabled]="true"
         [height]="'100%'">
 
-        <dxo-filter-row [visible]="showFilterRow" [applyFilter]="currentFilter"></dxo-filter-row>
-        <dxo-header-filter [visible]="showHeaderFilter"></dxo-header-filter>
-        <dxo-search-panel [visible]="true" [width]="240" placeholder="Cerca..."></dxo-search-panel>
         <dxo-paging [pageSize]="20"></dxo-paging>
         <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
 
@@ -77,4 +74,4 @@
 
   </div>
 
-</section>
+</app-sempione-card>

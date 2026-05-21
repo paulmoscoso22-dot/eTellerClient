@@ -1,15 +1,14 @@
-<div class="filter-shell" [formGroup]="searchForm">
+<div [formGroup]="searchForm">
+  <app-sempione-card>
 
-  <section class="card-section">
-
-    <app-header-card title="Filtri Di Ricerca">
+    <app-sempione-card-header title="Filtri di Ricerca">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
-    </app-header-card>
+    </app-sempione-card-header>
 
-    <div class="card-body">
+    <div class="filter-body">
 
       <!-- ── Sezione 1: Filtri Temporali ── -->
       <div class="section-heading">Filtri Temporali</div>
@@ -20,7 +19,7 @@
           <dx-date-box
             formControlName="trxDataDal"
             type="date"
-            displayFormat="dd.MM.yyyy"
+            displayFormat="dd/MM/yyyy"
             [showClearButton]="true"
             (onValueChanged)="onDateDalChanged($event)">
           </dx-date-box>
@@ -31,7 +30,7 @@
           <dx-date-box
             formControlName="trxDataAl"
             type="date"
-            displayFormat="dd.MM.yyyy"
+            displayFormat="dd/MM/yyyy"
             [showClearButton]="true"
             (onValueChanged)="onDateAlChanged($event)">
           </dx-date-box>
@@ -153,6 +152,5 @@
       </dx-button>
     </div>
 
-  </section>
-
+  </app-sempione-card>
 </div>

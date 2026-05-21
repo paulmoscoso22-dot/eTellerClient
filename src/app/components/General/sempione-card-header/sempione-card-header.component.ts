@@ -10,4 +10,5 @@ import { CommonModule } from '@angular/common';
 })
 export class SempioneCardHeaderComponent {
   @Input({ required: true }) title: string = '';
+  @Input() count?: number;
 }

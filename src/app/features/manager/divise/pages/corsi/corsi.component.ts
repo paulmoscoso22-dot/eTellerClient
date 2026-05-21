@@ -7,7 +7,7 @@ import {
   SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
-  SempioneFieldGroupComponent,
+  SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
 } from '../../../../../components/General';
 import notify from 'devextreme/ui/notify';
 import { CorsiService } from '../../services/corsi.service';
@@ -23,7 +23,7 @@ import { ICorsoResponse, ICorsiRequest } from '../../models/corso.models';
     SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
-    SempioneFieldGroupComponent,
+    SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
   ],
   templateUrl: './corsi.component.html',
   styleUrls: ['./corsi.component.css'],
@@ -60,6 +60,8 @@ export class CorsiComponent implements OnInit {
   // Popup
   popupMode = signal<'new' | 'view' | 'edit'>('new');
   isDetailPopupVisible = false;
+  isConfirmDeleteVisible = signal(false);
+  pendingDeleteData = signal<ICorsoResponse | null>(null);
   selectedLabel = signal<string>('');
 
   readonly tipoOptions = [
@@ -173,17 +175,29 @@ export class CorsiComponent implements OnInit {
     switch (action) {
       case 'view':   this.openViewPopup(data); break;
       case 'edit':   this.openEditPopup(data); break;
-      case 'delete': this.onDelete(data);      break;
+      case 'delete': this.requestDelete(data);  break;
     }
   }
 
-  onDelete(data: ICorsoResponse): void {
-    // TODO: call backend delete
+  requestDelete(data: ICorsoResponse): void {
+    this.pendingDeleteData.set(data);
+    this.isConfirmDeleteVisible.set(true);
+  }
+
+  confirmDelete(): void {
+    const data = this.pendingDeleteData();
+    if (!data) return;
     this.corsi.update(list => list.filter(c =>
       !(c.cprCurId1 === data.cprCurId1 && c.cprCurId2 === data.cprCurId2 &&
         c.cprCutId  === data.cprCutId   && c.cprValdat === data.cprValdat)
     ));
     notify(`Corso "${data.cprCurId1}/${data.cprCurId2}" eliminato`, 'success', 3000);
+    this.cancelDelete();
+  }
+
+  cancelDelete(): void {
+    this.isConfirmDeleteVisible.set(false);
+    this.pendingDeleteData.set(null);
   }
 
   onSubmit(): void {

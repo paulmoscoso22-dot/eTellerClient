@@ -1,10 +1,10 @@
-<div class="page-shell">
+<app-sempione-page-header title="Storico Tracce"></app-sempione-page-header>
 
-  <app-sempione-page-header title="Storico Trace"></app-sempione-page-header>
+<div class="page-shell">
 
   <app-sempione-card>
 
-    <app-sempione-card-header title="Registro delle Tracce">
+    <app-sempione-card-header title="Registro Delle Tracce">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M3 3v5h5"></path>
         <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"></path>
@@ -12,127 +12,125 @@
       </svg>
     </app-sempione-card-header>
 
-    <div [formGroup]="filterForm">
-      <app-sempione-toolbar>
+    <app-sempione-toolbar>
 
-        <div class="toolbar-field">
-          <dx-select-box
-            [items]="funzioni()"
-            displayExpr="tfcDes"
-            valueExpr="tfcId"
-            [searchEnabled]="true"
-            labelMode="hidden"
-            placeholder="Funzione..."
-            [value]="filterForm.get('traFunCode')?.value"
-            (valueChange)="filterForm.get('traFunCode')?.setValue($event)">
-          </dx-select-box>
-        </div>
+      <div class="toolbar-field">
+        <dx-select-box
+          [items]="funzioni()"
+          displayExpr="tfcDes"
+          valueExpr="tfcId"
+          [searchEnabled]="true"
+          labelMode="hidden"
+          placeholder="Funzione..."
+          [value]="filterFunCode()"
+          (onValueChanged)="filterFunCode.set($event.value)">
+        </dx-select-box>
+      </div>
 
-        <div class="toolbar-field">
-          <dx-select-box
-            [items]="utenti()"
-            displayExpr="des"
-            valueExpr="usrId"
-            [searchEnabled]="true"
-            labelMode="hidden"
-            placeholder="Utente..."
-            [value]="filterForm.get('traUser')?.value"
-            (valueChange)="filterForm.get('traUser')?.setValue($event)">
-          </dx-select-box>
-        </div>
+      <div class="toolbar-field">
+        <dx-select-box
+          [items]="utenti()"
+          displayExpr="des"
+          valueExpr="usrId"
+          [searchEnabled]="true"
+          labelMode="hidden"
+          placeholder="Utente..."
+          [value]="filterUser()"
+          (onValueChanged)="filterUser.set($event.value)">
+        </dx-select-box>
+      </div>
 
-        <div class="toolbar-field">
-          <dx-select-box
-            [items]="clients()"
-            displayExpr="cliDes"
-            valueExpr="cliId"
-            [searchEnabled]="true"
-            labelMode="hidden"
-            placeholder="Cassa..."
-            [value]="filterForm.get('traStation')?.value"
-            (valueChange)="filterForm.get('traStation')?.setValue($event)">
-          </dx-select-box>
-        </div>
+      <div class="toolbar-field">
+        <dx-select-box
+          [items]="clients()"
+          displayExpr="cliDes"
+          valueExpr="cliId"
+          [searchEnabled]="true"
+          labelMode="hidden"
+          placeholder="Cassa..."
+          [value]="filterStation()"
+          (onValueChanged)="filterStation.set($event.value)">
+        </dx-select-box>
+      </div>
 
-        <div class="toolbar-field">
-          <dx-select-box
-            [items]="tabellaItems()"
-            displayExpr="des"
-            valueExpr="id"
-            [searchEnabled]="true"
-            labelMode="hidden"
-            placeholder="Tabella..."
-            [value]="filterForm.get('traTabNam')?.value"
-            (valueChange)="filterForm.get('traTabNam')?.setValue($event)">
-          </dx-select-box>
-        </div>
+      <div class="toolbar-field">
+        <dx-select-box
+          [items]="tabellaItems()"
+          displayExpr="des"
+          valueExpr="id"
+          [searchEnabled]="true"
+          labelMode="hidden"
+          placeholder="Tabella..."
+          [value]="filterTabNam()"
+          (onValueChanged)="filterTabNam.set($event.value)">
+        </dx-select-box>
+      </div>
 
-        <div class="toolbar-field">
-          <dx-text-box
-            labelMode="hidden"
-            placeholder="Id Entità..."
-            [showClearButton]="true"
-            [value]="filterForm.get('traEntCode')?.value"
-            (valueChange)="filterForm.get('traEntCode')?.setValue($event)">
-          </dx-text-box>
-        </div>
+      <div class="toolbar-field">
+        <dx-text-box
+          labelMode="hidden"
+          placeholder="Id Entità..."
+          [showClearButton]="true"
+          [value]="$any(filterEntCode())"
+          (onValueChanged)="filterEntCode.set($event.value || null)">
+        </dx-text-box>
+      </div>
 
-        <div class="toolbar-field">
-          <dx-select-box
-            [items]="errorOptions"
-            displayExpr="text"
-            valueExpr="id"
-            labelMode="hidden"
-            placeholder="Errore..."
-            [value]="filterForm.get('traError')?.value"
-            (valueChange)="filterForm.get('traError')?.setValue($event)">
-          </dx-select-box>
-        </div>
+      <div class="toolbar-field">
+        <dx-select-box
+          [items]="errorOptions"
+          displayExpr="text"
+          valueExpr="id"
+          labelMode="hidden"
+          placeholder="Errore..."
+          [value]="filterError()"
+          (onValueChanged)="filterError.set($event.value)">
+        </dx-select-box>
+      </div>
 
-        <div class="toolbar-field">
-          <dx-date-box
-            type="date"
-            displayFormat="dd/MM/yyyy"
-            labelMode="hidden"
-            placeholder="Dal..."
-            [showClearButton]="true"
-            [width]="130"
-            [value]="filterForm.get('dataFrom')?.value"
-            (valueChange)="filterForm.get('dataFrom')?.setValue($event)">
-          </dx-date-box>
-        </div>
+      <div class="toolbar-field">
+        <dx-date-box
+          type="date"
+          displayFormat="dd/MM/yyyy"
+          labelMode="hidden"
+          placeholder="Dal..."
+          [showClearButton]="true"
+          [width]="130"
+          [value]="filterDateFrom()"
+          (onValueChanged)="filterDateFrom.set($event.value)">
+        </dx-date-box>
+      </div>
 
-        <div class="toolbar-field">
-          <dx-date-box
-            type="date"
-            displayFormat="dd/MM/yyyy"
-            labelMode="hidden"
-            placeholder="Al..."
-            [showClearButton]="true"
-            [width]="130"
-            [value]="filterForm.get('dataTo')?.value"
-            (valueChange)="filterForm.get('dataTo')?.setValue($event)">
-          </dx-date-box>
-        </div>
+      <div class="toolbar-field">
+        <dx-date-box
+          type="date"
+          displayFormat="dd/MM/yyyy"
+          labelMode="hidden"
+          placeholder="Al..."
+          [showClearButton]="true"
+          [width]="130"
+          [value]="filterDateTo()"
+          (onValueChanged)="filterDateTo.set($event.value)">
+        </dx-date-box>
+      </div>
 
-        <div toolbar-actions>
-          <app-sempione-button
-            icon="search"
-            hint="Cerca"
-            variant="secondary"
-            [disabled]="isLoading()"
-            (clicked)="onVisualizza()">
-          </app-sempione-button>
-          <app-sempione-button
-            icon="revert"
-            hint="Reset filtri"
-            variant="secondary"
-            (clicked)="resetFilters()">
-          </app-sempione-button>
-        </div>
+      <div toolbar-actions>
+        <app-sempione-button
+          icon="search"
+          hint="Cerca"
+          variant="secondary"
+          [disabled]="isLoading()"
+          (clicked)="onVisualizza()">
+        </app-sempione-button>
+        <app-sempione-button
+          icon="revert"
+          hint="Reset filtri"
+          variant="secondary"
+          (clicked)="resetFilters()">
+        </app-sempione-button>
+      </div>
 
-      </app-sempione-toolbar>
-    </div>
+    </app-sempione-toolbar>
 
     <app-sempione-data-grid
       [dataSource]="traces()"
@@ -202,9 +200,8 @@
     </app-sempione-popup-card>
 
     <app-sempione-popup-action-bar
-      [cancelText]="'Chiudi'"
+      cancelText="Chiudi"
       [showSave]="false"
-      [showStorico]="false"
       (cancel)="closeDetail()">
     </app-sempione-popup-action-bar>
 
