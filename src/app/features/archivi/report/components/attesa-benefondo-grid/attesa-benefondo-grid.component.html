@@ -1,13 +1,13 @@
-<section class="card-section">
+<app-sempione-card>
 
-  <app-header-card title="Attesa Benefondo" [count]="transactions().length > 0 ? transactions().length : undefined">
+  <app-sempione-card-header title="Attesa Benefondo" [count]="transactions().length > 0 ? transactions().length : undefined">
     <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="12" cy="12" r="10"></circle>
       <polyline points="12 6 12 12 16 14"></polyline>
     </svg>
-  </app-header-card>
+  </app-sempione-card-header>
 
-  <div class="card-body card-body--grid">
+  <div class="card-body--grid">
 
     @if (isLoading()) {
       <div class="state-message state-message--loading">
@@ -53,9 +53,6 @@
         [hoverStateEnabled]="true"
         [height]="'100%'">
 
-        <dxo-filter-row [visible]="showFilterRow" [applyFilter]="currentFilter"></dxo-filter-row>
-        <dxo-header-filter [visible]="showHeaderFilter"></dxo-header-filter>
-        <dxo-search-panel [visible]="true" [width]="240" placeholder="Cerca..."></dxo-search-panel>
         <dxo-paging [pageSize]="20"></dxo-paging>
         <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100]" [showInfo]="true"></dxo-pager>
 
@@ -74,4 +71,4 @@
 
   </div>
 
-</section>
+</app-sempione-card>

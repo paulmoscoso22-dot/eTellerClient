@@ -9,8 +9,12 @@ import {
   DxButtonModule,
   DxCheckBoxModule,
   DxSelectBoxModule,
-  DxPopupModule
+  DxTemplateModule
 } from 'devextreme-angular';
+import { HeaderCardComponent } from '../../../../components/header-card/header-card.component';
+import { SempionePageHeaderComponent } from '../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempionePopupComponent } from '../../../../components/General/sempione-popup/sempione-popup.component';
+import { SempionePopupActionBarComponent } from '../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
 import { RicercaOperazioniFacade } from '../services/ricerca-operazioni.facade';
@@ -34,7 +38,11 @@ import { RicercaOperazioniResponse } from '../domain/ricerca-operazioni.models';
     DxButtonModule,
     DxCheckBoxModule,
     DxSelectBoxModule,
-    DxPopupModule
+    DxTemplateModule,
+    HeaderCardComponent,
+    SempionePageHeaderComponent,
+    SempionePopupComponent,
+    SempionePopupActionBarComponent,
   ],
   templateUrl: './ricerca-operazioni.component.html',
   styleUrls: ['./ricerca-operazioni.component.css'],

@@ -166,6 +166,45 @@
 }
 
 // =============================================================================
+// SESSION INFO - Utente Host + Stampante Fiche
+// =============================================================================
+.session-info-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.session-info-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.session-info-icon {
+  font-size: 0.7rem;
+  color: var(--dx-color-icon);
+  flex-shrink: 0;
+}
+
+.session-info-primary {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--dx-color-text);
+  white-space: nowrap;
+  line-height: 1;
+  user-select: none;
+}
+
+.session-info-secondary {
+  font-size: 0.7rem;
+  color: var(--dx-color-icon);
+  white-space: nowrap;
+  line-height: 1;
+  user-select: none;
+}
+
+// =============================================================================
 // LANGUAGE SELECTOR - Selettore lingua
 // =============================================================================
 .lang-selector {

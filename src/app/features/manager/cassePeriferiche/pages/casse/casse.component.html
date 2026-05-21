@@ -1,6 +1,6 @@
-<div class="page-shell">
+<app-sempione-page-header title="Casse"></app-sempione-page-header>
 
-  <app-sempione-page-header title="Casse"></app-sempione-page-header>
+<div class="page-shell">
 
   <app-sempione-card>
 
@@ -24,22 +24,12 @@
         </dx-text-box>
       </div>
 
-      <div toolbar-actions>
-        <app-sempione-button
-          icon="revert"
-          hint="Ripristina ricerca"
-          variant="secondary"
-          (clicked)="resetSearch()">
-        </app-sempione-button>
-        <span class="toolbar-sep" toolbar-actions></span>
-        <app-sempione-button
-          text="Nuova Cassa"
-          icon="add"
-          variant="primary"
-          [shadow]="true"
-          (clicked)="openNewPopup()">
-        </app-sempione-button>
-      </div>
+      <app-sempione-crud-toolbar-actions
+        [showSearch]="false"
+        newText="Nuova Cassa"
+        (reset)="resetSearch()"
+        (add)="openNewPopup()">
+      </app-sempione-crud-toolbar-actions>
 
     </app-sempione-toolbar>
 
@@ -73,12 +63,12 @@
   [maxWidth]="800"
   (hidden)="closePopup()">
 
-  <form [formGroup]="cassaForm" class="popup-layout" [class.popup-view-mode]="popupMode() === 'view'">
+  <form [formGroup]="cassaForm" class="popup-layout">
 
     <app-sempione-popup-card title="Identificazione">
       <div class="popup-fields-grid popup-fields-grid--4col">
 
-        <app-sempione-field-group label="ID Cassa *" [locked]="popupMode() !== 'new'">
+        <app-sempione-field-group label="ID Cassa" [required]="true" [locked]="popupMode() !== 'new'">
           <dx-text-box formControlName="cliId" [readOnly]="popupMode() !== 'new'" placeholder="Es. A01" labelMode="hidden">
             <dx-validator>
               <dxi-validation-rule type="required"></dxi-validation-rule>
@@ -87,13 +77,13 @@
           </dx-text-box>
         </app-sempione-field-group>
 
-        <app-sempione-field-group label="Stato *" [locked]="popupMode() === 'view'">
+        <app-sempione-field-group label="Stato" [required]="true" [locked]="popupMode() === 'view'">
           <dx-select-box formControlName="cliStatus" [dataSource]="statiList()" displayExpr="steDes" valueExpr="steId" [readOnly]="popupMode() === 'view'" labelMode="hidden">
             <dx-validator><dxi-validation-rule type="required"></dxi-validation-rule></dx-validator>
           </dx-select-box>
         </app-sempione-field-group>
 
-        <app-sempione-field-group label="Lingua *" [locked]="popupMode() === 'view'">
+        <app-sempione-field-group label="Lingua" [required]="true" [locked]="popupMode() === 'view'">
           <dx-select-box formControlName="cliLingua" [dataSource]="languagesList()" displayExpr="lanDes" valueExpr="lanId" [readOnly]="popupMode() === 'view'" labelMode="hidden">
             <dx-validator><dxi-validation-rule type="required"></dxi-validation-rule></dx-validator>
           </dx-select-box>
@@ -103,7 +93,7 @@
           <dx-text-box formControlName="cliOff" [readOnly]="popupMode() === 'view'" placeholder="Codice ufficio" labelMode="hidden"></dx-text-box>
         </app-sempione-field-group>
 
-        <app-sempione-field-group label="Filiale *" [locked]="popupMode() === 'view'" class="popup-col-span-2">
+        <app-sempione-field-group label="Filiale" [required]="true" [locked]="popupMode() === 'view'" class="popup-col-span-2">
           <dx-select-box formControlName="cliBraId" [dataSource]="branchesList()" displayExpr="braDes" valueExpr="braId" [readOnly]="popupMode() === 'view'" labelMode="hidden"
             (onValueChanged)="popupMode() !== 'view' && onBranchChanged($event.value)">
             <dx-validator><dxi-validation-rule type="required"></dxi-validation-rule></dx-validator>
@@ -116,7 +106,7 @@
     <app-sempione-popup-card title="Configurazione Rete">
       <div class="popup-fields-grid popup-fields-grid--2col">
 
-        <app-sempione-field-group label="Indirizzo IP *" [locked]="popupMode() === 'view'">
+        <app-sempione-field-group label="Indirizzo IP" [required]="true" [locked]="popupMode() === 'view'">
           <dx-text-box formControlName="cliIp" [readOnly]="popupMode() === 'view'" placeholder="Es. 192.168.1.10" labelMode="hidden">
             <dx-validator>
               <dxi-validation-rule type="required"></dxi-validation-rule>
@@ -128,7 +118,7 @@
           </dx-text-box>
         </app-sempione-field-group>
 
-        <app-sempione-field-group label="Indirizzo MAC *" [locked]="popupMode() === 'view'">
+        <app-sempione-field-group label="Indirizzo MAC" [required]="true" [locked]="popupMode() === 'view'">
           <dx-text-box formControlName="cliMac" [readOnly]="popupMode() === 'view'" placeholder="Es. AA-BB-CC-DD-EE-FF" labelMode="hidden">
             <dx-validator>
               <dxi-validation-rule type="required"></dxi-validation-rule>
@@ -186,7 +176,7 @@
       (storico)="onTrace()">
       @if (popupMode() === 'edit') {
         <div secondary-actions>
-          <dx-button text="Elimina" icon="trash" stylingMode="contained" class="btn-fin-danger" (onClick)="onDelete()"></dx-button>
+          <dx-button text="Elimina" icon="trash" stylingMode="contained" class="btn-fin-danger" (onClick)="requestDeleteFromPopup()"></dx-button>
         </div>
       }
     </app-sempione-popup-action-bar>
@@ -194,3 +184,12 @@
   </form>
 
 </app-sempione-popup>
+
+<!-- ── Popup Conferma Eliminazione ── -->
+<app-sempione-confirm-delete
+  [(visible)]="isConfirmDeleteVisible"
+  entityLabel="la cassa"
+  [entityName]="pendingDeleteId()"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-sempione-confirm-delete>

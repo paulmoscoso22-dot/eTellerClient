@@ -5,20 +5,6 @@
   min-height: 0;
 }
 
-/* ── Card shell ── */
-.card-section {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-height: 0;
-  background: #fff;
-  border: 1px solid #dce3ee;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.12);
-  overflow: hidden;
-}
-
-/* ── Card body ── */
 .card-body--grid {
   padding: 0;
   flex: 1 1 auto;
@@ -40,11 +26,7 @@
   color: #6b7280;
 }
 
-.state-message svg {
-  width: 28px;
-  height: 28px;
-  stroke: #c5ccd8;
-}
+.state-message svg { width: 28px; height: 28px; stroke: #c5ccd8; }
 
 .state-message--loading {
   flex-direction: row;
@@ -53,12 +35,7 @@
   background: #f8fafc;
 }
 
-.state-message--loading svg {
-  width: 18px;
-  height: 18px;
-  stroke: #003366;
-  opacity: 0.7;
-}
+.state-message--loading svg { width: 18px; height: 18px; stroke: #003366; opacity: 0.7; }
 
 .spin-icon { animation: spin 0.9s linear infinite; }
 
@@ -77,19 +54,9 @@
   align-items: flex-start;
 }
 
-.state-message--error svg {
-  width: 16px;
-  height: 16px;
-  stroke: #ef4444;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
+.state-message--error svg { width: 16px; height: 16px; stroke: #ef4444; flex-shrink: 0; margin-top: 1px; }
 
-.state-message--empty {
-  background: #f8fafc;
-  border-top: 1px solid #e5e7eb;
-  flex: 1;
-}
+.state-message--empty { background: #f8fafc; border-top: 1px solid #e5e7eb; flex: 1; }
 
-.state-title  { font-size: 14px; font-weight: 600; color: #6b7280; }
+.state-title   { font-size: 14px; font-weight: 600; color: #6b7280; }
 .state-subtitle { font-size: 12px; color: #9ca3af; }

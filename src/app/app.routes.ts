@@ -112,10 +112,6 @@ export const routes: Routes = [
         loadComponent: () => import('./features/manager/informazioni/pages/trace/trace.component').then(m => m.TraceComponent),
         data: { titleKey: 'title' }
       },
-      {
-        path: 'log-sched-task',
-        loadComponent: () => import('./features/manager/informazioni/pages/log-sched-task/log-sched-task.component').then(m => m.LogSchedTaskComponent)
-      },
       //divise
       {
         path: 'aggiorna-dati-anagrafici',
@@ -193,10 +189,6 @@ export const routes: Routes = [
       {
         path: 'tipo-operazione',
         loadComponent: () => import('./features/manager/tabelle/pages/tipo-operazione/tipo-operazione.component').then(m => m.TipoOperazioneComponent)
-      },
-      {
-        path: 'regole-limiti-is107',
-        loadComponent: () => import('./features/manager/tabelle/pages/regole-limiti-is107/regole-limiti-is107.component').then(m => m.RegoleLimitiIs107Component)
       },
       //Operazioni - cambi biglietti banca
       {

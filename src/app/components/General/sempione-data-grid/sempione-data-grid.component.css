@@ -72,6 +72,12 @@
   text-overflow: clip !important;
 }
 
+:host ::ng-deep .dx-datagrid-headers .dx-header-row .dx-column-header-alignment-center .dx-datagrid-text-content {
+  text-align: center !important;
+  display: block !important;
+  width: 100% !important;
+}
+
 /* ── Data rows ── */
 :host ::ng-deep .dx-data-row > td {
   padding: 8px 10px !important;

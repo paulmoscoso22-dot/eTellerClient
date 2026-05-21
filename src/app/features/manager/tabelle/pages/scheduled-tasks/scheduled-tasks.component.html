@@ -1,6 +1,6 @@
-<div class="page-shell">
+<app-sempione-page-header title="Gestione Scheduled Tasks"></app-sempione-page-header>
 
-  <app-sempione-page-header title="Gestione Scheduled Tasks"></app-sempione-page-header>
+<div class="page-shell">
 
   <app-sempione-card>
 
@@ -178,7 +178,7 @@
 
       </div>
 
-      <div class="popup-flags-row" style="margin-top: 14px;">
+      <div class="popup-flags-row">
         <div class="popup-flag-group">
           <label class="popup-field-label">Traccia</label>
           <dx-check-box formControlName="futTrace" [readOnly]="popupMode() === 'view'"></dx-check-box>
@@ -209,7 +209,7 @@
           </app-sempione-field-group>
         </div>
 
-        <div class="popup-fields-grid popup-fields-grid--4col" style="margin-top: 12px;">
+        <div class="popup-fields-grid popup-fields-grid--4col" >
           <app-sempione-field-group label="Dalle">
             <dx-text-box formControlName="futStart" placeholder="HH:MM:SS" [readOnly]="popupMode() === 'view'"></dx-text-box>
           </app-sempione-field-group>
@@ -230,7 +230,7 @@
           </app-sempione-field-group>
         </div>
 
-        <div class="popup-fields-grid popup-fields-grid--4col" style="margin-top: 12px;">
+        <div class="popup-fields-grid popup-fields-grid--4col" >
           <app-sempione-field-group label="Errori max">
             <dx-number-box formControlName="futErrcount" [min]="1" [max]="100" [readOnly]="popupMode() === 'view'"></dx-number-box>
           </app-sempione-field-group>

@@ -8,7 +8,6 @@ import { DxTextAreaModule } from 'devextreme-angular/ui/text-area';
 import { DxButtonModule } from 'devextreme-angular/ui/button';
 import { DxCheckBoxModule } from 'devextreme-angular/ui/check-box';
 import notify from 'devextreme/ui/notify';
-import { confirm } from 'devextreme/ui/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ManagerService } from '../../services/sicurezza.service';
 import {
@@ -17,15 +16,12 @@ import {
   InsertSysFunctionRequest, UpdateSysFunctionRequest, DeleteSysFunctionRequest
 } from '../../models/manager.models';
 import { AuthFacade, AuthTemp } from '../../../../auth/auth.facade';
-import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
-import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
-import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
-import { SempioneToolbarComponent } from '../../../../../components/General/sempione-toolbar/sempione-toolbar.component';
-import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General/sempione-data-grid/sempione-data-grid.component';
-import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
-import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
-import { SempionePopupCardComponent } from '../../../../../components/General/sempione-popup-card/sempione-popup-card.component';
-import { SempioneFieldGroupComponent } from '../../../../../components/General/sempione-field-group/sempione-field-group.component';
+import {
+  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempioneToolbarComponent, SempioneDataGridComponent, SempioneGridColumn,
+  SempionePopupComponent, SempionePopupActionBarComponent, SempionePopupCardComponent,
+  SempioneFieldGroupComponent, SempioneButtonComponent, SempioneConfirmDeleteComponent,
+} from '../../../../../components/General';
 
 @Component({
   selector: 'app-funzioni',
@@ -37,6 +33,7 @@ import { SempioneFieldGroupComponent } from '../../../../../components/General/s
     SempioneToolbarComponent, SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupActionBarComponent,
     SempionePopupCardComponent, SempioneFieldGroupComponent,
+    SempioneButtonComponent, SempioneConfirmDeleteComponent,
   ],
   templateUrl: './funzioni.component.html',
   styleUrls: ['./funzioni.component.css'],
@@ -97,6 +94,9 @@ export class FunzioniComponent implements OnInit {
   showDetailPopup = signal<boolean>(false);
   popupMode       = signal<'view' | 'edit'>('view');
   isLoading       = signal<boolean>(false);
+
+  isConfirmDeleteVisible = signal(false);
+  pendingDeleteFun       = signal<{ funId: number; funName: string } | null>(null);
 
   @ViewChild('rolesGrid')  private rolesGrid?: SempioneDataGridComponent;
   @ViewChild('usersGrid')  private usersGrid?: SempioneDataGridComponent;
@@ -214,30 +214,40 @@ export class FunzioniComponent implements OnInit {
 
   onDeleteFromRow(data: SysFunctionsResponse): void {
     this.setSelectedFunction(data);
-    this.onDelete();
+    this.requestDelete();
   }
 
-  onDelete(): void {
+  requestDelete(): void {
     if (!this.requireSelection('Selezionare una funzione da eliminare')) return;
-    confirm(`Eliminare la funzione "${this.selectedFunName()}"?`, 'Conferma eliminazione')
-      .then((confirmed) => {
-        if (!confirmed) return;
-        const request: DeleteSysFunctionRequest = {
-          traUser:    this.authTemp.User,
-          traStation: this.authTemp.Cassa,
-          funId:      this.selectedFunId(),
-        };
-        this.isLoading.set(true);
-        this.managerService.deleteSysFunction(request)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe({
-            next: (result) => this.handleOperationSuccess(
-              result, 'Funzione eliminata con successo', "Errore durante l'eliminazione della funzione",
-              () => this.clearSelectedFunction()
-            ),
-            error: (err) => this.handleOperationError(err, "Errore durante l'eliminazione della funzione"),
-          });
+    this.pendingDeleteFun.set({ funId: this.selectedFunId(), funName: this.selectedFunName() });
+    this.isConfirmDeleteVisible.set(true);
+  }
+
+  confirmDelete(): void {
+    const fun = this.pendingDeleteFun();
+    if (!fun) return;
+    const request: DeleteSysFunctionRequest = {
+      traUser:    this.authTemp.User,
+      traStation: this.authTemp.Cassa,
+      funId:      fun.funId,
+    };
+    this.cancelDelete();
+    this.showDetailPopup.set(false);
+    this.isLoading.set(true);
+    this.managerService.deleteSysFunction(request)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (result) => this.handleOperationSuccess(
+          result, 'Funzione eliminata con successo', "Errore durante l'eliminazione della funzione",
+          () => this.clearSelectedFunction()
+        ),
+        error: (err) => this.handleOperationError(err, "Errore durante l'eliminazione della funzione"),
       });
+  }
+
+  cancelDelete(): void {
+    this.isConfirmDeleteVisible.set(false);
+    this.pendingDeleteFun.set(null);
   }
 
   onTrace(): void {

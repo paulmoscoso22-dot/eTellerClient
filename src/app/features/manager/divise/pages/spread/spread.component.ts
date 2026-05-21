@@ -1,13 +1,13 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DxTextBoxModule, DxNumberBoxModule } from 'devextreme-angular';
+import { DxTextBoxModule, DxNumberBoxModule, DxDateBoxModule } from 'devextreme-angular';
 import {
   SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
   SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
-  SempioneFieldGroupComponent,
+  SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
 } from '../../../../../components/General';
 import notify from 'devextreme/ui/notify';
 
@@ -23,11 +23,11 @@ export interface ISpreadItem {
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxTextBoxModule, DxNumberBoxModule,
+    DxTextBoxModule, DxNumberBoxModule, DxDateBoxModule,
     SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
     SempioneDataGridComponent, SempionePopupComponent, SempionePopupCardComponent,
-    SempionePopupActionBarComponent, SempioneFieldGroupComponent,
+    SempionePopupActionBarComponent, SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
   ],
   templateUrl: './spread.component.html',
   styleUrls: ['./spread.component.css'],
@@ -47,7 +47,10 @@ export class SpreadComponent implements OnInit {
   filterCur = signal<string>('');
   filterTipo = signal<string>('');
 
+  isLoading = signal<boolean>(false);
   isPopupVisible = false;
+  isConfirmDeleteVisible = signal(false);
+  pendingDeleteData = signal<ISpreadItem | null>(null);
   popupMode = signal<'new'|'edit'|'view'>('view');
   selectedLabel = signal<string>('');
 
@@ -97,12 +100,27 @@ export class SpreadComponent implements OnInit {
     this.closePopup();
   }
 
+  requestDelete(data: ISpreadItem): void {
+    this.pendingDeleteData.set(data);
+    this.isConfirmDeleteVisible.set(true);
+  }
+
+  confirmDelete(): void {
+    const data = this.pendingDeleteData();
+    if (!data) return;
+    this.spreadList.update(list => list.filter(i => !(i.sprCurId === data.sprCurId && i.sprType === data.sprType)));
+    notify(`Spread "${data.sprCurId} ${data.sprType}" eliminato`, 'success', 3000);
+    this.cancelDelete();
+  }
+
+  cancelDelete(): void {
+    this.isConfirmDeleteVisible.set(false);
+    this.pendingDeleteData.set(null);
+  }
+
   onTableAction(action: string, data: ISpreadItem): void {
     if (action === 'view') this.openViewPopup(data);
     if (action === 'edit') this.openEditPopup(data);
-    if (action === 'delete') {
-      this.spreadList.update(list => list.filter(i => !(i.sprCurId === data.sprCurId && i.sprType === data.sprType)));
-      notify('Spread eliminato', 'success', 1200);
-    }
+    if (action === 'delete') this.requestDelete(data);
   }
 }

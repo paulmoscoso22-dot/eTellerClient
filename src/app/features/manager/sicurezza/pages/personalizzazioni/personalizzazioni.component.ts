@@ -6,19 +6,15 @@ import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
 import { DxTextAreaModule } from 'devextreme-angular/ui/text-area';
 import { DxButtonModule } from 'devextreme-angular/ui/button';
 import notify from 'devextreme/ui/notify';
-import { confirm } from 'devextreme/ui/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ManagerService } from '../../services/sicurezza.service';
 import { PersonalisationResponse, UpdatePersonalisationRequest } from '../../models/personalisation.models';
-import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
-import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
-import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
-import { SempioneToolbarComponent } from '../../../../../components/General/sempione-toolbar/sempione-toolbar.component';
-import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General/sempione-data-grid/sempione-data-grid.component';
-import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
-import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
-import { SempionePopupCardComponent } from '../../../../../components/General/sempione-popup-card/sempione-popup-card.component';
-import { SempioneFieldGroupComponent } from '../../../../../components/General/sempione-field-group/sempione-field-group.component';
+import {
+  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempioneToolbarComponent, SempioneDataGridComponent, SempioneGridColumn,
+  SempionePopupComponent, SempionePopupActionBarComponent, SempionePopupCardComponent,
+  SempioneFieldGroupComponent, SempioneButtonComponent, SempioneConfirmDeleteComponent,
+} from '../../../../../components/General';
 
 @Component({
   selector: 'app-personalizzazioni',
@@ -30,6 +26,7 @@ import { SempioneFieldGroupComponent } from '../../../../../components/General/s
     SempioneToolbarComponent, SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupActionBarComponent,
     SempionePopupCardComponent, SempioneFieldGroupComponent,
+    SempioneButtonComponent, SempioneConfirmDeleteComponent,
   ],
   templateUrl: './personalizzazioni.component.html',
   styleUrls: ['./personalizzazioni.component.css'],
@@ -61,6 +58,9 @@ export class PersonalizzazioniComponent implements OnInit {
   showAddPopup    = signal<boolean>(false);
   popupMode       = signal<'view' | 'edit'>('view');
   isLoading       = signal<boolean>(false);
+
+  isConfirmDeleteVisible = signal(false);
+  pendingDeleteParId     = signal<string>('');
 
   readonly columns: SempioneGridColumn[] = [
     { dataField: 'parId',    caption: 'ID',          width: 220 },
@@ -148,19 +148,27 @@ export class PersonalizzazioniComponent implements OnInit {
 
   onDeleteFromRow(data: PersonalisationResponse): void {
     this.setSelected(data);
-    this.onDelete();
+    this.requestDelete();
   }
 
-  onDelete(): void {
+  requestDelete(): void {
     if (!this.selectedParId()) {
       notify('Selezionare una personalizzazione da eliminare', 'warning', 2000);
       return;
     }
-    confirm(`Eliminare la personalizzazione "${this.selectedParId()}"?`, 'Conferma eliminazione')
-      .then((confirmed) => {
-        if (!confirmed) return;
-        notify('Funzionalità di eliminazione non disponibile', 'warning', 2000);
-      });
+    this.pendingDeleteParId.set(this.selectedParId());
+    this.isConfirmDeleteVisible.set(true);
+  }
+
+  confirmDelete(): void {
+    this.cancelDelete();
+    this.showDetailPopup.set(false);
+    notify('Funzionalità di eliminazione non disponibile', 'warning', 2000);
+  }
+
+  cancelDelete(): void {
+    this.isConfirmDeleteVisible.set(false);
+    this.pendingDeleteParId.set('');
   }
 
   onTrace(): void {

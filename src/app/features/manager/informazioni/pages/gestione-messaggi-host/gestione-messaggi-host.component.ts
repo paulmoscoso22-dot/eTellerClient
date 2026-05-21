@@ -1,7 +1,6 @@
 import { Component, DestroyRef, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { DxSelectBoxModule } from 'devextreme-angular/ui/select-box';
 import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
 import { DxDateBoxModule } from 'devextreme-angular/ui/date-box';
@@ -19,11 +18,14 @@ import {
 import { InformazioniService } from '../../services/informazioni.service';
 import { GetMsg2HostRequest, Msg2HostResponse } from '../../models/informazioni.models';
 
+function makeToday(): Date    { const d = new Date(); d.setHours(0, 0, 0, 0); return d; }
+function makeTomorrow(): Date { const d = makeToday(); d.setDate(d.getDate() + 1); return d; }
+
 @Component({
   selector: 'app-gestione-messaggi-host',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule,
+    CommonModule,
     DxSelectBoxModule, DxTextBoxModule, DxDateBoxModule, DxNumberBoxModule, DxTextAreaModule,
     SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneButtonComponent,
@@ -36,9 +38,8 @@ import { GetMsg2HostRequest, Msg2HostResponse } from '../../models/informazioni.
 })
 export class GestioneMessaggiHostComponent implements OnInit {
   private readonly informazioniService = inject(InformazioniService);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly route = inject(ActivatedRoute);
-  private readonly fb = inject(FormBuilder);
+  private readonly destroyRef          = inject(DestroyRef);
+  private readonly route               = inject(ActivatedRoute);
 
   readonly statusOptions = [
     { id: null,          text: 'Tutti'     },
@@ -49,33 +50,22 @@ export class GestioneMessaggiHostComponent implements OnInit {
   ];
 
   readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'msgId',         caption: 'ID Msg',       alignment: 'center', width: 90  },
-    { dataField: 'msgStatus',     caption: 'Stato',        alignment: 'center'            },
-    { dataField: 'trxId',         caption: 'ID Transaz.',  alignment: 'center', width: 120 },
+    { dataField: 'msgId',         caption: 'ID Msg',        alignment: 'center', width: 90  },
+    { dataField: 'msgStatus',     caption: 'Stato',         alignment: 'center'             },
+    { dataField: 'trxId',         caption: 'ID Transaz.',   alignment: 'center', width: 120 },
     { dataField: 'msgModifyDate', caption: 'Data Modifica', alignment: 'center', width: 160, dataType: 'date', format: 'dd/MM/yyyy HH:mm:ss' },
   ];
 
-  filterForm: FormGroup;
-  messages     = signal<Msg2HostResponse[]>([]);
-  selectedMsg  = signal<Msg2HostResponse | null>(null);
-  isLoading    = signal(false);
+  filterDateFrom = signal<Date | null>(makeToday());
+  filterDateTo   = signal<Date | null>(makeTomorrow());
+  filterTrxId    = signal<number | null>(null);
+  filterMsgId    = signal<number | null>(null);
+  filterStatus   = signal<string | null>(null);
+
+  messages      = signal<Msg2HostResponse[]>([]);
+  selectedMsg   = signal<Msg2HostResponse | null>(null);
+  isLoading     = signal(false);
   detailVisible = false;
-
-  constructor() {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
-
-    this.filterForm = this.fb.group({
-      dataFrom:  [today],
-      dataTo:    [tomorrow],
-      trxId:     [null],
-      msgId:     [null],
-      msgStatus: [null],
-    });
-  }
 
   ngOnInit(): void {
     this.applyQueryParams();
@@ -87,12 +77,11 @@ export class GestioneMessaggiHostComponent implements OnInit {
   }
 
   resetFilters(): void {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
-    this.filterForm.reset({ dataFrom: today, dataTo: tomorrow, trxId: null, msgId: null, msgStatus: null });
+    this.filterDateFrom.set(makeToday());
+    this.filterDateTo.set(makeTomorrow());
+    this.filterTrxId.set(null);
+    this.filterMsgId.set(null);
+    this.filterStatus.set(null);
     this.messages.set([]);
   }
 
@@ -118,8 +107,7 @@ export class GestioneMessaggiHostComponent implements OnInit {
 
   private loadData(): void {
     this.isLoading.set(true);
-    const req = this.buildRequest();
-    this.informazioniService.postGetMsg2Host(req)
+    this.informazioniService.postGetMsg2Host(this.buildRequest())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => this.isLoading.set(false),
@@ -137,7 +125,7 @@ export class GestioneMessaggiHostComponent implements OnInit {
       .subscribe((params) => {
         const trxId = params['TRX_ID'] ?? params['trxId'];
         if (trxId !== undefined) {
-          this.filterForm.patchValue({ trxId: Number(trxId) });
+          this.filterTrxId.set(Number(trxId));
         }
       });
   }
@@ -149,13 +137,12 @@ export class GestioneMessaggiHostComponent implements OnInit {
   }
 
   private buildRequest(): GetMsg2HostRequest {
-    const v = this.filterForm.value;
     const req = new GetMsg2HostRequest();
-    req.dataFrom  = v.dataFrom  ?? null;
-    req.dataTo    = v.dataTo    ?? null;
-    req.trxId     = v.trxId     ?? null;
-    req.msgId     = v.msgId     ?? null;
-    req.msgStatus = v.msgStatus ?? null;
+    req.dataFrom  = this.filterDateFrom();
+    req.dataTo    = this.filterDateTo();
+    req.trxId     = this.filterTrxId();
+    req.msgId     = this.filterMsgId();
+    req.msgStatus = this.filterStatus();
     return req;
   }
 }

@@ -6,17 +6,7 @@
   overflow: hidden;
 }
 
-.page-shell {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  padding: 12px 16px 0;
-  gap: 10px;
-  overflow: hidden;
-}
-
-/* ── Popup textarea styling ── */
+/* monospace font for raw host message payloads */
 :host ::ng-deep dx-text-area .dx-texteditor-input {
   font-family: 'Courier New', Courier, monospace;
   font-size: 12px;

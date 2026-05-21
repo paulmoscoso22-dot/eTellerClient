@@ -7,11 +7,11 @@ import { confirm } from 'devextreme/ui/dialog';
 import notify from 'devextreme/ui/notify';
 import { ManagerService } from '../../services/sicurezza.service';
 import { SysUsersUseClientResponse } from '../../models/utenti.models';
-import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
-import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
-import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
-import { SempioneToolbarComponent } from '../../../../../components/General/sempione-toolbar/sempione-toolbar.component';
-import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General/sempione-data-grid/sempione-data-grid.component';
+import {
+  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempioneToolbarComponent, SempioneDataGridComponent, SempioneGridColumn,
+  SempioneButtonComponent,
+} from '../../../../../components/General';
 
 @Component({
   selector: 'app-utenti-collegati',
@@ -20,7 +20,7 @@ import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../co
     CommonModule,
     DxTextBoxModule, DxButtonModule,
     SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-    SempioneToolbarComponent, SempioneDataGridComponent,
+    SempioneToolbarComponent, SempioneDataGridComponent, SempioneButtonComponent,
   ],
   templateUrl: './utenti-collegati.component.html',
   styleUrls: ['./utenti-collegati.component.css'],
