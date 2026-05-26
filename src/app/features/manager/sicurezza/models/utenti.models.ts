@@ -39,6 +39,8 @@ export interface IUpdateUserRequest {
   usrStatus: string;
   usrExtref?: string;
   usrLingua: string;
+  traUser: string;
+  traStation: string;
   addIdRoles: number[];
   delIdRoles: number[];
 }

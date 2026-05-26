@@ -266,6 +266,7 @@ export class UtentiComponent implements OnInit {
         next: (success) => {
           if (success) {
             notify('Utente inserito con successo', 'success', 3000);
+            this.showDetailPopup.set(false);
             this.managerService.GetUserActiveBlocked().subscribe();
           } else {
             notify("Errore durante l'inserimento dell'utente", 'error', 3000);
@@ -289,6 +290,8 @@ export class UtentiComponent implements OnInit {
         usrStatus:  formValue.usrStatus || '',
         usrExtref:  formValue.usrExtref || '',
         usrLingua:  formValue.usrLingua || '',
+        traUser:    formValue.usrId     || '',
+        traStation: formValue.usrHostId || '',
         addIdRoles: this.movedToLeft    || [],
         delIdRoles: this.movedToRight   || [],
       };
@@ -298,6 +301,7 @@ export class UtentiComponent implements OnInit {
             notify('Utente aggiornato con successo', 'success', 3000);
             this.movedToLeft  = [];
             this.movedToRight = [];
+            this.showDetailPopup.set(false);
             this.managerService.GetUserActiveBlocked().subscribe();
           } else {
             notify("Errore durante l'aggiornamento dell'utente", 'error', 3000);
