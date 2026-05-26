@@ -31,6 +31,11 @@
         </div>
 
       </div>
+
+      <!-- ✅ Hint: mostra messaggio quando filtri vuoti -->
+      @if (!searchForm.get('tocCliId')?.value && !searchForm.get('tocData')?.value && !searchForm.get('tocCutId')?.value && !searchForm.get('tocBraId')?.value) {
+        <p class="hint" style="margin-top: 12px; color: #666; font-size: 0.875rem;">💡 Se lasci i filtri vuoti, vedrai tutti i dati disponibili</p>
+      }
     </div>
 
     <div class="action-bar">

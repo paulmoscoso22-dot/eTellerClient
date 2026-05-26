@@ -37,10 +37,10 @@ export class ReportFilterComponent implements OnInit {
   @Input() statusDefaultValue: number | null = null;
 
   private readonly statusLabels: Record<number, string> = {
-    0: 'Non Trasmesso',
-    1: 'Eseguito',
-    3: 'Annullato',
-    4: 'Attesa BEF',
+    30: 'Non Trasmesso',
+    50: 'Eseguito',
+    70: 'Annullato',
+    60: 'Attesa BEF',
   };
 
   get statusLabel(): string {
@@ -61,7 +61,8 @@ export class ReportFilterComponent implements OnInit {
   private initializeForm(): void {
     const dataDalValidators = this.dataDalRequired ? [Validators.required] : [];
     const dataAlValidators = this.dataAlRequired ? [Validators.required] : [];
-    const statusValidators = this.statusDefaultValue !== null ? [Validators.required, Validators.min(0)] : [];
+    // ✅ MODIFICATO: Non forzare validazione su trxStatus se è read-only
+    const statusValidators = this.statusDefaultValue !== null && !this.statusReadOnly ? [Validators.required, Validators.min(0)] : [];
 
     this.searchForm = this.formBuilder.group({
       trxCassa: [''],

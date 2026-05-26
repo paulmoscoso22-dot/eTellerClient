@@ -46,11 +46,7 @@ export class AttesaBenefondoComponent implements OnDestroy {
   onSearch(filterData: any): void {
     const { trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId } = filterData;
 
-    if (!trxDataDal || !trxDataAl) {
-      this.error.set('Compila tutti i campi obbligatori');
-      return;
-    }
-
+    // ✅ Date are optional - no validation required
     this.getTransactionWithFilters(trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId);
   }
 

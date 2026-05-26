@@ -1,11 +1,12 @@
 /**
  * Totale Cassa Request Model
+ * All fields are nullable — if null, no filter is applied on that field
  */
 export interface GetTotaleCassaRequest {
-  tocCliId: string;      // Cassa ID
-  tocData: string;       // Data (YYYY-MM-DD format in local timezone)
-  tocCutId: string;      // Currency Type ID
-  tocBraId: string;      // Branch ID
+  tocCliId: string | null;      // Cassa ID (nullable)
+  tocData: string | null;       // Data (YYYY-MM-DD format in local timezone, nullable)
+  tocCutId: string | null;      // Currency Type ID (nullable)
+  tocBraId: string | null;      // Branch ID (nullable)
 }
 
 /**
