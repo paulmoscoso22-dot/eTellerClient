@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DxTextBoxModule, DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule } from 'devextreme-angular';
 import {
-  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
   SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
@@ -23,7 +23,7 @@ import { ICurrencyCouple, ICurrencyDv } from '../../models/divisa.models';
   imports: [
     CommonModule, ReactiveFormsModule,
     DxTextBoxModule, DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule,
-    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,

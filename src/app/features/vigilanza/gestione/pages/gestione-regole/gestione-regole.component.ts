@@ -2,11 +2,8 @@ import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core'
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
-  DxDataGridModule,
   DxTextBoxModule,
   DxDateBoxModule,
-  DxButtonModule,
-  DxPopupModule,
   DxSelectBoxModule,
   DxCheckBoxModule,
   DxNumberBoxModule,
@@ -26,16 +23,13 @@ import {
 } from '../../domain/gestione-regole.models';
 import { IStOperationType } from '../../../../../core/domain/stOperationType.domain';
 import { ICurrencyType } from '../../../../../core/domain/currencyType.domain';
-import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
-import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
-import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
-import { SempioneToolbarComponent } from '../../../../../components/General/sempione-toolbar/sempione-toolbar.component';
-import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General/sempione-data-grid/sempione-data-grid.component';
-import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
-import { SempionePopupCardComponent } from '../../../../../components/General/sempione-popup-card/sempione-popup-card.component';
-import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
-import { SempioneFieldGroupComponent } from '../../../../../components/General/sempione-field-group/sempione-field-group.component';
-import { SempioneCrudToolbarActionsComponent } from '../../../../../components/General/sempione-crud-toolbar-actions/sempione-crud-toolbar-actions.component';
+import {
+  SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempioneToolbarComponent, SempioneButtonComponent,
+  SempioneDataGridComponent, SempioneGridColumn,
+  SempionePopupComponent, SempionePopupCardComponent,
+  SempionePopupActionBarComponent, SempioneFieldGroupComponent,
+} from '../../../../../components/General';
 
 @Component({
   selector: 'app-gestione-regole',
@@ -43,14 +37,12 @@ import { SempioneCrudToolbarActionsComponent } from '../../../../../components/G
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DxDataGridModule,
-    DxTextBoxModule,
-    DxDateBoxModule,
-    DxButtonModule,
-    DxPopupModule,
-    DxSelectBoxModule,
-    DxCheckBoxModule,
-    DxNumberBoxModule,
+    DxTextBoxModule, DxDateBoxModule, DxSelectBoxModule, DxCheckBoxModule, DxNumberBoxModule,
+    SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempioneToolbarComponent, SempioneButtonComponent,
+    SempioneDataGridComponent,
+    SempionePopupComponent, SempionePopupCardComponent,
+    SempionePopupActionBarComponent, SempioneFieldGroupComponent,
   ],
   templateUrl: './gestione-regole.component.html',
   styleUrls: ['./gestione-regole.component.css'],
@@ -62,6 +54,33 @@ export class GestioneRegoleComponent implements OnDestroy {
   private readonly authStore = inject(AuthStore);
 
   private subscription: Subscription | null = null;
+
+  readonly columns: SempioneGridColumn[] = [
+    { dataField: 'arlId',         caption: 'ID',                 width: 60 },
+    { dataField: 'optDes',        caption: 'Tipo operazione',    width: 140 },
+    { dataField: 'cutDes',        caption: 'Tipo divisa',        width: 120 },
+    { dataField: 'arlAcctId',     caption: 'Conto',              width: 120 },
+    { dataField: 'arlAcctType',   caption: 'Cat. conto',         width: 100 },
+    { dataField: 'arlLimit',      caption: 'Limite vigilanza',   width: 130, dataType: 'number', alignment: 'right' },
+    { dataField: 'arlValStart',   caption: 'Inizio validità',    width: 110, dataType: 'date', format: 'dd.MM.yyyy' },
+    { dataField: 'arlValEnd',     caption: 'Fine validità',      width: 110, dataType: 'date', format: 'dd.MM.yyyy' },
+    { dataField: 'arlRecDate',    caption: 'Data registrazione', width: 110, dataType: 'date', format: 'dd.MM.yyyy' },
+    { dataField: 'arlIsinternal', caption: 'Interna',            width: 80,  type: 'bool-text' },
+    { dataField: 'arlExclude',    caption: 'Escludi',            width: 80,  type: 'bool-text' },
+  ];
+
+  readonly historyColumns: SempioneGridColumn[] = [
+    { dataField: 'hisDate',       caption: 'Data modifica',      width: 140, dataType: 'datetime', format: 'dd/MM/yyyy HH:mm' },
+    { dataField: 'optDes',        caption: 'Tipo operazione',    width: 130 },
+    { dataField: 'cutDes',        caption: 'Tipo divisa',        width: 120 },
+    { dataField: 'arlAcctId',     caption: 'Conto',              width: 110 },
+    { dataField: 'arlAcctType',   caption: 'Cat. conto',         width: 100 },
+    { dataField: 'arlLimit',      caption: 'Limite',             width: 110, dataType: 'number', alignment: 'right' },
+    { dataField: 'arlValStart',   caption: 'Inizio validità',    width: 110, dataType: 'date', format: 'dd.MM.yyyy' },
+    { dataField: 'arlValEnd',     caption: 'Fine validità',      width: 110, dataType: 'date', format: 'dd.MM.yyyy' },
+    { dataField: 'arlIsinternal', caption: 'Interna',            width: 75,  type: 'bool-text' },
+    { dataField: 'arlExclude',    caption: 'Escludi',            width: 75,  type: 'bool-text' },
+  ];
 
   // ── Grid data ──
   rules = signal<IAntirecRuleResponse[]>([]);

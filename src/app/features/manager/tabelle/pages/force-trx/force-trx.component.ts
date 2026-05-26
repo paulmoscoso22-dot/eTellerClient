@@ -5,7 +5,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ForceTrxService } from '../../services/force-trx.service';
 import { IForceTrxItemResponse } from '../../models/force-trx.models';
 import {
-  SempionePageHeaderComponent,
+  SempionePageShellComponent,
   SempioneCardComponent,
   SempioneCardHeaderComponent,
   SempioneToolbarComponent,
@@ -25,7 +25,7 @@ import {
     CommonModule,
     DxSelectBoxModule,
     DxTextBoxModule,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
     SempioneToolbarComponent,

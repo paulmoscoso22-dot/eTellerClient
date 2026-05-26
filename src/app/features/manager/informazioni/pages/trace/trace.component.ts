@@ -7,7 +7,7 @@ import { DxDateBoxModule } from 'devextreme-angular/ui/date-box';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import notify from 'devextreme/ui/notify';
 import {
-  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
   SempioneToolbarComponent, SempioneButtonComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
@@ -30,7 +30,7 @@ function makeTomorrow(): Date { const d = makeToday(); d.setDate(d.getDate() + 1
   imports: [
     CommonModule,
     DxSelectBoxModule, DxTextBoxModule, DxDateBoxModule,
-    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneButtonComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,

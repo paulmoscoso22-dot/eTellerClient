@@ -8,7 +8,7 @@ import { GetAllUsersByUsrIdRequest, InfoAutorizzazioneUtenteResponse } from '../
 import { IStFunAcctypResponse } from '../../models/function.models';
 import { AuthFacade } from '../../../../auth/auth.facade';
 import {
-  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
   SempioneToolbarComponent, SempioneButtonComponent,
 } from '../../../../../components/General';
 
@@ -17,7 +17,7 @@ import {
   standalone: true,
   imports: [
     CommonModule, DxDataGridModule, DxTextBoxModule, DxTemplateModule,
-    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneButtonComponent,
   ],
   templateUrl: './info-autorizzazioni.component.html',

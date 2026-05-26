@@ -1,7 +1,4 @@
-<app-sempione-page-header title="Attesa Benefondo"></app-sempione-page-header>
-
-<div class="page-shell">
-  <!-- Search Form -->
+<app-sempione-page-shell title="Attesa Benefondo">
   <app-report-filter
     [isLoading]="isLoading"
     [statusDefaultValue]="statusDefaultValue"
@@ -11,10 +8,9 @@
     (searchClick)="onSearch($event)"
   ></app-report-filter>
 
-  <!-- Grid Component -->
   <app-attesa-benefondo-grid
     [transactions]="transactions"
     [isLoading]="isLoading"
     [error]="error"
   ></app-attesa-benefondo-grid>
-</div>
+</app-sempione-page-shell>

@@ -8,7 +8,7 @@ import notify from 'devextreme/ui/notify';
 import { ManagerService } from '../../services/sicurezza.service';
 import { SysUsersUseClientResponse } from '../../models/utenti.models';
 import {
-  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
   SempioneToolbarComponent, SempioneDataGridComponent, SempioneGridColumn,
   SempioneButtonComponent,
 } from '../../../../../components/General';
@@ -19,7 +19,7 @@ import {
   imports: [
     CommonModule,
     DxTextBoxModule, DxButtonModule,
-    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneDataGridComponent, SempioneButtonComponent,
   ],
   templateUrl: './utenti-collegati.component.html',

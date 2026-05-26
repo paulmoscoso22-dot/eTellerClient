@@ -10,7 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ManagerService } from '../../services/sicurezza.service';
 import { PersonalisationResponse, UpdatePersonalisationRequest } from '../../models/personalisation.models';
 import {
-  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
   SempioneToolbarComponent, SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupActionBarComponent, SempionePopupCardComponent,
   SempioneFieldGroupComponent, SempioneButtonComponent, SempioneConfirmDeleteComponent,
@@ -22,7 +22,7 @@ import {
   imports: [
     CommonModule, ReactiveFormsModule,
     DxTextBoxModule, DxTextAreaModule, DxButtonModule,
-    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupActionBarComponent,
     SempionePopupCardComponent, SempioneFieldGroupComponent,

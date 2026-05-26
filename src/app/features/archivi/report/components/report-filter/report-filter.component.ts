@@ -5,15 +5,11 @@ import {
   DxTextBoxModule,
   DxDateBoxModule,
   DxNumberBoxModule,
-  DxButtonModule
 } from 'devextreme-angular';
 import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
 import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneButtonComponent } from '../../../../../components/General';
 
-/**
- * Reusable Report Filter Component
- * Provides a standardized filter interface for report pages
- */
 @Component({
   selector: 'app-report-filter',
   standalone: true,
@@ -23,9 +19,9 @@ import { SempioneCardHeaderComponent } from '../../../../../components/General/s
     DxTextBoxModule,
     DxDateBoxModule,
     DxNumberBoxModule,
-    DxButtonModule,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
+    SempioneButtonComponent,
   ],
   templateUrl: './report-filter.component.html',
   styleUrls: ['./report-filter.component.css']
@@ -39,6 +35,18 @@ export class ReportFilterComponent implements OnInit {
   @Input() showStatus: boolean = true;
   @Input() statusReadOnly: boolean = false;
   @Input() statusDefaultValue: number | null = null;
+
+  private readonly statusLabels: Record<number, string> = {
+    0: 'Non Trasmesso',
+    1: 'Eseguito',
+    3: 'Annullato',
+    4: 'Attesa BEF',
+  };
+
+  get statusLabel(): string {
+    if (this.statusDefaultValue === null) return '';
+    return this.statusLabels[this.statusDefaultValue] ?? String(this.statusDefaultValue);
+  }
   @Input() dataDalRequired: boolean = false;
   @Input() dataAlRequired: boolean = false;
   
@@ -50,9 +58,6 @@ export class ReportFilterComponent implements OnInit {
     this.initializeForm();
   }
 
-  /**
-   * Initialize the form with appropriate validators
-   */
   private initializeForm(): void {
     const dataDalValidators = this.dataDalRequired ? [Validators.required] : [];
     const dataAlValidators = this.dataAlRequired ? [Validators.required] : [];
@@ -67,9 +72,6 @@ export class ReportFilterComponent implements OnInit {
     });
   }
 
-  /**
-   * Handle search button click
-   */
   search(): void {
     if (this.searchForm.invalid) {
       return;
@@ -90,9 +92,6 @@ export class ReportFilterComponent implements OnInit {
     });
   }
 
-  /**
-   * Handle date from change - set time to start of day (00:00:00)
-   */
   onDateDalChanged(e: any): void {
     if (e.value) {
       const date = new Date(e.value);
@@ -101,9 +100,6 @@ export class ReportFilterComponent implements OnInit {
     }
   }
 
-  /**
-   * Handle date to change - set time to end of day (23:59:59)
-   */
   onDateAlChanged(e: any): void {
     if (e.value) {
       const date = new Date(e.value);

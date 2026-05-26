@@ -10,6 +10,7 @@ export interface GetTransactionOperazioniAnnulateResponse {
   trxUsrId: string | null;
   hostTrace: string | null;
   trxText1: string | null;
+  stato?: string | null;
 }
 
 /**

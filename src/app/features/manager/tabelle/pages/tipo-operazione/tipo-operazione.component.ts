@@ -14,7 +14,7 @@ import {
   IUpsertOperationTypeCommand,
 } from '../../models/tipo-operazione.models';
 import {
-  SempionePageHeaderComponent,
+  SempionePageShellComponent,
   SempioneCardComponent,
   SempioneCardHeaderComponent,
   SempioneToolbarComponent,
@@ -36,7 +36,7 @@ import {
     CommonModule, ReactiveFormsModule,
     DxTextBoxModule,
     DxValidatorModule, DxSelectBoxModule, DxCheckBoxModule,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
     SempioneToolbarComponent,

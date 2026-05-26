@@ -13,7 +13,7 @@ import { CasseService } from '../../Services/casse.service';
 import { DeviceResponse, IDevice } from '../../models/device.models';
 import { ICassa } from '../../models/casa.models';
 import {
-  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
   SempioneToolbarComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
@@ -29,7 +29,7 @@ import {
     DxTextBoxModule, DxButtonModule, DxValidatorModule,
     DxSelectBoxModule, DxTextAreaModule, DxCheckBoxModule,
     ControlAssignComponent,
-    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,

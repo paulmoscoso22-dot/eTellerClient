@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, inject, DestroyRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LabelSecondaryComponent } from '../../../../../components/labels/label-secondary/label-secondary.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { InformazioniService } from '../../services/informazioni.service';
 import { GetTabellaServVarcharByIdRequest, TabellaServVarcharResponse, TraceResponse, GetTraceWithFunctionRequest, TraceWithFunctionResponse } from '../../models/informazioni.models';
@@ -8,7 +7,7 @@ import { GetTabellaServVarcharByIdRequest, TabellaServVarcharResponse, TraceResp
 @Component({
   selector: 'app-trace-detaill-component',
   standalone: true,
-  imports: [CommonModule, LabelSecondaryComponent],
+  imports: [CommonModule],
   templateUrl: './trace-detaill.component.html',
   styleUrls: ['./trace-detaill.component.scss']
 })

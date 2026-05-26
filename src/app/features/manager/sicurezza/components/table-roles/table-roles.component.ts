@@ -1,10 +1,10 @@
 import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { DxDataGridModule, DxDataGridComponent } from 'devextreme-angular';
+import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General';
 
 @Component({
   selector: 'app-table-roles',
   standalone: true,
-  imports: [DxDataGridModule],
+  imports: [SempioneDataGridComponent],
   templateUrl: './table-roles.component.html',
   styleUrls: ['./table-roles.component.css']
 })
@@ -12,13 +12,14 @@ export class TableRolesComponent {
   @Input() dataSource: any;
   @Input() pageSize = 3;
   @Output() selectionChanged = new EventEmitter<any>();
-  @ViewChild(DxDataGridComponent) private grid?: DxDataGridComponent;
+  @ViewChild(SempioneDataGridComponent) private grid?: SempioneDataGridComponent;
+
+  readonly columns: SempioneGridColumn[] = [
+    { dataField: 'roleId',   caption: 'Role ID', width: 80, dataType: 'number', alignment: 'center' },
+    { dataField: 'roleName', caption: 'Ruolo' },
+  ];
 
   public clearSelection(): void {
-    try {
-      this.grid?.instance?.clearSelection();
-    } catch (e) {
-      // ignore
-    }
+    this.grid?.clearSelection();
   }
 }

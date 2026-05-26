@@ -142,17 +142,17 @@
   justify-content: center;
   padding: 2px 8px;
   border-radius: 10px;
-  font-size: 10px;
+  font-size: var(--font-size-xs, 10px);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  background: #f1f5f9;
-  color: #64748b;
+  background: var(--color-status-neutral-bg, #f1f5f9);
+  color: var(--color-text-muted, #64748b);
 }
 
-.stato-pill--ok       { background: #d1fae5; color: #065f46; }
-.stato-pill--stornata { background: #fee2e2; color: #991b1b; }
-.stato-pill--forzata  { background: #fef3c7; color: #92400e; }
+.stato-pill--ok       { background: var(--color-status-ok-bg,      #dcfce7); color: var(--color-status-ok-text,      #166534); }
+.stato-pill--stornata { background: var(--color-status-error-bg,   #fee2e2); color: var(--color-status-error-text,   #991b1b); }
+.stato-pill--forzata  { background: var(--color-status-warning-bg, #fef9c3); color: var(--color-status-warning-text, #854d0e); }
 
 /* ── Action column ── */
 .actions-cell {
@@ -182,7 +182,7 @@
 }
 
 .action-btn--view:hover     { background: rgba(0, 51, 102, 0.08); }
-.action-btn--view:hover svg { stroke: #003366; }
+.action-btn--view:hover svg { stroke: var(--color-brand-navy, #003366); }
 
 /* ── Grid state messages ── */
 .grid-message {

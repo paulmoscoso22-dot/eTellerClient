@@ -1,12 +1,13 @@
 import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
 import { GetTransactionWaitingForBefResponse } from '../../domain/transaction.models';
 import { TransactionStatus } from '../../domain/transaction-status.enum';
 import { ReportFilterComponent } from '../../components/report-filter/report-filter.component';
 import { AttesaBenefondoGridComponent } from '../../components/attesa-benefondo-grid/attesa-benefondo-grid.component';
-import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempionePageShellComponent } from '../../../../../components/General/sempione-page-shell/sempione-page-shell.component';
 
 @Component({
   selector: 'app-attesa-benefondo',
@@ -15,7 +16,7 @@ import { SempionePageHeaderComponent } from '../../../../../components/General/s
     CommonModule,
     ReportFilterComponent,
     AttesaBenefondoGridComponent,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
   ],
   templateUrl: './attesa-benefondo.component.html',
   styleUrls: ['./attesa-benefondo.component.css'],
@@ -24,7 +25,7 @@ export class AttesaBenefondoComponent implements OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
   private subscription: Subscription | null = null;
 
-  transactions = signal<GetTransactionWithFiltersResponse[]>([]);
+  transactions = signal<GetTransactionWaitingForBefResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
   statusDefaultValue = TransactionStatus.AttesaBEF;

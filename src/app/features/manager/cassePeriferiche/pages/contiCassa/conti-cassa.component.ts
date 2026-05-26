@@ -7,7 +7,7 @@ import {
 } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import {
-  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
   SempioneToolbarComponent, SempioneButtonComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
@@ -32,7 +32,7 @@ export interface IContoCassa {
   imports: [
     CommonModule, ReactiveFormsModule,
     DxTextBoxModule, DxButtonModule, DxValidatorModule, DxSelectBoxModule,
-    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneButtonComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,

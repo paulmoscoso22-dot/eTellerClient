@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TabellaVarcharService, TabellaVarcharItem } from '../../services/tabella-varchar.service';
 import {
-  SempionePageHeaderComponent,
+  SempionePageShellComponent,
   SempioneCardComponent,
   SempioneCardHeaderComponent,
   SempioneToolbarComponent,
@@ -22,7 +22,7 @@ const TABLE = 'sys_DEVICETYPE';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
     SempioneToolbarComponent,

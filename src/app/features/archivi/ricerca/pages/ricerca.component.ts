@@ -14,7 +14,7 @@ import {
 } from '../../report/domain/transaction.models';
 import { RicercaFilterComponent } from '../components/ricerca-filter/ricerca-filter.component';
 import { RicercaGridComponent } from '../components/ricerca-grid/ricerca-grid.component';
-import { SempionePageHeaderComponent } from '../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempionePageShellComponent } from '../../../../components/General/sempione-page-shell/sempione-page-shell.component';
 
 @Component({
   selector: 'app-ricerca',
@@ -23,7 +23,7 @@ import { SempionePageHeaderComponent } from '../../../../components/General/semp
     CommonModule,
     RicercaFilterComponent,
     RicercaGridComponent,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
   ],
   templateUrl: './ricerca.component.html',
   styleUrls: ['./ricerca.component.css'],

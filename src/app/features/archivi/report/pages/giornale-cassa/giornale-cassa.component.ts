@@ -1,12 +1,13 @@
 import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
 import { GetTransactionGiornaleCassaResponse } from '../../domain/transaction.models';
 import { TransactionStatus } from '../../domain/transaction-status.enum';
 import { ReportFilterComponent } from '../../components/report-filter/report-filter.component';
 import { GiornaleCassaGridComponent } from '../../components/giornale-cassa-grid/giornale-cassa-grid.component';
-import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempionePageShellComponent } from '../../../../../components/General/sempione-page-shell/sempione-page-shell.component';
 
 @Component({
   selector: 'app-giornale-cassa',
@@ -15,7 +16,7 @@ import { SempionePageHeaderComponent } from '../../../../../components/General/s
     CommonModule,
     ReportFilterComponent,
     GiornaleCassaGridComponent,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
   ],
   templateUrl: './giornale-cassa.component.html',
   styleUrls: ['./giornale-cassa.component.css'],

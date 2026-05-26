@@ -4,15 +4,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import {
   DxTextBoxModule,
   DxDateBoxModule,
-  DxButtonModule
 } from 'devextreme-angular';
 import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
 import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneButtonComponent } from '../../../../../components/General';
 
-/**
- * Reusable Totale Cassa Filter Component
- * Provides a standardized filter interface for totali cassa page
- */
 @Component({
   selector: 'app-totale-cassa-filter',
   standalone: true,
@@ -21,9 +17,9 @@ import { SempioneCardHeaderComponent } from '../../../../../components/General/s
     ReactiveFormsModule,
     DxTextBoxModule,
     DxDateBoxModule,
-    DxButtonModule,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
+    SempioneButtonComponent,
   ],
   templateUrl: './totale-cassa-filter.component.html',
   styleUrls: ['./totale-cassa-filter.component.css']
@@ -45,9 +41,6 @@ export class TotaleCassaFilterComponent implements OnInit {
     this.initializeForm();
   }
 
-  /**
-   * Initialize the form with appropriate validators
-   */
   private initializeForm(): void {
     const cassaValidators = this.cassaRequired ? [Validators.required] : [];
     const dataValidators = this.dataRequired ? [Validators.required] : [];
@@ -62,9 +55,6 @@ export class TotaleCassaFilterComponent implements OnInit {
     });
   }
 
-  /**
-   * Handle search button click
-   */
   search(): void {
     if (this.searchForm.invalid) {
       return;

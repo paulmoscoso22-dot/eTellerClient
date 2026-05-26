@@ -11,7 +11,7 @@ import { Service } from '../../../../../core/services/service';
 import { IStOperationType } from '../../../../../core/domain/stOperationType.domain';
 import { ICurrencyType } from '../../../../../core/domain/currencyType.domain';
 import {
-  SempionePageHeaderComponent,
+  SempionePageShellComponent,
   SempioneCardComponent,
   SempioneCardHeaderComponent,
   SempioneToolbarComponent,
@@ -35,7 +35,7 @@ const NOME_TABELLA = 'ST_BOOKING_RC';
     ReactiveFormsModule,
     DxTextBoxModule,
     DxSelectBoxModule,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
     SempioneToolbarComponent,
@@ -66,7 +66,7 @@ export class CausaleMovimentiComponent implements OnInit {
   accountTypes = signal<IAccountTypeResponse[]>([]);
 
   readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'brcCutId',     caption: 'Tipo divisa',     alignment: 'left', width: 110 },
+    { dataField: 'brcCutId',     caption: 'ID',              alignment: 'left', width: 110 },
     { dataField: 'brcOptId',     caption: 'Tipo operazione', alignment: 'left', width: 120 },
     { dataField: 'brcActId',     caption: 'Genere conto',    alignment: 'left', width: 115 },
     { dataField: 'brcCodcau',    caption: 'Causale dare',    alignment: 'left', width: 110 },
@@ -82,10 +82,12 @@ export class CausaleMovimentiComponent implements OnInit {
   });
 
   isFormPopupVisible = false;
+  isViewPopupVisible = false;
   isEditMode = signal(false);
   selectedKey = signal<{ cutId: string; optId: string; actId: string } | null>(null);
   isSaving = signal(false);
   saveError = signal<string | null>(null);
+  viewItem = signal<IBookingRcItemResponse | null>(null);
 
   editForm: FormGroup = this.fb.group({
     brcCutId:     [null],
@@ -153,6 +155,15 @@ export class CausaleMovimentiComponent implements OnInit {
     this.saveError.set(null);
     this.editForm.reset({ brcCutId: null, brcOptId: null, brcActId: null, brcCodcau: '', brcCodcausto: '', brcText1: '', brcText2: '' });
     this.isFormPopupVisible = true;
+  }
+
+  openViewPopup(item: IBookingRcItemResponse): void {
+    this.viewItem.set(item);
+    this.isViewPopupVisible = true;
+  }
+
+  closeViewPopup(): void {
+    this.isViewPopupVisible = false;
   }
 
   openEditPopup(item: IBookingRcItemResponse): void {
