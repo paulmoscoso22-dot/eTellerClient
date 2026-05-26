@@ -173,9 +173,9 @@
 
       <div *dxTemplate="let cell of 'entityStatusCell'" class="entity-status-cell">
         <span class="entity-status-pill"
-          [class.entity-status-pill--green]="(cell.value | lowercase)?.includes('attiv')"
-          [class.entity-status-pill--red]="(cell.value | lowercase)?.includes('disabili')"
-          [class.entity-status-pill--yellow]="!(cell.value | lowercase)?.includes('attiv') && !(cell.value | lowercase)?.includes('disabili') && ((cell.value | lowercase)?.includes('inattiv') || (cell.value | lowercase)?.includes('bloccat'))">
+          [class.entity-status-pill--green]="(cell.value?.toString() | lowercase)?.includes('attiv')"
+          [class.entity-status-pill--red]="(cell.value?.toString() | lowercase)?.includes('disabili')"
+          [class.entity-status-pill--yellow]="!(cell.value?.toString() | lowercase)?.includes('attiv') && !(cell.value?.toString() | lowercase)?.includes('disabili') && ((cell.value?.toString() | lowercase)?.includes('inattiv') || (cell.value?.toString() | lowercase)?.includes('bloccat'))">
           {{ cell.value }}
         </span>
       </div>

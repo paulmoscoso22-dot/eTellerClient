@@ -2,10 +2,6 @@
 
   <app-totale-cassa-filter
     [isLoading]="isLoading"
-    [cassaRequired]="true"
-    [dataRequired]="true"
-    [tipContoRequired]="true"
-    [localitaRequired]="true"
     (searchClick)="onSearch($event)">
   </app-totale-cassa-filter>
 
@@ -29,7 +25,7 @@
       [pageSize]="20"
       [allowedPageSizes]="[20, 50, 100]"
       [showEditAction]="false"
-      noDataText="Nessun risultato. Imposta i filtri e avvia la ricerca per visualizzare i dati.">
+      noDataText="Nessun risultato. Refina i filtri e avvia una nuova ricerca.">
     </app-sempione-data-grid>
 
   </app-sempione-card>

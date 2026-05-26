@@ -1,4 +1,4 @@
-import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
@@ -24,7 +24,7 @@ import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../co
   templateUrl: './totali-cassa.component.html',
   styleUrls: ['./totali-cassa.component.css'],
 })
-export class TotaliCassaComponent implements OnDestroy {
+export class TotaliCassaComponent implements OnInit, OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
   private subscription: Subscription | null = null;
 
@@ -43,6 +43,11 @@ export class TotaliCassaComponent implements OnDestroy {
 
   constructor(private reportFacade: ReportFacade) {}
 
+  ngOnInit(): void {
+    // ✅ Carica tutti i dati al caricamento della pagina
+    this.loadAllTotaliCassa();
+  }
+
   ngOnDestroy(): void {
     this.destroy();
   }
@@ -54,22 +59,23 @@ export class TotaliCassaComponent implements OnDestroy {
     }
   }
 
+  // ✅ Carica tutti i dati senza filtri
+  private loadAllTotaliCassa(): void {
+    this.getTotaliCassa(null, null, null, null);
+  }
+
   onSearch(filterData: any): void {
     const { tocCliId, tocData, tocCutId, tocBraId } = filterData;
 
-    if (!tocCliId || !tocData || !tocCutId || !tocBraId) {
-      this.error.set('Compila tutti i campi obbligatori');
-      return;
-    }
-
+    // ✅ Tutti i filtri sono opzionali — non controllare se vuoti
     this.getTotaliCassa(tocCliId, tocData, tocCutId, tocBraId);
   }
 
   getTotaliCassa(
-    tocCliId: string,
-    tocData: Date,
-    tocCutId: string,
-    tocBraId: string
+    tocCliId: string | null | undefined,
+    tocData: Date | null | undefined,
+    tocCutId: string | null | undefined,
+    tocBraId: string | null | undefined
   ): void {
     this.destroy();
     this.isLoading.set(true);

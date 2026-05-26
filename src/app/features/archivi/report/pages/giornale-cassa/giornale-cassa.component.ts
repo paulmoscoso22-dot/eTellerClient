@@ -46,11 +46,7 @@ export class GiornaleCassaComponent implements OnDestroy {
   onSearch(filterData: any): void {
     const { trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId } = filterData;
 
-    if (!trxDataDal || !trxDataAl) {
-      this.error.set('Compila tutti i campi obbligatori');
-      return;
-    }
-
+    // ✅ Le date sono opzionali, nessun errore se vuote
     this.getTransactionWithFilters(trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId);
   }
 

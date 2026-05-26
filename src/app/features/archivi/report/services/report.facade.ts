@@ -185,36 +185,36 @@ export class ReportFacade {
   }
 
   /**
-   * Get totali cassa with filters
-   * 
-   * @param tocCliId - Cassa ID
-   * @param tocData - Data
-   * @param tocCutId - Currency Type ID
-   * @param tocBraId - Branch ID
-   * @returns Observable of totale cassa data
-   */
+    * Get totali cassa with filters
+    * 
+    * @param tocCliId - Cassa ID (nullable — if null, no filter applied)
+    * @param tocData - Data (nullable — if null, no filter applied)
+    * @param tocCutId - Currency Type ID (nullable — if null, no filter applied)
+    * @param tocBraId - Branch ID (nullable — if null, no filter applied)
+    * @returns Observable of totale cassa data
+    */
   getTotaliCassa(
-    tocCliId: string,
-    tocData: Date,
-    tocCutId: string,
-    tocBraId: string
+    tocCliId: string | null | undefined,
+    tocData: Date | null | undefined,
+    tocCutId: string | null | undefined,
+    tocBraId: string | null | undefined
   ): Observable<GetTotaleCassaResponse[]> {
     // Format date as YYYY-MM-DD using local date values (avoiding timezone conversion)
-    let formattedDate: string;
+    let formattedDate: string | null = null;
     if (tocData instanceof Date) {
       const year = tocData.getFullYear();
       const month = String(tocData.getMonth() + 1).padStart(2, '0');
       const day = String(tocData.getDate()).padStart(2, '0');
       formattedDate = `${year}-${month}-${day}`;
-    } else {
+    } else if (tocData) {
       formattedDate = tocData as string;
     }
 
     const payload: GetTotaleCassaRequest = {
-      tocCliId,
-      tocData: formattedDate as any, // Send as formatted strinEg, not Date
-      tocCutId,
-      tocBraId
+      tocCliId: this.normalizeString(tocCliId),
+      tocData: formattedDate as any, // Send as formatted string, not Date
+      tocCutId: this.normalizeString(tocCutId),
+      tocBraId: this.normalizeString(tocBraId)
     };
 
     return this.http.post<GetTotaleCassaResponse[]>(

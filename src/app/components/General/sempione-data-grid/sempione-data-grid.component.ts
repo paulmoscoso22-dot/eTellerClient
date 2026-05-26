@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DxDataGridModule } from 'devextreme-angular';
 import { DxDataGridComponent } from 'devextreme-angular/ui/data-grid';
@@ -22,6 +22,7 @@ export interface SempioneGridColumn {
   imports: [CommonModule, DxDataGridModule, SempioneRowActionsComponent],
   templateUrl: './sempione-data-grid.component.html',
   styleUrls: ['./sempione-data-grid.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SempioneDataGridComponent {
   @ViewChild(DxDataGridComponent) private grid?: DxDataGridComponent;
