@@ -37,7 +37,6 @@ export class CoppieDiviseService {
   delete(cur1: string, cur2: string, traUser: string, traStation: string): Observable<boolean> {
     traUser = "127";
     traStation = "127";
-    console.log(`Deleting currency couple: ${cur1} - ${cur2}, by user: ${traUser} at station: ${traStation}`);
     return this.api.delete<boolean>(
       `/CurrencyCouple/Delete?cur1=${encodeURIComponent(cur1)}&cur2=${encodeURIComponent(cur2)}&traUser=${encodeURIComponent(traUser)}&traStation=${encodeURIComponent(traStation)}`
     );

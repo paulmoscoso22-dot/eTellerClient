@@ -1,4 +1,4 @@
-import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, signal, DestroyRef, inject, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -66,6 +66,7 @@ export class GestioneErroriComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly gestioneErroriService = inject(GestioneErroriService);
   private readonly router = inject(Router);
+  private readonly ngZone = inject(NgZone);
 
   items = signal<IGestioneErroriItemResponse[]>([]);
   forceCodes = signal<IForceCodeResponse[]>([]);
@@ -78,7 +79,7 @@ export class GestioneErroriComponent implements OnInit {
   });
 
   // ── Form popup ──
-  isFormPopupVisible = false;
+  isFormPopupVisible = signal(false);
   popupMode = signal<'new' | 'view' | 'edit'>('new');
   selectedErrId = signal('');
   isSaving = signal(false);
@@ -112,7 +113,7 @@ export class GestioneErroriComponent implements OnInit {
   ];
 
   // ── Confirm delete popup ──
-  isConfirmDeleteVisible = false;
+  isConfirmDeleteVisible = signal(false);
   itemToDelete = signal<IGestioneErroriItemResponse | null>(null);
 
   constructor() {}
@@ -185,7 +186,7 @@ export class GestioneErroriComponent implements OnInit {
       errFocId: null, errDesSol: null,
     });
     this.editForm.get('errId')!.enable();
-    this.isFormPopupVisible = true;
+    this.isFormPopupVisible.set(true);
   }
 
   openViewPopup(item: IGestioneErroriItemResponse): void {
@@ -206,7 +207,7 @@ export class GestioneErroriComponent implements OnInit {
       errDesSol:  item.errDesSol,
     });
     this.editForm.get('errId')!.disable();
-    this.isFormPopupVisible = true;
+    this.isFormPopupVisible.set(true);
   }
 
   openEditPopup(item: IGestioneErroriItemResponse): void {
@@ -227,11 +228,11 @@ export class GestioneErroriComponent implements OnInit {
       errDesSol:  item.errDesSol,
     });
     this.editForm.get('errId')!.disable();
-    this.isFormPopupVisible = true;
+    this.isFormPopupVisible.set(true);
   }
 
   closeFormPopup(): void {
-    this.isFormPopupVisible = false;
+    this.isFormPopupVisible.set(false);
   }
 
   save(): void {
@@ -289,7 +290,7 @@ export class GestioneErroriComponent implements OnInit {
 
   private handleSaveSuccess(isEdit: boolean, id: string): void {
     this.isSaving.set(false);
-    this.isFormPopupVisible = false;
+    this.isFormPopupVisible.set(false);
     notify(
       isEdit
         ? `Errore "${id}" aggiornato con successo`
@@ -309,11 +310,11 @@ export class GestioneErroriComponent implements OnInit {
 
   requestDelete(item: IGestioneErroriItemResponse): void {
     this.itemToDelete.set(item);
-    this.isConfirmDeleteVisible = true;
+    this.isConfirmDeleteVisible.set(true);
   }
 
   cancelDelete(): void {
-    this.isConfirmDeleteVisible = false;
+    this.isConfirmDeleteVisible.set(false);
     this.itemToDelete.set(null);
   }
 
@@ -321,7 +322,15 @@ export class GestioneErroriComponent implements OnInit {
     const item = this.itemToDelete();
     if (!item) return;
 
-    this.isConfirmDeleteVisible = false;
+    // Defer signal update to avoid ExpressionChangedAfterItHasBeenCheckedError
+    this.ngZone.runOutsideAngular(() => {
+      setTimeout(() => {
+        this.ngZone.run(() => {
+          this.isConfirmDeleteVisible.set(false);
+        });
+      }, 0);
+    });
+
     this.gestioneErroriService.delete(item.errId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

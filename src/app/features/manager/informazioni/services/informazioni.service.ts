@@ -72,7 +72,7 @@ export class InformazioniService {
    * Retrieve TabellaServVarchar entries from the API and update internal observable.
    */
   postGetTabellaServVarchar(request: GetTabellaServVarcharRequest): Observable<TabellaServVarcharResponse[]> {
-    const url = `/Tabella/GetTabellaServVarchar`;
+    const url = `/Manager/Tabelle/GetTabellaServVarchar`;
     return this.api.post<TabellaServVarcharResponse[]>(url, request).pipe(
       tap((res: TabellaServVarcharResponse[]) => this._tabellaServVarchar.next(res))
     );
@@ -82,7 +82,7 @@ export class InformazioniService {
    * Retrieve TabellaServVarchar entries by id from the API and update internal observable.
    */
   postGetTabellaServVarcharById(request: GetTabellaServVarcharByIdRequest): Observable<TabellaServVarcharResponse> {
-    const url = `/Tabella/GetTabellaServVarcharById`;
+    const url = `/Manager/Tabelle/GetTabellaServVarcharById`;
     return this.api.post<TabellaServVarcharResponse>(url, request).pipe(
       tap((res: TabellaServVarcharResponse) => this._tabellaServVarcharsingle.next(res))
     );
@@ -96,7 +96,7 @@ export class InformazioniService {
   }
 
   postGetMsg2Host(request: GetMsg2HostRequest): Observable<Msg2HostResponse[]> {
-    const url = `/Informazioni/GetMsg2Host`;
+    const url = `/Manager/GetMsg2Host`;
     return this.api.post<Msg2HostResponse[]>(url, request).pipe(
       tap((res: Msg2HostResponse[]) => this._msg2host.next(res))
     );

@@ -269,7 +269,7 @@ export class MenuService  {
           icon: 'table',
           isVisible: true,
           children: [
-            { label: 'menu.categorieConti', url: 'categorie-conti', icon: 'folder', isVisible: true },
+            { label: 'menu.categorieConti', url: 'categorie-conti', icon: 'folder', isVisible: false },
             { label: 'menu.causaleMovimenti', url: 'causale-movimenti', icon: 'event', isVisible: true },
             { label: 'menu.forceTrx', url: 'force-trx', icon: 'lightning', isVisible: true },
             { label: 'menu.funzioniTraccie', url: 'funzioni-traccie', icon: 'tracer', isVisible: true },

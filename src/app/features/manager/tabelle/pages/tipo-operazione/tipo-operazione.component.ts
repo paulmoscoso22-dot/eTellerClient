@@ -155,7 +155,6 @@ export class TipoOperazioneComponent implements OnInit {
 
   private openEditPopup(data: ITipoOperazioneVm): void {
     data.optIscredit = data.optIscredit.trim();
-    console.log('Opening edit popup for:', data);
     this.selectedLabel.set(data.optId);
     this.operazioneForm.patchValue(data);
     this.popupMode.set('edit');
@@ -215,7 +214,6 @@ export class TipoOperazioneComponent implements OnInit {
   }
 
   onUpdate(): void {
-    console.log('Update command:', this.operazioneForm.getRawValue());
     if (!this.operazioneForm.valid) {
       notify('Compilare tutti i campi obbligatori con valori validi', 'error', 3000);
       return;

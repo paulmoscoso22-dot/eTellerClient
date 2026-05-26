@@ -21,7 +21,7 @@ export interface ISysUserByIdResponse {
   usrLingua: string;
 }
 
-export interface InsertUserResponse {
+export interface IInsertUserRequest {
   usrId: string;
   usrHostId: string;
   usrBraId: string;

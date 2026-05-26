@@ -12,14 +12,14 @@ export class TabellaIntService {
   private readonly apiService = inject(ApiService);
 
   search(nomeTabella: string, id?: number, desLike?: string): Observable<TabellaIntItem[]> {
-    return this.apiService.post<TabellaIntItem[]>('Tabella/GetTabellaServInt', { nomeTabella, id, desLike });
+    return this.apiService.post<TabellaIntItem[]>('Manager/Tabelle/GetTabellaServInt', { nomeTabella, id, desLike });
   }
 
   insert(nomeTabella: string, id: number, des: string): Observable<boolean> {
-    return this.apiService.post<boolean>('Tabella/InsertTabellaServInt', { nomeTabella, id, des });
+    return this.apiService.post<boolean>('Manager/Tabelle/InsertTabellaServInt', { nomeTabella, id, des });
   }
 
   update(nomeTabella: string, id: number, des: string): Observable<boolean> {
-    return this.apiService.post<boolean>('Tabella/UpdateTabellaServInt', { nomeTabella, id, des });
+    return this.apiService.post<boolean>('Manager/Tabelle/UpdateTabellaServInt', { nomeTabella, id, des });
   }
 }
