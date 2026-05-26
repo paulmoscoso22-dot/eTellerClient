@@ -13,7 +13,7 @@ import { Branch } from '../../../../../core/domain/branch.domain';
 import { ISTStatoEntitaResponse } from '../../../../../core/domain/stato-entita.domain';
 import { Router } from '@angular/router';
 import {
-  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
   SempioneToolbarComponent, SempioneButtonComponent,
   SempionePopupComponent, SempionePopupActionBarComponent,
   SempionePopupCardComponent, SempioneFieldGroupComponent,
@@ -28,7 +28,7 @@ import {
     DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule,
     DxSelectBoxModule, DxValidatorModule,
     ControlAssignComponent,
-    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneButtonComponent,
     SempionePopupComponent, SempionePopupActionBarComponent,
     SempionePopupCardComponent, SempioneFieldGroupComponent,

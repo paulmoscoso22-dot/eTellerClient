@@ -1,7 +1,4 @@
-<app-sempione-page-header title="Giornale di Cassa"></app-sempione-page-header>
-
-<div class="page-shell">
-  <!-- Search Form -->
+<app-sempione-page-shell title="Giornale di Cassa">
   <app-report-filter
     [isLoading]="isLoading"
     [statusDefaultValue]="statusDefaultValue"
@@ -11,10 +8,9 @@
     (searchClick)="onSearch($event)"
   ></app-report-filter>
 
-  <!-- Grid Component -->
   <app-giornale-cassa-grid
     [transactions]="transactions"
     [isLoading]="isLoading"
     [error]="error"
   ></app-giornale-cassa-grid>
-</div>
+</app-sempione-page-shell>

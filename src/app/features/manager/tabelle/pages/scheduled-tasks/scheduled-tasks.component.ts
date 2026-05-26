@@ -11,7 +11,7 @@ import {
 import notify from 'devextreme/ui/notify';
 import { TabelleService } from '../../services/tabelle.service';
 import {
-  SempionePageHeaderComponent,
+  SempionePageShellComponent,
   SempioneCardComponent,
   SempioneCardHeaderComponent,
   SempioneToolbarComponent,
@@ -35,7 +35,7 @@ import {
     CommonModule, ReactiveFormsModule,
     DxDataGridModule, DxTextBoxModule, DxCheckBoxModule,
     DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
     SempioneToolbarComponent,

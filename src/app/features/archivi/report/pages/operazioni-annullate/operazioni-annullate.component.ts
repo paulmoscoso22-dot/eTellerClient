@@ -7,7 +7,7 @@ import { GetTransactionOperazioniAnnulateResponse } from '../../domain/transacti
 import { TransactionStatus } from '../../domain/transaction-status.enum';
 import { ReportFilterComponent } from '../../components/report-filter/report-filter.component';
 import { OperazioniAnnullateGridComponent } from '../../components/operazioni-annullate-grid/operazioni-annullate-grid.component';
-import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempionePageShellComponent } from '../../../../../components/General/sempione-page-shell/sempione-page-shell.component';
 
 @Component({
   selector: 'app-operazioni-annullate',
@@ -16,7 +16,7 @@ import { SempionePageHeaderComponent } from '../../../../../components/General/s
     CommonModule,
     ReportFilterComponent,
     OperazioniAnnullateGridComponent,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
   ],
   templateUrl: './operazioni-annullate.component.html',
   styleUrls: ['./operazioni-annullate.component.css'],

@@ -7,7 +7,7 @@ import { GetTransactionGiornaleCassaResponse } from '../../domain/transaction.mo
 import { TransactionStatus } from '../../domain/transaction-status.enum';
 import { ReportFilterComponent } from '../../components/report-filter/report-filter.component';
 import { GiornaleCassaGridComponent } from '../../components/giornale-cassa-grid/giornale-cassa-grid.component';
-import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempionePageShellComponent } from '../../../../../components/General/sempione-page-shell/sempione-page-shell.component';
 
 @Component({
   selector: 'app-giornale-cassa',
@@ -16,7 +16,7 @@ import { SempionePageHeaderComponent } from '../../../../../components/General/s
     CommonModule,
     ReportFilterComponent,
     GiornaleCassaGridComponent,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
   ],
   templateUrl: './giornale-cassa.component.html',
   styleUrls: ['./giornale-cassa.component.css'],

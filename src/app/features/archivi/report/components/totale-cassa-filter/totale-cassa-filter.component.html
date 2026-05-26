@@ -34,10 +34,10 @@
     </div>
 
     <div class="action-bar">
-      <dx-button text="Annulla" icon="revert" stylingMode="outlined" (onClick)="reset()"></dx-button>
-      <dx-button text="Ricerca" icon="search" class="btn-fin-primary btn-fin-shadow"
-        [disabled]="isLoading()" (onClick)="search()">
-      </dx-button>
+      <app-sempione-button text="Annulla" icon="revert" (clicked)="reset()"></app-sempione-button>
+      <app-sempione-button text="Ricerca" icon="search" variant="primary" [shadow]="true"
+        [disabled]="isLoading()" (clicked)="search()">
+      </app-sempione-button>
     </div>
 
   </app-sempione-card>

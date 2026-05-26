@@ -24,7 +24,7 @@ import {
 import { IStOperationType } from '../../../../../core/domain/stOperationType.domain';
 import { ICurrencyType } from '../../../../../core/domain/currencyType.domain';
 import {
-  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
   SempioneToolbarComponent, SempioneButtonComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent,
@@ -38,7 +38,7 @@ import {
     CommonModule,
     ReactiveFormsModule,
     DxTextBoxModule, DxDateBoxModule, DxSelectBoxModule, DxCheckBoxModule, DxNumberBoxModule,
-    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneButtonComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent,

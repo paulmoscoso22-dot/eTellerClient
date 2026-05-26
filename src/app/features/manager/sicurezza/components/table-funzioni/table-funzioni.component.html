@@ -1,13 +1,7 @@
-<dx-data-grid
+<app-sempione-data-grid
   [dataSource]="dataSource"
-  [showBorders]="true"
-  [selection]="{ mode: 'single' }"
-  (onSelectionChanged)="selectionChanged.emit($event)">
-
-  <dxo-paging [pageSize]="pageSize"></dxo-paging>
-
-  <dxi-column dataField="funId" caption="Id" [width]="60"></dxi-column>
-  <dxi-column dataField="funName" caption="Function"></dxi-column>
-  <dxi-column dataField="funCode" caption="Code" [width]="120"></dxi-column>
-
-</dx-data-grid>
+  [columns]="columns"
+  [pageSize]="pageSize"
+  [showEditAction]="false"
+  (selectionChanged)="selectionChanged.emit($event)">
+</app-sempione-data-grid>

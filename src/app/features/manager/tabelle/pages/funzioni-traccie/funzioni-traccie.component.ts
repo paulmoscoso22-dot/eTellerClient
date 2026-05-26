@@ -8,7 +8,7 @@ import notify from 'devextreme/ui/notify';
 import { FunzioniTraccieService } from '../../services/funzioni-traccie.service';
 import { IFunzioniTraccieItemResponse, IFunzioniTraccieUpsertRequest } from '../../models/funzioni-traccie.models';
 import {
-  SempionePageHeaderComponent,
+  SempionePageShellComponent,
   SempioneCardComponent,
   SempioneCardHeaderComponent,
   SempioneToolbarComponent,
@@ -31,7 +31,7 @@ const NOME_TABELLA = 'ST_TRACE_FUNCTION';
     CommonModule,
     ReactiveFormsModule,
     DxTextBoxModule,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
     SempioneToolbarComponent,

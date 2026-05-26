@@ -35,7 +35,6 @@
 :host ::ng-deep .filter-body .dx-texteditor                   { height: 28px; }
 :host ::ng-deep .filter-body .dx-texteditor-input             { min-height: unset; height: 26px; padding-top: 3px; padding-bottom: 3px; font-size: 13px; }
 :host ::ng-deep .filter-body .dx-texteditor-buttons-container { height: 26px; }
-:host ::ng-deep .action-bar .dx-button                        { height: 28px; }
 
 /* ── Action bar ── */
 .action-bar {
@@ -44,8 +43,8 @@
   justify-content: flex-end;
   gap: 6px;
   padding: 7px 12px;
-  border-top: 1px solid #dce3ee;
-  background: rgba(237, 242, 247, 0.5);
+  border-top: 1px solid var(--dx-color-border, #dce3ee);
+  background: color-mix(in srgb, var(--dx-color-border, #dce3ee) 20%, transparent);
   flex-shrink: 0;
 }
 

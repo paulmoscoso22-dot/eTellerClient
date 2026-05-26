@@ -1,8 +1,6 @@
 import { Component, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
-import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
-import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General';
+import { SempioneCardComponent, SempioneCardHeaderComponent, SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General';
 import { GetTransactionOperazioniAnnulateResponse } from '../../domain/transaction.models';
 
 @Component({

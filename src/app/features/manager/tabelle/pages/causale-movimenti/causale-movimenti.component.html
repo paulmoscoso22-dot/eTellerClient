@@ -1,6 +1,4 @@
-<app-sempione-page-header title="Causali Movimenti"></app-sempione-page-header>
-
-<div class="page-shell">
+<app-sempione-page-shell title="Causali Movimenti">
 
   <app-sempione-card>
 
@@ -92,9 +90,11 @@
       [columns]="gridColumns"
       [isLoading]="isLoading()"
       [error]="error()"
+      [showViewAction]="true"
       [showEditAction]="true"
       [showTraceAction]="true"
       noDataText="Nessuna causale trovata. Inserire i criteri di ricerca e premere Cerca."
+      (rowView)="openViewPopup($event)"
       (rowEdit)="openEditPopup($event)"
       (rowTrace)="openTrace($event)">
     </app-sempione-data-grid>
@@ -207,3 +207,85 @@
   </div>
 
 </app-sempione-popup>
+
+<!-- ── Popup Visualizzazione ── -->
+@if (viewItem()) {
+<app-sempione-popup
+  [(visible)]="isViewPopupVisible"
+  [title]="'Dettaglio Causale — ' + viewItem()!.brcCutId + ' / ' + viewItem()!.brcOptId + ' / ' + viewItem()!.brcActId"
+  [maxWidth]="700"
+  (hidden)="closeViewPopup()">
+
+  <div class="popup-layout">
+
+    <app-sempione-popup-card title="Classificazione">
+      <div class="popup-fields-grid popup-fields-grid--3col">
+
+        <app-sempione-field-group label="Tipo divisa" [locked]="true">
+          <dx-select-box
+            [value]="viewItem()!.brcCutId"
+            [dataSource]="currencyTypes()"
+            displayExpr="cutDes"
+            valueExpr="cutId"
+            [readOnly]="true"
+            [showClearButton]="false">
+          </dx-select-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Tipo operazione" [locked]="true">
+          <dx-select-box
+            [value]="viewItem()!.brcOptId"
+            [dataSource]="operationTypes()"
+            displayExpr="optDes"
+            valueExpr="optId"
+            [readOnly]="true"
+            [showClearButton]="false">
+          </dx-select-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Genere conto" [locked]="true">
+          <dx-select-box
+            [value]="viewItem()!.brcActId"
+            [dataSource]="accountTypes()"
+            displayExpr="actDes"
+            valueExpr="actId"
+            [readOnly]="true"
+            [showClearButton]="false">
+          </dx-select-box>
+        </app-sempione-field-group>
+
+      </div>
+    </app-sempione-popup-card>
+
+    <app-sempione-popup-card title="Causali e testi">
+      <div class="popup-fields-grid popup-fields-grid--2col">
+
+        <app-sempione-field-group label="Codice causale dare">
+          <dx-text-box [value]="viewItem()!.brcCodcau" [readOnly]="true" [showClearButton]="false"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Codice causale avere">
+          <dx-text-box [value]="viewItem()!.brcCodcausto" [readOnly]="true" [showClearButton]="false"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Testo 1">
+          <dx-text-box [value]="viewItem()!.brcText1 ?? ''" [readOnly]="true" [showClearButton]="false"></dx-text-box>
+        </app-sempione-field-group>
+
+        <app-sempione-field-group label="Testo 2">
+          <dx-text-box [value]="viewItem()!.brcText2 ?? ''" [readOnly]="true" [showClearButton]="false"></dx-text-box>
+        </app-sempione-field-group>
+
+      </div>
+    </app-sempione-popup-card>
+
+    <app-sempione-popup-action-bar
+      [showSave]="false"
+      cancelText="Chiudi"
+      (cancel)="closeViewPopup()">
+    </app-sempione-popup-action-bar>
+
+  </div>
+
+</app-sempione-popup>
+}

@@ -1,8 +1,6 @@
 import { Component, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DxDataGridModule } from 'devextreme-angular';
-import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
-import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneCardComponent, SempioneCardHeaderComponent, SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General';
 
 import { GiornaleAntiriciclaggioTransaction } from '../../../report/domain/transaction.models';
 
@@ -11,9 +9,9 @@ import { GiornaleAntiriciclaggioTransaction } from '../../../report/domain/trans
   standalone: true,
   imports: [
     CommonModule,
-    DxDataGridModule,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
+    SempioneDataGridComponent,
   ],
   templateUrl: './ricerca-grid.component.html',
   styleUrls: ['./ricerca-grid.component.css']
@@ -22,4 +20,12 @@ export class RicercaGridComponent {
   @Input() transactions = signal<GiornaleAntiriciclaggioTransaction[]>([]);
   @Input() isLoading = signal(false);
   @Input() error = signal<string | null>(null);
+
+  readonly columns: SempioneGridColumn[] = [
+    { dataField: 'trxId',     caption: 'ID',              width: 80,  alignment: 'left' },
+    { dataField: 'trxDatope', caption: 'Data Operazione', width: 120, alignment: 'center', dataType: 'datetime', format: 'dd.MM.yy' },
+    { dataField: 'trxImpope', caption: 'Importo',         width: 120, alignment: 'right',  dataType: 'number',   format: '#,##0.00' },
+    { dataField: 'trxDivope', caption: 'Divisa',          width: 70,  alignment: 'center' },
+    { dataField: 'trxStatus', caption: 'Status',          width: 100, alignment: 'center' },
+  ];
 }

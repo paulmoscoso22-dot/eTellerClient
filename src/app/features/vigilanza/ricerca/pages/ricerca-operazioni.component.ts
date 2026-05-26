@@ -13,7 +13,7 @@ import {
   DxTemplateModule
 } from 'devextreme-angular';
 import { HeaderCardComponent } from '../../../../components/header-card/header-card.component';
-import { SempionePageHeaderComponent } from '../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempionePageShellComponent } from '../../../../components/General/sempione-page-shell/sempione-page-shell.component';
 import { SempionePopupComponent } from '../../../../components/General/sempione-popup/sempione-popup.component';
 import { SempionePopupActionBarComponent } from '../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -52,7 +52,7 @@ const DEFAULT_PAGE_SIZE = 30;
     DxSelectBoxModule,
     DxTemplateModule,
     HeaderCardComponent,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
     SempionePopupComponent,
     SempionePopupActionBarComponent,
   ],

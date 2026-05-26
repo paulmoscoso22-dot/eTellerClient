@@ -16,7 +16,7 @@ import {
   IForceCodeResponse,
 } from '../../models/gestione-errori.models';
 import {
-  SempionePageHeaderComponent,
+  SempionePageShellComponent,
   SempioneCardComponent,
   SempioneCardHeaderComponent,
   SempioneToolbarComponent,
@@ -44,7 +44,7 @@ const ENTNAME = 'ST_ERRORCODE';
     DxSelectBoxModule,
     DxCheckBoxModule,
     DxTextAreaModule,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
     SempioneToolbarComponent,

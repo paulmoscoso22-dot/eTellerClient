@@ -1,7 +1,4 @@
-<app-sempione-page-header title="Operazioni Annullate"></app-sempione-page-header>
-
-<div class="page-shell">
-  <!-- Search Form -->
+<app-sempione-page-shell title="Operazioni Annullate">
   <app-report-filter
     [isLoading]="isLoading"
     [statusDefaultValue]="statusDefaultValue"
@@ -11,10 +8,9 @@
     (searchClick)="onSearch($event)"
   ></app-report-filter>
 
-  <!-- Grid Component -->
   <app-operazioni-annullate-grid
     [transactions]="transactions"
     [isLoading]="isLoading"
     [error]="error"
   ></app-operazioni-annullate-grid>
-</div>
+</app-sempione-page-shell>

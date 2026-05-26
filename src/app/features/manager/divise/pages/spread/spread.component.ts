@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DxTextBoxModule, DxNumberBoxModule, DxDateBoxModule } from 'devextreme-angular';
 import {
-  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
   SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
@@ -24,7 +24,7 @@ export interface ISpreadItem {
   imports: [
     CommonModule, ReactiveFormsModule,
     DxTextBoxModule, DxNumberBoxModule, DxDateBoxModule,
-    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+    SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
     SempioneDataGridComponent, SempionePopupComponent, SempionePopupCardComponent,
     SempionePopupActionBarComponent, SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,

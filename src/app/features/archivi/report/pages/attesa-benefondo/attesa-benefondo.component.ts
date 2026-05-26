@@ -7,7 +7,7 @@ import { GetTransactionWaitingForBefResponse } from '../../domain/transaction.mo
 import { TransactionStatus } from '../../domain/transaction-status.enum';
 import { ReportFilterComponent } from '../../components/report-filter/report-filter.component';
 import { AttesaBenefondoGridComponent } from '../../components/attesa-benefondo-grid/attesa-benefondo-grid.component';
-import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempionePageShellComponent } from '../../../../../components/General/sempione-page-shell/sempione-page-shell.component';
 
 @Component({
   selector: 'app-attesa-benefondo',
@@ -16,7 +16,7 @@ import { SempionePageHeaderComponent } from '../../../../../components/General/s
     CommonModule,
     ReportFilterComponent,
     AttesaBenefondoGridComponent,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
   ],
   templateUrl: './attesa-benefondo.component.html',
   styleUrls: ['./attesa-benefondo.component.css'],

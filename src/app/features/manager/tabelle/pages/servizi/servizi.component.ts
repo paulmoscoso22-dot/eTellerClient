@@ -11,7 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TabelleService } from '../../services/tabelle.service';
 import { IServiziResponse } from '../../models/Servizi.models';
 import {
-  SempionePageHeaderComponent,
+  SempionePageShellComponent,
   SempioneCardComponent,
   SempioneCardHeaderComponent,
   SempioneToolbarComponent,
@@ -35,7 +35,7 @@ const TRACE_TABLE = 'SERVIZI';
     CommonModule, ReactiveFormsModule,
     DxTextBoxModule, DxCheckBoxModule,
     DxTextAreaModule, DxValidatorModule,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
     SempioneToolbarComponent,

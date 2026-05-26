@@ -1,6 +1,5 @@
 import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DxDataGridModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
@@ -8,18 +7,19 @@ import { GetTotaleCassaResponse } from '../../domain/totale-cassa.models';
 import { TotaleCassaFilterComponent } from '../../components/totale-cassa-filter/totale-cassa-filter.component';
 import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
 import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
-import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempionePageShellComponent } from '../../../../../components/General/sempione-page-shell/sempione-page-shell.component';
+import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General';
 
 @Component({
   selector: 'app-totali-cassa',
   standalone: true,
   imports: [
     CommonModule,
-    DxDataGridModule,
     TotaleCassaFilterComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
-    SempionePageHeaderComponent,
+    SempionePageShellComponent,
+    SempioneDataGridComponent,
   ],
   templateUrl: './totali-cassa.component.html',
   styleUrls: ['./totali-cassa.component.css'],
@@ -31,6 +31,15 @@ export class TotaliCassaComponent implements OnDestroy {
   totaliCassa = signal<GetTotaleCassaResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
+
+  readonly columns: SempioneGridColumn[] = [
+    { dataField: 'tocCurId',      caption: 'Unità',           width: 80,  alignment: 'center' },
+    { dataField: 'tocSaldoIni',   caption: 'Saldo Iniziale',  width: 130, alignment: 'right', dataType: 'number', format: '#,##0.00' },
+    { dataField: 'tocTotdare',    caption: 'Dare',            width: 120, alignment: 'right', dataType: 'number', format: '#,##0.00' },
+    { dataField: 'tocTotdareCtv', caption: 'Dare CTV',        width: 120, alignment: 'right', dataType: 'number', format: '#,##0.00' },
+    { dataField: 'tocTotavere',   caption: 'Avere',           width: 120, alignment: 'right', dataType: 'number', format: '#,##0.00' },
+    { dataField: 'tocSaldoFin',   caption: 'Saldo Finale',    width: 130, alignment: 'right', dataType: 'number', format: '#,##0.00' },
+  ];
 
   constructor(private reportFacade: ReportFacade) {}
 

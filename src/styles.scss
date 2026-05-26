@@ -6,25 +6,25 @@
 // ── Sempione button variants (usati da SempioneButtonComponent + pagine)
 // PRIMARY: navy solid — CTA principale
 .btn-fin-primary.dx-button {
-  background-color: #003366 !important;
-  border-color:     #003366 !important;
+  background-color: var(--color-brand-navy) !important;
+  border-color:     var(--color-brand-navy) !important;
   border-radius: 6px;
 
-  .dx-button-text, .dx-icon { color: #fff !important; }
+  .dx-button-text, .dx-icon { color: var(--color-surface-white) !important; }
 
   &:hover, &.dx-state-hover {
-    background-color: #004080 !important;
-    border-color:     #004080 !important;
+    background-color: var(--color-brand-navy-hover) !important;
+    border-color:     var(--color-brand-navy-hover) !important;
   }
 }
 
 // SECONDARY: outline neutro — azioni secondarie
 .btn-fin-secondary.dx-button {
   background-color: transparent !important;
-  border-color: #cbd5e1 !important;
+  border-color: var(--color-border) !important;
   border-radius: 6px;
 
-  .dx-button-text, .dx-icon { color: #1e293b !important; }
+  .dx-button-text, .dx-icon { color: var(--color-text-primary) !important; }
 
   &:hover, &.dx-state-hover {
     border-color: #94a3b8 !important;
@@ -35,14 +35,14 @@
 // GOLD: outline oro — azioni speciali (es. Aggiungi)
 .btn-fin-gold.dx-button {
   background-color: transparent !important;
-  border-color: #C5A059 !important;
+  border-color: var(--color-brand-gold) !important;
   border-radius: 6px;
 
-  .dx-button-text, .dx-icon { color: #8a6d22 !important; }
+  .dx-button-text, .dx-icon { color: var(--color-brand-gold-dark) !important; }
 
   &:hover, &.dx-state-hover {
-    border-color: #a8882e !important;
-    background-color: rgba(197, 160, 89, 0.08) !important;
+    border-color: var(--color-brand-gold-hover) !important;
+    background-color: var(--color-brand-gold-shadow) !important;
   }
 }
 
@@ -52,7 +52,7 @@
   border-color:     #dc2626 !important;
   border-radius: 6px;
 
-  .dx-button-text, .dx-icon { color: #fff !important; }
+  .dx-button-text, .dx-icon { color: var(--color-surface-white) !important; }
 
   &:hover, &.dx-state-hover {
     background-color: #b91c1c !important;
@@ -66,7 +66,7 @@
   border-color:     #e11d48 !important;
   border-radius: 6px;
 
-  .dx-button-text, .dx-icon { color: #fff !important; }
+  .dx-button-text, .dx-icon { color: var(--color-surface-white) !important; }
 
   &:hover, &.dx-state-hover {
     background-color: #be123c !important;
@@ -78,7 +78,7 @@
 
 // SHADOW: elevazione per il bottone CTA principale in toolbar
 .btn-fin-shadow.dx-button {
-  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.18) !important;
+  box-shadow: 0 4px 12px var(--color-brand-navy-shadow) !important;
 
   &:hover, &.dx-state-hover {
     box-shadow: 0 6px 16px rgba(0, 51, 102, 0.24) !important;
@@ -103,7 +103,7 @@
   .dx-button { height: 28px; }
 
   .dx-texteditor.dx-state-focused {
-    border-color: #003366 !important;
+    border-color: var(--color-brand-navy) !important;
     box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.08) !important;
   }
 }
@@ -128,11 +128,11 @@
 .popup-col-span-3    { grid-column: span 3; }
 
 // ── Popup field label + flags row
-.popup-field-label { font-size: 11px; font-weight: 500; color: #64748b; line-height: 1.2; }
+.popup-field-label { font-size: var(--font-size-sm); font-weight: 500; color: var(--color-text-muted); line-height: 1.2; }
 .popup-flags-row   { display: flex; flex-wrap: wrap; gap: 18px; margin-bottom: 4px; }
 .popup-flag-group  { display: flex; align-items: center; gap: 8px; }
 .popup-flag-group .popup-field-label { margin: 0; }
-.popup-flag-group--accent .popup-field-label { color: #003366; font-weight: 600; }
+.popup-flag-group--accent .popup-field-label { color: var(--color-brand-navy); font-weight: 600; }
 
 @media (max-width: 640px) {
   .popup-fields-grid--4col { grid-template-columns: 1fr 1fr; }
@@ -164,12 +164,79 @@
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
 /* =============================================================================
-   CSS Custom Properties - Layout dimensions
+   CSS Custom Properties - Design Tokens
    ============================================================================= */
 :root {
+    /* Layout */
     --header-height: 3rem;
     --breadcrumb-height: 2.5rem;
     --page-content-height: calc(100vh - var(--header-height) - var(--breadcrumb-height) - 4rem);
+
+    /* Brand */
+    --color-brand-navy:        #003366;
+    --color-brand-navy-hover:  #004080;
+    --color-brand-navy-shadow: rgba(0, 51, 102, 0.18);
+    --color-brand-gold:        #C5A059;
+    --color-brand-gold-hover:  #a8882e;
+    --color-brand-gold-dark:   #8a6d22;
+    --color-brand-gold-shadow: rgba(197, 160, 89, 0.08);
+
+    /* Text */
+    --color-text-primary:   #1e293b;
+    --color-text-secondary: #374151;
+    --color-text-muted:     #64748b;
+    --color-text-subtle:    #6b7280;
+
+    /* Surfaces */
+    --color-surface-base:    #f8fafc;
+    --color-surface-header:  #EDF2F7;
+    --color-surface-hover:   #e3eaf3;
+    --color-surface-white:   #ffffff;
+
+    /* Borders */
+    --color-border:         #cbd5e1;
+    --color-border-light:   #dce3ee;
+    --color-border-lighter: #e5e7eb;
+
+    /* Status — OK (green) */
+    --color-status-ok-bg:     #dcfce7;
+    --color-status-ok-text:   #166534;
+    --color-status-ok-border: #22c55e;
+
+    /* Status — Error (red) */
+    --color-status-error-bg:     #fee2e2;
+    --color-status-error-text:   #991b1b;
+    --color-status-error-border: #ef4444;
+
+    /* Status — Warning (amber) */
+    --color-status-warning-bg:     #fef9c3;
+    --color-status-warning-text:   #854d0e;
+    --color-status-warning-border: #f59e0b;
+
+    /* Status — Info (blue) */
+    --color-status-info-bg:     #dbeafe;
+    --color-status-info-text:   #1e40af;
+    --color-status-info-border: #3b82f6;
+
+    /* Status — Neutral (grey) */
+    --color-status-neutral-bg:   #f3f4f6;
+    --color-status-neutral-text: #374151;
+
+    /* Typography scale */
+    --font-size-xs:   10px;
+    --font-size-sm:   11px;
+    --font-size-base: 12px;
+    --font-size-md:   13px;
+    --font-size-lg:   14px;
+    --font-size-xl:   16px;
+
+    /* Spacing scale */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
 }
 
 /* =============================================================================
@@ -260,7 +327,7 @@ html, body {
    Titoli principali di pagina
    ============================================================================= */
 h1 {
-    color: #20294c !important;
+    color: var(--color-brand-navy) !important;
 }
 
 /* =============================================================================
@@ -269,9 +336,9 @@ h1 {
 
 // Intestazioni colonne
 .dx-datagrid-headers .dx-header-row > td {
-    background-color: #EDF2F7 !important;
-    color: #003366 !important;
-    font-size: 10px !important;
+    background-color: var(--color-surface-header) !important;
+    color: var(--color-brand-navy) !important;
+    font-size: var(--font-size-xs) !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.06em !important;
@@ -281,18 +348,18 @@ h1 {
 
 .dx-datagrid-headers .dx-header-row > td:hover,
 .dx-datagrid-headers .dx-header-row > td.dx-state-hover {
-    background-color: #e3eaf3 !important;
-    color: #003366 !important;
+    background-color: var(--color-surface-hover) !important;
+    color: var(--color-brand-navy) !important;
 }
 
 .dx-datagrid-headers .dx-datagrid-filter-row > td {
-    background-color: #ffffff !important;
+    background-color: var(--color-surface-white) !important;
 }
 
 // Righe dati
 .dx-datagrid-rowsview .dx-data-row > td {
     padding: 7px 10px !important;
-    font-size: 12px !important;
+    font-size: var(--font-size-base) !important;
     color: #334155 !important;
     vertical-align: middle !important;
 }
@@ -307,7 +374,7 @@ h1 {
 
 .dx-datagrid-rowsview .dx-selection.dx-data-row > td {
     background-color: rgba(0, 51, 102, 0.10) !important;
-    color: #003366 !important;
+    color: var(--color-brand-navy) !important;
     font-weight: 600 !important;
 }
 
@@ -316,8 +383,8 @@ h1 {
     position: sticky;
     bottom: 0;
     z-index: 10;
-    background: #fff;
-    border-top: 1px solid #e5e7eb !important;
+    background: var(--color-surface-white);
+    border-top: 1px solid var(--color-border-lighter) !important;
     padding: 2px 10px !important;
 }
 
@@ -332,8 +399,8 @@ h1 {
 .dx-datagrid-pager .dx-info {
     order: -1 !important;
     margin-right: auto !important;
-    font-size: 10px !important;
-    color: #6b7280 !important;
+    font-size: var(--font-size-xs) !important;
+    color: var(--color-text-subtle) !important;
     font-weight: 500;
     white-space: nowrap;
 }
@@ -345,25 +412,25 @@ h1 {
     align-items: center !important;
     justify-content: center !important;
     border-radius: 5px !important;
-    font-size: 11px !important;
+    font-size: var(--font-size-sm) !important;
     font-weight: 500;
-    color: #374151 !important;
-    border: 1px solid #dce3ee !important;
+    color: var(--color-text-secondary) !important;
+    border: 1px solid var(--color-border-light) !important;
     background: transparent !important;
     margin: 0 1px;
     transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 .dx-datagrid-pager .dx-pages .dx-page:hover {
-    background: rgba(197, 160, 89, 0.08) !important;
+    background: var(--color-brand-gold-shadow) !important;
     color: #7a5c1e !important;
     border-color: rgba(197, 160, 89, 0.5) !important;
 }
 
 .dx-datagrid-pager .dx-pages .dx-page.dx-selection {
-    background: #003366 !important;
-    color: #fff !important;
-    border-color: #003366 !important;
+    background: var(--color-brand-navy) !important;
+    color: var(--color-surface-white) !important;
+    border-color: var(--color-brand-navy) !important;
     font-weight: 700 !important;
 }
 
@@ -380,43 +447,43 @@ h1 {
 
 .dx-datagrid-pager .dx-navigate-button:hover {
     background: rgba(0, 51, 102, 0.06) !important;
-    color: #003366 !important;
-    border-color: #dce3ee !important;
+    color: var(--color-brand-navy) !important;
+    border-color: var(--color-border-light) !important;
 }
 
 .dx-datagrid-pager .dx-navigate-button.dx-button-disable { opacity: 0.35; }
 
 .dx-datagrid-pager .dx-page-size {
-    font-size: 11px !important;
+    font-size: var(--font-size-sm) !important;
     height: 22px !important;
     padding: 0 8px !important;
     border-radius: 5px !important;
-    border: 1px solid #dce3ee !important;
-    color: #374151 !important;
+    border: 1px solid var(--color-border-light) !important;
+    color: var(--color-text-secondary) !important;
     background: transparent !important;
     transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 .dx-datagrid-pager .dx-page-size:hover {
-    background: rgba(197, 160, 89, 0.08) !important;
+    background: var(--color-brand-gold-shadow) !important;
     color: #7a5c1e !important;
     border-color: rgba(197, 160, 89, 0.5) !important;
 }
 
 .dx-datagrid-pager .dx-page-size.dx-selection {
     background: rgba(0, 51, 102, 0.09) !important;
-    color: #003366 !important;
+    color: var(--color-brand-navy) !important;
     font-weight: 700 !important;
     border-color: rgba(0, 51, 102, 0.3) !important;
 }
 
 // Popup — titolo di sezione (utility globale)
 .popup-section-title {
-    font-size: 10px;
+    font-size: var(--font-size-xs);
     font-weight: 700;
     letter-spacing: 0.07em;
     text-transform: uppercase;
-    color: #003366;
+    color: var(--color-brand-navy);
     border-bottom: 2px solid rgba(0, 51, 102, 0.15);
     padding-bottom: 6px;
     margin-bottom: 10px;
@@ -474,9 +541,9 @@ h1 {
 .popup-view-mode .dx-dropdowneditor.dx-state-readonly .dx-texteditor-input,
 .popup-view-mode .dx-numberbox.dx-state-readonly .dx-texteditor-input,
 .popup-view-mode .dx-textarea.dx-state-readonly .dx-texteditor-input {
-    font-size: 14px !important;
+    font-size: var(--font-size-lg) !important;
     font-weight: 600 !important;
-    color: #003366 !important;
+    color: var(--color-brand-navy) !important;
     padding-left: 0 !important;
     cursor: default !important;
 }
@@ -502,7 +569,7 @@ h1 {
     border-color: #2d6a4f !important;
     height: 36px !important;
 
-    .dx-button-text, .dx-icon { color: #fff !important; }
+    .dx-button-text, .dx-icon { color: var(--color-surface-white) !important; }
 
     &.dx-state-hover, &:hover {
         background-color: #1b4332 !important;
@@ -513,10 +580,10 @@ h1 {
 // ── OUTLINE (navy): bottoni secondari (Storico, Stampa, ecc.)
 .btn-action-outline.dx-button {
     background-color: transparent !important;
-    border: 1.5px solid #003366 !important;
+    border: 1.5px solid var(--color-brand-navy) !important;
     height: 36px !important;
 
-    .dx-button-text, .dx-icon { color: #003366 !important; }
+    .dx-button-text, .dx-icon { color: var(--color-brand-navy) !important; }
 
     &.dx-state-hover, &:hover {
         background-color: rgba(0, 51, 102, 0.06) !important;
@@ -532,21 +599,21 @@ h1 {
     .dx-button-text, .dx-icon { color: #dc2626 !important; }
 
     &.dx-state-hover, &:hover {
-        background-color: #fef2f2 !important;
+        background-color: var(--color-status-error-bg) !important;
     }
 }
 
 // ── CLOSE / NAVY (blu Sempione): bottone Chiudi in modalità visualizzazione
 .btn-action-close.dx-button {
-    background-color: #003366 !important;
-    border-color: #003366 !important;
+    background-color: var(--color-brand-navy) !important;
+    border-color: var(--color-brand-navy) !important;
     height: 36px !important;
 
-    .dx-button-text, .dx-icon { color: #fff !important; }
+    .dx-button-text, .dx-icon { color: var(--color-surface-white) !important; }
 
     &.dx-state-hover, &:hover {
-        background-color: #004080 !important;
-        border-color: #004080 !important;
+        background-color: var(--color-brand-navy-hover) !important;
+        border-color: var(--color-brand-navy-hover) !important;
     }
 }
 
@@ -557,8 +624,8 @@ h1 {
 
 // Barra titolo
 .dx-popup-title.dx-toolbar {
-    background-color: #003366 !important;
-    border-bottom: 2px solid #C5A059 !important;
+    background-color: var(--color-brand-navy) !important;
+    border-bottom: 2px solid var(--color-brand-gold) !important;
     min-height: 44px !important;
     padding: 0 8px 0 14px !important;
     flex-shrink: 0;
@@ -591,7 +658,7 @@ h1 {
 // Sempione Popup — area contenuto: padding e sfondo scoped solo su sempione-popup
 .sempione-popup .dx-popup-content {
     padding: 20px !important;
-    background: #f8fafc !important;
+    background: var(--color-surface-base) !important;
 }
 
 // Bottone chiudi ×

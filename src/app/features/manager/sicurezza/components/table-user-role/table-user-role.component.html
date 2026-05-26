@@ -1,24 +1,7 @@
-<dx-data-grid
+<app-sempione-data-grid
   [dataSource]="dataSource"
-  [showBorders]="true"
-  [columnAutoWidth]="true"
-  [allowColumnReordering]="true"
-  [allowColumnResizing]="true"
-  columnResizingMode="nextColumn"
-  [selection]="{ mode: 'single' }"
-  [height]="'100%'"
-  (onSelectionChanged)="selectionChanged.emit($event)">
-
-  <dxo-paging [pageSize]="pageSize"></dxo-paging>
-  <dxo-pager
-    [showInfo]="true"
-    infoText="{2} utenti"
-    [showPageSizeSelector]="false"
-    [showNavigationButtons]="true"
-    displayMode="full">
-  </dxo-pager>
-
-  <dxi-column dataField="usrExtref" caption="Utente"></dxi-column>
-  <dxi-column dataField="usrId"     caption="ID"    [width]="70" alignment="center"></dxi-column>
-
-</dx-data-grid>
+  [columns]="columns"
+  [pageSize]="pageSize"
+  [showEditAction]="false"
+  (selectionChanged)="selectionChanged.emit($event)">
+</app-sempione-data-grid>
