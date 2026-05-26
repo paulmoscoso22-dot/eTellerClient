@@ -26,16 +26,16 @@ export class TabellaVarcharService {
 
   search(nomeTabella: string, id: string, des: string): Observable<TabellaVarcharItem[]> {
     const params: TabellaVarcharSearchParams = { nomeTabella, id, desLike: des };
-    return this.apiService.post<TabellaVarcharItem[]>('Tabella/GetTabellaServVarchar', params);
+    return this.apiService.post<TabellaVarcharItem[]>('Manager/Tabelle/GetTabellaServVarchar', params);
   }
 
   insert(nomeTabella: string, id: string, des: string): Observable<boolean> {
     const body: TabellaVarcharUpsert = { nomeTabella, id, des };
-    return this.apiService.post<boolean>('Tabella/InsertTabellaServVarchar', body);
+    return this.apiService.post<boolean>('Manager/Tabelle/InsertTabellaServVarchar', body);
   }
 
   update(nomeTabella: string, id: string, des: string): Observable<boolean> {
     const body: TabellaVarcharUpsert = { nomeTabella, id, des };
-    return this.apiService.post<boolean>('Tabella/UpdateTabellaServVarchar', body);
+    return this.apiService.post<boolean>('Manager/Tabelle/UpdateTabellaServVarchar', body);
   }
 }

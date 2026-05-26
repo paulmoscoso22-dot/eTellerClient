@@ -11,18 +11,18 @@ export class TipoOperazioneService {
   private readonly api = inject(ApiService);
 
   getAll(): Observable<ITipoOperazioneVm[]> {
-    return this.api.post<ITipoOperazioneVm[]>('Tabella/GetOperationTypes', {});
+    return this.api.post<ITipoOperazioneVm[]>('Manager/Tabelle/GetOperationTypes', {});
   }
 
   getById(optId: string): Observable<ITipoOperazioneVm> {
-    return this.api.post<ITipoOperazioneVm>('Tabella/GetOperationTypeById', { optId });
+    return this.api.post<ITipoOperazioneVm>('Manager/Tabelle/GetOperationTypeById', { optId });
   }
 
   insert(cmd: IUpsertOperationTypeCommand): Observable<boolean> {
-    return this.api.post<boolean>('Tabella/InsertOperationType', cmd);
+    return this.api.post<boolean>('Manager/Tabelle/InsertOperationType', cmd);
   }
 
   update(cmd: IUpsertOperationTypeCommand): Observable<boolean> {
-    return this.api.post<boolean>('Tabella/UpdateOperationType', cmd);
+    return this.api.post<boolean>('Manager/Tabelle/UpdateOperationType', cmd);
   }
 }

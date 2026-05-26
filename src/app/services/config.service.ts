@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 export interface AppConfig {
   /** Indica se siamo in ambiente di produzione */
@@ -29,7 +30,9 @@ export class ConfigService {
    */
   static setConfig(config: AppConfig): void {
     ConfigService._staticConfig = config;
-    console.log(`[ConfigService] Configuration set for environment: ${config.envName}`);
+    if (!environment.production) {
+      console.log(`[ConfigService] Configuration set for environment: ${config.envName}`);
+    }
   }
 
   /**

@@ -94,7 +94,6 @@ export class CoppieDiviseComponent implements OnInit {
     });
     this.service.getCurrenciesDV().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: data => {
-        console.log('Currencies DV:', data);
         this.currencies.set(data);
       },
       error: () => notify('Errore caricamento divise', 'error', 3000)

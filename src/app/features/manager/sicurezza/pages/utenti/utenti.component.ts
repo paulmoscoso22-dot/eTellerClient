@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractContro
 import { DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import { ManagerService } from '../../services/sicurezza.service';
-import { ISysUsersActiveAndBlockedResponse, GetUsersByUserIdRequest, InsertUserResponse, IUpdateUserRequest } from '../../models/utenti.models';
+import { ISysUsersActiveAndBlockedResponse, GetUsersByUserIdRequest, IInsertUserRequest, IUpdateUserRequest } from '../../models/utenti.models';
 import { ISysRoleResonse, GetRoleByUsrIdRequest, IGetRoleNotForUsrIdRquest } from '../../models/ruoli.models';
 import { ControlAssignComponent } from '../../../../../components/control-assign/control-assign.component';
 import { Service } from '../../../../../core/services/service';
@@ -252,7 +252,7 @@ export class UtentiComponent implements OnInit {
   onSubmit(): void {
     if (this.userForm.valid) {
       const formValue = this.userForm.getRawValue();
-      const request: InsertUserResponse = {
+      const request: IInsertUserRequest = {
         usrId:      formValue.usrId      || '',
         usrHostId:  formValue.usrHostId  || '',
         usrBraId:   formValue.usrBraId   || '',

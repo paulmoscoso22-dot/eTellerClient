@@ -7,7 +7,7 @@ import { ISysRoleResonse, IGetUserByRoleRequest, IInsertRoleRequest, IUpdateRole
 import { IGetFunctionRoleByRoleIdRequest, IFunctionRoleResponse, IStFunAcctypResponse } from '../models/function.models';
 import { PersonalisationResponse, UpdatePersonalisationRequest } from '../models/personalisation.models';
 import { AuthTemp } from '../../../../features/auth/auth.facade';
-import { ISysUsersActiveAndBlockedResponse, GetUsersByUserIdRequest, ISysUserByIdResponse, InsertUserResponse, IUpdateUserRequest, ResetPasswordRequest, SysUsersUseClientResponse, IUpdateUserClientExitRequest } from '../models/utenti.models';
+import { ISysUsersActiveAndBlockedResponse, GetUsersByUserIdRequest, ISysUserByIdResponse, IInsertUserRequest, IUpdateUserRequest, ResetPasswordRequest, SysUsersUseClientResponse, IUpdateUserClientExitRequest } from '../models/utenti.models';
 
 @Injectable({
   providedIn: 'root',
@@ -138,7 +138,7 @@ export class ManagerService {
 
     insertSysFunction(request: InsertSysFunctionRequest): Observable<boolean> {
     return this.apiService.post<boolean>(
-      `/Manager/InsertSysFunction`,
+      `/Manager/Function/InsertSysFunction`,
       request
     ).pipe(
       tap(data => this.insertSysFunctionSubject.next(data))
@@ -147,7 +147,7 @@ export class ManagerService {
 
   updateSysFunction(request: UpdateSysFunctionRequest): Observable<boolean> {
     return this.apiService.put<boolean>(
-      `/Manager/UpdateSysFunction`,
+      `/Manager/Function/UpdateSysFunction`,
       request
     ).pipe(
       tap(data => this.updateSysFunctionSubject.next(data))
@@ -156,7 +156,7 @@ export class ManagerService {
 
   deleteSysFunction(request: DeleteSysFunctionRequest): Observable<boolean> {
     return this.apiService.deleteWithBody<boolean>(
-      `/Manager/DeleteSysFunction`,
+      `/Manager/Function/DeleteSysFunction`,
       request
     ).pipe(
       tap(data => this.deleteSysFunctionSubject.next(data))
@@ -312,7 +312,7 @@ export class ManagerService {
   updateUserSubject = new BehaviorSubject<ISysUserByIdResponse | null>(null);
   public updateUser$ = this.updateUserSubject.asObservable();
 
-  insertUser(request: InsertUserResponse): Observable<boolean> {
+  insertUser(request: IInsertUserRequest): Observable<boolean> {
     return this.apiService.post<boolean>(
       `/Manager/User/InsertUser`,
       request

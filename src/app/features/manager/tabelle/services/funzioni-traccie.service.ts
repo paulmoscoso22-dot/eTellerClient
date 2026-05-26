@@ -10,7 +10,7 @@ export class FunzioniTraccieService {
   private readonly api = inject(ApiService);
 
   getAll(id?: string | null, desLike?: string | null): Observable<IFunzioniTraccieItemResponse[]> {
-    return this.api.post<IFunzioniTraccieItemResponse[]>('Tabella/GetTabellaServVarchar', {
+    return this.api.post<IFunzioniTraccieItemResponse[]>('Manager/Tabelle/GetTabellaServVarchar', {
       nomeTabella: NOME_TABELLA,
       id: id ?? null,
       desLike: desLike ?? null,
@@ -18,10 +18,10 @@ export class FunzioniTraccieService {
   }
 
   insert(item: IFunzioniTraccieUpsertRequest): Observable<boolean> {
-    return this.api.post<boolean>('Tabella/InsertTabellaServVarchar', item);
+    return this.api.post<boolean>('Manager/Tabelle/InsertTabellaServVarchar', item);
   }
 
   update(item: IFunzioniTraccieUpsertRequest): Observable<boolean> {
-    return this.api.post<boolean>('Tabella/UpdateTabellaServVarchar', item);
+    return this.api.post<boolean>('Manager/Tabelle/UpdateTabellaServVarchar', item);
   }
 }

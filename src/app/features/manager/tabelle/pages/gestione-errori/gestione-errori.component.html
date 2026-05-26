@@ -68,7 +68,8 @@
 
 <!-- ── Popup Aggiungi / Modifica / Dettaglio Errore ── -->
 <app-sempione-popup
-  [(visible)]="isFormPopupVisible"
+  [visible]="isFormPopupVisible()"
+  (visibleChange)="isFormPopupVisible.set($event)"
   [title]="popupMode() === 'edit' ? 'Modifica Errore — ' + selectedErrId()
          : popupMode() === 'view' ? 'Dettaglio Errore — ' + selectedErrId()
          : 'Nuovo Errore'"
@@ -183,7 +184,8 @@
 
 <!-- ── Popup Conferma Eliminazione ── -->
 <app-sempione-confirm-delete
-  [(visible)]="isConfirmDeleteVisible"
+  [visible]="isConfirmDeleteVisible()"
+  (visibleChange)="isConfirmDeleteVisible.set($event)"
   entityLabel="l'errore"
   [entityName]="itemToDelete()?.errId"
   (confirmed)="confirmDelete()"

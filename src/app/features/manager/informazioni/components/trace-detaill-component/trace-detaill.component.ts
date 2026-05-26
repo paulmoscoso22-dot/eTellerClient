@@ -25,7 +25,6 @@ export class TraceDetaillComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log('TraceDetaillComponent initialized with traIdOrRow:', this.trace);
     this.loadFunzioneDescriptions(this.trace?.traFunCode || '');
     // initial load already handled by setter when Input is set
   }

@@ -16,6 +16,7 @@ import {
   InsertSysFunctionRequest, UpdateSysFunctionRequest, DeleteSysFunctionRequest
 } from '../../models/manager.models';
 import { AuthFacade, AuthTemp } from '../../../../auth/auth.facade';
+import { extractErrorMessage } from '../../../../../core/utils/error-message.util';
 import {
   SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
   SempioneToolbarComponent, SempioneDataGridComponent, SempioneGridColumn,
@@ -311,7 +312,7 @@ export class FunzioniComponent implements OnInit {
     return true;
   }
 
-  private handleOperationSuccess(result: unknown, successMsg: string, errorMsg: string, afterSuccess?: () => void): void {
+  private handleOperationSuccess(result: unknown, successMsg: string, fallbackErrorMsg: string, afterSuccess?: () => void): void {
     this.isLoading.set(false);
     if (result) {
       notify(successMsg, 'success', 2000);
@@ -320,13 +321,16 @@ export class FunzioniComponent implements OnInit {
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({ error: (err) => console.error('Error reloading functions:', err) });
     } else {
-      notify(errorMsg, 'error', 2000);
+      // Result false/null senza eccezione — mostra errore backend se disponibile
+      const msg = extractErrorMessage(result, fallbackErrorMsg);
+      notify(msg, 'error', 4000);
     }
   }
 
-  private handleOperationError(err: unknown, errorMsg: string): void {
+  private handleOperationError(err: unknown, fallbackMsg: string): void {
     this.isLoading.set(false);
-    notify(errorMsg, 'error', 2000);
-    console.error(errorMsg, err);
+    const msg = extractErrorMessage(err, fallbackMsg);
+    notify(msg, 'error', 4000);
+    console.error('[Funzioni]', err);
   }
 }
