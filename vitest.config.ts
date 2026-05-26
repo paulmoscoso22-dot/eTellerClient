@@ -9,5 +9,7 @@ export default defineConfig({
         inline: ['devextreme', 'devextreme-angular'],
       },
     },
+    // Disable node environment warning
+    environment: 'jsdom',
   },
 });
