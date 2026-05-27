@@ -1,9 +1,10 @@
-import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
+import { Component, signal, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subscription } from 'rxjs';
+import { tap, catchError } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
 import { GetTransactionGiornaleCassaResponse } from '../../domain/transaction.models';
+import { ReportSearchParams } from '../../domain/report-search.models';
 import { TransactionStatus } from '../../domain/transaction-status.enum';
 import { ReportFilterComponent } from '../../components/report-filter/report-filter.component';
 import { GiornaleCassaGridComponent } from '../../components/giornale-cassa-grid/giornale-cassa-grid.component';
@@ -20,44 +21,31 @@ import { SempionePageShellComponent } from '../../../../../components/General/se
   ],
   templateUrl: './giornale-cassa.component.html',
   styleUrls: ['./giornale-cassa.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GiornaleCassaComponent implements OnDestroy {
+export class GiornaleCassaComponent {
   private readonly destroyRef = inject(DestroyRef);
-  private subscription: Subscription | null = null;
+  private readonly reportFacade = inject(ReportFacade);
 
   transactions = signal<GetTransactionGiornaleCassaResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
   statusDefaultValue = TransactionStatus.Eseguito;
 
-  constructor(private reportFacade: ReportFacade) {}
-
-  ngOnDestroy(): void {
-    this.destroy();
-  }
-
-  private destroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-      this.subscription = null;
-    }
-  }
-
-  onSearch(filterData: any): void {
+  onSearch(filterData: ReportSearchParams): void {
     const { trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId } = filterData;
 
-    // ✅ Le date sono opzionali, nessun errore se vuote
+    // ✅ Dates are optional, no error if empty (interface allows null values)
     this.getTransactionWithFilters(trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId);
   }
 
   getTransactionWithFilters(
-    trxCassa: string,
-    trxDataDal: Date,
-    trxDataAl: Date,
-    trxStatus: number,
-    trxBraId: string
+    trxCassa: string | null,
+    trxDataDal: Date | null,
+    trxDataAl: Date | null,
+    trxStatus: number | null,
+    trxBraId: string | null
   ): void {
-    this.destroy();
     this.isLoading.set(true);
     this.error.set(null);
 
@@ -68,16 +56,16 @@ export class GiornaleCassaComponent implements OnDestroy {
       trxStatus,
       trxBraId
     ).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (data) => {
+      tap(data => {
         this.transactions.set(data as GetTransactionGiornaleCassaResponse[]);
         this.isLoading.set(false);
-      },
-      error: (error: any) => {
+      }),
+      catchError(error => {
         this.error.set(error.message || 'Errore nel recupero transazioni');
         this.isLoading.set(false);
-      }
-    });
+        throw error;
+      }),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe();
   }
 }

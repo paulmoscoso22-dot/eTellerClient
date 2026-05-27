@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, inject, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
@@ -9,6 +9,7 @@ import {
 import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
 import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
 import { SempioneButtonComponent } from '../../../../../components/General';
+import { ReportSearchParams } from '../../domain/report-search.models';
 
 @Component({
   selector: 'app-report-filter',
@@ -24,7 +25,8 @@ import { SempioneButtonComponent } from '../../../../../components/General';
     SempioneButtonComponent,
   ],
   templateUrl: './report-filter.component.html',
-  styleUrls: ['./report-filter.component.css']
+  styleUrls: ['./report-filter.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReportFilterComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
@@ -50,7 +52,7 @@ export class ReportFilterComponent implements OnInit {
   @Input() dataDalRequired: boolean = false;
   @Input() dataAlRequired: boolean = false;
   
-  @Output() searchClick = new EventEmitter<any>();
+  @Output() searchClick = new EventEmitter<ReportSearchParams>();
 
   searchForm!: FormGroup;
 
@@ -84,29 +86,14 @@ export class ReportFilterComponent implements OnInit {
     const normalizedDataDal = trxDataDal ? new Date(new Date(trxDataDal).setHours(0, 0, 0, 0)) : null;
     const normalizedDataAl = trxDataAl ? new Date(new Date(trxDataAl).setHours(23, 59, 59, 999)) : null;
     
+    // Coerce empty strings to null to satisfy interface contract (string | null)
     this.searchClick.emit({
-      trxCassa,
+      trxCassa: trxCassa?.trim() || null,
       trxDataDal: normalizedDataDal,
       trxDataAl: normalizedDataAl,
       trxStatus,
-      trxBraId
+      trxBraId: trxBraId?.trim() || null
     });
-  }
-
-  onDateDalChanged(e: any): void {
-    if (e.value) {
-      const date = new Date(e.value);
-      date.setHours(0, 0, 0, 0);
-      this.searchForm.patchValue({ trxDataDal: date }, { emitEvent: false });
-    }
-  }
-
-  onDateAlChanged(e: any): void {
-    if (e.value) {
-      const date = new Date(e.value);
-      date.setHours(23, 59, 59, 999);
-      this.searchForm.patchValue({ trxDataAl: date }, { emitEvent: false });
-    }
   }
 
   reset(): void {
@@ -118,4 +105,7 @@ export class ReportFilterComponent implements OnInit {
       trxBraId: ''
     });
   }
+
+  // ⚠️ Callbacks onDateDalChanged() and onDateAlChanged() have been removed
+  // Date normalization now happens only in search() method to avoid redundant normalization
 }
