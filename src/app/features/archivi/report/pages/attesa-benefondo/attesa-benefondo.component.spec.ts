@@ -59,7 +59,7 @@ describe('AttesaBenefondoComponent', () => {
     );
   });
 
-  it('should populate transactions signal when Observable emits data', () => {
+  it('should populate transactions signal when Observable emits data', (done) => {
     const mockData: any[] = [
       {
         trxId: 1,
@@ -87,10 +87,12 @@ describe('AttesaBenefondoComponent', () => {
 
     component.onSearch(params);
 
-    setTimeout(() => {
+    // Use requestAnimationFrame instead of setTimeout for better timing
+    requestAnimationFrame(() => {
       expect(component.transactions()).toEqual(mockData);
       expect(component.isLoading()).toBe(false);
-    }, 100);
+      done();
+    });
   });
 
   it('should not have a manual subscription field', () => {
@@ -99,7 +101,7 @@ describe('AttesaBenefondoComponent', () => {
     expect((component as any).subscription === undefined || (component as any).subscription === null).toBe(true);
   });
 
-  it('should handle Observable errors and set error signal', () => {
+  it('should handle Observable errors and set error signal', (done) => {
     const errorMessage = 'Network error';
     mockFacade.getTransactionWaitingForBef.mockReturnValue(throwError(() => new Error(errorMessage)));
 
@@ -113,10 +115,11 @@ describe('AttesaBenefondoComponent', () => {
 
     component.onSearch(params);
 
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       expect(component.error()).toBeTruthy();
       expect(component.isLoading()).toBe(false);
-    }, 100);
+      done();
+    });
   });
 
   it('should set isLoading to true when search is initiated', () => {
@@ -134,7 +137,7 @@ describe('AttesaBenefondoComponent', () => {
     component.onSearch(params);
   });
 
-  it('should handle rapid filter changes and use only the latest result', () => {
+  it('should handle rapid filter changes and use only the latest result', (done) => {
     const data1: any[] = [
       {
         trxId: 1,
@@ -186,8 +189,9 @@ describe('AttesaBenefondoComponent', () => {
     component.onSearch(params1);
     component.onSearch(params2);
 
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       expect(component.transactions().length).toBeGreaterThan(0);
-    }, 150);
+      done();
+    });
   });
 });

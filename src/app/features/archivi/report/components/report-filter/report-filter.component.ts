@@ -9,6 +9,7 @@ import {
 import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
 import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
 import { SempioneButtonComponent } from '../../../../../components/General';
+import { ReportSearchParams } from '../../domain/report-search.models';
 
 @Component({
   selector: 'app-report-filter',
@@ -50,7 +51,7 @@ export class ReportFilterComponent implements OnInit {
   @Input() dataDalRequired: boolean = false;
   @Input() dataAlRequired: boolean = false;
   
-  @Output() searchClick = new EventEmitter<any>();
+  @Output() searchClick = new EventEmitter<ReportSearchParams>();
 
   searchForm!: FormGroup;
 
