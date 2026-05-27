@@ -1,0 +1,72 @@
+---
+# OpenSpec Bootstrap Configuration
+# eTellerClient — Angular 21, TypeScript, DevExtreme
+# Generated: 2026-05-26
+
+project: eTellerClient
+version: "0.0.0"
+
+stack:
+  framework: Angular 21
+  language: TypeScript 5.9
+  ui_framework: DevExtreme 25.2
+  runtime: Node.js + Express (SSR)
+  state_management: RxJS 7.8, Signals
+  styling: SCSS
+
+conventions:
+  architecture:
+    - Standalone components (Angular 21)
+    - Services for logic and API calls
+    - Signals preferred for local state
+    - Small, reusable components
+  naming:
+    component: PascalCase
+    service: PascalCase
+    file: kebab-case
+    variable: camelCase
+  ui:
+    - DevExtreme components only (DxGrid, DxForm, DxButton, etc.)
+    - No external UI libraries (Angular Material, PrimeNG forbidden)
+    - async pipe in templates, avoid manual subscribe
+  state:
+    - RxJS operators: switchMap, map, combineLatest
+    - Async pipe preferred over subscriptions
+    - Signals for local component state
+
+testing:
+  strict_tdd: true
+  runner: vitest
+  runner_command: "ng test"
+  config_file: vitest.config.ts
+  environment: jsdom
+  layers:
+    unit: ✅ vitest + jsdom
+    integration: ⚠️ testing-library available, partial setup
+    e2e: ❌ not configured
+  coverage: ✅ vitest --coverage supported
+  quality_tools:
+    linter: ✅ ESLint (ng lint)
+    type_checker: ✅ TypeScript strict mode enabled
+    formatter: ✅ Prettier configured
+
+artifacts:
+  testing_capabilities: .atl/testing-capabilities.md
+  skill_registry: .atl/skill-registry.md
+
+phases:
+  explore: Document TDD requirements and acceptance criteria
+  propose: Outline change scope with testing strategy
+  spec: Define scenarios with test cases and acceptance conditions
+  design: Architecture with test layer considerations
+  tasks: Break into testable units with coverage expectations
+  apply: Implement with TDD (tests-first or alongside)
+  verify: Prove test coverage and spec alignment
+  archive: Sync delta specs with learnings
+
+rules:
+  - All features must have unit tests before merge
+  - Integration tests required for API interactions
+  - DevExtreme component testing via testing-library + vitest
+  - Signal testing via fixture.detectChanges() or computed() assertions
+  - Coverage target: 70% for new code
