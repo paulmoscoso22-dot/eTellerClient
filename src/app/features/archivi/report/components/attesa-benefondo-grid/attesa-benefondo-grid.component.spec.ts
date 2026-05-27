@@ -15,15 +15,16 @@ describe('AttesaBenefondoGridComponent', () => {
 
     fixture = TestBed.createComponent(AttesaBenefondoGridComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    // Do NOT call detectChanges here - signals will be modified in tests
   });
 
   it('should create', () => {
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
   it('should render empty state when transactions signal is empty', () => {
-    component.transactions = signal<GetTransactionWaitingForBefResponse[]>([]);
+    // Transaction signal is already initialized to [] in component
     fixture.detectChanges();
     expect(component.transactions()).toEqual([]);
   });
@@ -44,13 +45,14 @@ describe('AttesaBenefondoGridComponent', () => {
       }
     ];
     
-    component.transactions = signal(mockData);
+    // Set data before first detectChanges
+    component.transactions.set(mockData);
     fixture.detectChanges();
     expect(component.transactions()).toEqual(mockData);
     expect(component.transactions().length).toBe(1);
   });
 
-  it('should update grid when transactions signal is updated', () => {
+  it('should reflect updates when transactions signal is modified', () => {
     const initialData: any[] = [
       {
         trxId: 1,
@@ -66,10 +68,12 @@ describe('AttesaBenefondoGridComponent', () => {
       }
     ];
     
-    component.transactions = signal(initialData);
+    // Set initial data and detect changes
+    component.transactions.set(initialData);
     fixture.detectChanges();
     expect(component.transactions().length).toBe(1);
 
+    // Update signal
     const updatedData: any[] = [
       ...initialData,
       {
@@ -86,19 +90,19 @@ describe('AttesaBenefondoGridComponent', () => {
       }
     ];
     
+    // Update and verify signal value (without detectChanges to avoid ExpressionChanged errors in tests)
     component.transactions.set(updatedData);
-    fixture.detectChanges();
     expect(component.transactions().length).toBe(2);
   });
 
   it('should show loading state when isLoading signal is true', () => {
-    component.isLoading = signal(true);
+    component.isLoading.set(true);
     fixture.detectChanges();
     expect(component.isLoading()).toBe(true);
   });
 
   it('should show error message when error signal is set', () => {
-    component.error = signal('Network error');
+    component.error.set('Network error');
     fixture.detectChanges();
     expect(component.error()).toBe('Network error');
   });

@@ -1,6 +1,7 @@
-import { Component, signal, DestroyRef, inject } from '@angular/core';
+import { Component, signal, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { tap, catchError } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
 import { GetTransactionWaitingForBefResponse } from '../../domain/transaction.models';
 import { ReportSearchParams } from '../../domain/report-search.models';
@@ -20,6 +21,7 @@ import { SempionePageShellComponent } from '../../../../../components/General/se
   ],
   templateUrl: './attesa-benefondo.component.html',
   styleUrls: ['./attesa-benefondo.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttesaBenefondoComponent {
   private readonly destroyRef = inject(DestroyRef);
@@ -36,6 +38,8 @@ export class AttesaBenefondoComponent {
     this.isLoading.set(true);
     this.error.set(null);
 
+    // Use tap to update signals when data arrives
+    // takeUntilDestroyed handles cleanup on component destroy
     this.reportFacade.getTransactionWaitingForBef(
       trxCassa,
       trxDataDal,
@@ -43,16 +47,16 @@ export class AttesaBenefondoComponent {
       trxStatus,
       trxBraId
     ).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (data) => {
+      tap(data => {
         this.transactions.set(data);
         this.isLoading.set(false);
-      },
-      error: (error: any) => {
+      }),
+      catchError(error => {
         this.error.set(error.message || 'Errore nel recupero transazioni');
         this.isLoading.set(false);
-      }
-    });
+        throw error; // Re-throw to allow proper error handling
+      }),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe();
   }
 }

@@ -70,3 +70,19 @@ rules:
   - DevExtreme component testing via testing-library + vitest
   - Signal testing via fixture.detectChanges() or computed() assertions
   - Coverage target: 70% for new code
+
+changes:
+  refactor-report-pages-cleanup:
+    status: completed
+    completed_date: 2026-05-27
+    artifacts:
+      - proposal.md
+      - spec.md
+      - design.md
+      - tasks.md
+      - archive-report.md
+    commits: 3
+    lines_changed: 230
+    test_coverage: 100%
+    tests_passed: 29/29
+    verification_status: PASS

@@ -95,7 +95,7 @@ describe('ReportFilterComponent', () => {
     expect(emittedValue.trxDataAl).toBeNull();
   });
 
-  it('should coerce empty string fields to null or keep as is', () => {
+  it('should coerce empty string fields to null', () => {
     const emitSpy = vi.spyOn(component.searchClick, 'emit');
     component.searchForm.patchValue({
       trxCassa: '',
@@ -107,13 +107,20 @@ describe('ReportFilterComponent', () => {
     component.search();
 
     const emittedValue = emitSpy.mock.calls[0][0] as ReportSearchParams;
-    expect(emittedValue.trxCassa).toBeDefined();
-    expect(emittedValue.trxBraId).toBeDefined();
+    // ACTUAL assertions: verify empty strings coerce to null (interface contract: string | null)
+    expect(emittedValue.trxCassa).toBeNull();
+    expect(emittedValue.trxBraId).toBeNull();
+    expect(emittedValue.trxDataDal).toBeNull();
+    expect(emittedValue.trxDataAl).toBeNull();
   });
 
   it('should not emit when form is invalid', () => {
     const emitSpy = vi.spyOn(component.searchClick, 'emit');
     component.dataDalRequired = true;
+    
+    // Force form re-initialization with required validator
+    component.ngOnInit();
+    
     component.searchForm.patchValue({
       trxCassa: '',
       trxDataDal: null,
@@ -121,11 +128,15 @@ describe('ReportFilterComponent', () => {
       trxStatus: null,
       trxBraId: ''
     });
+    component.searchForm.markAllAsTouched();
+    
+    // VERIFY form is invalid FIRST
+    expect(component.searchForm.invalid).toBe(true);
+    
     component.search();
-
-    if (component.searchForm.invalid) {
-      expect(emitSpy).not.toHaveBeenCalled();
-    }
+    
+    // ASSERTION outside conditional (prevent flaky test)
+    expect(emitSpy).not.toHaveBeenCalled();
   });
 
   it('should reset form to default values', () => {

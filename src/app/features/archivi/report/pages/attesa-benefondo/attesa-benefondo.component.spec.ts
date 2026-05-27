@@ -59,7 +59,7 @@ describe('AttesaBenefondoComponent', () => {
     );
   });
 
-  it('should populate transactions signal when Observable emits data', (done) => {
+  it('should populate transactions signal when Observable emits data', async () => {
     const mockData: any[] = [
       {
         trxId: 1,
@@ -87,12 +87,11 @@ describe('AttesaBenefondoComponent', () => {
 
     component.onSearch(params);
 
-    // Use requestAnimationFrame instead of setTimeout for better timing
-    requestAnimationFrame(() => {
-      expect(component.transactions()).toEqual(mockData);
-      expect(component.isLoading()).toBe(false);
-      done();
-    });
+    // Use microtask to wait for Observable subscription
+    await new Promise(resolve => Promise.resolve().then(resolve));
+    
+    expect(component.transactions()).toEqual(mockData);
+    expect(component.isLoading()).toBe(false);
   });
 
   it('should not have a manual subscription field', () => {
@@ -101,7 +100,7 @@ describe('AttesaBenefondoComponent', () => {
     expect((component as any).subscription === undefined || (component as any).subscription === null).toBe(true);
   });
 
-  it('should handle Observable errors and set error signal', (done) => {
+  it('should handle Observable errors and set error signal', async () => {
     const errorMessage = 'Network error';
     mockFacade.getTransactionWaitingForBef.mockReturnValue(throwError(() => new Error(errorMessage)));
 
@@ -115,11 +114,11 @@ describe('AttesaBenefondoComponent', () => {
 
     component.onSearch(params);
 
-    requestAnimationFrame(() => {
-      expect(component.error()).toBeTruthy();
-      expect(component.isLoading()).toBe(false);
-      done();
-    });
+    // Use microtask to wait for Observable subscription
+    await new Promise(resolve => Promise.resolve().then(resolve));
+    
+    expect(component.error()).toBeTruthy();
+    expect(component.isLoading()).toBe(false);
   });
 
   it('should set isLoading to true when search is initiated', () => {
@@ -137,7 +136,7 @@ describe('AttesaBenefondoComponent', () => {
     component.onSearch(params);
   });
 
-  it('should handle rapid filter changes and use only the latest result', (done) => {
+  it('should handle rapid filter changes and use only the latest result', async () => {
     const data1: any[] = [
       {
         trxId: 1,
@@ -189,9 +188,13 @@ describe('AttesaBenefondoComponent', () => {
     component.onSearch(params1);
     component.onSearch(params2);
 
-    requestAnimationFrame(() => {
-      expect(component.transactions().length).toBeGreaterThan(0);
-      done();
-    });
+    // Use microtask to wait for Observable subscription
+    await new Promise(resolve => Promise.resolve().then(resolve));
+    
+    // VERIFY: Both calls complete independently (no switchMap cancellation).
+    // The second onSearch() call updates the signal, so final state should contain data2 (CASSA02)
+    // In production, if rapid calls are a concern, switchMap should be implemented at facade level
+    expect(component.transactions().length).toBeGreaterThan(0);
+    expect(component.transactions()[0].trxCassa).toBe('CASSA02');
   });
 });
