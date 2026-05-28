@@ -1,11 +1,11 @@
-import { Component, OnInit, inject, signal, computed, DestroyRef } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, DestroyRef, ViewChild } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DxTextBoxModule, DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule } from 'devextreme-angular';
 import {
   SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-  SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+  SempioneSearchModeComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
   SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
@@ -24,7 +24,7 @@ import { ICurrencyCouple, ICurrencyDv } from '../../models/divisa.models';
     CommonModule, ReactiveFormsModule,
     DxTextBoxModule, DxValidatorModule, DxNumberBoxModule, DxSelectBoxModule,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-    SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+    SempioneSearchModeComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
     SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
@@ -39,17 +39,18 @@ export class CoppieDiviseComponent implements OnInit {
   private router      = inject(Router);
   private destroyRef  = inject(DestroyRef);
 
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
+
   readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'cucCur1',   caption: 'Divisa 1',        type: 'currency', width: 110 },
-    { dataField: 'cucCur2',   caption: 'Divisa 2',        type: 'currency', width: 110 },
-    { dataField: 'cucLondes', caption: 'Descrizione',      alignment: 'left'            },
-    { dataField: 'cucShodes', caption: 'Des. Abbreviata',  alignment: 'left', width: 150 },
-    { dataField: 'cucSize',   caption: 'Taglio',           alignment: 'center', width: 90, dataType: 'number' },
+    { dataField: 'cucCur1',   caption: 'Divisa 1',       type: 'currency', width: 110, allowHeaderFiltering: true, allowFiltering: false },
+    { dataField: 'cucCur2',   caption: 'Divisa 2',       type: 'currency', width: 110, allowHeaderFiltering: true, allowFiltering: false },
+    { dataField: 'cucLondes', caption: 'Descrizione',     alignment: 'left',            allowHeaderFiltering: true, allowFiltering: false },
+    { dataField: 'cucShodes', caption: 'Des. Abbreviata', alignment: 'left', width: 150, allowHeaderFiltering: true, allowFiltering: false },
+    { dataField: 'cucSize',   caption: 'Taglio',          alignment: 'center', width: 90, dataType: 'number', allowHeaderFiltering: true, allowFiltering: false },
   ];
 
-  private coppie       = signal<ICurrencyCouple[]>([]);
+  coppie               = signal<ICurrencyCouple[]>([]);
   currencies           = signal<ICurrencyDv[]>([]);
-  searchValue          = signal<string>('');
   popupMode            = signal<'new' | 'view' | 'edit'>('new');
   isDetailPopupVisible   = false;
   isLoading              = signal<boolean>(false);
@@ -58,18 +59,6 @@ export class CoppieDiviseComponent implements OnInit {
   selectedLabel        = signal<string>('');
 
   readonly taglioOptions = [1, 100];
-
-  filteredCoppie = computed(() => {
-    const q = this.searchValue().toLowerCase().trim();
-    const all = this.coppie();
-    if (!q) return all;
-    return all.filter(c =>
-      c.cucCur1.toLowerCase().includes(q) ||
-      c.cucCur2.toLowerCase().includes(q) ||
-      (c.cucLondes ?? '').toLowerCase().includes(q) ||
-      (c.cucShodes ?? '').toLowerCase().includes(q)
-    );
-  });
 
   currencyIds = computed(() => this.currencies().map(c => c.curId));
 
@@ -100,7 +89,9 @@ export class CoppieDiviseComponent implements OnInit {
     });
   }
 
-  onCerca(): void { this.loadData(); }
+  clearGridFilters(): void {
+    this.dataGrid?.clearFilters();
+  }
 
   openNewPopup(): void {
     this.coppiaForm.reset({ cucSize: 1 });
@@ -213,7 +204,4 @@ export class CoppieDiviseComponent implements OnInit {
     this.selectedLabel.set('');
   }
 
-  onSearchChanged(e: any): void {
-    this.searchValue.set(e.value ?? '');
-  }
 }

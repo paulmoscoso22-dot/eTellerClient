@@ -6,43 +6,24 @@
   overflow: hidden;
 }
 
-.page-shell {
+/* ── Page layout ── */
+.content-layout {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
-  padding: 12px 16px 0;
   gap: 10px;
+  padding: 10px 16px;
 }
 
-/* ── Card shell ── */
-.card-section {
-  background: #fff;
-  border: 1px solid #dce3ee;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.12);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.card-filtri   { flex-shrink: 0; }
-.card-risultati { flex: 1 1 auto; min-height: 0; }
+app-sempione-card.card-filtri   { flex: 0 0 auto; }
+app-sempione-card.card-risultati { flex: 1 1 auto; min-height: 0; }
 
 /* ── Card body ── */
 .card-body {
-  padding: 14px 18px;
-  background: #fff;
-}
-
-.card-body--grid {
-  padding: 0;
-  flex: 1 1 auto;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  padding: 12px 16px;
+  background: var(--color-surface-white);
 }
 
 /* ── Filter sections ── */
@@ -57,7 +38,7 @@
 
 .section-divider {
   height: 1px;
-  background: #e5e7eb;
+  background: var(--color-border-lighter);
   margin: 12px 0;
 }
 
@@ -77,7 +58,7 @@
 .field-label {
   font-size: 12px;
   font-weight: 600;
-  color: #003366;
+  color: var(--color-brand-navy);
   letter-spacing: 0.02em;
 }
 
@@ -87,32 +68,30 @@
   gap: 20px;
 }
 
-/* ── Action bar ── */
-.action-bar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-  padding: 7px 12px;
-  border-top: 1px solid #dce3ee;
-  background: rgba(237, 242, 247, 0.5);
-  flex-shrink: 0;
-}
-
 /* ── DX Controls (filter area) ── */
 :host ::ng-deep .card-body .dx-texteditor                   { height: 28px; }
 :host ::ng-deep .card-body .dx-texteditor-input             { min-height: unset; height: 26px; padding-top: 3px; padding-bottom: 3px; font-size: 12.5px; }
 :host ::ng-deep .card-body .dx-texteditor-buttons-container { height: 26px; }
-:host ::ng-deep .card-body .dx-checkbox-text                { font-size: 12px; color: #374151; }
-:host ::ng-deep .action-bar .dx-button                      { height: 28px; }
+:host ::ng-deep .card-body .dx-checkbox-text                { font-size: 12px; color: var(--color-text-secondary); }
 
-/* ── Currency badge ── */
-.cur-cell {
-  display: flex;
+/* ── Stato pill (popup dettaglio) ── */
+.stato-pill {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--color-status-neutral-bg);
+  color: var(--color-text-muted);
 }
+.stato-pill--ok       { background: var(--color-status-ok-bg);      color: var(--color-status-ok-text); }
+.stato-pill--stornata { background: var(--color-status-error-bg);    color: var(--color-status-error-text); }
+.stato-pill--forzata  { background: var(--color-status-warning-bg);  color: var(--color-status-warning-text); }
 
+/* ── Currency badge (popup dettaglio) ── */
 .cur-badge {
   display: inline-flex;
   align-items: center;
@@ -125,128 +104,9 @@
   font-weight: 700;
   font-family: monospace;
   letter-spacing: 0.05em;
-  background: #dbeafe;
-  color: #1e40af;
+  background: var(--color-status-info-bg);
+  color: var(--color-status-info-text);
 }
-
-/* ── Stato pill ── */
-.stato-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.stato-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: var(--font-size-xs, 10px);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  background: var(--color-status-neutral-bg, #f1f5f9);
-  color: var(--color-text-muted, #64748b);
-}
-
-.stato-pill--ok       { background: var(--color-status-ok-bg,      #dcfce7); color: var(--color-status-ok-text,      #166534); }
-.stato-pill--stornata { background: var(--color-status-error-bg,   #fee2e2); color: var(--color-status-error-text,   #991b1b); }
-.stato-pill--forzata  { background: var(--color-status-warning-bg, #fef9c3); color: var(--color-status-warning-text, #854d0e); }
-
-/* ── Action column ── */
-.actions-cell {
-  display: flex;
-  gap: 2px;
-  align-items: center;
-  justify-content: center;
-}
-
-.action-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.14s;
-}
-
-.action-btn svg {
-  width: 14px;
-  height: 14px;
-  stroke: #94a3b8;
-  transition: stroke 0.14s;
-}
-
-.action-btn--view:hover     { background: rgba(0, 51, 102, 0.08); }
-.action-btn--view:hover svg { stroke: var(--color-brand-navy, #003366); }
-
-/* ── Grid state messages ── */
-.grid-message {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 24px;
-  font-size: 13px;
-}
-
-.grid-message svg { width: 18px; height: 18px; flex-shrink: 0; }
-
-.grid-message--error {
-  color: #991b1b;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 6px;
-  margin: 12px;
-}
-
-.grid-message--error svg { stroke: #dc2626; }
-.grid-message--loading   { color: #374151; }
-
-.spin-icon { animation: spin 0.9s linear infinite; }
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.grid-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 64px 24px;
-  text-align: center;
-}
-
-.grid-empty svg  { width: 48px; height: 48px; stroke: #cbd5e1; }
-.empty-title    { margin: 0; font-size: 16px; font-weight: 600; color: #475569; }
-.empty-subtitle { margin: 0; font-size: 13px; color: #94a3b8; }
-
-/* ── Popup detail fields ── */
-.detail-field {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.detail-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: #003366;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.detail-value {
-  font-size: 13px;
-  color: #1e293b;
-  line-height: 1.4;
-}
-
-.detail-value.mono { font-family: monospace; }
 
 /* ── Responsive ── */
 @media (max-width: 1100px) {

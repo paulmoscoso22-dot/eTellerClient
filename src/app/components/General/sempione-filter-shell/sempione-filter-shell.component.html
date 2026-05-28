@@ -1,0 +1,27 @@
+<app-sempione-card>
+
+  <app-sempione-card-header [title]="title">
+    <ng-content select="[filter-icon]"></ng-content>
+  </app-sempione-card-header>
+
+  <div class="filter-body">
+    <ng-content></ng-content>
+  </div>
+
+  <div class="filter-action-bar">
+    <app-sempione-button
+      [hint]="resetText"
+      icon="revert"
+      (clicked)="resetted.emit()">
+    </app-sempione-button>
+    <app-sempione-button
+      [hint]="searchText"
+      icon="search"
+      variant="primary"
+      [shadow]="true"
+      [disabled]="isLoading"
+      (clicked)="searched.emit()">
+    </app-sempione-button>
+  </div>
+
+</app-sempione-card>

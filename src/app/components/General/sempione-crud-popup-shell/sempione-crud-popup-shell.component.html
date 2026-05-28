@@ -1,0 +1,27 @@
+<app-sempione-popup
+  [visible]="visible"
+  [title]="title"
+  [maxWidth]="maxWidth"
+  [dragEnabled]="dragEnabled"
+  [showCloseButton]="true"
+  (hidden)="onHidden()">
+
+  <div class="popup-layout">
+
+    <ng-content></ng-content>
+
+    <app-sempione-popup-action-bar
+      [showSave]="computedShowSave"
+      [saveText]="saveText"
+      [cancelText]="cancelText"
+      [isSaving]="isSaving"
+      [showStorico]="showStorico"
+      (save)="save.emit()"
+      (cancel)="onCancel()"
+      (storico)="storico.emit()">
+      <ng-content select="[secondary-actions]"></ng-content>
+    </app-sempione-popup-action-bar>
+
+  </div>
+
+</app-sempione-popup>

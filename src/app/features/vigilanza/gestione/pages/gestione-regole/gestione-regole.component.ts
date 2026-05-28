@@ -1,16 +1,9 @@
-import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
+import { Component, signal, DestroyRef, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {
-  DxTextBoxModule,
-  DxDateBoxModule,
-  DxSelectBoxModule,
-  DxCheckBoxModule,
-  DxNumberBoxModule,
-} from 'devextreme-angular';
+import { DxSelectBoxModule, DxDateBoxModule, DxNumberBoxModule, DxCheckBoxModule, DxTextBoxModule } from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import notify from 'devextreme/ui/notify';
-import { Subscription } from 'rxjs';
 import { AuthStore } from '../../../../auth/auth.store';
 import { GestioneRegoleService } from '../../services/gestione-regole.service';
 import {
@@ -25,10 +18,10 @@ import { IStOperationType } from '../../../../../core/domain/stOperationType.dom
 import { ICurrencyType } from '../../../../../core/domain/currencyType.domain';
 import {
   SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-  SempioneToolbarComponent, SempioneButtonComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent,
   SempionePopupActionBarComponent, SempioneFieldGroupComponent,
+  SempioneSearchModeComponent,
 } from '../../../../../components/General';
 
 @Component({
@@ -37,36 +30,41 @@ import {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DxTextBoxModule, DxDateBoxModule, DxSelectBoxModule, DxCheckBoxModule, DxNumberBoxModule,
+    DxSelectBoxModule, DxDateBoxModule, DxNumberBoxModule, DxCheckBoxModule, DxTextBoxModule,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-    SempioneToolbarComponent, SempioneButtonComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent,
     SempionePopupActionBarComponent, SempioneFieldGroupComponent,
+    SempioneSearchModeComponent,
   ],
   templateUrl: './gestione-regole.component.html',
   styleUrls: ['./gestione-regole.component.css'],
 })
-export class GestioneRegoleComponent implements OnDestroy {
+export class GestioneRegoleComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
   private readonly service = inject(GestioneRegoleService);
   private readonly authStore = inject(AuthStore);
 
-  private subscription: Subscription | null = null;
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
+
+  private readonly boolHeaderFilter = [
+    { text: 'Sì', value: true },
+    { text: 'No', value: false },
+  ];
 
   readonly columns: SempioneGridColumn[] = [
-    { dataField: 'arlId',         caption: 'ID',                 width: 60 },
-    { dataField: 'optDes',        caption: 'Tipo operazione',    width: 140 },
-    { dataField: 'cutDes',        caption: 'Tipo divisa',        width: 120 },
-    { dataField: 'arlAcctId',     caption: 'Conto',              width: 120 },
-    { dataField: 'arlAcctType',   caption: 'Cat. conto',         width: 100 },
-    { dataField: 'arlLimit',      caption: 'Limite vigilanza',   width: 130, dataType: 'number', alignment: 'right' },
-    { dataField: 'arlValStart',   caption: 'Inizio validità',    width: 110, dataType: 'date', format: 'dd.MM.yyyy' },
-    { dataField: 'arlValEnd',     caption: 'Fine validità',      width: 110, dataType: 'date', format: 'dd.MM.yyyy' },
-    { dataField: 'arlRecDate',    caption: 'Data registrazione', width: 110, dataType: 'date', format: 'dd.MM.yyyy' },
-    { dataField: 'arlIsinternal', caption: 'Interna',            width: 80,  type: 'bool-text' },
-    { dataField: 'arlExclude',    caption: 'Escludi',            width: 80,  type: 'bool-text' },
+    { dataField: 'arlId',         caption: 'ID',                 width: 55,  allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'optDes',        caption: 'Tipo operazione',    width: 155, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'cutDes',        caption: 'Tipo divisa',        width: 110, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'arlAcctId',     caption: 'Conto',              width: 115, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'arlAcctType',   caption: 'Cat. conto',         width: 125, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'arlLimit',      caption: 'Limite vigilanza',   width: 155, dataType: 'number', allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'arlValStart',   caption: 'Inizio validità',    width: 155, dataType: 'date', format: 'dd.MM.yyyy', allowFiltering: false, allowHeaderFiltering: true, headerFilterType: 'calendar', cssClass: 'col-date' },
+    { dataField: 'arlValEnd',     caption: 'Fine validità',      width: 140, dataType: 'date', format: 'dd.MM.yyyy', allowFiltering: false, allowHeaderFiltering: true, headerFilterType: 'calendar', cssClass: 'col-date' },
+    { dataField: 'arlRecDate',    caption: 'Data registrazione', width: 185, dataType: 'date', format: 'dd.MM.yyyy', allowFiltering: false, allowHeaderFiltering: true, headerFilterType: 'calendar', cssClass: 'col-date' },
+    { dataField: 'arlIsinternal', caption: 'Interna',  width: 115,   type: 'bool-text', allowFiltering: false, allowHeaderFiltering: true, dataType: 'boolean', headerFilterDataSource: this.boolHeaderFilter },
+    { dataField: 'arlExclude',    caption: 'Escludi',  minWidth: 90, type: 'bool-text', allowFiltering: false, allowHeaderFiltering: true, dataType: 'boolean', headerFilterDataSource: this.boolHeaderFilter },
   ];
 
   readonly historyColumns: SempioneGridColumn[] = [
@@ -78,8 +76,8 @@ export class GestioneRegoleComponent implements OnDestroy {
     { dataField: 'arlLimit',      caption: 'Limite',             width: 110, dataType: 'number', alignment: 'right' },
     { dataField: 'arlValStart',   caption: 'Inizio validità',    width: 110, dataType: 'date', format: 'dd.MM.yyyy' },
     { dataField: 'arlValEnd',     caption: 'Fine validità',      width: 110, dataType: 'date', format: 'dd.MM.yyyy' },
-    { dataField: 'arlIsinternal', caption: 'Interna',            width: 75,  type: 'bool-text' },
-    { dataField: 'arlExclude',    caption: 'Escludi',            width: 75,  type: 'bool-text' },
+    { dataField: 'arlIsinternal', caption: 'Interna',            width: 75,    type: 'bool-text' },
+    { dataField: 'arlExclude',    caption: 'Escludi',            minWidth: 75, type: 'bool-text' },
   ];
 
   // ── Grid data ──
@@ -90,14 +88,6 @@ export class GestioneRegoleComponent implements OnDestroy {
   // ── Lookup data ──
   operationTypes = signal<IStOperationType[]>([]);
   currencyTypes = signal<ICurrencyType[]>([]);
-
-  // ── Filter form ──
-  filterForm: FormGroup = this.fb.group({
-    arlOpTypeId: [null],
-    arlCurTypeId: [null],
-    arlAcctId: [''],
-    arlAcctType: [''],
-  });
 
   // ── Form popup (add / edit) ──
   isFormPopupVisible = false;
@@ -134,36 +124,28 @@ export class GestioneRegoleComponent implements OnDestroy {
     this.service.getCurrencyTypes()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(data => this.currencyTypes.set(data ?? []));
+
+    this.loadAll();
   }
 
-  // ── Filter actions ──
+  // ── Data loading ──
 
-  search(): void {
-    const v = this.filterForm.value;
+  private loadAll(): void {
     const request: IAntirecRulesSearchParams = {
-      arlOpTypeId: v.arlOpTypeId ?? null,
-      arlCurTypeId: v.arlCurTypeId ?? null,
-      arlAcctId: v.arlAcctId || null,
-      arlAcctType: v.arlAcctType || null,
+      arlOpTypeId: null, arlCurTypeId: null, arlAcctId: null, arlAcctType: null,
     };
-    this.destroy();
     this.isLoading.set(true);
     this.error.set(null);
-    this.subscription = this.service.getByParameters(request)
+    this.service.getByParameters(request)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => { this.rules.set(data ?? []); this.isLoading.set(false); },
-        error: (err: any) => {
-          this.error.set(err.message || 'Errore nel recupero delle regole');
-          this.isLoading.set(false);
-        }
+        error: (err: any) => { this.error.set(err.message || 'Errore nel recupero delle regole'); this.isLoading.set(false); }
       });
   }
 
-  resetFilters(): void {
-    this.filterForm.reset({ arlOpTypeId: null, arlCurTypeId: null, arlAcctId: '', arlAcctType: '' });
-    this.rules.set([]);
-    this.error.set(null);
+  clearGridFilters(): void {
+    this.dataGrid?.clearFilters();
   }
 
   // ── Form popup ──
@@ -303,7 +285,7 @@ export class GestioneRegoleComponent implements OnDestroy {
           notify('Regola aggiornata con successo', 'success', 3000);
           this.isSaving.set(false);
           this.isFormPopupVisible = false;
-          this.search();
+          this.loadAll();
         },
         error: () => {
           this.isSaving.set(false);
@@ -337,7 +319,7 @@ export class GestioneRegoleComponent implements OnDestroy {
           notify('Regola inserita con successo', 'success', 3000);
           this.isSaving.set(false);
           this.isFormPopupVisible = false;
-          this.search();
+          this.loadAll();
         },
         error: () => {
           this.isSaving.set(false);
@@ -384,7 +366,7 @@ export class GestioneRegoleComponent implements OnDestroy {
       .subscribe({
         next: () => {
           notify('Regola eliminata con successo', 'success', 3000);
-          this.search();
+          this.loadAll();
         },
         error: () => {
           notify('Errore durante l\'operazione', 'error', 3000);
@@ -400,12 +382,5 @@ export class GestioneRegoleComponent implements OnDestroy {
     const m = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${y}-${m}-${day}`;
-  }
-
-  ngOnDestroy(): void { this.destroy(); }
-
-  private destroy(): void {
-    this.subscription?.unsubscribe();
-    this.subscription = null;
   }
 }

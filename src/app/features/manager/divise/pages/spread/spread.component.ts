@@ -1,10 +1,10 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DxTextBoxModule, DxNumberBoxModule, DxDateBoxModule } from 'devextreme-angular';
 import {
   SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-  SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+  SempioneSearchModeComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
   SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
@@ -25,7 +25,7 @@ export interface ISpreadItem {
     CommonModule, ReactiveFormsModule,
     DxTextBoxModule, DxNumberBoxModule, DxDateBoxModule,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-    SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+    SempioneSearchModeComponent,
     SempioneDataGridComponent, SempionePopupComponent, SempionePopupCardComponent,
     SempionePopupActionBarComponent, SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
   ],
@@ -35,17 +35,16 @@ export interface ISpreadItem {
 export class SpreadComponent implements OnInit {
   private fb = inject(FormBuilder);
 
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
+
   readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'sprCurId',  caption: 'Divisa',    alignment: 'left',  width: 120 },
-    { dataField: 'sprType',   caption: 'Tipo',       alignment: 'left',  width: 140 },
-    { dataField: 'sprValue',  caption: 'Valore',     alignment: 'right', width: 140, dataType: 'number', format: '#,##0.0000' },
-    { dataField: 'sprDatini', caption: 'Valido Dal', alignment: 'left',  width: 140 },
+    { dataField: 'sprCurId',  caption: 'Divisa',    alignment: 'left',  width: 120, allowHeaderFiltering: true, allowFiltering: false },
+    { dataField: 'sprType',   caption: 'Tipo',       alignment: 'left',  width: 140, allowHeaderFiltering: true, allowFiltering: false },
+    { dataField: 'sprValue',  caption: 'Valore',     alignment: 'right', width: 140, dataType: 'number', format: '#,##0.0000', allowHeaderFiltering: true, allowFiltering: false },
+    { dataField: 'sprDatini', caption: 'Valido Dal', alignment: 'left',  minWidth: 140, allowHeaderFiltering: true, allowFiltering: false },
   ];
 
   spreadList = signal<ISpreadItem[]>([]);
-
-  filterCur = signal<string>('');
-  filterTipo = signal<string>('');
 
   isLoading = signal<boolean>(false);
   isPopupVisible = false;
@@ -53,16 +52,6 @@ export class SpreadComponent implements OnInit {
   pendingDeleteData = signal<ISpreadItem | null>(null);
   popupMode = signal<'new'|'edit'|'view'>('view');
   selectedLabel = signal<string>('');
-
-  filteredSpread = computed(() => {
-    const c = this.filterCur().toLowerCase().trim();
-    const t = this.filterTipo().toLowerCase().trim();
-    return this.spreadList().filter(s => {
-      if (c && !s.sprCurId.toLowerCase().includes(c)) return false;
-      if (t && !s.sprType.toLowerCase().includes(t)) return false;
-      return true;
-    });
-  });
 
   spreadForm: FormGroup = this.fb.group({
     sprCurId: [''],
@@ -79,8 +68,7 @@ export class SpreadComponent implements OnInit {
     ]);
   }
 
-  onCerca(): void { notify('Filtri applicati', 'info', 1400); }
-  onResetFiltri(): void { this.filterCur.set(''); this.filterTipo.set(''); }
+  clearGridFilters(): void { this.dataGrid?.clearFilters(); }
 
   openNewPopup(): void { this.popupMode.set('new'); this.selectedLabel.set('Nuovo Spread'); this.isPopupVisible = true; }
   openEditPopup(item: ISpreadItem): void { this.popupMode.set('edit'); this.selectedLabel.set(item.sprCurId); this.spreadForm.patchValue(item); this.isPopupVisible = true; }

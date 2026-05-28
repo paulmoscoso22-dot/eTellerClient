@@ -3,23 +3,24 @@ import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
-  DxDataGridModule,
   DxTextBoxModule,
   DxDateBoxModule,
   DxNumberBoxModule,
-  DxButtonModule,
   DxCheckBoxModule,
   DxSelectBoxModule,
-  DxTemplateModule
 } from 'devextreme-angular';
-import { HeaderCardComponent } from '../../../../components/header-card/header-card.component';
-import { SempionePageShellComponent } from '../../../../components/General/sempione-page-shell/sempione-page-shell.component';
+import { SempioneCardComponent } from '../../../../components/General/sempione-card/sempione-card.component';
+import { SempioneCardHeaderComponent } from '../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneButtonComponent } from '../../../../components/General/sempione-button/sempione-button.component';
+import { SempionePageHeaderComponent } from '../../../../components/General/sempione-page-header/sempione-page-header.component';
+import { SempioneToolbarComponent } from '../../../../components/General/sempione-toolbar/sempione-toolbar.component';
+import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../components/General/sempione-data-grid/sempione-data-grid.component';
 import { SempionePopupComponent } from '../../../../components/General/sempione-popup/sempione-popup.component';
 import { SempionePopupActionBarComponent } from '../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
+import { SempionePopupCardComponent } from '../../../../components/General/sempione-popup-card/sempione-popup-card.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import type { ValueChangedEvent as DateBoxValueChangedEvent } from 'devextreme/ui/date_box';
-import type { ValueChangedEvent as NumberBoxValueChangedEvent } from 'devextreme/ui/number_box';
 import { RicercaOperazioniFacade } from '../services/ricerca-operazioni.facade';
 import { GestioneComparentiAdeService } from '../../gestione/services/gestione-comparenti-ade.service';
 import { Service } from '../../../../core/services/service';
@@ -43,18 +44,20 @@ const DEFAULT_PAGE_SIZE = 30;
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DxDataGridModule,
     DxTextBoxModule,
     DxDateBoxModule,
     DxNumberBoxModule,
-    DxButtonModule,
     DxCheckBoxModule,
     DxSelectBoxModule,
-    DxTemplateModule,
-    HeaderCardComponent,
-    SempionePageShellComponent,
+    SempionePageHeaderComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
+    SempioneToolbarComponent,
+    SempioneDataGridComponent,
     SempionePopupComponent,
+    SempionePopupCardComponent,
     SempionePopupActionBarComponent,
+    SempioneButtonComponent,
   ],
   templateUrl: './ricerca-operazioni.component.html',
   styleUrls: ['./ricerca-operazioni.component.css'],
@@ -81,6 +84,20 @@ export class RicercaOperazioniComponent implements OnInit {
   readonly isAppearerPopupVisible = signal(false);
   readonly isAppearerLoading = signal(false);
   readonly error = signal<string | null>(null);
+
+  readonly columns: SempioneGridColumn[] = [
+    { dataField: 'trxId',           caption: 'Nop / TrxId',  width: 90,  alignment: 'center' },
+    { dataField: 'trxDate',         caption: 'Data',          width: 100, alignment: 'center', dataType: 'date', format: 'dd.MM.yy' },
+    { dataField: 'cutDes',          caption: 'Utente/Cassa',  width: 140, alignment: 'left' },
+    { dataField: 'optDes',          caption: 'Operazione',    minWidth: 160, alignment: 'left' },
+    { dataField: 'trxReport',       caption: 'N. Rapporto',   width: 110, alignment: 'center' },
+    { dataField: 'trxCurId',        caption: 'Divisa',        width: 70,  type: 'currency' },
+    { dataField: 'trxAmount',       caption: 'Importo',       width: 110, alignment: 'right', dataType: 'number', format: '#,##0.00' },
+    { dataField: 'trxRate',         caption: 'Cambio',        width: 100, alignment: 'right', dataType: 'number', format: '#,##0.0000' },
+    { dataField: 'appearerName',    caption: 'Comparente',    width: 160, alignment: 'left' },
+    { dataField: 'beneficiaryName', caption: 'Beneficiario',  minWidth: 160, alignment: 'left' },
+    { dataField: 'staDes',          caption: 'Stato',         width: 100, type: 'stato-operazione' },
+  ];
 
   readonly searchForm: FormGroup = this.formBuilder.group({
     trxCassa: [''],
@@ -180,18 +197,9 @@ export class RicercaOperazioniComponent implements OnInit {
     this.searchForm.patchValue({ trxDataAl: date }, { emitEvent: false });
   }
 
-  onPageSizeChanged(e: NumberBoxValueChangedEvent): void {
-    const value = Number(e.value ?? DEFAULT_PAGE_SIZE);
-    this.pageSize.set(this.isValidPageSize(value) ? value : DEFAULT_PAGE_SIZE);
+  onGridPageSizeChanged(newSize: number): void {
+    this.pageSize.set(this.isValidPageSize(newSize) ? newSize : DEFAULT_PAGE_SIZE);
     this.persistFilters();
-  }
-
-  onGridOptionChanged(e: { fullName?: string; value?: unknown }): void {
-    if (e.fullName === 'paging.pageSize') {
-      const value = Number(e.value ?? DEFAULT_PAGE_SIZE);
-      this.pageSize.set(this.isValidPageSize(value) ? value : DEFAULT_PAGE_SIZE);
-      this.persistFilters();
-    }
   }
 
   searchAppearers(): void {
@@ -224,12 +232,6 @@ export class RicercaOperazioniComponent implements OnInit {
     if (s.includes('forz') || s.includes('vigil')) return 'stato-pill--forzata';
     if (s.includes('ok') || s.includes('complet')) return 'stato-pill--ok';
     return '';
-  }
-
-  formatDate(value: string | Date | null | undefined): string {
-    if (!value) return '—';
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleString('it-IT');
   }
 
   search(): void {

@@ -6,7 +6,7 @@
   display: inline-block;
   width: 1px;
   height: 16px;
-  background: #dce3ee;
+  background: var(--color-border-light);
   flex-shrink: 0;
   align-self: center;
   margin: 0 2px;

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { InformazioniService } from '../../services/informazioni.service';
 import { GetTabellaServVarcharByIdRequest, TabellaServVarcharResponse, TraceResponse, GetTraceWithFunctionRequest, TraceWithFunctionResponse } from '../../models/informazioni.models';
+import { SempionePopupCardComponent } from '../../../../../components/General';
 
 @Component({
   selector: 'app-trace-detaill-component',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SempionePopupCardComponent],
   templateUrl: './trace-detaill.component.html',
   styleUrls: ['./trace-detaill.component.scss']
 })

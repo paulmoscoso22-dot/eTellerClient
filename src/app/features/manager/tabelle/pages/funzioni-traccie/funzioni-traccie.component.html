@@ -12,66 +12,15 @@
       </svg>
     </app-sempione-card-header>
 
-    <div [formGroup]="filterForm">
-      <app-sempione-toolbar>
-
-        <div class="toolbar-field toolbar-field--sm">
-          <dx-text-box
-            formControlName="id"
-            placeholder="Codice..."
-            [showClearButton]="true"
-            valueChangeEvent="input">
-          </dx-text-box>
-        </div>
-
-        <div class="toolbar-field toolbar-field--lg">
-          <dx-text-box
-            formControlName="desLike"
-            placeholder="Cerca per descrizione..."
-            [showClearButton]="true"
-            valueChangeEvent="input">
-          </dx-text-box>
-        </div>
-
-        <div toolbar-actions>
-          <app-sempione-button
-            icon="search"
-            hint="Cerca"
-            variant="secondary"
-            [disabled]="isLoading()"
-            (clicked)="search()">
-          </app-sempione-button>
-          <app-sempione-button
-            icon="revert"
-            hint="Reset filtri"
-            variant="secondary"
-            (clicked)="resetFilters()">
-          </app-sempione-button>
-          <app-sempione-button
-            icon="checklist"
-            hint="Mostra tutti"
-            variant="secondary"
-            [disabled]="isLoading()"
-            (clicked)="showAll()">
-          </app-sempione-button>
-          <span class="toolbar-sep" toolbar-actions></span>
-          <app-sempione-button
-            text="Nuovo"
-            icon="add"
-            variant="primary"
-            [shadow]="true"
-            (clicked)="openAddPopup()">
-          </app-sempione-button>
-        </div>
-
-      </app-sempione-toolbar>
-    </div>
+    <app-sempione-search-mode mode="header" newText="Nuovo" (reset)="clearGridFilters()" (add)="openAddPopup()">
+    </app-sempione-search-mode>
 
     <app-sempione-data-grid
       [dataSource]="items()"
       [columns]="gridColumns"
       [isLoading]="isLoading()"
       [error]="error()"
+      [showHeaderFilter]="true"
       [showEditAction]="true"
       [showTraceAction]="true"
       noDataText="Nessun risultato trovato."

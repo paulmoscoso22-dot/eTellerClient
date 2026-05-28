@@ -1,6 +1,6 @@
 <app-sempione-page-header title="Ruoli"></app-sempione-page-header>
 
-<div class="layout-body">
+<div class="content-layout">
 
   <!-- ══ Top Row: Gestione Ruoli (2/3) + Utenti associati (1/3) ══ -->
   <div class="top-row">
@@ -22,6 +22,7 @@
           [showClearButton]="true">
         </dx-text-box>
         <div toolbar-actions>
+          <app-sempione-button icon="search" hint="Cerca" variant="secondary" (clicked)="searchRoles.set(searchRoles())"></app-sempione-button>
           <app-sempione-button icon="revert" hint="Ripristina filtri" variant="secondary" (clicked)="resetFilters()"></app-sempione-button>
           <app-sempione-button text="Nuovo" icon="plus" variant="primary" [shadow]="true" (clicked)="onAdd()"></app-sempione-button>
         </div>
@@ -63,6 +64,7 @@
           [showClearButton]="true">
         </dx-text-box>
         <div toolbar-actions>
+          <app-sempione-button icon="search" hint="Cerca" variant="secondary" (clicked)="searchUsers.set(searchUsers())"></app-sempione-button>
           <app-sempione-button icon="revert" hint="Ripristina filtri" variant="secondary" (clicked)="searchUsers.set('')"></app-sempione-button>
         </div>
       </app-sempione-toolbar>
@@ -215,14 +217,7 @@
         (save)="onSaveDetail()"
         (cancel)="showDetailPopup.set(false)"
         (storico)="onTrace()">
-        <dx-button
-          secondary-actions
-          text="Cancella"
-          icon="trash"
-          stylingMode="outlined"
-          class="btn-fin-danger"
-          (onClick)="requestDelete()">
-        </dx-button>
+        <app-sempione-button secondary-actions text="Cancella" icon="trash" variant="danger" (clicked)="requestDelete()"></app-sempione-button>
       </app-sempione-popup-action-bar>
     }
   </div>

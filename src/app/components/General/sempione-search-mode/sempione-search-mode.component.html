@@ -1,0 +1,21 @@
+<app-sempione-toolbar>
+
+  @if (mode === 'toolbar') {
+    <ng-content></ng-content>
+  }
+
+  <div toolbar-actions>
+    <app-sempione-crud-toolbar-actions
+      [showSearch]="mode === 'toolbar'"
+      [showReset]="showReset"
+      [showAll]="false"
+      [showAdd]="showAdd"
+      [newText]="newText"
+      [isLoading]="isLoading"
+      (search)="search.emit()"
+      (reset)="reset.emit()"
+      (add)="add.emit()">
+    </app-sempione-crud-toolbar-actions>
+  </div>
+
+</app-sempione-toolbar>

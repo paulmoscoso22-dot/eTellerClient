@@ -27,11 +27,11 @@
 
 .ra-btn--view svg        { stroke: #94a3b8; }
 .ra-btn--view:hover      { background: rgba(0, 51, 102, 0.06); }
-.ra-btn--view:hover svg  { stroke: #64748b; }
+.ra-btn--view:hover svg  { stroke: var(--color-text-muted); }
 
 .ra-btn--edit svg        { stroke: rgba(0, 51, 102, 0.65); }
 .ra-btn--edit:hover      { background: rgba(0, 51, 102, 0.09); }
-.ra-btn--edit:hover svg  { stroke: #003366; }
+.ra-btn--edit:hover svg  { stroke: var(--color-brand-navy); }
 
 .ra-btn--trace svg       { stroke: rgba(180, 83, 9, 0.60); }
 .ra-btn--trace:hover     { background: rgba(217, 119, 6, 0.09); }
@@ -59,12 +59,12 @@
   transition: background 0.14s, color 0.14s;
 }
 .ra-more-trigger:hover,
-.ra-more-trigger.open { background: rgba(0, 51, 102, 0.08); color: #003366; }
+.ra-more-trigger.open { background: rgba(0, 51, 102, 0.08); color: var(--color-brand-navy); }
 
 .ra-more-menu {
   position: fixed;
   z-index: 9999;
-  background: #fff;
+  background: var(--color-surface-white);
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -91,7 +91,7 @@
   text-align: left;
   transition: background 0.12s, color 0.12s;
 }
-.ra-more-item:hover { background: rgba(0, 51, 102, 0.06); color: #003366; }
+.ra-more-item:hover { background: rgba(0, 51, 102, 0.06); color: var(--color-brand-navy); }
 .ra-more-item svg { flex-shrink: 0; }
 .ra-more-item--trace       { color: #92400e; }
 .ra-more-item--trace svg   { stroke: #b45309; }

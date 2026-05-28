@@ -210,14 +210,7 @@
         (save)="onSaveDetail()"
         (cancel)="showDetailPopup.set(false)"
         (storico)="onTrace()">
-        <dx-button
-          secondary-actions
-          text="Cancella"
-          icon="trash"
-          stylingMode="outlined"
-          class="btn-fin-danger"
-          (onClick)="requestDelete()">
-        </dx-button>
+        <app-sempione-button secondary-actions text="Cancella" icon="trash" variant="danger" (clicked)="requestDelete()"></app-sempione-button>
       </app-sempione-popup-action-bar>
     }
   </div>

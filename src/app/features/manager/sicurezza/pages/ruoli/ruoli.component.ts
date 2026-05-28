@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
 import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
 import { DxSelectBoxModule } from 'devextreme-angular/ui/select-box';
-import { DxButtonModule } from 'devextreme-angular/ui/button';
 import { DxTemplateModule } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -25,7 +24,7 @@ import {
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxDataGridModule, DxTextBoxModule, DxSelectBoxModule, DxButtonModule, DxTemplateModule,
+    DxDataGridModule, DxTextBoxModule, DxSelectBoxModule, DxTemplateModule,
     SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupActionBarComponent,
@@ -100,7 +99,8 @@ export class RuoliComponent implements OnInit {
       usrStatusDes:
         u.usrStatus === 'enabled'  ? 'Attivo'       :
         u.usrStatus === 'disabled' ? 'Disabilitato' :
-        u.usrStatus === 'blocked'  ? 'Bloccato'     : u.usrStatus,
+        u.usrStatus === 'blocked'  ? 'Bloccato'     :
+        (u.usrStatus === 'extinct' || u.usrStatus === 'estinto') ? 'Estinto' : u.usrStatus,
     }))
   );
 

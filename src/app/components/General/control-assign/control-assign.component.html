@@ -1,0 +1,32 @@
+<div class="control-assign-container">
+  <div class="control-assign-list">
+    <dx-data-grid
+      [dataSource]="assignedRoles()"
+      [showBorders]="true"
+      height="180"
+      keyExpr="roleId"
+      noDataText="Nessuna periferica assegnata"
+      [(selectedRowKeys)]="selectedAssignedRoleKeys">
+      <dxo-selection mode="single"></dxo-selection>
+      <dxi-column dataField="roleName" caption="Periferiche Assegnate"></dxi-column>
+    </dx-data-grid>
+  </div>
+
+  <div id="moveleftRight" class="control-assign-buttons">
+    <app-sempione-button text="<<" [disabled]="disabled" (clicked)="addRole()"></app-sempione-button>
+    <app-sempione-button text=">>" [disabled]="disabled" (clicked)="removeRole()"></app-sempione-button>
+  </div>
+
+  <div id="ruoliPossibili" class="control-assign-list">
+    <dx-data-grid
+      [dataSource]="possibleRoles()"
+      [showBorders]="true"
+      height="180"
+      keyExpr="roleId"
+      noDataText="Nessuna periferica disponibile"
+      [(selectedRowKeys)]="selectedPossibleRoleKeys">
+      <dxo-selection mode="single"></dxo-selection>
+      <dxi-column dataField="roleName" caption="Periferiche Disponibili"></dxi-column>
+    </dx-data-grid>
+  </div>
+</div>

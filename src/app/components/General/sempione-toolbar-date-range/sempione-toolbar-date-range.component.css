@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.field-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1;
+  padding-left: 2px;
+}

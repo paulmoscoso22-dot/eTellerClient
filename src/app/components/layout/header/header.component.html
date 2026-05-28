@@ -1,0 +1,71 @@
+<div class="header">
+  <i class="bi bi-list list-icon" (click)="onMenuIconClicked()"></i>
+  <div class="logo-sep"></div>
+  <app-sempione-logo></app-sempione-logo>
+  <div class="header-spacer"></div>
+
+  <app-user-badge (clicked)="onUserBadgeClick()"></app-user-badge>
+
+  <div class="logo-sep"></div>
+
+  <span class="header-eteller">eTeller</span>
+
+  <div class="logo-sep"></div>
+
+  <!-- Status Indicator + Timestamp -->
+  <div class="status-wrapper">
+    <span
+      id="status-indicator"
+      class="status-pill"
+      [class.status-pill--online]="isOnline()"
+      [class.status-pill--offline]="!isOnline()"
+      [attr.aria-label]="statusAriaLabel"
+      role="status">
+      {{ isOnline() ? 'ONLINE' : 'OFFLINE' }}
+    </span>
+    <span class="status-timestamp">{{ relativeTime() }}</span>
+  </div>
+  <dx-tooltip
+    target="#status-indicator"
+    showEvent="mouseenter"
+    hideEvent="mouseleave"
+    position="bottom">
+    <div *dxTemplate="let d of 'content'" class="status-tooltip">
+      <i class="bi" [class.bi-check-circle-fill]="isOnline()" [class.bi-x-circle-fill]="!isOnline()"></i>
+      <div>
+        <div class="status-tooltip-label">{{ isOnline() ? 'Operativo' : 'Errore — Sistema non raggiungibile' }}</div>
+        <div class="status-tooltip-time">{{ absoluteTimestamp }}</div>
+      </div>
+    </div>
+  </dx-tooltip>
+
+  <div class="logo-sep"></div>
+
+  <div class="session-info-wrapper">
+    <div class="session-info-row">
+      <i class="bi bi-person-fill session-info-icon"></i>
+      <span class="session-info-primary">{{ hostUser() }}</span>
+    </div>
+    <div class="session-info-row">
+      <i class="bi bi-printer-fill session-info-icon"></i>
+      <span class="session-info-secondary">{{ fichesPrinter() }}</span>
+    </div>
+  </div>
+
+  <div class="logo-sep"></div>
+
+  <dx-drop-down-button
+    class="lang-selector"
+    [items]="languages"
+    [text]="currentLang()"
+    displayExpr="label"
+    keyExpr="code"
+    (onItemClick)="onLanguageSelect($event)"
+    stylingMode="text"
+    [showArrowIcon]="false"
+    [width]="52">
+  </dx-drop-down-button>
+
+  <div class="logo-sep"></div>
+  <i class="bi bi-box-arrow-right list-icon" (click)="onLogout()" title="Logout" role="button" aria-label="Logout"></i>
+</div>

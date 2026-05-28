@@ -6,20 +6,13 @@
   overflow: hidden;
 }
 
-/* ── Popup view mode: read-only values ── */
-.detail-value {
-  font-size: 13px;
-  color: #1e293b;
-  line-height: 1.4;
-  padding: 4px 0;
-}
-
-.detail-value.mono { font-family: monospace; }
+/* ── Detail value override ── */
+.detail-value { padding: 4px 0; }
 
 /* ── Validation error ── */
 .field-error {
   display: block;
   font-size: 10px;
-  color: #dc2626;
+  color: var(--color-danger);
   margin-top: 2px;
 }

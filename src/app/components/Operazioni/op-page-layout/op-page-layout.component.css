@@ -28,11 +28,13 @@
   padding: 3px 12px 3px 8px;
   border-radius: 4px;
   font-size: 12px;
-  color: #fff;
+  color: var(--color-surface-white);
 }
 
-.op-badge--acquisto { background: #14532d; }
-.op-badge--vendita  { background: #7f1d1d; }
+.op-badge--acquisto     { background: #16a34a; }
+.op-badge--versamento   { background: #16a34a; }
+.op-badge--vendita      { background: #dc2626; }
+.op-badge--prelevamento { background: #dc2626; }
 
 .badge-icon {
   width: 14px;
@@ -88,7 +90,7 @@
 /* ── Field separator (shared utility) ── */
 :host ::ng-deep .field-sep {
   height: 1px;
-  background: #e5e7eb;
+  background: var(--color-border-lighter);
   margin: 8px 0;
 }
 

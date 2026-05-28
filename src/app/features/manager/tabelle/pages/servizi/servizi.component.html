@@ -10,30 +10,16 @@
       </svg>
     </app-sempione-card-header>
 
-    <app-sempione-toolbar>
-      <div class="toolbar-field toolbar-field--lg">
-        <dx-text-box
-          [value]="searchValue()"
-          placeholder="Cerca per ID o descrizione..."
-          [showClearButton]="true"
-          valueChangeEvent="input"
-          (onValueChanged)="onSearchChanged($event)">
-        </dx-text-box>
-      </div>
-      <app-sempione-crud-toolbar-actions
-        newText="Nuovo Servizio"
-        (search)="loadServizi()"
-        (reset)="onResetForm()"
-        (add)="openNewPopup()">
-      </app-sempione-crud-toolbar-actions>
-    </app-sempione-toolbar>
+    <app-sempione-search-mode mode="header" newText="Nuovo Servizio" (reset)="clearGridFilters()" (add)="openNewPopup()">
+    </app-sempione-search-mode>
 
     <app-sempione-data-grid
-      [dataSource]="filteredServizi()"
+      [dataSource]="servizi()"
       [columns]="gridColumns"
       keyExpr="serId"
       [pageSize]="15"
       [allowedPageSizes]="[15, 25, 50]"
+      [showHeaderFilter]="true"
       [showViewAction]="true"
       [showEditAction]="true"
       [showTraceAction]="true"
@@ -42,7 +28,8 @@
       (rowView)="openViewPopup($event)"
       (rowEdit)="openEditPopup($event)"
       (rowTrace)="onTraceFromRow($event)"
-      (rowDelete)="onDelete($event)">
+      (rowDelete)="onDelete($event)"
+      (rowDblClick)="openViewPopup($event)">
     </app-sempione-data-grid>
 
   </app-sempione-card>
@@ -110,7 +97,7 @@
 
       </div>
 
-      <div class="popup-flags-row" style="margin-top: 14px;">
+      <div class="popup-flags-row popup-flags-row--spaced">
         <div class="popup-flag-group">
           <label class="popup-field-label">Invio Email</label>
           <dx-check-box formControlName="serEmail" [readOnly]="popupMode() === 'view'"></dx-check-box>

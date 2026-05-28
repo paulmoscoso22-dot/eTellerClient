@@ -12,91 +12,23 @@
       </svg>
     </app-sempione-card-header>
 
-    <div [formGroup]="filterForm">
-      <app-sempione-toolbar>
-
-        <div class="toolbar-field">
-          <dx-select-box
-            formControlName="brcCutId"
-            [dataSource]="currencyTypes()"
-            displayExpr="cutDes"
-            valueExpr="cutId"
-            [showClearButton]="true"
-            [searchEnabled]="true"
-            placeholder="Tipo divisa...">
-          </dx-select-box>
-        </div>
-
-        <div class="toolbar-field">
-          <dx-select-box
-            formControlName="brcOptId"
-            [dataSource]="operationTypes()"
-            displayExpr="optDes"
-            valueExpr="optId"
-            [showClearButton]="true"
-            [searchEnabled]="true"
-            placeholder="Tipo operazione...">
-          </dx-select-box>
-        </div>
-
-        <div class="toolbar-field">
-          <dx-select-box
-            formControlName="brcActId"
-            [dataSource]="accountTypes()"
-            displayExpr="actDes"
-            valueExpr="actId"
-            [showClearButton]="true"
-            [searchEnabled]="true"
-            placeholder="Genere conto...">
-          </dx-select-box>
-        </div>
-
-        <div toolbar-actions>
-          <app-sempione-button
-            icon="search"
-            hint="Cerca"
-            variant="secondary"
-            [disabled]="isLoading()"
-            (clicked)="search()">
-          </app-sempione-button>
-          <app-sempione-button
-            icon="revert"
-            hint="Reset filtri"
-            variant="secondary"
-            (clicked)="resetFilters()">
-          </app-sempione-button>
-          <app-sempione-button
-            icon="checklist"
-            hint="Mostra tutti"
-            variant="secondary"
-            [disabled]="isLoading()"
-            (clicked)="showAll()">
-          </app-sempione-button>
-          <span class="toolbar-sep" toolbar-actions></span>
-          <app-sempione-button
-            text="Aggiungi"
-            icon="add"
-            variant="primary"
-            [shadow]="true"
-            (clicked)="openAddPopup()">
-          </app-sempione-button>
-        </div>
-
-      </app-sempione-toolbar>
-    </div>
+    <app-sempione-search-mode mode="header" newText="Aggiungi" (reset)="clearGridFilters()" (add)="openAddPopup()">
+    </app-sempione-search-mode>
 
     <app-sempione-data-grid
       [dataSource]="items()"
       [columns]="gridColumns"
       [isLoading]="isLoading()"
       [error]="error()"
+      [showHeaderFilter]="true"
       [showViewAction]="true"
       [showEditAction]="true"
       [showTraceAction]="true"
-      noDataText="Nessuna causale trovata. Inserire i criteri di ricerca e premere Cerca."
+      noDataText="Nessuna causale trovata."
       (rowView)="openViewPopup($event)"
       (rowEdit)="openEditPopup($event)"
-      (rowTrace)="openTrace($event)">
+      (rowTrace)="openTrace($event)"
+      (rowDblClick)="openViewPopup($event)">
     </app-sempione-data-grid>
 
   </app-sempione-card>

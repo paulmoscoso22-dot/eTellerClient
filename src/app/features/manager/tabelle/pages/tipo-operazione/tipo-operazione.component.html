@@ -10,51 +10,26 @@
       </svg>
     </app-sempione-card-header>
 
-    <app-sempione-toolbar>
-
-      <div class="toolbar-field toolbar-field--sm">
-        <dx-text-box
-          [value]="filterId()"
-          [showClearButton]="true"
-          placeholder="Codice..."
-          valueChangeEvent="input"
-          (onValueChanged)="onFilterIdChanged($event)">
-        </dx-text-box>
-      </div>
-
-      <div class="toolbar-field toolbar-field--lg">
-        <dx-text-box
-          [value]="filterDes()"
-          [showClearButton]="true"
-          placeholder="Descrizione..."
-          valueChangeEvent="input"
-          (onValueChanged)="onFilterDesChanged($event)">
-        </dx-text-box>
-      </div>
-
-      <app-sempione-crud-toolbar-actions
-        [showSearch]="false"
-        (reset)="resetSearch()"
-        (add)="openNewPopup()">
-      </app-sempione-crud-toolbar-actions>
-
-    </app-sempione-toolbar>
+    <app-sempione-search-mode mode="header" newText="Nuovo" (reset)="clearGridFilters()" (add)="openNewPopup()">
+    </app-sempione-search-mode>
 
     <app-sempione-data-grid
-      [dataSource]="filteredOperazioni()"
+      [dataSource]="operazioni()"
       [columns]="gridColumns"
       keyExpr="optId"
       [pageSize]="20"
       [allowedPageSizes]="[20, 50, 100]"
       [isLoading]="isLoading()"
       [error]="error()"
+      [showHeaderFilter]="true"
       [showViewAction]="true"
       [showEditAction]="true"
       [showTraceAction]="true"
       noDataText="Nessun tipo operazione trovato."
       (rowView)="onTableAction('view', $event)"
       (rowEdit)="onTableAction('edit', $event)"
-      (rowTrace)="onTableAction('trace', $event)">
+      (rowTrace)="onTableAction('trace', $event)"
+      (rowDblClick)="onTableAction('view', $event)">
     </app-sempione-data-grid>
 
   </app-sempione-card>

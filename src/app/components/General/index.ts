@@ -19,3 +19,11 @@ export { SempioneIdDesFilterComponent } from './sempione-id-des-filter/sempione-
 export { SempioneSimpleCrudPopupComponent } from './sempione-simple-crud-popup/sempione-simple-crud-popup.component';
 export { SempioneLogoComponent } from './sempione-logo/sempione-logo.component';
 export { SempionePageShellComponent } from './sempione-page-shell/sempione-page-shell.component';
+export { SempioneFilterShellComponent } from './sempione-filter-shell/sempione-filter-shell.component';
+export { SempioneCurrencyBadgeComponent } from './sempione-currency-badge/sempione-currency-badge.component';
+export { SempioneCrudPopupShellComponent } from './sempione-crud-popup-shell/sempione-crud-popup-shell.component';
+export { ControlAssignComponent } from './control-assign/control-assign.component';
+export { SempionePillComponent } from './sempione-pill/sempione-pill.component';
+export type { SempionePillColor, SempionePillSize } from './sempione-pill/sempione-pill.component';
+export { SempioneSearchModeComponent } from './sempione-search-mode/sempione-search-mode.component';
+export { SempioneToolbarDateRangeComponent } from './sempione-toolbar-date-range/sempione-toolbar-date-range.component';

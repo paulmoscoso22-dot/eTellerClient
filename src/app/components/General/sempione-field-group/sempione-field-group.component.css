@@ -11,7 +11,7 @@
 .field-label {
   font-size: 11px;
   font-weight: 500;
-  color: #64748b;
+  color: var(--color-text-muted);
   line-height: 1.2;
 }
 
@@ -25,7 +25,7 @@
 
 .field-group--inline .field-label {
   font-size: 13px;
-  color: #374151;
+  color: var(--color-text-secondary);
   white-space: nowrap;
 }
 
@@ -37,9 +37,9 @@
 
 :host ::ng-deep .field-id-locked .dx-texteditor .dx-texteditor-container,
 :host ::ng-deep .field-id-locked .dx-dropdowneditor .dx-texteditor-container {
-  border: 1px dashed #cbd5e1 !important;
+  border: 1px dashed var(--color-border) !important;
   border-radius: 4px !important;
-  background-color: #f8fafc !important;
+  background-color: var(--color-surface-base) !important;
   min-height: 28px !important;
   box-shadow: none !important;
 }
@@ -48,8 +48,8 @@
 :host ::ng-deep .field-id-locked .dx-dropdowneditor .dx-texteditor-input {
   font-size: 13px !important;
   font-weight: 600 !important;
-  color: #1e293b !important;
-  -webkit-text-fill-color: #1e293b !important;
+  color: var(--color-text-primary) !important;
+  -webkit-text-fill-color: var(--color-text-primary) !important;
   opacity: 1 !important;
   cursor: default !important;
   background-color: transparent !important;

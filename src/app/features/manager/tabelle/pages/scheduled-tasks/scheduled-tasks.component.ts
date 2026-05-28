@@ -543,6 +543,7 @@ export class ScheduledTasksComponent implements OnInit {
   }
 
   onRefresh(): void {
+    this.searchValue.set('');
     this.loadFunzioniSchedule();
   }
 

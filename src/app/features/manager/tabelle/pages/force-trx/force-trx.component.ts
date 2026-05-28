@@ -12,7 +12,6 @@ import {
   SempionePopupComponent,
   SempionePopupCardComponent,
   SempionePopupActionBarComponent,
-  SempioneButtonComponent,
   SempioneFieldGroupComponent,
   SempioneDataGridComponent,
   SempioneGridColumn,
@@ -32,7 +31,6 @@ import {
     SempionePopupComponent,
     SempionePopupCardComponent,
     SempionePopupActionBarComponent,
-    SempioneButtonComponent,
     SempioneFieldGroupComponent,
     SempioneDataGridComponent,
   ],
@@ -74,7 +72,7 @@ export class ForceTrxComponent implements OnInit {
     this.loadAll();
   }
 
-  private loadAll(): void {
+  loadAll(): void {
     this.isLoading.set(true);
     this.error.set(null);
 
@@ -98,6 +96,7 @@ export class ForceTrxComponent implements OnInit {
 
   onLanguageChanged(lanCode: string): void {
     this.selectedLanCode.set(lanCode);
+    this.loadAll();
   }
 
   openDetail(item: IForceTrxItemResponse): void {

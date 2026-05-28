@@ -1,6 +1,6 @@
 /* ══════════════════════════════════════════
    Table Utenti — Banca del Sempione Style
-   Brand navy : #003366  |  Gold : #C5A059
+   Brand navy : var(--color-brand-navy)  |  Gold : var(--color-brand-gold)
    ══════════════════════════════════════════ */
 
 :host {
@@ -14,12 +14,12 @@
 /* ── Grid Header — light grey with navy bottom border ── */
 :host ::ng-deep .dx-datagrid-headers .dx-header-row td {
   background-color: #f8fafd !important;
-  color: #374151 !important;
+  color: var(--color-text-secondary) !important;
   font-size: 10px !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
-  border-bottom: 2px solid #003366 !important;
+  border-bottom: 2px solid var(--color-brand-navy) !important;
 }
 
 :host ::ng-deep .dx-datagrid-headers .dx-header-row td:hover {
@@ -29,7 +29,7 @@
 /* Sort indicator: visible on light header */
 :host ::ng-deep .dx-datagrid-headers .dx-header-row td .dx-sort-indicator,
 :host ::ng-deep .dx-datagrid-headers .dx-header-row td .dx-column-indicators .dx-icon {
-  color: #003366 !important;
+  color: var(--color-brand-navy) !important;
 }
 
 /* ── Compact rows ── */
@@ -41,7 +41,7 @@
 
 /* ── Zebra-striping ── */
 :host ::ng-deep .dx-data-row.dx-row-alt > td {
-  background-color: #f8fafc !important;
+  background-color: var(--color-surface-base) !important;
 }
 
 /* ── Hover ── */
@@ -52,7 +52,7 @@
 /* ── Selected row ── */
 :host ::ng-deep .dx-selection.dx-data-row > td {
   background-color: rgba(0, 51, 102, 0.10) !important;
-  color: #003366 !important;
+  color: var(--color-brand-navy) !important;
   font-weight: 600 !important;
 }
 
@@ -76,13 +76,13 @@
 }
 
 .status-pill--online {
-  background: #dcfce7;
-  color: #166534;
+  background: var(--color-status-ok-bg);
+  color: var(--color-status-ok-text);
 }
 
 .status-pill--offline {
-  background: #fee2e2;
-  color: #991b1b;
+  background: var(--color-status-error-bg);
+  color: var(--color-status-error-text);
 }
 
 /* ── Action buttons ── */
@@ -117,7 +117,7 @@
 }
 
 .action-btn--view:hover svg {
-  stroke: #003366;
+  stroke: var(--color-brand-navy);
 }
 
 .action-btn--edit:hover {
@@ -125,7 +125,7 @@
 }
 
 .action-btn--edit:hover svg {
-  stroke: #003366;
+  stroke: var(--color-brand-navy);
 }
 
 /* ── Overflow (more-actions) button ── */
@@ -142,6 +142,6 @@
 }
 
 :host ::ng-deep .action-more-btn .dx-button:hover {
-  color: #003366;
+  color: var(--color-brand-navy);
   background: rgba(0, 51, 102, 0.08);
 }

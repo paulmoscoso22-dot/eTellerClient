@@ -6,10 +6,7 @@ import {
   DxDateBoxModule,
   DxNumberBoxModule,
 } from 'devextreme-angular';
-import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
-import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
-import { SempioneButtonComponent } from '../../../../../components/General';
-import { ReportSearchParams } from '../../domain/report-search.models';
+import { SempioneFilterShellComponent } from '../../../../../components/General';
 
 @Component({
   selector: 'app-report-filter',
@@ -20,9 +17,7 @@ import { ReportSearchParams } from '../../domain/report-search.models';
     DxTextBoxModule,
     DxDateBoxModule,
     DxNumberBoxModule,
-    SempioneCardComponent,
-    SempioneCardHeaderComponent,
-    SempioneButtonComponent,
+    SempioneFilterShellComponent,
   ],
   templateUrl: './report-filter.component.html',
   styleUrls: ['./report-filter.component.css'],

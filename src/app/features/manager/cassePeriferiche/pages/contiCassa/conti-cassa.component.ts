@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  DxTextBoxModule, DxButtonModule, DxValidatorModule, DxSelectBoxModule
+  DxTextBoxModule, DxValidatorModule, DxSelectBoxModule
 } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import {
@@ -31,7 +31,7 @@ export interface IContoCassa {
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxTextBoxModule, DxButtonModule, DxValidatorModule, DxSelectBoxModule,
+    DxTextBoxModule, DxValidatorModule, DxSelectBoxModule,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneButtonComponent,
     SempioneDataGridComponent,

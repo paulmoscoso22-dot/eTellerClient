@@ -20,16 +20,9 @@
     </dx-text-box>
 
     <div toolbar-actions>
+      <app-sempione-button icon="search" hint="Cerca" variant="secondary" (clicked)="searchText.set(searchText())"></app-sempione-button>
       <app-sempione-button icon="revert" hint="Ripristina" variant="secondary" (clicked)="searchText.set('')"></app-sempione-button>
-      <app-sempione-button icon="refresh" text="Aggiorna" variant="secondary" (clicked)="onRefresh()"></app-sempione-button>
-      <dx-button
-        icon="remove"
-        text="Forza Uscita"
-        stylingMode="contained"
-        class="btn-fin-danger-filled"
-        [disabled]="!selectedUsrCliId() || isLoading()"
-        (onClick)="forzaUscita()">
-      </dx-button>
+      <app-sempione-button icon="refresh" hint="Aggiorna" variant="secondary" (clicked)="onRefresh()"></app-sempione-button>
     </div>
   </app-sempione-toolbar>
 

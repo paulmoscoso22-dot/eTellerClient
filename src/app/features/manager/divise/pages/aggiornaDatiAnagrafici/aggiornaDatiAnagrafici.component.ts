@@ -1,10 +1,10 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, ViewChild, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DxTextBoxModule, DxValidatorModule, DxNumberBoxModule } from 'devextreme-angular';
 import {
   SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-  SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+  SempioneSearchModeComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
   SempioneFieldGroupComponent,
@@ -14,6 +14,8 @@ import { DiviseService } from '../../services/divise.service';
 import { Router } from '@angular/router';
 import { IDivisaAnagrafica, UpdateDivisaRequest } from '../../models/divisa.models';
 import { UserService } from '../../../../../services/user.service';
+import { Service } from '../../../../../core/services/service';
+import { ICurrencyType } from '../../../../../core/domain/currencyType.domain';
 
 export type { IDivisaAnagrafica } from '../../models/divisa.models';
 
@@ -24,7 +26,7 @@ export type { IDivisaAnagrafica } from '../../models/divisa.models';
     CommonModule, ReactiveFormsModule,
     DxTextBoxModule, DxValidatorModule, DxNumberBoxModule,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-    SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+    SempioneSearchModeComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
     SempioneFieldGroupComponent,
@@ -36,45 +38,33 @@ export class AggiornaDAtiAnagraficiComponent implements OnInit {
   private fb = inject(FormBuilder);
   private diviseService = inject(DiviseService);
   private router = inject(Router);
+  private coreService = inject(Service);
 
-  readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'curId',      caption: 'Divisa',          type: 'currency',  width: 100 },
-    { dataField: 'curCutId',   caption: 'Tipo',             type: 'tipo-pill', width: 90  },
-    { dataField: 'curShodes',  caption: 'Des. Abbreviata',  alignment: 'left', width: 140 },
-    { dataField: 'curLondes',  caption: 'Descrizione',      alignment: 'left'             },
-    { dataField: 'curMinamn',  caption: 'Taglio min.',      alignment: 'right', width: 110, dataType: 'number', format: '#,##0.##'   },
-    { dataField: 'curTolrat',  caption: 'Tolleranza %',     alignment: 'right', width: 110, dataType: 'number', format: '#,##0.0000' },
-    { dataField: 'curFinezza', caption: 'Finezza',          alignment: 'center', width: 90 },
-    { dataField: 'curModdat',  caption: 'Data modifica',    alignment: 'left',  width: 140 },
-  ];
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
 
-  private divise = signal<IDivisaAnagrafica[]>([]);
+  private currencyTypes = signal<ICurrencyType[]>([]);
 
-  filterCodice      = signal<string>('');
-  filterDescrizione = signal<string>('');
+  readonly gridColumns = computed<SempioneGridColumn[]>(() => {
+    const tipoHF = this.currencyTypes().map(t => ({ text: t.cutDes, value: t.cutId }));
+    return [
+      { dataField: 'curId',      caption: 'Divisa',         type: 'currency',  width: 100, allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'curCutId',   caption: 'Tipo',            type: 'tipo-pill', width: 90,  allowHeaderFiltering: true, allowFiltering: false, headerFilterDataSource: tipoHF },
+      { dataField: 'curShodes',  caption: 'Des. Abbreviata', alignment: 'left', width: 140, allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'curLondes',  caption: 'Descrizione',     alignment: 'left',             allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'curMinamn',  caption: 'Taglio min.',     alignment: 'right', width: 110, dataType: 'number', format: '#,##0.##',   allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'curTolrat',  caption: 'Tolleranza %',    alignment: 'right', width: 110, dataType: 'number', format: '#,##0.0000', allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'curFinezza', caption: 'Finezza',         alignment: 'center', width: 90, allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'curModdat',  caption: 'Data modifica',   alignment: 'left',  width: 140, allowHeaderFiltering: true, allowFiltering: false },
+    ];
+  });
+
+  divise = signal<IDivisaAnagrafica[]>([]);
 
   popupMode = signal<'view' | 'edit'>('view');
   isDetailPopupVisible = false;
   selectedLabel = signal<string>('');
   isLoading = signal<boolean>(false);
 
-  readonly tipoOptions = [
-    { id: 'BB', des: 'Biglietti Banca' },
-    { id: 'MM', des: 'Monete e Metalli' },
-    { id: 'TR', des: 'Travelers Cheques' },
-  ];
-
-  filteredDivise = computed(() => {
-    const q    = this.filterCodice().toLowerCase().trim();
-    const qDes = this.filterDescrizione().toLowerCase().trim();
-
-    return this.divise().filter(d => {
-      if (q && !d.curId.toLowerCase().includes(q)) return false;
-      if (qDes && !d.curLondes.toLowerCase().includes(qDes) &&
-                  !d.curShodes.toLowerCase().includes(qDes)) return false;
-      return true;
-    });
-  });
 
   divisaForm: FormGroup = this.fb.group({
     curId:      [''],
@@ -88,6 +78,7 @@ export class AggiornaDAtiAnagraficiComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.coreService.getCurrencyTypes().subscribe({ next: data => this.currencyTypes.set(data ?? []) });
     this.loadDivise();
   }
 
@@ -106,13 +97,8 @@ export class AggiornaDAtiAnagraficiComponent implements OnInit {
     });
   }
 
-  onCerca(): void {
-    notify('Ricerca applicata', 'info', 1500);
-  }
-
-  onResetFiltri(): void {
-    this.filterCodice.set('');
-    this.filterDescrizione.set('');
+  clearGridFilters(): void {
+    this.dataGrid?.clearFilters();
   }
 
   openViewPopup(data: IDivisaAnagrafica): void {

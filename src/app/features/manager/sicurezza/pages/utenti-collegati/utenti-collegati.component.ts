@@ -1,7 +1,6 @@
 import { Component, OnInit, inject, signal, computed, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
-import { DxButtonModule } from 'devextreme-angular/ui/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { confirm } from 'devextreme/ui/dialog';
 import notify from 'devextreme/ui/notify';
@@ -18,7 +17,7 @@ import {
   standalone: true,
   imports: [
     CommonModule,
-    DxTextBoxModule, DxButtonModule,
+    DxTextBoxModule,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneDataGridComponent, SempioneButtonComponent,
   ],

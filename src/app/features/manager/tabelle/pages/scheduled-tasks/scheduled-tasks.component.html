@@ -10,15 +10,6 @@
     </app-sempione-card-header>
 
     <app-sempione-toolbar>
-      <div class="toolbar-field toolbar-field--lg">
-        <dx-text-box
-          [value]="searchValue()"
-          placeholder="Cerca per ID, nome o descrizione..."
-          [showClearButton]="true"
-          valueChangeEvent="input"
-          (onValueChanged)="onSearchChanged($event)">
-        </dx-text-box>
-      </div>
       <div toolbar-actions>
         <app-sempione-button
           icon="refresh"
@@ -53,6 +44,7 @@
         <dxo-paging [pageSize]="15"></dxo-paging>
         <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[15, 25, 50]" [showInfo]="true"></dxo-pager>
         <dxo-load-panel [enabled]="false"></dxo-load-panel>
+        <dxo-header-filter [visible]="true" [allowSearch]="true"></dxo-header-filter>
 
         <dxi-column dataField="futId"         caption="ID"       [width]="110" alignment="left"></dxi-column>
         <dxi-column dataField="futFunname"    caption="Nome"                   alignment="left"></dxi-column>

@@ -22,10 +22,10 @@
 }
 
 .help-error {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-border);
   border-radius: 6px;
-  color: #991b1b;
+  color: var(--color-status-error-text);
   font-size: 13px;
   padding: 10px 14px;
 }

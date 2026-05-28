@@ -1,7 +1,6 @@
 import { Component, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  DxButtonModule,
   DxTextBoxModule,
   DxNumberBoxModule,
   DxSelectBoxModule,
@@ -11,7 +10,8 @@ import {
   DxPopupModule,
   DxDropDownButtonModule
 } from 'devextreme-angular';
-import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
+import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneButtonComponent } from '../../../../../components/General/sempione-button/sempione-button.component';
 import { OpBadgeComponent } from '../../../../../components/Operazioni/op-badge/op-badge.component';
 import { RicercaContoTable } from '../ricerca-conto-table/ricerca-conto-table';
 
@@ -22,7 +22,6 @@ export type ContoCorrenteMode = 'versamento' | 'prelevamento';
   standalone: true,
   imports: [
     CommonModule,
-    DxButtonModule,
     DxTextBoxModule,
     DxNumberBoxModule,
     DxSelectBoxModule,
@@ -31,7 +30,7 @@ export type ContoCorrenteMode = 'versamento' | 'prelevamento';
     DxTextAreaModule,
     DxPopupModule,
     DxDropDownButtonModule,
-    HeaderCardComponent,
+    SempioneCardHeaderComponent, SempioneButtonComponent,
     RicercaContoTable,
     OpBadgeComponent
   ],

@@ -1,6 +1,6 @@
 .login-title {
   text-align: center;
-  color: #333;
+  color: var(--color-text-primary);
   margin-bottom: 30px;
   font-size: 28px;
   font-weight: 600;
@@ -11,31 +11,33 @@
 }
 
 :host ::ng-deep .dx-textbox-container {
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-border-lighter);
   border-radius: 4px;
 }
 
 :host ::ng-deep .dx-textbox-input {
   padding: 12px 14px;
   font-size: 14px;
-  color: #333;
+  color: var(--color-text-primary);
 }
 
-:host ::ng-deep .dx-button {
+.login-submit {
+  display: flex;
+  justify-content: center;
   margin-top: 10px;
 }
 
 .error-text {
-  color: #d32f2f;
+  color: var(--color-status-error-text);
   font-size: 12px;
   margin-top: 5px;
   padding: 4px 0;
 }
 
 .error-message {
-  background-color: #ffebee;
-  border: 1px solid #ef5350;
-  color: #c62828;
+  background-color: var(--color-status-error-bg);
+  border: 1px solid var(--color-status-error-border);
+  color: var(--color-status-error-text);
   padding: 12px;
   border-radius: 4px;
   margin-bottom: 20px;
@@ -46,17 +48,17 @@
   text-align: center;
   margin-top: 20px;
   font-size: 14px;
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .login-footer a {
-  color: #667eea;
+  color: var(--color-brand-navy);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s;
 }
 
 .login-footer a:hover {
-  color: #003366;
+  color: var(--color-brand-navy);
   text-decoration: underline;
 }

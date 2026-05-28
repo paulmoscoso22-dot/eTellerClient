@@ -20,10 +20,10 @@
   border-radius: 10px;
   font-size: 11px;
   font-weight: 600;
-  background: #f1f5f9;
-  color: #64748b;
-  border: 1px solid #e2e8f0;
+  background: var(--color-surface-subtle);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-lighter);
 }
 
-.offline-badge--yes { background: #d1fae5; color: #065f46; border-color: #a7f3d0; }
-.offline-badge--no  { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+.offline-badge--yes { background: var(--color-status-ok-bg-alt); color: var(--color-status-ok-text-dark); border-color: var(--color-status-ok-border-alt); }
+.offline-badge--no  { background: var(--color-status-error-bg); color: var(--color-status-error-text); border-color: var(--color-danger-border); }

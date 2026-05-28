@@ -1,4 +1,4 @@
-import { Component, signal, DestroyRef, inject, OnInit, NgZone } from '@angular/core';
+import { Component, signal, DestroyRef, inject, OnInit, NgZone, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -19,7 +19,6 @@ import {
   SempionePageShellComponent,
   SempioneCardComponent,
   SempioneCardHeaderComponent,
-  SempioneToolbarComponent,
   SempionePopupComponent,
   SempionePopupCardComponent,
   SempionePopupActionBarComponent,
@@ -29,7 +28,7 @@ import {
   SempioneDataGridComponent,
   SempioneGridColumn,
   SempioneConfirmDeleteComponent,
-  SempioneCrudToolbarActionsComponent,
+  SempioneSearchModeComponent,
 } from '../../../../../components/General';
 
 const ENTNAME = 'ST_ERRORCODE';
@@ -47,16 +46,15 @@ const ENTNAME = 'ST_ERRORCODE';
     SempionePageShellComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
-    SempioneToolbarComponent,
     SempionePopupComponent,
     SempionePopupCardComponent,
     SempionePopupActionBarComponent,
     SempioneFieldGroupComponent,
-  
+
     SempioneAlertComponent,
     SempioneDataGridComponent,
     SempioneConfirmDeleteComponent,
-    SempioneCrudToolbarActionsComponent,
+    SempioneSearchModeComponent,
   ],
   templateUrl: './gestione-errori.component.html',
   styleUrls: ['./gestione-errori.component.css'],
@@ -67,6 +65,7 @@ export class GestioneErroriComponent implements OnInit {
   private readonly gestioneErroriService = inject(GestioneErroriService);
   private readonly router = inject(Router);
   private readonly ngZone = inject(NgZone);
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
 
   items = signal<IGestioneErroriItemResponse[]>([]);
   forceCodes = signal<IForceCodeResponse[]>([]);
@@ -100,9 +99,9 @@ export class GestioneErroriComponent implements OnInit {
   });
 
   readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'errId',     caption: 'Codice',      alignment: 'left',   width: 140 },
-    { dataField: 'errTyp',    caption: 'Tipo',        alignment: 'center', width: 60  },
-    { dataField: 'errDescIt', caption: 'Descrizione', alignment: 'left', wrap: true   },
+    { dataField: 'errId',     caption: 'Codice',      alignment: 'left',   width: 140, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'errTyp',    caption: 'Tipo',        alignment: 'center', width: 60,  allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'errDescIt', caption: 'Descrizione', alignment: 'left', wrap: true,   allowFiltering: false, allowHeaderFiltering: true },
   ];
 
   readonly errTypOptions = [
@@ -170,6 +169,8 @@ export class GestioneErroriComponent implements OnInit {
     this.items.set([]);
     this.error.set(null);
   }
+
+  clearGridFilters(): void { this.dataGrid?.clearFilters(); }
 
   get isFocIdEnabled(): boolean {
     return !!this.editForm.get('errForFlag')?.value;

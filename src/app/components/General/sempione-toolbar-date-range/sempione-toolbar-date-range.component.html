@@ -1,0 +1,23 @@
+<div class="field-group">
+  <span class="field-label">{{ labelDal }}</span>
+  <dx-date-box
+    [value]="valueDal"
+    (onValueChanged)="dalChange.emit($event.value)"
+    [displayFormat]="displayFormat"
+    labelMode="hidden"
+    [showClearButton]="true"
+    [width]="width">
+  </dx-date-box>
+</div>
+
+<div class="field-group">
+  <span class="field-label">al</span>
+  <dx-date-box
+    [value]="valueAl"
+    (onValueChanged)="alChange.emit($event.value)"
+    [displayFormat]="displayFormat"
+    labelMode="hidden"
+    [showClearButton]="true"
+    [width]="width">
+  </dx-date-box>
+</div>

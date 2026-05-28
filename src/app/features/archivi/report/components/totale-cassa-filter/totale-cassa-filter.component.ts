@@ -5,9 +5,7 @@ import {
   DxTextBoxModule,
   DxDateBoxModule,
 } from 'devextreme-angular';
-import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
-import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
-import { SempioneButtonComponent } from '../../../../../components/General';
+import { SempioneFilterShellComponent } from '../../../../../components/General';
 
 @Component({
   selector: 'app-totale-cassa-filter',
@@ -17,9 +15,7 @@ import { SempioneButtonComponent } from '../../../../../components/General';
     ReactiveFormsModule,
     DxTextBoxModule,
     DxDateBoxModule,
-    SempioneCardComponent,
-    SempioneCardHeaderComponent,
-    SempioneButtonComponent,
+    SempioneFilterShellComponent,
   ],
   templateUrl: './totale-cassa-filter.component.html',
   styleUrls: ['./totale-cassa-filter.component.css']

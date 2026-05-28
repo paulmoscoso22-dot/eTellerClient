@@ -5,7 +5,6 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
 import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
 import { DxNumberBoxModule } from 'devextreme-angular/ui/number-box';
 import { DxTextAreaModule } from 'devextreme-angular/ui/text-area';
-import { DxButtonModule } from 'devextreme-angular/ui/button';
 import { DxCheckBoxModule } from 'devextreme-angular/ui/check-box';
 import notify from 'devextreme/ui/notify';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -29,7 +28,7 @@ import {
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxTextBoxModule, DxNumberBoxModule, DxTextAreaModule, DxButtonModule, DxCheckBoxModule,
+    DxTextBoxModule, DxNumberBoxModule, DxTextAreaModule, DxCheckBoxModule,
     SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupActionBarComponent,

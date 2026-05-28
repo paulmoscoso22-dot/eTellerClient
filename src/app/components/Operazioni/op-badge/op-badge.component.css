@@ -5,23 +5,16 @@
 .op-bar {
   display: flex;
   align-items: center;
-  padding: 7px 14px;
-  border-radius: 6px;
-  border-left: 4px solid;
+  padding: 5px 12px 5px 10px;
+  border-radius: 5px;
   margin-bottom: 10px;
 }
 
-.op-bar--in {
-  background: #f0fdf4;
-  border-left-color: #16a34a;
-  color: #15803d;
-}
-
-.op-bar--out {
-  background: #fff1f2;
-  border-left-color: #dc2626;
-  color: #b91c1c;
-}
+/* ── Mode color variants ── */
+.op-bar--acquisto     { background: #16a34a; }
+.op-bar--versamento   { background: #16a34a; }
+.op-bar--vendita      { background: #dc2626; }
+.op-bar--prelevamento { background: #dc2626; }
 
 .op-badge {
   display: flex;
@@ -32,19 +25,19 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   flex: 1;
-  color: inherit;
+  color: var(--color-surface-white);
 }
 
 .op-nr {
   margin-left: auto;
-  font-size: 13px;
-  font-weight: 700;
-  color: inherit;
-  opacity: 0.9;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-surface-white);
+  opacity: 0.85;
 }
 
 .badge-icon {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
   flex-shrink: 0;
 }

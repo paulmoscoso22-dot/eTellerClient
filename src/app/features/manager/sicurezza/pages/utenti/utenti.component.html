@@ -32,6 +32,8 @@
     </dx-text-box>
 
     <div toolbar-actions>
+      <app-sempione-button icon="search" hint="Cerca" variant="secondary" (clicked)="searchValue.set(searchValue())"></app-sempione-button>
+      <app-sempione-button icon="revert" hint="Ripristina filtri" variant="secondary" (clicked)="searchValue.set('')"></app-sempione-button>
       <app-sempione-button
         icon="print"
         hint="Stampa lista utenti"
@@ -63,7 +65,8 @@
     (selectionChanged)="onSelectionChanged($event)"
     (rowView)="openViewPopup($event)"
     (rowEdit)="openEditPopup($event)"
-    (rowTrace)="onRowTrace($event)">
+    (rowTrace)="onRowTrace($event)"
+    (rowDblClick)="openViewPopup($event)">
   </app-sempione-data-grid>
 </app-sempione-card>
 
@@ -182,14 +185,7 @@
         (save)="onUpdate()"
         (cancel)="onClear()"
         (storico)="onTrace()">
-        <dx-button
-          secondary-actions
-          text="Reset Password"
-          icon="key"
-          stylingMode="outlined"
-          class="btn-fin-danger"
-          (onClick)="openResetPasswordPopup()">
-        </dx-button>
+        <app-sempione-button secondary-actions text="Reset Password" icon="key" variant="danger" (clicked)="openResetPasswordPopup()"></app-sempione-button>
       </app-sempione-popup-action-bar>
     }
 

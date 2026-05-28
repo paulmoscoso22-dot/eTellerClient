@@ -28,14 +28,14 @@
       ></dx-text-box>
     </div>
 
-    <dx-button
-      text="Accedi"
-      type="default"
-      stylingMode="contained"
-      [width]="'100%'"
-      [disabled]="isLoading()"
-      (onClick)="onLogin()"
-    ></dx-button>
+    <div class="login-submit">
+      <app-sempione-button
+        text="Accedi"
+        variant="primary"
+        [disabled]="isLoading()"
+        (clicked)="onLogin()">
+      </app-sempione-button>
+    </div>
 
     @if (isLoading()) {
       <div class="loading-overlay">

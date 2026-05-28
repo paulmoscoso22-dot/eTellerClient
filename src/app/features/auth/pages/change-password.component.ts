@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DxTextBoxModule, DxButtonModule, DxLoadIndicatorModule } from 'devextreme-angular';
+import { DxTextBoxModule, DxLoadIndicatorModule } from 'devextreme-angular';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { AUTH_RESULT_CODE, IChangePasswordRequest } from '../domain/auth.models';
@@ -9,12 +9,13 @@ import { AuthService } from '../services/auth.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { SempioneFieldGroupComponent } from '../../../components/General/sempione-field-group/sempione-field-group.component';
 import { SempioneAlertComponent } from '../../../components/General/sempione-alert/sempione-alert.component';
+import { SempioneButtonComponent } from '../../../components/General/sempione-button/sempione-button.component';
 import notify from 'devextreme/ui/notify';
 
 @Component({
   selector: 'app-change-password',
   standalone: true,
-  imports: [DxTextBoxModule, DxButtonModule, DxLoadIndicatorModule, SempioneFieldGroupComponent, SempioneAlertComponent],
+  imports: [DxTextBoxModule, DxLoadIndicatorModule, SempioneFieldGroupComponent, SempioneAlertComponent, SempioneButtonComponent],
   templateUrl: './change-password.component.html',
   styleUrls: ['./auth-card.css', './change-password.component.css'],
 })

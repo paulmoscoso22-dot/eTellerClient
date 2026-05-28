@@ -1,7 +1,6 @@
 import { Component, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  DxButtonModule,
   DxNumberBoxModule,
   DxSelectBoxModule,
   DxCheckBoxModule,
@@ -9,7 +8,8 @@ import {
   DxTextAreaModule,
   DxRadioGroupModule
 } from 'devextreme-angular';
-import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
+import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneButtonComponent } from '../../../../../components/General/sempione-button/sempione-button.component';
 import { OpBadgeComponent } from '../../../../../components/Operazioni/op-badge/op-badge.component';
 
 export type MoneteMetalliMode = 'acquisto' | 'vendita';
@@ -25,14 +25,13 @@ export interface MetalOption {
   standalone: true,
   imports: [
     CommonModule,
-    DxButtonModule,
     DxNumberBoxModule,
     DxSelectBoxModule,
     DxCheckBoxModule,
     DxDateBoxModule,
     DxTextAreaModule,
     DxRadioGroupModule,
-    HeaderCardComponent,
+    SempioneCardHeaderComponent, SempioneButtonComponent,
     OpBadgeComponent
   ],
   templateUrl: './monete-metalli-form.component.html',

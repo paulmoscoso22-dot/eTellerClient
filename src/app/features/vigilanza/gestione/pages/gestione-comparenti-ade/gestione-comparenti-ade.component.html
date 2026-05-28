@@ -10,53 +10,8 @@
     </svg>
   </app-sempione-card-header>
 
-  <div [formGroup]="filterForm">
-    <app-sempione-toolbar>
-      <dx-text-box
-        formControlName="araName"
-        [showClearButton]="true"
-        placeholder="Nome e cognome..."
-        labelMode="hidden">
-      </dx-text-box>
-
-      <div class="toolbar-field">
-        <dx-date-box
-          formControlName="araBirthdate"
-          type="date"
-          displayFormat="dd.MM.yyyy"
-          [showClearButton]="true"
-          placeholder="Data nascita..."
-          labelMode="hidden">
-        </dx-date-box>
-      </div>
-
-      <div toolbar-actions>
-        <dx-button
-          icon="search"
-          hint="Cerca"
-          stylingMode="outlined"
-          class="btn-fin-secondary"
-          [disabled]="isLoading()"
-          (onClick)="search()">
-        </dx-button>
-        <dx-button
-          icon="revert"
-          hint="Ripristina filtri"
-          stylingMode="outlined"
-          class="btn-fin-secondary"
-          (onClick)="resetFilters()">
-        </dx-button>
-        <span class="toolbar-sep" toolbar-actions></span>
-        <dx-button
-          icon="add"
-          text="Aggiungi"
-          stylingMode="contained"
-          class="btn-fin-primary"
-          (onClick)="openAddPopup()">
-        </dx-button>
-      </div>
-    </app-sempione-toolbar>
-  </div>
+  <app-sempione-search-mode mode="header" newText="Aggiungi" (reset)="clearGridFilters()" (add)="openAddPopup()">
+  </app-sempione-search-mode>
 
   <app-sempione-data-grid
     [dataSource]="appearers()"
@@ -66,19 +21,23 @@
     [error]="error()"
     [pageSize]="30"
     [allowedPageSizes]="[20, 30, 50, 100]"
+    [showHeaderFilter]="true"
+    [showViewAction]="true"
     [showEditAction]="true"
     [showTraceAction]="true"
-    emptyStateText="Nessun comparente trovato. Inserire i criteri di ricerca e premere Cerca."
+    emptyStateText="Nessun comparente trovato."
     emptyStateIcon="user"
+    (rowView)="openViewPopup($event)"
     (rowEdit)="openEditPopup($event)"
-    (rowTrace)="openHistoryPopup($event)">
+    (rowTrace)="openHistoryPopup($event)"
+    (rowDblClick)="openViewPopup($event)">
   </app-sempione-data-grid>
 </app-sempione-card>
 
-<!-- ══ Popup Aggiungi / Modifica ══ -->
+<!-- ══ Popup Visualizza / Aggiungi / Modifica ══ -->
 <app-sempione-popup
   [(visible)]="isFormPopupVisible"
-  [title]="isEditMode() ? ('Modifica Comparente — ID ' + selectedAraId()) : 'Nuovo Comparente'"
+  [title]="isViewMode() ? ('Dettaglio Comparente — ID ' + selectedAraId()) : isEditMode() ? ('Modifica Comparente — ID ' + selectedAraId()) : 'Nuovo Comparente'"
   [maxWidth]="760"
   (hidden)="closeFormPopup()">
 
@@ -96,25 +55,25 @@
         <div class="popup-fields-grid popup-fields-grid--2col">
 
           <div class="popup-col-span-2">
-            <app-sempione-field-group label="Nome e cognome" [required]="true">
-              <dx-text-box formControlName="araName" [showClearButton]="true" labelMode="hidden"></dx-text-box>
+            <app-sempione-field-group label="Nome e cognome" [required]="!isViewMode()">
+              <dx-text-box formControlName="araName" [showClearButton]="!isViewMode()" [readOnly]="isViewMode()" labelMode="hidden"></dx-text-box>
             </app-sempione-field-group>
           </div>
 
           <app-sempione-field-group label="Rappresentanza">
-            <dx-text-box formControlName="araRepresents" [showClearButton]="true" labelMode="hidden"></dx-text-box>
+            <dx-text-box formControlName="araRepresents" [showClearButton]="!isViewMode()" [readOnly]="isViewMode()" labelMode="hidden"></dx-text-box>
           </app-sempione-field-group>
 
           <app-sempione-field-group label="Domicilio">
-            <dx-text-box formControlName="araAddress" [showClearButton]="true" labelMode="hidden"></dx-text-box>
+            <dx-text-box formControlName="araAddress" [showClearButton]="!isViewMode()" [readOnly]="isViewMode()" labelMode="hidden"></dx-text-box>
           </app-sempione-field-group>
 
           <app-sempione-field-group label="Data nascita">
-            <dx-date-box formControlName="araBirthdate" type="date" displayFormat="dd.MM.yyyy" [showClearButton]="true" labelMode="hidden"></dx-date-box>
+            <dx-date-box formControlName="araBirthdate" type="date" displayFormat="dd.MM.yyyy" [showClearButton]="!isViewMode()" [readOnly]="isViewMode()" labelMode="hidden"></dx-date-box>
           </app-sempione-field-group>
 
           <app-sempione-field-group label="Luogo nascita">
-            <dx-text-box formControlName="araBirthplace" [showClearButton]="true" labelMode="hidden"></dx-text-box>
+            <dx-text-box formControlName="araBirthplace" [showClearButton]="!isViewMode()" [readOnly]="isViewMode()" labelMode="hidden"></dx-text-box>
           </app-sempione-field-group>
 
           <div class="popup-col-span-2">
@@ -124,8 +83,9 @@
                 [dataSource]="countries()"
                 displayExpr="ctyShonamIta"
                 valueExpr="ctyIntcod"
-                [showClearButton]="true"
-                [searchEnabled]="true"
+                [showClearButton]="!isViewMode()"
+                [searchEnabled]="!isViewMode()"
+                [readOnly]="isViewMode()"
                 placeholder="Selezionare..."
                 labelMode="hidden">
               </dx-select-box>
@@ -139,18 +99,18 @@
         <div class="popup-fields-grid popup-fields-grid--2col">
 
           <app-sempione-field-group label="Nr. documento">
-            <dx-text-box formControlName="araIddocnum" [showClearButton]="true" labelMode="hidden"></dx-text-box>
+            <dx-text-box formControlName="araIddocnum" [showClearButton]="!isViewMode()" [readOnly]="isViewMode()" labelMode="hidden"></dx-text-box>
           </app-sempione-field-group>
 
           <app-sempione-field-group label="Scadenza documento">
-            <dx-date-box formControlName="araDocexpdate" type="date" displayFormat="dd.MM.yyyy" [showClearButton]="true" labelMode="hidden"></dx-date-box>
+            <dx-date-box formControlName="araDocexpdate" type="date" displayFormat="dd.MM.yyyy" [showClearButton]="!isViewMode()" [readOnly]="isViewMode()" labelMode="hidden"></dx-date-box>
           </app-sempione-field-group>
 
           <app-sempione-field-group label="Opzioni">
             <div class="checkbox-stack">
-              <dx-check-box formControlName="araRecComplete" text="Scheda completa"></dx-check-box>
+              <dx-check-box formControlName="araRecComplete" text="Scheda completa" [disabled]="isViewMode()"></dx-check-box>
               @if (isEditMode()) {
-                <dx-check-box formControlName="araIsupdated" text="Aggiornato"></dx-check-box>
+                <dx-check-box formControlName="araIsupdated" text="Aggiornato" [disabled]="isViewMode()"></dx-check-box>
               }
             </div>
           </app-sempione-field-group>
@@ -171,7 +131,8 @@
 
       <app-sempione-popup-action-bar
         saveText="Salva"
-        cancelText="Annulla"
+        [cancelText]="isViewMode() ? 'Chiudi' : 'Annulla'"
+        [showSave]="!isViewMode()"
         [isSaving]="isSaving()"
         (save)="save()"
         (cancel)="closeFormPopup()">

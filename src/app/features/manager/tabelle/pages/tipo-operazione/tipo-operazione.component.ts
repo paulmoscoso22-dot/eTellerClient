@@ -1,4 +1,4 @@
-import { Component, signal, computed, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, signal, computed, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -17,7 +17,6 @@ import {
   SempionePageShellComponent,
   SempioneCardComponent,
   SempioneCardHeaderComponent,
-  SempioneToolbarComponent,
   SempionePopupComponent,
   SempionePopupCardComponent,
   SempionePopupActionBarComponent,
@@ -26,7 +25,7 @@ import {
 
   SempioneDataGridComponent,
   SempioneGridColumn,
-  SempioneCrudToolbarActionsComponent,
+  SempioneSearchModeComponent,
 } from '../../../../../components/General';
 
 @Component({
@@ -39,15 +38,14 @@ import {
     SempionePageShellComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
-    SempioneToolbarComponent,
     SempionePopupComponent,
     SempionePopupCardComponent,
     SempionePopupActionBarComponent,
     SempioneFieldGroupComponent,
-  
-  
+
+
     SempioneDataGridComponent,
-    SempioneCrudToolbarActionsComponent,
+    SempioneSearchModeComponent,
   ],
   templateUrl: './tipo-operazione.component.html',
   styleUrls: ['./tipo-operazione.component.css'],
@@ -57,8 +55,9 @@ export class TipoOperazioneComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly tipoOperazioneService = inject(TipoOperazioneService);
   private readonly router = inject(Router);
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
 
-  private operazioni = signal<ITipoOperazioneVm[]>([]);
+  operazioni = signal<ITipoOperazioneVm[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
 
@@ -70,12 +69,12 @@ export class TipoOperazioneComponent implements OnInit {
   selectedLabel = signal<string>('');
 
   readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'optId',       caption: 'ID',           alignment: 'left',   width: 110              },
-    { dataField: 'optDes',      caption: 'Descrizione',  alignment: 'left', wrap: true               },
-    { dataField: 'optHoscod',   caption: 'Host Code',    alignment: 'left',   width: 130              },
-    { dataField: 'optAptId',    caption: 'Applicazione', alignment: 'center', width: 110              },
-    { dataField: 'optIscredit', caption: 'Segno',        alignment: 'center', width: 90,  type: 'segno' },
-    { dataField: 'optPrtdv',    caption: 'Stampa fiche', alignment: 'center', width: 110, type: 'bool'  },
+    { dataField: 'optId',       caption: 'ID',           alignment: 'left',   width: 110, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'optDes',      caption: 'Descrizione',  alignment: 'left', wrap: true, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'optHoscod',   caption: 'Host Code',    alignment: 'left',   width: 130, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'optAptId',    caption: 'Applicazione', alignment: 'center', width: 110, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'optIscredit', caption: 'Segno',        alignment: 'center', width: 90,  type: 'segno', allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'optPrtdv',    caption: 'Stampa fiche', alignment: 'center', width: 110, type: 'bool', allowFiltering: false, allowHeaderFiltering: true, headerFilterDataSource: [{ text: 'Sì', value: true }, { text: 'No', value: false }] },
   ];
 
   readonly segnoOptions = [
@@ -138,6 +137,8 @@ export class TipoOperazioneComponent implements OnInit {
     this.filterId.set('');
     this.filterDes.set('');
   }
+
+  clearGridFilters(): void { this.dataGrid?.clearFilters(); }
 
   openNewPopup(): void {
     this.operazioneForm.reset({ optIscredit: '', optPrtdv: false });

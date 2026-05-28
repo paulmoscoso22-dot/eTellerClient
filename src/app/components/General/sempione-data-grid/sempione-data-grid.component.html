@@ -54,7 +54,12 @@
       [hoverStateEnabled]="true"
       [height]="'100%'"
       [noDataText]="noDataText"
-      (onSelectionChanged)="selectionChanged.emit($event)">
+      (onSelectionChanged)="selectionChanged.emit($event)"
+      (onOptionChanged)="onOptionChanged($event)"
+      (onCellPrepared)="onCellPrepared($event)"
+      (onHeaderFilterShowing)="onHeaderFilterShowing()"
+      (onHeaderFilterHidden)="onHeaderFilterHidden()"
+      (onRowDblClick)="onRowDblClick($event)">
 
       <dxo-selection mode="single"></dxo-selection>
       <dxo-paging [pageSize]="pageSize"></dxo-paging>
@@ -64,16 +69,22 @@
         [showInfo]="true">
       </dxo-pager>
       <dxo-load-panel [enabled]="false"></dxo-load-panel>
+      <dxo-filter-row [visible]="showFilterRow"></dxo-filter-row>
+      <dxo-header-filter [visible]="showHeaderFilter" [allowSearch]="true"></dxo-header-filter>
 
-      @for (col of columns; track col.dataField) {
+      @for (col of effectiveColumns; track col.dataField) {
         @if (col.type === 'currency') {
           <dxi-column
             [dataField]="col.dataField"
             [caption]="col.caption"
             [width]="col.width"
             [allowSorting]="col.allowSorting ?? true"
+            [allowHeaderFiltering]="col.allowHeaderFiltering ?? false"
             cellTemplate="currencyCell"
             alignment="center">
+            @if (col.headerFilterDataSource) {
+              <dxo-header-filter [dataSource]="col.headerFilterDataSource"></dxo-header-filter>
+            }
           </dxi-column>
         } @else if (col.type === 'bool-text') {
           <dxi-column
@@ -81,9 +92,14 @@
             [caption]="col.caption"
             [width]="col.width"
             [allowSorting]="col.allowSorting ?? false"
-            [allowFiltering]="false"
+            [allowFiltering]="col.allowFiltering ?? false"
+            [allowHeaderFiltering]="col.allowHeaderFiltering ?? false"
+            [dataType]="col.dataType"
             cellTemplate="boolTextCell"
             alignment="center">
+            @if (col.headerFilterDataSource) {
+              <dxo-header-filter [dataSource]="col.headerFilterDataSource"></dxo-header-filter>
+            }
           </dxi-column>
         } @else if (col.type === 'bool-text-inverted') {
           <dxi-column
@@ -91,18 +107,42 @@
             [caption]="col.caption"
             [width]="col.width"
             [allowSorting]="col.allowSorting ?? false"
-            [allowFiltering]="false"
+            [allowFiltering]="col.allowFiltering ?? false"
+            [allowHeaderFiltering]="col.allowHeaderFiltering ?? false"
+            [dataType]="col.dataType"
             cellTemplate="boolTextInvertedCell"
             alignment="center">
+            @if (col.headerFilterDataSource) {
+              <dxo-header-filter [dataSource]="col.headerFilterDataSource"></dxo-header-filter>
+            }
           </dxi-column>
         } @else if (col.type === 'entity-status') {
           <dxi-column
             [dataField]="col.dataField"
             [caption]="col.caption"
             [width]="col.width"
+            [minWidth]="col.minWidth"
             [allowSorting]="col.allowSorting ?? true"
+            [allowHeaderFiltering]="col.allowHeaderFiltering ?? false"
             cellTemplate="entityStatusCell"
             alignment="center">
+            @if (col.headerFilterDataSource) {
+              <dxo-header-filter [dataSource]="col.headerFilterDataSource"></dxo-header-filter>
+            }
+          </dxi-column>
+        } @else if (col.type === 'stato-operazione') {
+          <dxi-column
+            [dataField]="col.dataField"
+            [caption]="col.caption"
+            [width]="col.width"
+            [minWidth]="col.minWidth"
+            [allowSorting]="col.allowSorting ?? true"
+            [allowHeaderFiltering]="col.allowHeaderFiltering ?? false"
+            cellTemplate="statoOpCell"
+            alignment="center">
+            @if (col.headerFilterDataSource) {
+              <dxo-header-filter [dataSource]="col.headerFilterDataSource"></dxo-header-filter>
+            }
           </dxi-column>
         } @else if (col.type === 'tipo-pill') {
           <dxi-column
@@ -110,8 +150,12 @@
             [caption]="col.caption"
             [width]="col.width"
             [allowSorting]="col.allowSorting ?? true"
+            [allowHeaderFiltering]="col.allowHeaderFiltering ?? false"
             cellTemplate="tipoPillCell"
             alignment="center">
+            @if (col.headerFilterDataSource) {
+              <dxo-header-filter [dataSource]="col.headerFilterDataSource"></dxo-header-filter>
+            }
           </dxi-column>
         } @else if (col.type === 'status') {
           <dxi-column
@@ -119,8 +163,12 @@
             [caption]="col.caption"
             [width]="col.width"
             [allowSorting]="col.allowSorting ?? true"
+            [allowHeaderFiltering]="col.allowHeaderFiltering ?? false"
             cellTemplate="statusCell"
             alignment="center">
+            @if (col.headerFilterDataSource) {
+              <dxo-header-filter [dataSource]="col.headerFilterDataSource"></dxo-header-filter>
+            }
           </dxi-column>
         } @else if (col.type === 'bool') {
           <dxi-column
@@ -128,9 +176,13 @@
             [caption]="col.caption"
             [width]="col.width"
             [allowSorting]="col.allowSorting ?? false"
-            [allowFiltering]="false"
+            [allowFiltering]="col.allowFiltering ?? false"
+            [allowHeaderFiltering]="col.allowHeaderFiltering ?? false"
             cellTemplate="boolCell"
             alignment="center">
+            @if (col.headerFilterDataSource) {
+              <dxo-header-filter [dataSource]="col.headerFilterDataSource"></dxo-header-filter>
+            }
           </dxi-column>
         } @else if (col.type === 'segno') {
           <dxi-column
@@ -138,19 +190,28 @@
             [caption]="col.caption"
             [width]="col.width"
             [allowSorting]="col.allowSorting ?? true"
+            [allowHeaderFiltering]="col.allowHeaderFiltering ?? false"
             cellTemplate="segnoCell"
             alignment="center">
+            @if (col.headerFilterDataSource) {
+              <dxo-header-filter [dataSource]="col.headerFilterDataSource"></dxo-header-filter>
+            }
           </dxi-column>
         } @else {
           <dxi-column
             [dataField]="col.dataField"
             [caption]="col.caption"
             [width]="col.width"
+            [minWidth]="col.minWidth"
             [alignment]="col.alignment ?? 'left'"
             [allowSorting]="col.allowSorting ?? true"
+            [allowHeaderFiltering]="col.allowHeaderFiltering ?? false"
             [dataType]="col.dataType"
             [format]="col.format"
-            [cssClass]="col.wrap ? 'col-wrap' : ''">
+            [cssClass]="(col.cssClass || '') + (col.wrap ? ' col-wrap' : '')">
+            @if (col.headerFilterDataSource) {
+              <dxo-header-filter [dataSource]="col.headerFilterDataSource"></dxo-header-filter>
+            }
           </dxi-column>
         }
       }
@@ -173,9 +234,19 @@
 
       <div *dxTemplate="let cell of 'entityStatusCell'" class="entity-status-cell">
         <span class="entity-status-pill"
-          [class.entity-status-pill--green]="(cell.value?.toString() | lowercase)?.includes('attiv')"
-          [class.entity-status-pill--red]="(cell.value?.toString() | lowercase)?.includes('disabili')"
-          [class.entity-status-pill--yellow]="!(cell.value?.toString() | lowercase)?.includes('attiv') && !(cell.value?.toString() | lowercase)?.includes('disabili') && ((cell.value?.toString() | lowercase)?.includes('inattiv') || (cell.value?.toString() | lowercase)?.includes('bloccat'))">
+          [class.entity-status-pill--green]="(cell.value | lowercase)?.includes('attiv')"
+          [class.entity-status-pill--red]="(cell.value | lowercase)?.includes('disabili')"
+          [class.entity-status-pill--yellow]="!(cell.value | lowercase)?.includes('attiv') && !(cell.value | lowercase)?.includes('disabili') && ((cell.value | lowercase)?.includes('inattiv') || (cell.value | lowercase)?.includes('bloccat'))"
+          [class.entity-status-pill--gray]="(cell.value | lowercase)?.includes('estint') || (cell.value | lowercase)?.includes('extinct')">
+          {{ cell.value }}
+        </span>
+      </div>
+
+      <div *dxTemplate="let cell of 'statoOpCell'" class="entity-status-cell">
+        <span class="entity-status-pill"
+          [class.entity-status-pill--green]="(cell.value | lowercase)?.includes('ok') || (cell.value | lowercase)?.includes('complet')"
+          [class.entity-status-pill--red]="(cell.value | lowercase)?.includes('stor') || (cell.value | lowercase)?.includes('revers')"
+          [class.entity-status-pill--yellow]="(cell.value | lowercase)?.includes('forz') || (cell.value | lowercase)?.includes('vigil')">
           {{ cell.value }}
         </span>
       </div>

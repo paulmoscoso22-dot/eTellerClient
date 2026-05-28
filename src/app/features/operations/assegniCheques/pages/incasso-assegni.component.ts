@@ -2,10 +2,11 @@ import { Component, signal } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import {
   DxTextBoxModule, DxNumberBoxModule, DxSelectBoxModule, DxCheckBoxModule,
-  DxDateBoxModule, DxTextAreaModule, DxButtonModule, DxDropDownButtonModule,
+  DxDateBoxModule, DxTextAreaModule, DxDropDownButtonModule,
   DxPopupModule
 } from 'devextreme-angular';
-import { HeaderCardComponent } from '../../../../components/header-card/header-card.component';
+import { SempioneCardHeaderComponent } from '../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneButtonComponent } from '../../../../components/General/sempione-button/sempione-button.component';
 import { OpBadgeComponent } from '../../../../components/Operazioni/op-badge/op-badge.component';
 
 const round05 = (v: number) => Math.round(v * 20) / 20;
@@ -16,9 +17,9 @@ const round05 = (v: number) => Math.round(v * 20) / 20;
   imports: [
     CommonModule, DatePipe, DecimalPipe,
     DxTextBoxModule, DxNumberBoxModule, DxSelectBoxModule, DxCheckBoxModule,
-    DxDateBoxModule, DxTextAreaModule, DxButtonModule, DxDropDownButtonModule,
+    DxDateBoxModule, DxTextAreaModule, DxDropDownButtonModule,
     DxPopupModule,
-    HeaderCardComponent,
+    SempioneCardHeaderComponent, SempioneButtonComponent,
     OpBadgeComponent
   ],
   templateUrl: './incasso-assegni.component.html',

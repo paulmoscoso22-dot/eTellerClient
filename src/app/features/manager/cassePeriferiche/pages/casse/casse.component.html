@@ -23,8 +23,8 @@
       </div>
 
       <app-sempione-crud-toolbar-actions
-        [showSearch]="false"
         newText="Nuova Cassa"
+        (search)="filterSearch.set(filterSearch())"
         (reset)="resetSearch()"
         (add)="openNewPopup()">
       </app-sempione-crud-toolbar-actions>
@@ -47,7 +47,8 @@
       (rowView)="onTableAction('view', $event)"
       (rowEdit)="onTableAction('edit', $event)"
       (rowTrace)="onRowTrace($event)"
-      (rowDelete)="onRowDelete($event)">
+      (rowDelete)="onRowDelete($event)"
+      (rowDblClick)="onTableAction('view', $event)">
     </app-sempione-data-grid>
 
   </app-sempione-card>
@@ -174,7 +175,7 @@
       (storico)="onTrace()">
       @if (popupMode() === 'edit') {
         <div secondary-actions>
-          <dx-button text="Elimina" icon="trash" stylingMode="contained" class="btn-fin-danger" (onClick)="requestDeleteFromPopup()"></dx-button>
+          <app-sempione-button text="Elimina" icon="trash" variant="danger" (clicked)="requestDeleteFromPopup()"></app-sempione-button>
         </div>
       }
     </app-sempione-popup-action-bar>

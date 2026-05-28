@@ -36,10 +36,10 @@
 }
 
 .action-btn--edit:hover     { background: rgba(0, 51, 102, 0.08); }
-.action-btn--edit:hover svg { stroke: #003366; }
+.action-btn--edit:hover svg { stroke: var(--color-brand-navy); }
 
 .action-btn--history:hover     { background: rgba(0, 51, 102, 0.08); }
-.action-btn--history:hover svg { stroke: #003366; }
+.action-btn--history:hover svg { stroke: var(--color-brand-navy); }
 
 .action-btn--delete { color: #e74c3c; }
 .action-btn--delete:hover { background: #fde8e8; }
@@ -52,8 +52,8 @@
   position: sticky;
   bottom: 0;
   z-index: 10;
-  background: #fff;
-  border-top: 1px solid #e5e7eb !important;
+  background: var(--color-surface-white);
+  border-top: 1px solid var(--color-border-lighter) !important;
   padding: 2px 10px !important;
 }
 
@@ -69,7 +69,7 @@
   order: -1 !important;
   margin-right: auto !important;
   font-size: 10px !important;
-  color: #6b7280 !important;
+  color: var(--color-text-subtle) !important;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -84,8 +84,8 @@
   border-radius: 5px !important;
   font-size: 11px !important;
   font-weight: 500;
-  color: #374151 !important;
-  border: 1px solid #dce3ee !important;
+  color: var(--color-text-secondary) !important;
+  border: 1px solid var(--color-border-light) !important;
   background: transparent !important;
   margin: 0 1px;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
@@ -93,14 +93,14 @@
 
 :host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page:hover {
   background: rgba(0, 51, 102, 0.06) !important;
-  color: #003366 !important;
+  color: var(--color-brand-navy) !important;
   border-color: rgba(0, 51, 102, 0.3) !important;
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-pages .dx-page.dx-selection {
-  background: #003366 !important;
-  color: #fff !important;
-  border-color: #003366 !important;
+  background: var(--color-brand-navy) !important;
+  color: var(--color-surface-white) !important;
+  border-color: var(--color-brand-navy) !important;
   font-weight: 700 !important;
 }
 
@@ -129,8 +129,8 @@
 
 :host ::ng-deep .dx-datagrid-pager .dx-navigate-button:hover {
   background: rgba(0, 51, 102, 0.06) !important;
-  color: #003366 !important;
-  border-color: #dce3ee !important;
+  color: var(--color-brand-navy) !important;
+  border-color: var(--color-border-light) !important;
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-navigate-button.dx-button-disable {
@@ -143,21 +143,21 @@
   line-height: 22px !important;
   padding: 0 8px !important;
   border-radius: 5px !important;
-  border: 1px solid #dce3ee !important;
-  color: #374151 !important;
+  border: 1px solid var(--color-border-light) !important;
+  color: var(--color-text-secondary) !important;
   background: transparent !important;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-page-size:hover {
   background: rgba(0, 51, 102, 0.06) !important;
-  color: #003366 !important;
+  color: var(--color-brand-navy) !important;
   border-color: rgba(0, 51, 102, 0.3) !important;
 }
 
 :host ::ng-deep .dx-datagrid-pager .dx-page-size.dx-selection {
   background: rgba(0, 51, 102, 0.09) !important;
-  color: #003366 !important;
+  color: var(--color-brand-navy) !important;
   font-weight: 700 !important;
   border-color: rgba(0, 51, 102, 0.3) !important;
 }
@@ -168,7 +168,7 @@
   justify-content: center;
   gap: 10px;
   padding: 40px;
-  color: #374151;
+  color: var(--color-text-secondary);
   font-size: 13px;
 }
 
@@ -191,7 +191,7 @@
   background: #fef2f2;
   border: 1px solid #fecaca;
   border-radius: 6px;
-  color: #991b1b;
+  color: var(--color-status-error-text);
   font-size: 12px;
 }
 

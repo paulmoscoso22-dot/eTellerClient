@@ -9,50 +9,22 @@
       </svg>
     </app-sempione-card-header>
 
-    <app-sempione-toolbar>
-
-      <div class="toolbar-field">
-        <dx-text-box
-          placeholder="Divisa..."
-          [showClearButton]="true"
-          labelMode="hidden"
-          valueChangeEvent="input"
-          [value]="filterCodice()"
-          (onValueChanged)="filterCodice.set($event.value)">
-        </dx-text-box>
-      </div>
-
-      <div class="toolbar-field toolbar-field--lg">
-        <dx-text-box
-          placeholder="Descrizione..."
-          [showClearButton]="true"
-          labelMode="hidden"
-          valueChangeEvent="input"
-          [value]="filterDescrizione()"
-          (onValueChanged)="filterDescrizione.set($event.value)">
-        </dx-text-box>
-      </div>
-
-      <app-sempione-crud-toolbar-actions
-        [showSearch]="true"
-        [showAdd]="false"
-        (search)="onCerca()"
-        (reset)="onResetFiltri()">
-      </app-sempione-crud-toolbar-actions>
-
-    </app-sempione-toolbar>
+    <app-sempione-search-mode mode="header" [showAdd]="false" (reset)="clearGridFilters()">
+    </app-sempione-search-mode>
 
     <app-sempione-data-grid
-      [dataSource]="filteredDivise()"
-      [columns]="gridColumns"
+      [dataSource]="divise()"
+      [columns]="gridColumns()"
       [keyExpr]="['curId', 'curCutId']"
       [pageSize]="30"
       [allowedPageSizes]="[30, 50, 100]"
+      [showHeaderFilter]="true"
       [showViewAction]="true"
       [showEditAction]="true"
       noDataText="Nessuna divisa trovata."
       (rowView)="onTableAction('view', $event)"
-      (rowEdit)="onTableAction('edit', $event)">
+      (rowEdit)="onTableAction('edit', $event)"
+      (rowDblClick)="onTableAction('view', $event)">
     </app-sempione-data-grid>
 
   </app-sempione-card>

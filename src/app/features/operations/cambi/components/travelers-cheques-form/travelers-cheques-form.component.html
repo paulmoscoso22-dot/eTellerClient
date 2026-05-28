@@ -11,12 +11,12 @@
 
       <!-- Card 1: Traveler's Cheque -->
       <section class="card-section">
-        <app-header-card title="Traveler's Cheque">
+        <app-sempione-card-header title="Traveler's Cheque">
           <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="2" y="6" width="20" height="13" rx="2"></rect>
             <path d="M6 10h6M6 14h4"></path>
           </svg>
-        </app-header-card>
+        </app-sempione-card-header>
         <div class="card-body">
 
           <div class="form-row">
@@ -66,8 +66,7 @@
               </dx-radio-group>
               <dx-number-box
                 [(value)]="formData.commRate"
-                format="#,##0.0000"
-                style="flex:1; min-width:0"
+                format="#,##0.0000" class="form-fld"
                 (onValueChanged)="calculate()">
               </dx-number-box>
             </div>
@@ -76,7 +75,7 @@
           <div class="form-row">
             <label class="form-lbl">Importo comm.</label>
             <div class="form-fld form-fld--row">
-              <div class="display-value" style="flex:1">
+              <div class="display-value form-fld">
                 {{ formData.commAmt != null ? (formData.commAmt | number:'1.2-2') : '—' }}
               </div>
               <div class="display-value ctv-badge">
@@ -92,7 +91,7 @@
           <div class="form-row">
             <label class="form-lbl">Totale</label>
             <div class="form-fld form-fld--row">
-              <div class="display-value display-value--accent" style="flex:1">
+              <div class="display-value display-value--accent form-fld">
                 {{ formData.totale != null ? (formData.totale | number:'1.2-2') : '—' }}
               </div>
               <div class="display-value display-value--accent ctv-badge">
@@ -108,14 +107,14 @@
 
       <!-- Card 2: Controparte -->
       <section class="card-section">
-        <app-header-card title="Controparte">
+        <app-sempione-card-header title="Controparte">
           <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M17 1l4 4-4 4"></path>
             <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
             <path d="M7 23l-4-4 4-4"></path>
             <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
           </svg>
-        </app-header-card>
+        </app-sempione-card-header>
         <div class="card-body">
 
           <div class="form-row">
@@ -134,11 +133,10 @@
             <div class="form-fld form-fld--row">
               <dx-number-box
                 [(value)]="formData.excrat"
-                format="#,##0.0000"
-                style="flex:1"
+                format="#,##0.0000" class="form-fld"
                 (onValueChanged)="calculate()">
               </dx-number-box>
-              <dx-button icon="money" hint="Pannello cambio" (onClick)="showCambio()"></dx-button>
+              <app-sempione-button icon="money" hint="Pannello cambio" (clicked)="showCambio()"></app-sempione-button>
               <div class="display-value sys-rate">
                 <span class="sys-label">SYS</span>
                 {{ formData.excratSys != null ? (formData.excratSys | number:'1.4-4') : '—' }}
@@ -146,7 +144,7 @@
             </div>
           </div>
 
-          <div class="form-row" style="align-items: center;">
+          <div class="form-row">
             <label class="form-lbl">Forza cambio</label>
             <dx-check-box [(value)]="formData.cbForceChange"></dx-check-box>
           </div>
@@ -162,7 +160,7 @@
             </div>
           </div>
 
-          <div class="form-row" style="align-items: center;">
+          <div class="form-row">
             <label class="form-lbl">Arrotonda importi</label>
             <dx-check-box [(value)]="formData.cbArrotondaImporti" (onValueChanged)="calculate()"></dx-check-box>
           </div>
@@ -208,14 +206,14 @@
 
       <!-- Card 3: Vigilanza -->
       <section class="card-section">
-        <app-header-card title="Vigilanza">
+        <app-sempione-card-header title="Vigilanza">
           <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
           </svg>
-        </app-header-card>
+        </app-sempione-card-header>
         <div class="card-body">
 
-          <div class="form-row" style="align-items: center;">
+          <div class="form-row">
             <label class="form-lbl">Forza vigilanza</label>
             <dx-check-box [(value)]="formData.forzaVigilanza"></dx-check-box>
           </div>
@@ -227,7 +225,7 @@
               <span class="aml-dot"></span>
               <span class="aml-status">Anti-Riciclaggio (AML)</span>
             </div>
-            <dx-button text="Dettaglio" stylingMode="outlined" (onClick)="showAppearer()"></dx-button>
+            <app-sempione-button text="Dettaglio" (clicked)="showAppearer()"></app-sempione-button>
           </div>
 
         </div>
@@ -235,14 +233,14 @@
 
       <!-- Card 4: Descrizione Operazione -->
       <section class="card-section card-fill">
-        <app-header-card title="Descrizione Operazione">
+        <app-sempione-card-header title="Descrizione Operazione">
           <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
             <polyline points="14 2 14 8 20 8"></polyline>
             <line x1="16" y1="13" x2="8" y2="13"></line>
             <line x1="16" y1="17" x2="8" y2="17"></line>
           </svg>
-        </app-header-card>
+        </app-sempione-card-header>
         <div class="card-body">
 
           <div class="form-row">
@@ -291,9 +289,9 @@
 
   <!-- ── Float bar ── -->
   <div class="float-bar">
-    <dx-button text="Indietro" icon="arrowleft" stylingMode="outlined" class="btn-secondary" (onClick)="indietro()"></dx-button>
-    <dx-button text="Annulla"  icon="remove"    stylingMode="outlined" class="btn-secondary" (onClick)="annulla()"></dx-button>
-    <dx-button text="Modifica" icon="edit"      stylingMode="outlined" class="btn-secondary" (onClick)="modifica()"></dx-button>
+    <app-sempione-button text="Indietro" icon="arrowleft" (clicked)="indietro()"></app-sempione-button>
+    <app-sempione-button text="Annulla" icon="remove" (clicked)="annulla()"></app-sempione-button>
+    <app-sempione-button text="Modifica" icon="edit" (clicked)="modifica()"></app-sempione-button>
     <dx-drop-down-button
       text="Altre azioni"
       icon="overflow"
@@ -304,7 +302,7 @@
       displayExpr="text"
       (onItemClick)="onAltreAzioniClick($event)">
     </dx-drop-down-button>
-    <dx-button text="Conferma" icon="check" class="btn-confirm" (onClick)="conferma()"></dx-button>
+    <app-sempione-button text="Conferma" icon="check" variant="primary" (clicked)="conferma()"></app-sempione-button>
   </div>
 
 </div>

@@ -95,6 +95,12 @@
 
       <div toolbar-actions>
         <app-sempione-button
+          icon="search"
+          hint="Cerca"
+          variant="secondary"
+          (clicked)="filterCassa.set(filterCassa())">
+        </app-sempione-button>
+        <app-sempione-button
           icon="revert"
           hint="Reset filtri"
           variant="secondary"
@@ -126,7 +132,8 @@
       noDataText="Nessun conto trovato."
       (rowView)="onTableAction('view', $event)"
       (rowEdit)="onTableAction('edit', $event)"
-      (rowTrace)="onRowTrace($event)">
+      (rowTrace)="onRowTrace($event)"
+      (rowDblClick)="onTableAction('view', $event)">
     </app-sempione-data-grid>
 
   </app-sempione-card>

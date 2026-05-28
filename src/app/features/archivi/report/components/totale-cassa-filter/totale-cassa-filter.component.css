@@ -26,7 +26,7 @@
 .field-label {
   font-size: 10px;
   font-weight: 600;
-  color: #003366;
+  color: var(--color-brand-navy);
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
@@ -43,8 +43,8 @@
   justify-content: flex-end;
   gap: 6px;
   padding: 7px 12px;
-  border-top: 1px solid var(--dx-color-border, #dce3ee);
-  background: color-mix(in srgb, var(--dx-color-border, #dce3ee) 20%, transparent);
+  border-top: 1px solid var(--dx-color-border, var(--color-border-light));
+  background: color-mix(in srgb, var(--dx-color-border, var(--color-border-light)) 20%, transparent);
   flex-shrink: 0;
 }
 

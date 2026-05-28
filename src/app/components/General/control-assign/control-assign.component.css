@@ -1,0 +1,66 @@
+/* Styles for ControlAssignComponent */
+
+.control-assign-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.control-assign-list {
+  flex: 1 1 250px;
+}
+
+.control-assign-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Bottoni << >> in stato disabilitato: grigio opaco */
+::ng-deep #moveleftRight .dx-button.dx-state-disabled {
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+/* Intestazione colonne */
+::ng-deep .control-assign-container .dx-datagrid-headers .dx-header-row td {
+  background-color: var(--color-surface-base) !important;
+  color: var(--color-brand-navy) !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* Griglia: bordo morbido e raggio */
+::ng-deep .control-assign-container .dx-datagrid.dx-gridbase-container {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.04);
+}
+
+/* Empty state */
+::ng-deep .control-assign-container .dx-datagrid-nodata {
+  font-size: 11.5px !important;
+  color: #94a3b8 !important;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  text-align: center;
+  padding: 20px 12px !important;
+  line-height: 1.5;
+}
+
+/* Righe */
+::ng-deep .control-assign-container .dx-data-row > td {
+  font-size: 12.5px !important;
+  color: #0f172a !important;
+  padding: 6px 10px !important;
+}
