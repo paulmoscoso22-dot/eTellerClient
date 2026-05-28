@@ -2,6 +2,7 @@ import { Component, signal, DestroyRef, inject, OnInit, ViewChild } from '@angul
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import notify from 'devextreme/ui/notify';
 import { TabellaIntService, TabellaIntItem } from '../../services/tabella-int.service';
 import {
   SempionePageShellComponent,
@@ -105,6 +106,14 @@ export class StatoTransazioneComponent implements OnInit {
     this.popupMode.set('edit');
     this.popupItem.set(item);
     this.isFormPopupVisible = true;
+  }
+
+  onSaved(): void {
+    const message = this.popupMode() === 'new'
+      ? '✅ Stato Transazione aggiunto con successo'
+      : '✅ Modifiche salvate con successo';
+    notify(message, 'success', 3000);
+    this.search();
   }
 
   onTrace(id?: string | number | null): void {

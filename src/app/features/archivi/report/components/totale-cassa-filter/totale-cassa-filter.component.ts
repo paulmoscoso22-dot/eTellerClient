@@ -24,10 +24,6 @@ export class TotaleCassaFilterComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
 
   @Input() isLoading = signal(false);
-  @Input() cassaRequired: boolean = true;
-  @Input() dataRequired: boolean = true;
-  @Input() tipContoRequired: boolean = true;
-  @Input() localitaRequired: boolean = true;
 
   @Output() searchClick = new EventEmitter<any>();
 
@@ -38,24 +34,17 @@ export class TotaleCassaFilterComponent implements OnInit {
   }
 
   private initializeForm(): void {
-    const cassaValidators = this.cassaRequired ? [Validators.required] : [];
-    const dataValidators = this.dataRequired ? [Validators.required] : [];
-    const tipContoValidators = this.tipContoRequired ? [Validators.required] : [];
-    const localitaValidators = this.localitaRequired ? [Validators.required] : [];
-
+    // ✅ Tutti i campi sono opzionali — nessun validatore obbligatorio
     this.searchForm = this.formBuilder.group({
-      tocCliId: ['', cassaValidators],
-      tocData: [null, dataValidators],
-      tocCutId: ['', tipContoValidators],
-      tocBraId: ['', localitaValidators]
+      tocCliId: [''],
+      tocData: [null],
+      tocCutId: [''],
+      tocBraId: ['']
     });
   }
 
   search(): void {
-    if (this.searchForm.invalid) {
-      return;
-    }
-
+    // ✅ Non controllare se invalido — emetti sempre
     const { tocCliId, tocData, tocCutId, tocBraId } = this.searchForm.value;
 
     this.searchClick.emit({

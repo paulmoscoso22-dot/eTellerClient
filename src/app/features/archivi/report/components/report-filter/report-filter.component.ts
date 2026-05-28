@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, inject, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
@@ -20,7 +20,8 @@ import { SempioneFilterShellComponent } from '../../../../../components/General'
     SempioneFilterShellComponent,
   ],
   templateUrl: './report-filter.component.html',
-  styleUrls: ['./report-filter.component.css']
+  styleUrls: ['./report-filter.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReportFilterComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
@@ -33,10 +34,10 @@ export class ReportFilterComponent implements OnInit {
   @Input() statusDefaultValue: number | null = null;
 
   private readonly statusLabels: Record<number, string> = {
-    0: 'Non Trasmesso',
-    1: 'Eseguito',
-    3: 'Annullato',
-    4: 'Attesa BEF',
+    30: 'Non Trasmesso',
+    50: 'Eseguito',
+    70: 'Annullato',
+    60: 'Attesa BEF',
   };
 
   get statusLabel(): string {
@@ -46,7 +47,7 @@ export class ReportFilterComponent implements OnInit {
   @Input() dataDalRequired: boolean = false;
   @Input() dataAlRequired: boolean = false;
   
-  @Output() searchClick = new EventEmitter<any>();
+  @Output() searchClick = new EventEmitter<ReportSearchParams>();
 
   searchForm!: FormGroup;
 
@@ -57,7 +58,8 @@ export class ReportFilterComponent implements OnInit {
   private initializeForm(): void {
     const dataDalValidators = this.dataDalRequired ? [Validators.required] : [];
     const dataAlValidators = this.dataAlRequired ? [Validators.required] : [];
-    const statusValidators = this.statusDefaultValue !== null ? [Validators.required, Validators.min(0)] : [];
+    // ✅ MODIFICATO: Non forzare validazione su trxStatus se è read-only
+    const statusValidators = this.statusDefaultValue !== null && !this.statusReadOnly ? [Validators.required, Validators.min(0)] : [];
 
     this.searchForm = this.formBuilder.group({
       trxCassa: [''],
@@ -79,29 +81,14 @@ export class ReportFilterComponent implements OnInit {
     const normalizedDataDal = trxDataDal ? new Date(new Date(trxDataDal).setHours(0, 0, 0, 0)) : null;
     const normalizedDataAl = trxDataAl ? new Date(new Date(trxDataAl).setHours(23, 59, 59, 999)) : null;
     
+    // Coerce empty strings to null to satisfy interface contract (string | null)
     this.searchClick.emit({
-      trxCassa,
+      trxCassa: trxCassa?.trim() || null,
       trxDataDal: normalizedDataDal,
       trxDataAl: normalizedDataAl,
       trxStatus,
-      trxBraId
+      trxBraId: trxBraId?.trim() || null
     });
-  }
-
-  onDateDalChanged(e: any): void {
-    if (e.value) {
-      const date = new Date(e.value);
-      date.setHours(0, 0, 0, 0);
-      this.searchForm.patchValue({ trxDataDal: date }, { emitEvent: false });
-    }
-  }
-
-  onDateAlChanged(e: any): void {
-    if (e.value) {
-      const date = new Date(e.value);
-      date.setHours(23, 59, 59, 999);
-      this.searchForm.patchValue({ trxDataAl: date }, { emitEvent: false });
-    }
   }
 
   reset(): void {
@@ -113,4 +100,7 @@ export class ReportFilterComponent implements OnInit {
       trxBraId: ''
     });
   }
+
+  // ⚠️ Callbacks onDateDalChanged() and onDateAlChanged() have been removed
+  // Date normalization now happens only in search() method to avoid redundant normalization
 }

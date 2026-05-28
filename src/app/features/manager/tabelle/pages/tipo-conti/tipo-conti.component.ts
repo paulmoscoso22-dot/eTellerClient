@@ -1,6 +1,7 @@
 import { Component, signal, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import notify from 'devextreme/ui/notify';
 import { TabellaVarcharService, TabellaVarcharItem } from '../../services/tabella-varchar.service';
 import {
   SempionePageShellComponent,
@@ -81,6 +82,14 @@ export class TipoContiComponent implements OnInit {
     this.isEditMode.set(true);
     this.popupItem.set(item);
     this.isFormPopupVisible = true;
+  }
+
+  onSaved(): void {
+    const message = this.isEditMode()
+      ? '✅ Tipo Conto modificato con successo'
+      : '✅ Tipo Conto aggiunto con successo';
+    notify(message, 'success', 3000);
+    this.search();
   }
 
   onTrace(id?: string | number | null): void {

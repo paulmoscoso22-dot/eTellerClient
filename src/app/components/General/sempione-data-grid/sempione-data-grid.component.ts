@@ -29,6 +29,7 @@ export interface SempioneGridColumn {
   imports: [CommonModule, DxDataGridModule, SempioneRowActionsComponent],
   templateUrl: './sempione-data-grid.component.html',
   styleUrls: ['./sempione-data-grid.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SempioneDataGridComponent implements OnDestroy {
   private readonly headerFilterService = inject(SempioneHeaderFilterService);
