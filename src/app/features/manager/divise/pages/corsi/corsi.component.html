@@ -11,63 +11,16 @@
 
     <app-sempione-toolbar>
 
-      <div class="toolbar-field">
-        <dx-text-box
-          placeholder="Divisa..."
-          [showClearButton]="true"
-          labelMode="hidden"
-          valueChangeEvent="input"
-          [value]="filterCodice()"
-          (onValueChanged)="filterCodice.set($event.value)">
-        </dx-text-box>
-      </div>
-
-      <div class="toolbar-field toolbar-field--lg">
-        <dx-text-box
-          placeholder="Descrizione..."
-          [showClearButton]="true"
-          labelMode="hidden"
-          valueChangeEvent="input"
-          [value]="filterDescrizione()"
-          (onValueChanged)="filterDescrizione.set($event.value)">
-        </dx-text-box>
-      </div>
-
-      <div class="toolbar-field">
-        <dx-select-box
-          [dataSource]="tipoOptions"
-          displayExpr="des"
-          valueExpr="id"
-          labelMode="hidden"
-          [showClearButton]="true"
-          [value]="filterTipo()"
-          (onValueChanged)="filterTipo.set($event.value)">
-        </dx-select-box>
-      </div>
-
-      <div class="toolbar-field">
-        <dx-date-box
-          [value]="filterDateDal()"
-          (onValueChanged)="filterDateDal.set($event.value)"
-          displayFormat="dd/MM/yyyy"
-          labelMode="hidden"
-          [showClearButton]="true"
-          [width]="130">
-        </dx-date-box>
-      </div>
-
-      <div class="toolbar-field">
-        <dx-date-box
-          [value]="filterDateAl()"
-          (onValueChanged)="filterDateAl.set($event.value)"
-          displayFormat="dd/MM/yyyy"
-          labelMode="hidden"
-          [showClearButton]="true"
-          [width]="130">
-        </dx-date-box>
-      </div>
+      <app-sempione-toolbar-date-range
+        labelDal="Data valuta dal"
+        [valueDal]="filterDateDal()"
+        [valueAl]="filterDateAl()"
+        (dalChange)="filterDateDal.set($event)"
+        (alChange)="filterDateAl.set($event)">
+      </app-sempione-toolbar-date-range>
 
       <app-sempione-crud-toolbar-actions
+        toolbar-actions
         [showSearch]="true"
         newText="Nuovo Corso"
         (search)="onCerca()"
@@ -88,19 +41,21 @@
     </div>
 
     <app-sempione-data-grid
-      [dataSource]="filteredCorsi()"
-      [columns]="gridColumns"
+      [dataSource]="corsi()"
+      [columns]="gridColumns()"
       [keyExpr]="['cprCurId1', 'cprCurId2', 'cprCutId', 'cprValdat']"
       [pageSize]="20"
       [allowedPageSizes]="[20, 50, 100]"
       [isLoading]="isLoading()"
+      [showHeaderFilter]="true"
       [showViewAction]="true"
       [showEditAction]="true"
       [showDeleteAction]="true"
       noDataText="Nessun corso trovato."
       (rowView)="onTableAction('view', $event)"
       (rowEdit)="onTableAction('edit', $event)"
-      (rowDelete)="onTableAction('delete', $event)">
+      (rowDelete)="onTableAction('delete', $event)"
+      (rowDblClick)="onTableAction('view', $event)">
     </app-sempione-data-grid>
 
   </app-sempione-card>

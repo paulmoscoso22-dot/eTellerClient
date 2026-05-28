@@ -3,7 +3,7 @@
 }
 
 .popup-card {
-  background: #fff;
+  background: var(--color-surface-white);
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 16px;
@@ -20,7 +20,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #003366;
-  border-left: 3px solid #003366;
+  color: var(--color-brand-navy);
+  border-left: 3px solid var(--color-brand-navy);
   border-radius: 8px 8px 0 0;
 }

@@ -1,5 +1,27 @@
 /* Styles for ControlAssignComponent */
 
+.control-assign-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.control-assign-list {
+  flex: 1 1 250px;
+}
+
+.control-assign-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
 /* Bottoni << >> in stato disabilitato: grigio opaco */
 ::ng-deep #moveleftRight .dx-button.dx-state-disabled {
   opacity: 0.4;
@@ -8,8 +30,8 @@
 
 /* Intestazione colonne */
 ::ng-deep .control-assign-container .dx-datagrid-headers .dx-header-row td {
-  background-color: #f8fafc !important;
-  color: #003366 !important;
+  background-color: var(--color-surface-base) !important;
+  color: var(--color-brand-navy) !important;
   font-size: 10px !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;

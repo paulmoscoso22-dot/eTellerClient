@@ -15,87 +15,99 @@
   @if (!isLoading() && !loadError() && helpInfo()) {
 
     <!-- ══ Informazioni Cassa ══ -->
-    <op-card-section title="Informazioni Cassa">
-      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-        <line x1="2" y1="10" x2="22" y2="10"></line>
-      </svg>
+    <app-sempione-card>
+      <app-sempione-card-header title="Informazioni Cassa">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+          <line x1="2" y1="10" x2="22" y2="10"></line>
+        </svg>
+      </app-sempione-card-header>
 
-      <div class="popup-fields-grid popup-fields-grid--2col">
+      <div class="card-body">
+        <div class="popup-fields-grid popup-fields-grid--2col">
 
-        <app-sempione-field-group label="Ultimo Utente">
-          <dx-text-box [value]="helpInfo()?.lastUser ?? '—'" [readOnly]="true"></dx-text-box>
-        </app-sempione-field-group>
+          <app-sempione-field-group label="Ultimo Utente">
+            <dx-text-box [value]="helpInfo()?.lastUser ?? '—'" [readOnly]="true"></dx-text-box>
+          </app-sempione-field-group>
 
-        <app-sempione-field-group label="Data Ultimo Logout">
-          <dx-text-box [value]="helpInfo()?.lastLogoutDate ?? '—'" [readOnly]="true"></dx-text-box>
-        </app-sempione-field-group>
+          <app-sempione-field-group label="Data Ultimo Logout">
+            <dx-text-box [value]="helpInfo()?.lastLogoutDate ?? '—'" [readOnly]="true"></dx-text-box>
+          </app-sempione-field-group>
 
-        <app-sempione-field-group label="Lingua Sistema">
-          <dx-text-box [value]="helpInfo()?.systemLanguage ?? '—'" [readOnly]="true"></dx-text-box>
-        </app-sempione-field-group>
+          <app-sempione-field-group label="Lingua Sistema">
+            <dx-text-box [value]="helpInfo()?.systemLanguage ?? '—'" [readOnly]="true"></dx-text-box>
+          </app-sempione-field-group>
 
-        <app-sempione-field-group label="Stampante Fiche">
-          <dx-text-box [value]="helpInfo()?.fichesPrinter ?? '—'" [readOnly]="true"></dx-text-box>
-        </app-sempione-field-group>
+          <app-sempione-field-group label="Stampante Fiche">
+            <dx-text-box [value]="helpInfo()?.fichesPrinter ?? '—'" [readOnly]="true"></dx-text-box>
+          </app-sempione-field-group>
 
-        <app-sempione-field-group label="TwinSafe Abilitato" [inline]="true">
-          <dx-check-box [value]="helpInfo()?.isTwinSafeEnabled" [readOnly]="true"></dx-check-box>
-        </app-sempione-field-group>
+          <app-sempione-field-group label="TwinSafe Abilitato" [inline]="true">
+            <dx-check-box [value]="helpInfo()?.isTwinSafeEnabled" [readOnly]="true"></dx-check-box>
+          </app-sempione-field-group>
 
-        <app-sempione-field-group label="Operazioni Cassa Abilitate" [inline]="true">
-          <dx-check-box [value]="helpInfo()?.isCassaOperationsEnabled" [readOnly]="true"></dx-check-box>
-        </app-sempione-field-group>
+          <app-sempione-field-group label="Operazioni Cassa Abilitate" [inline]="true">
+            <dx-check-box [value]="helpInfo()?.isCassaOperationsEnabled" [readOnly]="true"></dx-check-box>
+          </app-sempione-field-group>
 
+        </div>
       </div>
-    </op-card-section>
+    </app-sempione-card>
 
     <div class="help-bottom-row">
 
       <!-- ══ Host ══ -->
-      <op-card-section title="Host">
-        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="2" y="2" width="20" height="8" rx="2"></rect>
-          <rect x="2" y="14" width="20" height="8" rx="2"></rect>
-          <line x1="6" y1="6" x2="6.01" y2="6"></line>
-          <line x1="6" y1="18" x2="6.01" y2="18"></line>
-        </svg>
+      <app-sempione-card>
+        <app-sempione-card-header title="Host">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="2" width="20" height="8" rx="2"></rect>
+            <rect x="2" y="14" width="20" height="8" rx="2"></rect>
+            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+          </svg>
+        </app-sempione-card-header>
 
-        <div class="popup-fields-grid popup-fields-grid--2col">
+        <div class="card-body">
+          <div class="popup-fields-grid popup-fields-grid--2col">
 
-          <app-sempione-field-group label="Utente Host">
-            <dx-text-box [value]="helpInfo()?.hostUser ?? '—'" [readOnly]="true"></dx-text-box>
-          </app-sempione-field-group>
-
-          <app-sempione-field-group label="Versione Host">
-            <dx-text-box [value]="helpInfo()?.hostVersion != null ? '' + helpInfo()!.hostVersion : '—'" [readOnly]="true"></dx-text-box>
-          </app-sempione-field-group>
-
-          <div class="popup-col-span-2">
-            <app-sempione-field-group label="Data Compilazione Host">
-              <dx-text-box [value]="helpInfo()?.hostCompileDate ?? '—'" [readOnly]="true"></dx-text-box>
+            <app-sempione-field-group label="Utente Host">
+              <dx-text-box [value]="helpInfo()?.hostUser ?? '—'" [readOnly]="true"></dx-text-box>
             </app-sempione-field-group>
-          </div>
 
+            <app-sempione-field-group label="Versione Host">
+              <dx-text-box [value]="helpInfo()?.hostVersion != null ? '' + helpInfo()!.hostVersion : '—'" [readOnly]="true"></dx-text-box>
+            </app-sempione-field-group>
+
+            <div class="popup-col-span-2">
+              <app-sempione-field-group label="Data Compilazione Host">
+                <dx-text-box [value]="helpInfo()?.hostCompileDate ?? '—'" [readOnly]="true"></dx-text-box>
+              </app-sempione-field-group>
+            </div>
+
+          </div>
         </div>
-      </op-card-section>
+      </app-sempione-card>
 
       <!-- ══ Applicativo Web ══ -->
-      <op-card-section title="Applicativo Web">
-        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="2" y="3" width="20" height="14" rx="2"></rect>
-          <line x1="8" y1="21" x2="16" y2="21"></line>
-          <line x1="12" y1="17" x2="12" y2="21"></line>
-        </svg>
+      <app-sempione-card>
+        <app-sempione-card-header title="Applicativo Web">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+        </app-sempione-card-header>
 
-        <div class="popup-fields-grid popup-fields-grid--1col">
+        <div class="card-body">
+          <div class="popup-fields-grid popup-fields-grid--1col">
 
-          <app-sempione-field-group label="Versione Applicativo">
-            <dx-text-box [value]="helpInfo()?.webApplicationVersion ?? '—'" [readOnly]="true"></dx-text-box>
-          </app-sempione-field-group>
+            <app-sempione-field-group label="Versione Applicativo">
+              <dx-text-box [value]="helpInfo()?.webApplicationVersion ?? '—'" [readOnly]="true"></dx-text-box>
+            </app-sempione-field-group>
 
+          </div>
         </div>
-      </op-card-section>
+      </app-sempione-card>
 
     </div>
 

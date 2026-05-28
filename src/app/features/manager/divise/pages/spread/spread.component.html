@@ -8,44 +8,15 @@
       </svg>
     </app-sempione-card-header>
 
-    <app-sempione-toolbar>
-
-      <div class="toolbar-field">
-        <dx-text-box
-          placeholder="Divisa..."
-          [showClearButton]="true"
-          labelMode="hidden"
-          valueChangeEvent="input"
-          [value]="filterCur()"
-          (onValueChanged)="filterCur.set($event.value)">
-        </dx-text-box>
-      </div>
-
-      <div class="toolbar-field">
-        <dx-text-box
-          placeholder="Tipo..."
-          [showClearButton]="true"
-          labelMode="hidden"
-          valueChangeEvent="input"
-          [value]="filterTipo()"
-          (onValueChanged)="filterTipo.set($event.value)">
-        </dx-text-box>
-      </div>
-
-      <app-sempione-crud-toolbar-actions
-        [showSearch]="false"
-        newText="Nuovo Spread"
-        (reset)="onResetFiltri()"
-        (add)="openNewPopup()">
-      </app-sempione-crud-toolbar-actions>
-
-    </app-sempione-toolbar>
+    <app-sempione-search-mode mode="header" newText="Nuovo Spread" (reset)="clearGridFilters()" (add)="openNewPopup()">
+    </app-sempione-search-mode>
 
     <app-sempione-data-grid
-      [dataSource]="filteredSpread()"
+      [dataSource]="spreadList()"
       [columns]="gridColumns"
       [keyExpr]="['sprCurId', 'sprType']"
       [isLoading]="isLoading()"
+      [showHeaderFilter]="true"
       [pageSize]="20"
       [allowedPageSizes]="[20, 50, 100]"
       noDataText="Nessuno spread trovato."
@@ -54,7 +25,8 @@
       [showDeleteAction]="true"
       (rowView)="onTableAction('view', $event)"
       (rowEdit)="onTableAction('edit', $event)"
-      (rowDelete)="onTableAction('delete', $event)">
+      (rowDelete)="onTableAction('delete', $event)"
+      (rowDblClick)="onTableAction('view', $event)">
     </app-sempione-data-grid>
 
   </app-sempione-card>

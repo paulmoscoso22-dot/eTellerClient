@@ -37,6 +37,6 @@
 .field-error {
   display: block;
   font-size: 10px;
-  color: #dc2626;
+  color: var(--color-danger);
   margin-top: 2px;
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DxButtonModule } from 'devextreme-angular';
 import { ButtonStyle } from 'devextreme/common';
 
-export type SempioneButtonVariant = 'primary' | 'secondary' | 'gold';
+export type SempioneButtonVariant = 'primary' | 'secondary' | 'gold' | 'danger' | 'danger-filled';
 
 @Component({
   selector: 'app-sempione-button',
@@ -29,6 +29,6 @@ export class SempioneButtonComponent {
   }
 
   get stylingMode(): ButtonStyle {
-    return this.variant === 'primary' ? 'contained' : 'outlined';
+    return (this.variant === 'primary' || this.variant === 'danger' || this.variant === 'danger-filled') ? 'contained' : 'outlined';
   }
 }

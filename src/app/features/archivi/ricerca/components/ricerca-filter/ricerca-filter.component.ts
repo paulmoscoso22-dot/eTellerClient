@@ -5,7 +5,6 @@ import {
   DxTextBoxModule,
   DxDateBoxModule,
   DxNumberBoxModule,
-  DxButtonModule,
   DxCheckBoxModule,
   DxSelectBoxModule
 } from 'devextreme-angular';
@@ -14,8 +13,7 @@ import { Currency } from '../../../../../core/domain/currency.domain';
 import { Branch } from '../../../../../core/domain/branch.domain';
 import { ICurrencyType } from '../../../../../core/domain/currencyType.domain';
 import { IStOperationType } from '../../../../../core/domain/stOperationType.domain';
-import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
-import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneFilterShellComponent } from '../../../../../components/General';
 
 @Component({
   selector: 'app-ricerca-filter',
@@ -26,11 +24,9 @@ import { SempioneCardHeaderComponent } from '../../../../../components/General/s
     DxTextBoxModule,
     DxDateBoxModule,
     DxNumberBoxModule,
-    DxButtonModule,
     DxCheckBoxModule,
     DxSelectBoxModule,
-    SempioneCardComponent,
-    SempioneCardHeaderComponent,
+    SempioneFilterShellComponent,
   ],
   templateUrl: './ricerca-filter.component.html',
   styleUrls: ['./ricerca-filter.component.css']

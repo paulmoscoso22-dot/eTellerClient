@@ -47,7 +47,8 @@
       (rowView)="onTableAction('view', $event)"
       (rowEdit)="onTableAction('edit', $event)"
       (rowTrace)="onRowTrace($event)"
-      (rowDelete)="onRowDelete($event)">
+      (rowDelete)="onRowDelete($event)"
+      (rowDblClick)="onTableAction('view', $event)">
     </app-sempione-data-grid>
 
   </app-sempione-card>
@@ -122,10 +123,10 @@
       @if (popupMode() === 'edit') {
         <div secondary-actions>
           @if (!selectedDevice()?.inUso) {
-            <dx-button text="Elimina" icon="trash" stylingMode="contained" class="btn-fin-danger" (onClick)="requestDelete()"></dx-button>
+            <app-sempione-button text="Elimina" icon="trash" variant="danger" (clicked)="requestDelete()"></app-sempione-button>
           }
           @if (selectedDevice()?.inUso) {
-            <dx-button text="Rilascia" icon="unlock" stylingMode="outlined" class="btn-fin-secondary" (onClick)="onRelease()"></dx-button>
+            <app-sempione-button text="Rilascia" icon="unlock" (clicked)="onRelease()"></app-sempione-button>
           }
         </div>
       }

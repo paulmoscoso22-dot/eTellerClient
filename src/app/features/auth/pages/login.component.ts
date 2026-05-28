@@ -2,7 +2,6 @@ import { Component, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   DxFormModule,
-  DxButtonModule,
   DxLoadIndicatorModule,
   DxTextBoxModule,
 } from 'devextreme-angular';
@@ -12,11 +11,12 @@ import { AuthService } from '../services/auth.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { ForceLoginComponent } from './force-login.component';
 import { SempioneLogoComponent } from '../../../components/General/sempione-logo/sempione-logo.component';
+import { SempioneButtonComponent } from '../../../components/General/sempione-button/sempione-button.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [DxFormModule, DxButtonModule, DxLoadIndicatorModule, DxTextBoxModule, ForceLoginComponent, SempioneLogoComponent],
+  imports: [DxFormModule, DxLoadIndicatorModule, DxTextBoxModule, ForceLoginComponent, SempioneLogoComponent, SempioneButtonComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./auth-card.css', './login.component.css'],
 })

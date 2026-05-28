@@ -8,10 +8,13 @@ import {
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
   SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
+  SempioneToolbarDateRangeComponent,
 } from '../../../../../components/General';
 import notify from 'devextreme/ui/notify';
 import { CorsiService } from '../../services/corsi.service';
 import { ICorsoResponse, ICorsiRequest } from '../../models/corso.models';
+import { Service } from '../../../../../core/services/service';
+import { ICurrencyType } from '../../../../../core/domain/currencyType.domain';
 
 @Component({
   selector: 'app-corsi',
@@ -24,6 +27,7 @@ import { ICorsoResponse, ICorsiRequest } from '../../models/corso.models';
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
     SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
+    SempioneToolbarDateRangeComponent,
   ],
   templateUrl: './corsi.component.html',
   styleUrls: ['./corsi.component.css'],
@@ -31,31 +35,32 @@ import { ICorsoResponse, ICorsiRequest } from '../../models/corso.models';
 export class CorsiComponent implements OnInit {
   private fb = inject(FormBuilder);
   private corsiService = inject(CorsiService);
+  private coreService = inject(Service);
 
-  readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'cprCurId1',   caption: 'Div. CTP',    type: 'currency',  width: 100 },
-    { dataField: 'cprCurId2',   caption: 'Div. BASE',   type: 'currency',  width: 100 },
-    { dataField: 'cprCutId',    caption: 'Tipo',         type: 'tipo-pill', width: 90  },
-    { dataField: 'curHostcod',  caption: 'Cod. HOST',    alignment: 'left', width: 110 },
-    { dataField: 'cprRateBuy',  caption: 'Cambio BUY',   alignment: 'right', width: 120, dataType: 'number', format: '#,##0.0000' },
-    { dataField: 'cprRateSell', caption: 'Cambio SELL',  alignment: 'right', width: 120, dataType: 'number', format: '#,##0.0000' },
-    { dataField: 'cprValdat',   caption: 'Data Valuta',  alignment: 'left', width: 140 },
-    { dataField: 'cprDatreg',   caption: 'Data Reg.',    alignment: 'left', width: 140 },
-    { dataField: 'curLondes',   caption: 'Descrizione',  alignment: 'left'             },
-  ];
+  private currencyTypes = signal<ICurrencyType[]>([]);
 
-  private corsi = signal<ICorsoResponse[]>([]);
+  readonly gridColumns = computed<SempioneGridColumn[]>(() => {
+    const tipoHF = this.currencyTypes().map(t => ({ text: t.cutDes, value: t.cutId }));
+    return [
+      { dataField: 'cprCurId1',   caption: 'Div. CTP',   type: 'currency',  width: 100, allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'cprCurId2',   caption: 'Div. BASE',  type: 'currency',  width: 100, allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'cprCutId',    caption: 'Tipo',        type: 'tipo-pill', width: 90,  allowHeaderFiltering: true, allowFiltering: false, headerFilterDataSource: tipoHF },
+      { dataField: 'curHostcod',  caption: 'Cod. HOST',   alignment: 'left', width: 110, allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'cprRateBuy',  caption: 'Cambio BUY',  alignment: 'right', width: 120, dataType: 'number', format: '#,##0.0000', allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'cprRateSell', caption: 'Cambio SELL', alignment: 'right', width: 120, dataType: 'number', format: '#,##0.0000', allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'cprValdat',   caption: 'Data Valuta', alignment: 'left', width: 140, allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'cprDatreg',   caption: 'Data Reg.',   alignment: 'left', width: 140, allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'curLondes',   caption: 'Descrizione', alignment: 'left',             allowHeaderFiltering: true, allowFiltering: false },
+    ];
+  });
+
+  corsi = signal<ICorsoResponse[]>([]);
   isLoading = signal<boolean>(false);
 
-  // Filtri barra di ricerca
-  filterCodice      = signal<string>('');
-  filterDescrizione = signal<string>('');
-  filterTipo        = signal<string>('BB');
   filterDateDal     = signal<Date | null>(null);
   filterDateAl      = signal<Date | null>(null);
 
-  // Ultimo aggiornamento (dal backend)
-  lastUpdate = signal<string>('15.01.2024 09:00:00');
+  lastUpdate = signal<string>('—');
 
   // Popup
   popupMode = signal<'new' | 'view' | 'edit'>('new');
@@ -64,39 +69,11 @@ export class CorsiComponent implements OnInit {
   pendingDeleteData = signal<ICorsoResponse | null>(null);
   selectedLabel = signal<string>('');
 
-  readonly tipoOptions = [
-    { id: '',   des: 'Tutti' },
-    { id: 'BB', des: 'Biglietti Banca' },
-    { id: 'MM', des: 'Monete e Metalli' },
-    { id: 'TR', des: 'Travelers Cheques' },
-  ];
+  get tipoOptions() {
+    return this.currencyTypes().map(t => ({ id: t.cutId, des: t.cutDes }));
+  }
 
   readonly currencies = ['CHF', 'EUR', 'USD', 'GBP', 'JPY', 'CAD', 'AUD', 'SEK', 'NOK'];
-
-  filteredCorsi = computed(() => {
-    const q    = this.filterCodice().toLowerCase().trim();
-    const qDes = this.filterDescrizione().toLowerCase().trim();
-    const tipo = this.filterTipo();
-    const dal  = this.filterDateDal();
-    const al   = this.filterDateAl();
-
-    return this.corsi().filter(c => {
-      if (q && !c.cprCurId1.toLowerCase().includes(q) &&
-               !c.cprCurId2.toLowerCase().includes(q) &&
-               !(c.curHostcod ?? '').toLowerCase().includes(q)) return false;
-      if (qDes && !(c.curLondes ?? '').toLowerCase().includes(qDes)) return false;
-      if (tipo && c.cprCutId !== tipo) return false;
-      if (dal) {
-        const rowDate = new Date(c.cprValdat);
-        if (rowDate < dal) return false;
-      }
-      if (al) {
-        const rowDate = new Date(c.cprValdat);
-        if (rowDate > al) return false;
-      }
-      return true;
-    });
-  });
 
   corsoForm: FormGroup = this.fb.group({
     cprCurId1:   ['', Validators.required],
@@ -112,6 +89,7 @@ export class CorsiComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.coreService.getCurrencyTypes().subscribe({ next: data => this.currencyTypes.set(data ?? []) });
     this.loadCorsi();
   }
 
@@ -123,16 +101,24 @@ export class CorsiComponent implements OnInit {
     const dal = this.filterDateDal();
     const al  = this.filterDateAl();
     const request: ICorsiRequest = {
-      curId:     this.filterCodice()      || null,
-      curLondes: this.filterDescrizione() || null,
-      curCutId:  this.filterTipo()        || null,
-      dateFrom:  dal ? dal.toISOString()  : '1900-01-01',
-      dateTo:    al  ? al.toISOString()   : '2500-01-01',
+      curId:     null,
+      curLondes: null,
+      curCutId:  null,
+      dateFrom:  dal ? dal.toISOString() : '1900-01-01',
+      dateTo:    al  ? al.toISOString()  : '2500-01-01',
     };
     this.isLoading.set(true);
     this.corsiService.getAll(request).subscribe({
       next: data => {
         this.corsi.set(data);
+        const dates = data.map(c => c.cprDatreg).filter(Boolean) as string[];
+        if (dates.length) {
+          const latest = new Date(dates.reduce((a, b) => a > b ? a : b));
+          this.lastUpdate.set(latest.toLocaleString('it-IT', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit', second: '2-digit'
+          }));
+        }
         this.isLoading.set(false);
       },
       error: () => {
@@ -143,9 +129,6 @@ export class CorsiComponent implements OnInit {
   }
 
   onResetFiltri(): void {
-    this.filterCodice.set('');
-    this.filterDescrizione.set('');
-    this.filterTipo.set('BB');
     this.filterDateDal.set(null);
     this.filterDateAl.set(null);
   }

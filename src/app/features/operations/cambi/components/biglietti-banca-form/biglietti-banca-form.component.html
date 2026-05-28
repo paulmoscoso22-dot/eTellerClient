@@ -11,12 +11,12 @@
 
       <!-- Card 1: Dati Operazione -->
       <section class="card-section">
-        <app-header-card [title]="cardDatiTitle">
+        <app-sempione-card-header [title]="cardDatiTitle">
           <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="12" y1="1" x2="12" y2="23"></line>
             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
           </svg>
-        </app-header-card>
+        </app-sempione-card-header>
         <div class="card-body">
 
           <div class="form-row">
@@ -77,13 +77,13 @@
 
       <!-- Card 2: Calcolo Cambio -->
       <section class="card-section">
-        <app-header-card title="Calcolo Cambio">
+        <app-sempione-card-header title="Calcolo Cambio">
           <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
             <line x1="8" y1="21" x2="16" y2="21"></line>
             <line x1="12" y1="17" x2="12" y2="21"></line>
           </svg>
-        </app-header-card>
+        </app-sempione-card-header>
         <div class="card-body">
 
           <div class="form-row">
@@ -144,11 +144,11 @@
 
       <!-- Card 3: Vigilanza e Note -->
       <section class="card-section card-fill">
-        <app-header-card title="Vigilanza e Note">
+        <app-sempione-card-header title="Vigilanza e Note">
           <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
           </svg>
-        </app-header-card>
+        </app-sempione-card-header>
         <div class="card-body">
 
           <div class="form-row">
@@ -160,17 +160,17 @@
 
           <div class="field-sep"></div>
 
-          <div class="form-row" style="align-items: center;">
+          <div class="form-row">
             <label class="form-lbl">Forza cambio</label>
             <dx-check-box [(value)]="formData.cbForceChange"></dx-check-box>
           </div>
 
-          <div class="form-row" style="align-items: center;">
+          <div class="form-row">
             <label class="form-lbl">Arrotonda importi</label>
             <dx-check-box [(value)]="formData.cbArrotondaImporti" (onValueChanged)="onArrotondaChange()"></dx-check-box>
           </div>
 
-          <div class="form-row" style="align-items: center;">
+          <div class="form-row">
             <label class="form-lbl">Spread dipendente</label>
             <dx-check-box [(value)]="formData.cbUseSpreadDip"></dx-check-box>
           </div>
@@ -194,11 +194,11 @@
   <!-- ── Action Bar ── -->
   <div class="action-bar">
     <div class="actions-left">
-      <dx-button text="Annulla" icon="remove" stylingMode="outlined" (onClick)="annulla()"></dx-button>
+      <app-sempione-button text="Annulla" icon="remove" (clicked)="annulla()"></app-sempione-button>
     </div>
-    <dx-button text="Conferma" icon="check" class="btn-confirm" (onClick)="conferma()"></dx-button>
+    <app-sempione-button text="Conferma" icon="check" variant="primary" (clicked)="conferma()"></app-sempione-button>
     <div class="actions-right">
-      <dx-button text="Stampa" icon="print" stylingMode="outlined" (onClick)="stampa()"></dx-button>
+      <app-sempione-button text="Stampa" icon="print" (clicked)="stampa()"></app-sempione-button>
     </div>
   </div>
 

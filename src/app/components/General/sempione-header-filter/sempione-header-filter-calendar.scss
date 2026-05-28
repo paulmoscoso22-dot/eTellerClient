@@ -1,0 +1,138 @@
+// =============================================================================
+// Sempione — Header Filter Calendario
+// Popup datepicker per colonne data (calendar icon).
+// Renderizzato a livello <body>: solo CSS globale può raggiungerlo.
+// =============================================================================
+
+.dx-header-filter-menu {
+
+  // ── Cornice popup ──────────────────────────────────────────────────────────
+  .dx-overlay-content.dx-popup-normal {
+    border-radius: 8px !important;
+    border: 1px solid var(--color-border-light) !important;
+    box-shadow: 0 4px 24px rgba(0, 51, 102, 0.14) !important;
+    overflow: hidden !important;
+  }
+
+  // ── Contenuto popup ────────────────────────────────────────────────────────
+  .dx-popup-content {
+    padding: 0 !important;
+    background: var(--color-surface-white) !important;
+  }
+
+  // ── Navigazione mese (header calendario) ──────────────────────────────────
+  .dx-calendar-navigator {
+    background: var(--color-surface-header) !important;
+    border-bottom: 1px solid var(--color-border-lighter) !important;
+    padding: 4px 6px !important;
+  }
+
+  .dx-calendar-navigator .dx-button {
+    background: transparent !important;
+    border: none !important;
+    color: var(--color-brand-navy) !important;
+  }
+
+  .dx-calendar-navigator .dx-button:hover,
+  .dx-calendar-navigator .dx-button.dx-state-hover {
+    background-color: rgba(0, 51, 102, 0.08) !important;
+    border-radius: 4px !important;
+  }
+
+  .dx-calendar-navigator-caption {
+    color: var(--color-brand-navy) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+  }
+
+  // ── Nomi giorni (intestazioni colonne) ─────────────────────────────────────
+  .dx-calendar-body thead th {
+    color: var(--color-text-muted) !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    padding: 4px 0 !important;
+  }
+
+  // ── Celle giorno ──────────────────────────────────────────────────────────
+  .dx-calendar-cell {
+    color: var(--color-text-primary) !important;
+    font-size: 12px !important;
+    border-radius: 4px !important;
+  }
+
+  .dx-calendar-cell:hover,
+  .dx-calendar-cell.dx-state-hover {
+    background-color: rgba(0, 51, 102, 0.08) !important;
+    color: var(--color-brand-navy) !important;
+  }
+
+  // Giorno selezionato — cerchio navy
+  .dx-calendar-cell.dx-calendar-selected-date {
+    background-color: var(--color-brand-navy) !important;
+    color: #fff !important;
+    border-radius: 50% !important;
+  }
+
+  // Oggi — contorno navy sottile
+  .dx-calendar-cell.dx-calendar-today {
+    border: 1px solid var(--color-brand-navy) !important;
+    color: var(--color-brand-navy) !important;
+    font-weight: 700 !important;
+    border-radius: 50% !important;
+  }
+
+  // Giorni fuori mese corrente
+  .dx-calendar-cell.dx-calendar-other-month {
+    color: var(--color-text-placeholder) !important;
+  }
+
+  // ── Footer bottoni ─────────────────────────────────────────────────────────
+  .dx-popup-bottom.dx-toolbar {
+    background: var(--color-surface-base) !important;
+    border-top: 1px solid var(--color-border-lighter) !important;
+    padding: 6px 8px !important;
+    min-height: unset !important;
+  }
+
+  // OK — navy pieno
+  .dx-popup-bottom .dx-button.dx-button-default,
+  .dx-button.dx-button-default {
+    background-color: var(--color-brand-navy) !important;
+    border-color: var(--color-brand-navy) !important;
+    border-radius: 5px !important;
+    height: 28px !important;
+    min-width: 64px !important;
+
+    .dx-button-text {
+      color: var(--color-surface-white) !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+    }
+
+    &.dx-state-hover, &:hover {
+      background-color: var(--color-brand-navy-hover) !important;
+      border-color: var(--color-brand-navy-hover) !important;
+    }
+  }
+
+  // Annulla — outline neutro
+  .dx-popup-bottom .dx-button.dx-button-normal,
+  .dx-button.dx-button-normal {
+    background-color: transparent !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: 5px !important;
+    height: 28px !important;
+    min-width: 64px !important;
+
+    .dx-button-text {
+      color: var(--color-text-primary) !important;
+      font-size: 12px !important;
+    }
+
+    &.dx-state-hover, &:hover {
+      border-color: var(--color-text-placeholder) !important;
+      background-color: rgba(15, 23, 42, 0.04) !important;
+    }
+  }
+}

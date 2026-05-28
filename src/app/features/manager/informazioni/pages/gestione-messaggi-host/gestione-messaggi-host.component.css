@@ -11,6 +11,6 @@
   font-family: 'Courier New', Courier, monospace;
   font-size: 12px;
   line-height: 1.5;
-  color: #1e293b;
+  color: var(--color-text-primary);
   resize: none;
 }

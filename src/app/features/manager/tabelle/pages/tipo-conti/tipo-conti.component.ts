@@ -1,5 +1,4 @@
-import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, signal, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TabellaVarcharService, TabellaVarcharItem } from '../../services/tabella-varchar.service';
@@ -7,11 +6,9 @@ import {
   SempionePageShellComponent,
   SempioneCardComponent,
   SempioneCardHeaderComponent,
-  SempioneToolbarComponent,
+  SempioneSearchModeComponent,
   SempioneDataGridComponent,
   SempioneGridColumn,
-  SempioneIdDesFilterComponent,
-  SempioneCrudToolbarActionsComponent,
   SempioneSimpleCrudPopupComponent,
 } from '../../../../../components/General';
 
@@ -21,14 +18,11 @@ const TABLE = 'ST_ACCOUNTTYPE';
   selector: 'app-tipo-conti',
   standalone: true,
   imports: [
-    ReactiveFormsModule,
     SempionePageShellComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
-    SempioneToolbarComponent,
+    SempioneSearchModeComponent,
     SempioneDataGridComponent,
-    SempioneIdDesFilterComponent,
-    SempioneCrudToolbarActionsComponent,
     SempioneSimpleCrudPopupComponent,
   ],
   templateUrl: './tipo-conti.component.html',
@@ -37,20 +31,18 @@ const TABLE = 'ST_ACCOUNTTYPE';
 export class TipoContiComponent implements OnInit {
 
   private readonly destroyRef = inject(DestroyRef);
-  private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly service = inject(TabellaVarcharService);
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
 
   items = signal<TabellaVarcharItem[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
 
   readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'id',  caption: 'ID',          alignment: 'left', width: 140 },
-    { dataField: 'des', caption: 'Descrizione',  alignment: 'left', wrap: true },
+    { dataField: 'id',  caption: 'ID',         alignment: 'left', width: 140, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'des', caption: 'Descrizione', alignment: 'left', wrap: true, allowFiltering: false, allowHeaderFiltering: true },
   ];
-
-  filterForm: FormGroup = this.fb.group({ id: [null], des: [null] });
 
   isFormPopupVisible = false;
   isEditMode = signal(false);
@@ -64,11 +56,9 @@ export class TipoContiComponent implements OnInit {
   }
 
   search(): void {
-    const { id, des } = this.filterForm.value;
     this.isLoading.set(true);
     this.error.set(null);
-
-    this.service.search(TABLE, id ?? null, des ?? null)
+    this.service.search(TABLE, null, null)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => { this.items.set(data); this.isLoading.set(false); },
@@ -79,16 +69,7 @@ export class TipoContiComponent implements OnInit {
       });
   }
 
-  showAll(): void {
-    this.filterForm.reset({ id: null, des: null });
-    this.search();
-  }
-
-  resetFilters(): void {
-    this.filterForm.reset({ id: null, des: null });
-    this.items.set([]);
-    this.error.set(null);
-  }
+  clearGridFilters(): void { this.dataGrid?.clearFilters(); }
 
   openPopup(): void {
     this.isEditMode.set(false);

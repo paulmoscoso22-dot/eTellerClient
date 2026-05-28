@@ -24,7 +24,7 @@
   flex-shrink: 0;
   font-size: 10px;
   font-weight: 600;
-  color: #003366;
+  color: var(--color-brand-navy);
   text-transform: uppercase;
   letter-spacing: 0.03em;
   text-align: right;

@@ -1,0 +1,48 @@
+.sempione-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* ── Size ── */
+.sempione-pill--sm {
+  padding: 2px 8px;
+  font-size: var(--font-size-xs);
+}
+
+.sempione-pill--md {
+  padding: 3px 10px;
+  font-size: var(--font-size-sm);
+}
+
+/* ── Color variants ── */
+.sempione-pill--green {
+  background: var(--color-status-ok-bg);
+  color: var(--color-status-ok-text);
+}
+
+.sempione-pill--red {
+  background: var(--color-status-error-bg);
+  color: var(--color-status-error-text);
+}
+
+.sempione-pill--yellow {
+  background: var(--color-status-warning-bg);
+  color: var(--color-status-warning-text);
+}
+
+.sempione-pill--blue {
+  background: var(--color-status-info-bg);
+  color: var(--color-status-info-text);
+}
+
+.sempione-pill--neutral {
+  background: var(--color-status-neutral-bg);
+  color: var(--color-status-neutral-text);
+}

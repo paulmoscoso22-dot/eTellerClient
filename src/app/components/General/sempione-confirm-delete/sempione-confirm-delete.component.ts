@@ -1,10 +1,11 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { DxPopupModule, DxButtonModule } from 'devextreme-angular';
+import { DxPopupModule } from 'devextreme-angular';
+import { SempioneButtonComponent } from '../sempione-button/sempione-button.component';
 
 @Component({
   selector: 'app-sempione-confirm-delete',
   standalone: true,
-  imports: [DxPopupModule, DxButtonModule],
+  imports: [DxPopupModule, SempioneButtonComponent],
   templateUrl: './sempione-confirm-delete.component.html',
   styleUrls: ['./sempione-confirm-delete.component.css'],
 })

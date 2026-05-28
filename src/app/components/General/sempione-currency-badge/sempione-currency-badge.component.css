@@ -1,0 +1,19 @@
+:host {
+  display: inline-flex;
+}
+
+.currency-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  font-family: monospace;
+  letter-spacing: 0.05em;
+  background: var(--color-status-info-bg, var(--color-status-info-bg));
+  color: var(--color-status-info-text, var(--color-status-info-text));
+}

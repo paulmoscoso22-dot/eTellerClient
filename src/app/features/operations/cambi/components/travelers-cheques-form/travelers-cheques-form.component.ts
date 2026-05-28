@@ -2,10 +2,11 @@ import { Component, Input, signal } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import {
   DxTextBoxModule, DxNumberBoxModule, DxSelectBoxModule, DxCheckBoxModule,
-  DxDateBoxModule, DxTextAreaModule, DxButtonModule, DxRadioGroupModule,
+  DxDateBoxModule, DxTextAreaModule, DxRadioGroupModule,
   DxPopupModule, DxDropDownButtonModule
 } from 'devextreme-angular';
-import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
+import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneButtonComponent } from '../../../../../components/General/sempione-button/sempione-button.component';
 import { OpBadgeComponent } from '../../../../../components/Operazioni/op-badge/op-badge.component';
 
 export type TravelersChequesMode = 'acquisto' | 'vendita';
@@ -18,9 +19,9 @@ const r05 = (v: number) => Math.round(v * 20) / 20;
   imports: [
     CommonModule, DatePipe, DecimalPipe,
     DxTextBoxModule, DxNumberBoxModule, DxSelectBoxModule, DxCheckBoxModule,
-    DxDateBoxModule, DxTextAreaModule, DxButtonModule, DxRadioGroupModule,
+    DxDateBoxModule, DxTextAreaModule, DxRadioGroupModule,
     DxPopupModule, DxDropDownButtonModule,
-    HeaderCardComponent,
+    SempioneCardHeaderComponent, SempioneButtonComponent,
     OpBadgeComponent
   ],
   templateUrl: './travelers-cheques-form.component.html',

@@ -3,7 +3,7 @@
 }
 
 .sempione-card-header {
-  background: #003366;
+  background: var(--color-brand-navy);
   padding: 8px 14px;
   display: flex;
   align-items: center;
@@ -17,13 +17,13 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #fff;
+  color: var(--color-surface-white);
   flex: 1;
 }
 
 .gold-divider {
   height: 2px;
-  background: #C5A059;
+  background: var(--color-brand-gold);
   flex-shrink: 0;
 }
 
@@ -33,7 +33,7 @@
   padding: 1px 8px;
   border-radius: 10px;
   background: rgba(197, 160, 89, 0.25);
-  color: #C5A059;
+  color: var(--color-brand-gold);
   border: 1px solid rgba(197, 160, 89, 0.6);
   white-space: nowrap;
   margin-left: 6px;
@@ -43,6 +43,6 @@
 :host ::ng-deep .card-icon {
   width: 16px;
   height: 16px;
-  color: #fff;
+  color: var(--color-surface-white);
   flex-shrink: 0;
 }

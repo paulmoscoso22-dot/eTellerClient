@@ -1,0 +1,197 @@
+// =============================================================================
+// Sempione — Header Filter Lista
+// Menu a tendina valori per colonne non-data (funnel icon).
+// Renderizzato a livello <body>: solo CSS globale può raggiungerlo.
+// =============================================================================
+
+.dx-header-filter-menu {
+
+  // ── Cornice popup ──────────────────────────────────────────────────────────
+  .dx-overlay-content.dx-popup-normal {
+    border-radius: 8px !important;
+    border: 1px solid var(--color-border-light) !important;
+    box-shadow: 0 4px 24px rgba(0, 51, 102, 0.14) !important;
+    overflow: hidden !important;
+  }
+
+  // ── Contenuto (padding azzerato) ───────────────────────────────────────────
+  .dx-popup-content {
+    padding: 0 !important;
+    background: var(--color-surface-white) !important;
+  }
+
+  // ── ZONA A: sfondo distinto per popup-lista ────────────────────────────────
+  // :has(.dx-list) distingue il popup-lista dal popup-calendario senza JS.
+  // Il searchbox (bg white) emerge visivamente contro il surface-header.
+  .dx-popup-content:has(.dx-list) {
+    background: var(--color-surface-header) !important;
+  }
+
+  // ── ZONA A — Search box ────────────────────────────────────────────────────
+  .dx-searchbox {
+    margin: 10px 10px 8px !important;
+    border-radius: 5px !important;
+    border-color: var(--color-border) !important;
+    height: 30px !important;
+    background: var(--color-surface-white) !important;
+
+    &.dx-state-focused {
+      border-color: var(--color-brand-navy) !important;
+      box-shadow: 0 0 0 2px rgba(0, 51, 102, 0.08) !important;
+    }
+
+    .dx-texteditor-input {
+      font-size: 12px !important;
+      height: 28px !important;
+      min-height: unset !important;
+      padding: 3px 8px !important;
+      color: var(--color-text-primary) !important;
+      background: transparent !important;
+    }
+
+    .dx-placeholder::before {
+      font-size: 12px !important;
+      color: var(--color-text-placeholder) !important;
+    }
+
+    .dx-icon-search::before,
+    .dx-icon-search {
+      color: var(--color-text-muted) !important;
+      font-size: 13px !important;
+    }
+  }
+
+  // ── ZONA B + C — Lista (bg bianco, separata da bordo top) ──────────────────
+  .dx-list {
+    background: var(--color-surface-white) !important;
+    border-top: 1px solid var(--color-border-light) !important;
+    max-height: var(--hf-list-max-height, 240px) !important;
+    overflow-y: auto !important;
+
+    // scrollbar stile macOS: sottile, visibile solo su hover
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 51, 102, 0.15) transparent;
+
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 51, 102, 0.15);
+      border-radius: 2px;
+    }
+    &:hover::-webkit-scrollbar-thumb {
+      background: rgba(0, 51, 102, 0.35);
+    }
+  }
+
+  // ── ZONA B — "Seleziona tutto" sticky (separato visivamente dalla lista) ───
+  .dx-list-select-all {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1 !important;
+    background: var(--color-surface-white) !important;
+    border-bottom: 1px solid var(--color-border-light) !important;
+    padding: 6px 10px !important;
+  }
+
+  .dx-list-select-all .dx-list-select-all-label {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: var(--color-brand-navy) !important;
+  }
+
+  // ── ZONA C — Voci lista ────────────────────────────────────────────────────
+  .dx-list-item {
+    border-top: none !important;
+    border-bottom: 1px solid var(--color-border-lighter) !important;
+    color: var(--color-text-primary) !important;
+
+    &:last-child { border-bottom: none !important; }
+
+    &.dx-state-hover,
+    &.dx-state-hover .dx-list-item-content {
+      background-color: rgba(0, 51, 102, 0.06) !important;
+      color: var(--color-brand-navy) !important;
+    }
+
+    &.dx-list-item-selected .dx-list-item-content {
+      background-color: rgba(0, 51, 102, 0.10) !important;
+      color: var(--color-brand-navy) !important;
+    }
+  }
+
+  .dx-list-item-content {
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+    color: var(--color-text-primary) !important;
+    line-height: 1.4 !important;
+  }
+
+  // ── Checkbox navy ──────────────────────────────────────────────────────────
+  .dx-checkbox-icon {
+    border-color: var(--color-border) !important;
+    border-radius: 3px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .dx-checkbox.dx-state-hover .dx-checkbox-icon,
+  .dx-checkbox.dx-state-focused .dx-checkbox-icon {
+    border-color: var(--color-brand-navy) !important;
+  }
+
+  .dx-checkbox-checked .dx-checkbox-icon,
+  .dx-checkbox-indeterminate .dx-checkbox-icon {
+    background-color: var(--color-brand-navy) !important;
+    border-color: var(--color-brand-navy) !important;
+    color: #fff !important;
+  }
+
+  // ── ZONA D — Footer bottoni ────────────────────────────────────────────────
+  .dx-popup-bottom.dx-toolbar {
+    background: var(--color-surface-base) !important;
+    border-top: 1px solid var(--color-border-lighter) !important;
+    padding: 6px 8px !important;
+    min-height: unset !important;
+  }
+
+  // OK — navy pieno
+  .dx-popup-bottom .dx-button.dx-button-default,
+  .dx-button.dx-button-default {
+    background-color: var(--color-brand-navy) !important;
+    border-color: var(--color-brand-navy) !important;
+    border-radius: 5px !important;
+    height: 28px !important;
+    min-width: 64px !important;
+
+    .dx-button-text {
+      color: var(--color-surface-white) !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+    }
+
+    &.dx-state-hover, &:hover {
+      background-color: var(--color-brand-navy-hover) !important;
+      border-color: var(--color-brand-navy-hover) !important;
+    }
+  }
+
+  // Annulla — outline neutro
+  .dx-popup-bottom .dx-button.dx-button-normal,
+  .dx-button.dx-button-normal {
+    background-color: transparent !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: 5px !important;
+    height: 28px !important;
+    min-width: 64px !important;
+
+    .dx-button-text {
+      color: var(--color-text-primary) !important;
+      font-size: 12px !important;
+    }
+
+    &.dx-state-hover, &:hover {
+      border-color: var(--color-text-placeholder) !important;
+      background-color: rgba(15, 23, 42, 0.04) !important;
+    }
+  }
+}

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  DxTextBoxModule, DxButtonModule, DxValidatorModule, DxSelectBoxModule
+  DxTextBoxModule, DxValidatorModule, DxSelectBoxModule
 } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import {
@@ -12,7 +12,7 @@ import {
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
   SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
-  SempioneCrudToolbarActionsComponent,
+  SempioneCrudToolbarActionsComponent, SempioneButtonComponent,
 } from '../../../../../components/General';
 
 export interface IPeriferica {
@@ -30,13 +30,13 @@ export interface IPeriferica {
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxTextBoxModule, DxButtonModule, DxValidatorModule, DxSelectBoxModule,
+    DxTextBoxModule, DxValidatorModule, DxSelectBoxModule,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
     SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
-    SempioneCrudToolbarActionsComponent,
+    SempioneCrudToolbarActionsComponent, SempioneButtonComponent,
   ],
   templateUrl: './periferiche.component.html',
   styleUrls: ['./periferiche.component.css'],

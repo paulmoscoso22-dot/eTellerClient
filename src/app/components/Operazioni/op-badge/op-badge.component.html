@@ -1,4 +1,4 @@
-<div class="op-bar" [class.op-bar--in]="isIncoming" [class.op-bar--out]="!isIncoming">
+<div class="op-bar" [class]="'op-bar--' + mode">
   <span class="op-badge">
     @if (isIncoming) {
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" class="badge-icon">

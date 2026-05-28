@@ -1,44 +1,37 @@
 <div [formGroup]="searchForm">
-  <app-sempione-card>
+  <app-sempione-filter-shell
+    title="Filtri di Selezione"
+    [isLoading]="isLoading()"
+    (searched)="search()"
+    (resetted)="reset()">
 
-    <app-sempione-card-header title="Filtri di Selezione">
-      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-      </svg>
-    </app-sempione-card-header>
+    <svg filter-icon class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
 
-    <div class="filter-body">
-      <div class="fields-grid fields-grid--4">
+    <div class="fields-grid fields-grid--4">
 
-        <div class="field-group">
-          <label class="field-label">Cassa</label>
-          <dx-text-box formControlName="tocCliId" placeholder="Codice Cassa" [showClearButton]="true"></dx-text-box>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Data</label>
-          <dx-date-box formControlName="tocData" type="date" displayFormat="dd/MM/yyyy" [showClearButton]="true"></dx-date-box>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Tipo Conto</label>
-          <dx-text-box formControlName="tocCutId" placeholder="Tipo conto" [showClearButton]="true"></dx-text-box>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Località</label>
-          <dx-text-box formControlName="tocBraId" placeholder="Filiale" [showClearButton]="true"></dx-text-box>
-        </div>
-
+      <div class="field-group">
+        <label class="field-label">Cassa</label>
+        <dx-text-box formControlName="tocCliId" placeholder="Codice Cassa" [showClearButton]="true"></dx-text-box>
       </div>
+
+      <div class="field-group">
+        <label class="field-label">Data</label>
+        <dx-date-box formControlName="tocData" type="date" displayFormat="dd/MM/yyyy" [showClearButton]="true"></dx-date-box>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Tipo Conto</label>
+        <dx-text-box formControlName="tocCutId" placeholder="Tipo conto" [showClearButton]="true"></dx-text-box>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Località</label>
+        <dx-text-box formControlName="tocBraId" placeholder="Filiale" [showClearButton]="true"></dx-text-box>
+      </div>
+
     </div>
 
-    <div class="action-bar">
-      <app-sempione-button text="Annulla" icon="revert" (clicked)="reset()"></app-sempione-button>
-      <app-sempione-button text="Ricerca" icon="search" variant="primary" [shadow]="true"
-        [disabled]="isLoading()" (clicked)="search()">
-      </app-sempione-button>
-    </div>
-
-  </app-sempione-card>
+  </app-sempione-filter-shell>
 </div>

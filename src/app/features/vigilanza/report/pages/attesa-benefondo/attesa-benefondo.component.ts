@@ -5,11 +5,12 @@ import {
   DxDataGridModule,
   DxTextBoxModule,
   DxDateBoxModule,
-  DxButtonModule,
   DxToastModule,
   DxTemplateModule,
 } from 'devextreme-angular';
-import { HeaderCardComponent } from '../../../../../components/header-card/header-card.component';
+import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
+import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
+import { SempioneButtonComponent } from '../../../../../components/General/sempione-button/sempione-button.component';
 import { SempionePageShellComponent } from '../../../../../components/General/sempione-page-shell/sempione-page-shell.component';
 import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
 import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
@@ -27,13 +28,14 @@ import { TransactionStatus } from '../../../../archivi/report/domain/transaction
     DxDataGridModule,
     DxTextBoxModule,
     DxDateBoxModule,
-    DxButtonModule,
     DxToastModule,
     DxTemplateModule,
-    HeaderCardComponent,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
     SempionePageShellComponent,
     SempionePopupComponent,
     SempionePopupActionBarComponent,
+    SempioneButtonComponent,
   ],
   templateUrl: './attesa-benefondo.component.html',
   styleUrls: ['./attesa-benefondo.component.css'],

@@ -1,6 +1,6 @@
 /* ══════════════════════════════════════════
    Conto Corrente Form — Banca del Sempione
-   Brand navy : #003366  |  Gold : #C5A059
+   Brand navy : var(--color-brand-navy)  |  Gold : var(--color-brand-gold)
    Background : #F5F7F9
    ══════════════════════════════════════════ */
 
@@ -24,25 +24,25 @@
 
 
 /* Confirm button — primary navy (top right) */
-:host ::ng-deep .btn-confirm.dx-button {
-  background-color: #003366;
-  border-color: #003366;
-  color: #fff;
+:host ::ng-deep .btn-fin-primary.dx-button {
+  background-color: var(--color-brand-navy);
+  border-color: var(--color-brand-navy);
+  color: var(--color-surface-white);
   height: 32px;
   margin-left: auto;
 }
 
-:host ::ng-deep .btn-confirm.dx-button:hover {
-  background-color: #004080;
-  border-color: #004080;
+:host ::ng-deep .btn-fin-primary.dx-button:hover {
+  background-color: var(--color-brand-navy-hover);
+  border-color: var(--color-brand-navy-hover);
 }
 
-:host ::ng-deep .btn-confirm .dx-button-content {
+:host ::ng-deep .btn-fin-primary .dx-button-content {
   padding: 0 28px;
 }
 
-:host ::ng-deep .btn-confirm .dx-icon {
-  color: #fff;
+:host ::ng-deep .btn-fin-primary .dx-icon {
+  color: var(--color-surface-white);
 }
 
 /* ══════════════════════════════════════════
@@ -75,8 +75,8 @@
    Card
    ══════════════════════════════════════════ */
 .card-section {
-  background: #fff;
-  border: 1px solid #dce3ee;
+  background: var(--color-surface-white);
+  border: 1px solid var(--color-border-light);
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0, 51, 102, 0.07);
   flex-shrink: 0;
@@ -112,7 +112,7 @@
   flex-shrink: 0;
   font-size: 10px;
   font-weight: 600;
-  color: #003366;
+  color: var(--color-brand-navy);
   text-transform: uppercase;
   letter-spacing: 0.03em;
   text-align: right;
@@ -172,7 +172,7 @@
   border-radius: 4px;
   font-size: 13px;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-text-secondary);
   border: 1px solid #e9ecef;
 }
 
@@ -189,10 +189,10 @@
 /* Calculated totals — navy accent */
 .display-value--accent {
   background: #f0f4f8;
-  color: #003366;
+  color: var(--color-brand-navy);
   font-weight: 700;
   border-color: #c8d8ea;
-  border-left: 3px solid #003366;
+  border-left: 3px solid var(--color-brand-navy);
   font-variant-numeric: tabular-nums;
 }
 
@@ -247,7 +247,7 @@
   padding: 5px 18px;
   font-size: 11px;
   font-weight: 700;
-  color: #6b7280;
+  color: var(--color-text-subtle);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   transition: background 0.14s, color 0.14s;
@@ -260,8 +260,8 @@
 }
 
 .seg-btn--active {
-  background: #003366;
-  color: #fff;
+  background: var(--color-brand-navy);
+  color: var(--color-surface-white);
 }
 
 /* % / Importo addon + number input group */
@@ -288,18 +288,18 @@
   padding: 0 11px;
   font-size: 11px;
   font-weight: 700;
-  color: #6b7280;
+  color: var(--color-text-subtle);
   transition: background 0.14s, color 0.14s;
   line-height: 1;
 }
 
 .addon-pill + .addon-pill {
-  border-left: 1px solid #dce3ee;
+  border-left: 1px solid var(--color-border-light);
 }
 
 .addon-pill--active {
-  background: #003366;
-  color: #fff;
+  background: var(--color-brand-navy);
+  color: var(--color-surface-white);
 }
 
 :host ::ng-deep .aggio-numbox {
@@ -323,7 +323,7 @@
   justify-content: space-between;
   gap: 8px;
   padding: 7px 10px;
-  background: #fff8e1;
+  background: var(--color-surface-white)8e1;
   border-left: 3px solid #ffc107;
   border-radius: 4px;
 }
@@ -338,7 +338,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #f59e0b;
+  background: var(--color-status-warning-border);
   flex-shrink: 0;
 }
 
@@ -363,15 +363,15 @@
   box-shadow: 0 -2px 8px rgba(0, 51, 102, 0.05);
 }
 
-:host ::ng-deep .btn-secondary.dx-button {
+:host ::ng-deep .btn-fin-secondary.dx-button {
   height: 28px;
   border-color: #c8d3e0;
-  color: #374151;
+  color: var(--color-text-secondary);
 }
 
-:host ::ng-deep .btn-secondary.dx-button:hover {
-  border-color: #003366;
-  color: #003366;
+:host ::ng-deep .btn-fin-secondary.dx-button:hover {
+  border-color: var(--color-brand-navy);
+  color: var(--color-brand-navy);
   background: rgba(0, 51, 102, 0.04);
 }
 

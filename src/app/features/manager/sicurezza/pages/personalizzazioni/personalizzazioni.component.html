@@ -29,6 +29,7 @@
     </dx-text-box>
 
     <div toolbar-actions>
+      <app-sempione-button icon="search" hint="Cerca" variant="secondary" (clicked)="filterParDes.set(filterParDes())"></app-sempione-button>
       <app-sempione-button icon="revert" hint="Ripristina filtri" variant="secondary" (clicked)="resetFilters()"></app-sempione-button>
       <app-sempione-button icon="print" text="Stampa" variant="secondary"></app-sempione-button>
       <app-sempione-button text="Nuovo" icon="plus" variant="primary" [shadow]="true" (clicked)="onAdd()"></app-sempione-button>
@@ -54,83 +55,76 @@
 </app-sempione-page-shell>
 
 <!-- ══ Popup: Dettaglio / Modifica Personalizzazione ══ -->
-<app-sempione-popup
+<app-sempione-crud-popup-shell
   [visible]="showDetailPopup()"
   (visibleChange)="showDetailPopup.set($event)"
-  [title]="(popupMode() === 'edit' ? 'Modifica Personalizzazione' : 'Dettaglio Personalizzazione') + (selectedParId() ? ' — ' + selectedParId() : '')"
-  [maxWidth]="520">
+  [title]="(popupMode() === 'edit' ? 'Modifica' : 'Dettaglio') + ' Personalizzazione' + (selectedParId() ? ' — ' + selectedParId() : '')"
+  [maxWidth]="520"
+  [mode]="popupMode()"
+  [showSave]="popupMode() === 'edit'"
+  [saveText]="popupMode() === 'view' ? 'Modifica' : 'Salva'"
+  [cancelText]="popupMode() === 'view' ? 'Chiudi' : 'Annulla'"
+  [showStorico]="true"
+  [isSaving]="isLoading()"
+  (save)="popupMode() === 'view' ? switchToEditMode() : onSaveDetail()"
+  (cancel)="showDetailPopup.set(false)"
+  (storico)="onTrace()">
 
-  <div class="popup-layout">
-    <app-sempione-popup-card title="Dettaglio Personalizzazione">
-      <div class="popup-fields-grid popup-fields-grid--1col">
+  <app-sempione-popup-card title="Dettaglio Personalizzazione">
+    <div class="popup-fields-grid popup-fields-grid--1col">
 
-        <app-sempione-field-group label="ID">
-          @if (popupMode() === 'view') {
-            <div class="detail-value mono">{{ selectedParId() || '—' }}</div>
-          } @else {
-            <dx-text-box [value]="selectedParId()" (onValueChanged)="selectedParId.set($event.value)"></dx-text-box>
-          }
-        </app-sempione-field-group>
+      <app-sempione-field-group label="ID">
+        @if (popupMode() === 'view') {
+          <div class="detail-value mono">{{ selectedParId() || '—' }}</div>
+        } @else {
+          <dx-text-box [value]="selectedParId()" (onValueChanged)="selectedParId.set($event.value)"></dx-text-box>
+        }
+      </app-sempione-field-group>
 
-        <app-sempione-field-group label="Descrizione">
-          @if (popupMode() === 'view') {
-            <div class="detail-value">{{ selectedParDes() || '—' }}</div>
-          } @else {
-            <dx-text-area [value]="selectedParDes()" (onValueChanged)="selectedParDes.set($event.value)" [height]="80"></dx-text-area>
-          }
-        </app-sempione-field-group>
+      <app-sempione-field-group label="Descrizione">
+        @if (popupMode() === 'view') {
+          <div class="detail-value">{{ selectedParDes() || '—' }}</div>
+        } @else {
+          <dx-text-area [value]="selectedParDes()" (onValueChanged)="selectedParDes.set($event.value)" [height]="80"></dx-text-area>
+        }
+      </app-sempione-field-group>
 
-        <app-sempione-field-group label="Valore">
-          @if (popupMode() === 'view') {
-            <div class="detail-value mono">{{ selectedParValue() || '—' }}</div>
-          } @else {
-            <dx-text-box [value]="selectedParValue()" (onValueChanged)="selectedParValue.set($event.value)"></dx-text-box>
-          }
-        </app-sempione-field-group>
+      <app-sempione-field-group label="Valore">
+        @if (popupMode() === 'view') {
+          <div class="detail-value mono">{{ selectedParValue() || '—' }}</div>
+        } @else {
+          <dx-text-box [value]="selectedParValue()" (onValueChanged)="selectedParValue.set($event.value)"></dx-text-box>
+        }
+      </app-sempione-field-group>
 
-      </div>
-    </app-sempione-popup-card>
+    </div>
+  </app-sempione-popup-card>
 
-    @if (popupMode() === 'view') {
-      <app-sempione-popup-action-bar
-        saveText="Modifica"
-        cancelText="Chiudi"
-        [showStorico]="true"
-        (save)="switchToEditMode()"
-        (cancel)="showDetailPopup.set(false)"
-        (storico)="onTrace()">
-      </app-sempione-popup-action-bar>
-    } @else {
-      <app-sempione-popup-action-bar
-        saveText="Salva"
-        cancelText="Annulla"
-        [showStorico]="true"
-        [isSaving]="isLoading()"
-        (save)="onSaveDetail()"
-        (cancel)="showDetailPopup.set(false)"
-        (storico)="onTrace()">
-        <dx-button
-          secondary-actions
-          text="Cancella"
-          icon="trash"
-          stylingMode="outlined"
-          class="btn-fin-danger"
-          (onClick)="requestDelete()">
-        </dx-button>
-      </app-sempione-popup-action-bar>
-    }
-  </div>
+  @if (popupMode() === 'edit') {
+    <app-sempione-button
+      secondary-actions
+      text="Cancella"
+      icon="trash"
+      variant="secondary"
+      (clicked)="requestDelete()">
+    </app-sempione-button>
+  }
 
-</app-sempione-popup>
+</app-sempione-crud-popup-shell>
 
 <!-- ══ Popup: Nuova Personalizzazione ══ -->
-<app-sempione-popup
+<app-sempione-crud-popup-shell
   [visible]="showAddPopup()"
   (visibleChange)="showAddPopup.set($event)"
   title="Nuova Personalizzazione"
-  [maxWidth]="480">
+  [maxWidth]="480"
+  mode="new"
+  saveText="Salva"
+  cancelText="Annulla"
+  (save)="onSaveAdd()"
+  (cancel)="onCancelAdd()">
 
-  <form [formGroup]="addForm" class="popup-layout">
+  <form [formGroup]="addForm">
     <app-sempione-popup-card title="Dettagli Personalizzazione">
       <div class="popup-fields-grid popup-fields-grid--1col">
 
@@ -154,15 +148,9 @@
 
       </div>
     </app-sempione-popup-card>
-    <app-sempione-popup-action-bar
-      saveText="Salva"
-      cancelText="Annulla"
-      (save)="onSaveAdd()"
-      (cancel)="onCancelAdd()">
-    </app-sempione-popup-action-bar>
   </form>
 
-</app-sempione-popup>
+</app-sempione-crud-popup-shell>
 
 <!-- ══ Popup Conferma Eliminazione ══ -->
 <app-sempione-confirm-delete

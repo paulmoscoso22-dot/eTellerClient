@@ -4,8 +4,8 @@ import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { MenuItem } from '../../domain/menu-item';
 import { MenuService } from '../../services/menu.service';
-import { HeaderComponent } from '../layaout/header/header.component';
-import { Sidebar } from '../layaout/sidebar/sidebar.component';
+import { HeaderComponent } from '../layout/header/header.component';
+import { Sidebar } from '../layout/sidebar/sidebar.component';
 import { Theme } from '../../services/theme';
 import { TranslocoService } from '@jsverse/transloco';
 

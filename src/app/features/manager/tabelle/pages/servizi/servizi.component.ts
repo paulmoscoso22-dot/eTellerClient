@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,7 +14,6 @@ import {
   SempionePageShellComponent,
   SempioneCardComponent,
   SempioneCardHeaderComponent,
-  SempioneToolbarComponent,
   SempionePopupComponent,
   SempionePopupCardComponent,
   SempionePopupActionBarComponent,
@@ -23,7 +22,7 @@ import {
 
   SempioneDataGridComponent,
   SempioneGridColumn,
-  SempioneCrudToolbarActionsComponent,
+  SempioneSearchModeComponent,
 } from '../../../../../components/General';
 
 const TRACE_TABLE = 'SERVIZI';
@@ -38,15 +37,14 @@ const TRACE_TABLE = 'SERVIZI';
     SempionePageShellComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
-    SempioneToolbarComponent,
     SempionePopupComponent,
     SempionePopupCardComponent,
     SempionePopupActionBarComponent,
     SempioneFieldGroupComponent,
-  
-  
+
+
     SempioneDataGridComponent,
-    SempioneCrudToolbarActionsComponent,
+    SempioneSearchModeComponent,
   ],
   templateUrl: './servizi.component.html',
   styleUrls: ['./servizi.component.css'],
@@ -55,8 +53,9 @@ export class ServiziComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly tabelleService = inject(TabelleService);
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
 
-  private servizi = signal<IServiziResponse[]>([]);
+  servizi = signal<IServiziResponse[]>([]);
   searchValue = signal<string>('');
   popupMode = signal<'new' | 'view' | 'edit'>('new');
   isDetailPopupVisible = false;
@@ -64,13 +63,13 @@ export class ServiziComponent implements OnInit {
   isSaving = signal(false);
 
   readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'serId',      caption: 'ID',                 alignment: 'left',   width: 130 },
-    { dataField: 'serDes',     caption: 'Descrizione',        alignment: 'left', wrap: true   },
-    { dataField: 'serRunning', caption: 'Running',   type: 'bool', alignment: 'center', width: 90  },
-    { dataField: 'serTrace',   caption: 'Traccia',   type: 'bool', alignment: 'center', width: 90  },
-    { dataField: 'serEmail',   caption: 'Email',     type: 'bool', alignment: 'center', width: 80  },
-    { dataField: 'serEnable',  caption: 'Abilitato', type: 'bool', alignment: 'center', width: 90  },
-    { dataField: 'serLastRun', caption: 'Ultima esecuzione',  alignment: 'left',   width: 160 },
+    { dataField: 'serId',      caption: 'ID',                 alignment: 'left',   width: 130, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'serDes',     caption: 'Descrizione',        alignment: 'left', wrap: true, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'serRunning', caption: 'Running',   type: 'bool', alignment: 'center', width: 90, allowFiltering: false, allowHeaderFiltering: false },
+    { dataField: 'serTrace',   caption: 'Traccia',   type: 'bool', alignment: 'center', width: 90, allowFiltering: false, allowHeaderFiltering: false },
+    { dataField: 'serEmail',   caption: 'Email',     type: 'bool', alignment: 'center', width: 80, allowFiltering: false, allowHeaderFiltering: false },
+    { dataField: 'serEnable',  caption: 'Abilitato', type: 'bool', alignment: 'center', width: 90, allowFiltering: false, allowHeaderFiltering: false },
+    { dataField: 'serLastRun', caption: 'Ultima esecuzione',  alignment: 'left',   width: 160, allowFiltering: false, allowHeaderFiltering: false },
   ];
 
   moreActions = [
@@ -224,6 +223,8 @@ export class ServiziComponent implements OnInit {
       queryParams: { traTabNam: TRACE_TABLE, traEntCode: data.serId },
     });
   }
+
+  clearGridFilters(): void { this.dataGrid?.clearFilters(); }
 
   onRefresh(): void {
     this.loadServizi();

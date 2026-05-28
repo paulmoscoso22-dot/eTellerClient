@@ -1,4 +1,4 @@
-import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, signal, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -7,11 +7,9 @@ import {
   SempionePageShellComponent,
   SempioneCardComponent,
   SempioneCardHeaderComponent,
-  SempioneToolbarComponent,
   SempioneDataGridComponent,
   SempioneGridColumn,
-  SempioneIdDesFilterComponent,
-  SempioneCrudToolbarActionsComponent,
+  SempioneSearchModeComponent,
   SempioneSimpleCrudPopupComponent,
 } from '../../../../../components/General';
 
@@ -25,10 +23,8 @@ const TABLE = 'sys_TRX_STATUS';
     SempionePageShellComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
-    SempioneToolbarComponent,
     SempioneDataGridComponent,
-    SempioneIdDesFilterComponent,
-    SempioneCrudToolbarActionsComponent,
+    SempioneSearchModeComponent,
     SempioneSimpleCrudPopupComponent,
   ],
   templateUrl: './stato-transazione.component.html',
@@ -40,14 +36,15 @@ export class StatoTransazioneComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly service = inject(TabellaIntService);
   private readonly router = inject(Router);
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
 
   items = signal<TabellaIntItem[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
 
   readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'id',  caption: 'ID',          alignment: 'left', width: 100 },
-    { dataField: 'des', caption: 'Descrizione',  alignment: 'left', wrap: true },
+    { dataField: 'id',  caption: 'ID',          alignment: 'left', width: 100, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'des', caption: 'Descrizione',  alignment: 'left', wrap: true, allowFiltering: false, allowHeaderFiltering: true },
   ];
 
   filterForm: FormGroup = this.fb.group({ id: [null], des: [null] });
@@ -89,6 +86,8 @@ export class StatoTransazioneComponent implements OnInit {
     this.items.set([]);
     this.error.set(null);
   }
+
+  clearGridFilters(): void { this.dataGrid?.clearFilters(); }
 
   openAddPopup(): void {
     this.popupMode.set('new');

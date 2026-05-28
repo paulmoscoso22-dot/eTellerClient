@@ -1,10 +1,10 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, ViewChild, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DxTextBoxModule, DxValidatorModule, DxNumberBoxModule } from 'devextreme-angular';
 import {
   SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-  SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+  SempioneSearchModeComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
   SempioneFieldGroupComponent,
@@ -12,6 +12,8 @@ import {
 import notify from 'devextreme/ui/notify';
 import { IDivisaAnagraficaResponse, IDivisaAnagraficaRequest, UpdateDivisaRequest } from '../../models/divisa.models';
 import { DiviseService } from '../../services/divise.service';
+import { Service } from '../../../../../core/services/service';
+import { ICurrencyType } from '../../../../../core/domain/currencyType.domain';
 
 @Component({
   selector: 'app-dati-anagrafici',
@@ -20,7 +22,7 @@ import { DiviseService } from '../../services/divise.service';
     CommonModule, ReactiveFormsModule,
     DxTextBoxModule, DxValidatorModule, DxNumberBoxModule,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-    SempioneToolbarComponent, SempioneCrudToolbarActionsComponent,
+    SempioneSearchModeComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
     SempioneFieldGroupComponent,
@@ -31,36 +33,29 @@ import { DiviseService } from '../../services/divise.service';
 export class DatiAnagraficiComponent implements OnInit {
   private fb = inject(FormBuilder);
   private diviseService = inject(DiviseService);
+  private coreService = inject(Service);
 
-  readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'curId',      caption: 'ID',             type: 'currency',  width: 100 },
-    { dataField: 'curCutId',   caption: 'Genere',          type: 'tipo-pill', width: 90  },
-    { dataField: 'curShodes',  caption: 'Descrizione',     alignment: 'left'             },
-    { dataField: 'curMinamn',  caption: 'Imp. Minimo',     alignment: 'right', width: 120, dataType: 'number', format: '#,##0.##' },
-    { dataField: 'curModdat',  caption: 'Data modifica',   alignment: 'left',  width: 150 },
-    { dataField: 'curHostcod', caption: 'Host code',       alignment: 'left',  width: 120 },
-  ];
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
 
-  private divise = signal<IDivisaAnagraficaResponse[]>([]);
+  private currencyTypes = signal<ICurrencyType[]>([]);
 
-  filterCodice      = signal<string>('');
-  filterDescrizione = signal<string>('');
+  readonly gridColumns = computed<SempioneGridColumn[]>(() => {
+    const tipoHF = this.currencyTypes().map(t => ({ text: t.cutDes, value: t.cutId }));
+    return [
+      { dataField: 'curId',      caption: 'ID',           type: 'currency',  width: 100, allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'curCutId',   caption: 'Genere',        type: 'tipo-pill', width: 90,  allowHeaderFiltering: true, allowFiltering: false, headerFilterDataSource: tipoHF },
+      { dataField: 'curShodes',  caption: 'Descrizione',   alignment: 'left',             allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'curMinamn',  caption: 'Imp. Minimo',   alignment: 'right', width: 120, dataType: 'number', format: '#,##0.##', allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'curModdat',  caption: 'Data modifica', alignment: 'left',  width: 150, allowHeaderFiltering: true, allowFiltering: false },
+      { dataField: 'curHostcod', caption: 'Host code',     alignment: 'left',  width: 120, allowHeaderFiltering: true, allowFiltering: false },
+    ];
+  });
+
+  divise = signal<IDivisaAnagraficaResponse[]>([]);
 
   popupMode = signal<'view' | 'edit'>('view');
   isDetailPopupVisible = false;
   selectedLabel = signal<string>('');
-
-  filteredDivise = computed(() => {
-    const q    = this.filterCodice().toLowerCase().trim();
-    const qDes = this.filterDescrizione().toLowerCase().trim();
-
-    return this.divise().filter(d => {
-      if (q && !d.curId.toLowerCase().includes(q)) return false;
-      if (qDes && !d.curLondes.toLowerCase().includes(qDes) &&
-                  !d.curShodes.toLowerCase().includes(qDes)) return false;
-      return true;
-    });
-  });
 
   divisaForm: FormGroup = this.fb.group({
     curId:      [''],
@@ -75,6 +70,7 @@ export class DatiAnagraficiComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.coreService.getCurrencyTypes().subscribe({ next: data => this.currencyTypes.set(data ?? []) });
     this.loadDivise();
   }
 
@@ -85,20 +81,8 @@ export class DatiAnagraficiComponent implements OnInit {
     });
   }
 
-  onCerca(): void {
-    const request: IDivisaAnagraficaRequest = {
-      curId: this.filterCodice().trim() || null,
-      curLondes: this.filterDescrizione().trim() || null,
-    };
-    this.diviseService.getAll(request).subscribe({
-      next: data => this.divise.set(data),
-      error: () => {}
-    });
-  }
-
-  onResetFiltri(): void {
-    this.filterCodice.set('');
-    this.filterDescrizione.set('');
+  clearGridFilters(): void {
+    this.dataGrid?.clearFilters();
   }
 
   openViewPopup(data: IDivisaAnagraficaResponse): void {

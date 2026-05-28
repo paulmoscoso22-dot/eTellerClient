@@ -1,9 +1,8 @@
-import { Component, OnDestroy, signal, DestroyRef, inject } from '@angular/core';
+import { Component, OnDestroy, signal, DestroyRef, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
 import { DxDateBoxModule } from 'devextreme-angular/ui/date-box';
-import { DxButtonModule } from 'devextreme-angular/ui/button';
 import { DxSelectBoxModule } from 'devextreme-angular/ui/select-box';
 import { DxCheckBoxModule } from 'devextreme-angular/ui/check-box';
 import { DxLoadIndicatorModule } from 'devextreme-angular/ui/load-indicator';
@@ -22,15 +21,13 @@ import {
   DeleteAraRequest,
 } from '../../domain/gestione-comparenti-ade.models';
 import { CountryResponse } from '../../domain/country.models';
-import { SempionePageHeaderComponent } from '../../../../../components/General/sempione-page-header/sempione-page-header.component';
-import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
-import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
-import { SempioneToolbarComponent } from '../../../../../components/General/sempione-toolbar/sempione-toolbar.component';
-import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General/sempione-data-grid/sempione-data-grid.component';
-import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
-import { SempionePopupCardComponent } from '../../../../../components/General/sempione-popup-card/sempione-popup-card.component';
-import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
-import { SempioneFieldGroupComponent } from '../../../../../components/General/sempione-field-group/sempione-field-group.component';
+import {
+  SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
+  SempioneDataGridComponent, SempioneGridColumn,
+  SempionePopupComponent, SempionePopupCardComponent,
+  SempionePopupActionBarComponent, SempioneFieldGroupComponent,
+  SempioneSearchModeComponent,
+} from '../../../../../components/General';
 
 @Component({
   selector: 'app-gestione-comparenti-ade',
@@ -38,10 +35,11 @@ import { SempioneFieldGroupComponent } from '../../../../../components/General/s
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DxTextBoxModule, DxDateBoxModule, DxButtonModule, DxSelectBoxModule, DxCheckBoxModule, DxLoadIndicatorModule,
+    DxTextBoxModule, DxDateBoxModule, DxSelectBoxModule, DxCheckBoxModule, DxLoadIndicatorModule,
     SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-    SempioneToolbarComponent, SempioneDataGridComponent,
+    SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent, SempioneFieldGroupComponent,
+    SempioneSearchModeComponent,
   ],
   templateUrl: './gestione-comparenti-ade.component.html',
   styleUrls: ['./gestione-comparenti-ade.component.css'],
@@ -53,17 +51,24 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
   private readonly countryService = inject(CountryService);
   private readonly authStore = inject(AuthStore);
 
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
+
   private subscription: Subscription | null = null;
 
+  readonly boolHeaderFilter = [
+    { text: 'Sì', value: true },
+    { text: 'No', value: false },
+  ];
+
   readonly columns: SempioneGridColumn[] = [
-    { dataField: 'araName',        caption: 'Nome e cognome',  alignment: 'left' },
-    { dataField: 'araRepresents',  caption: 'Rappresentanza',  alignment: 'left',   width: 130 },
-    { dataField: 'araBirthdate',   caption: 'Data nascita',    alignment: 'center', width: 105, dataType: 'date', format: 'dd.MM.yyyy' },
-    { dataField: 'araNationality', caption: 'Nazionalità',     alignment: 'left',   width: 110 },
-    { dataField: 'araAddress',     caption: 'Domicilio',       alignment: 'left',   width: 160 },
-    { dataField: 'araIddocnum',    caption: 'Nr doc identità', alignment: 'left',   width: 130 },
-    { dataField: 'araDocexpdate',  caption: 'Scad. doc.',      alignment: 'center', width: 100, dataType: 'date', format: 'dd.MM.yyyy' },
-    { dataField: 'araRecComplete', caption: 'Completo',        alignment: 'center', width: 85,  type: 'bool-text' },
+    { dataField: 'araName',        caption: 'Nome e cognome',  alignment: 'left',                     allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'araRepresents',  caption: 'Rappresentanza',  alignment: 'left',   width: 130,        allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'araBirthdate',   caption: 'Data nascita',    alignment: 'center', width: 155,        allowFiltering: false, allowHeaderFiltering: true, dataType: 'date',    format: 'dd.MM.yyyy', headerFilterType: 'calendar', cssClass: 'col-date' },
+    { dataField: 'araNationality', caption: 'Nazionalità',     alignment: 'left',   width: 120,        allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'araAddress',     caption: 'Domicilio',       alignment: 'left',   width: 160,        allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'araIddocnum',    caption: 'Nr doc identità', alignment: 'left',   width: 155,        allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'araDocexpdate',  caption: 'Scad. doc.',      alignment: 'center', width: 130,        allowFiltering: false, allowHeaderFiltering: true, dataType: 'date',    format: 'dd.MM.yyyy', headerFilterType: 'calendar', cssClass: 'col-date' },
+    { dataField: 'araRecComplete', caption: 'Completo',        alignment: 'center', width: 130, type: 'bool-text', allowFiltering: false, allowHeaderFiltering: true, dataType: 'boolean', headerFilterDataSource: this.boolHeaderFilter },
   ];
 
   readonly historyColumns: SempioneGridColumn[] = [
@@ -86,17 +91,10 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
   // ── Lookup data ──
   countries = signal<CountryResponse[]>([]);
 
-  // ── Filter form ──
-  filterForm: FormGroup = this.fb.group({
-    araName: [''],
-    araBirthdate: [null],
-    araRecComplete: [false],
-    showExpiredRecords: [true],
-  });
-
-  // ── Form popup (add / edit) ──
+  // ── Form popup (add / edit / view) ──
   isFormPopupVisible = false;
   isEditMode = signal(false);
+  isViewMode = signal(false);
   selectedAraId = signal<number | null>(null);
   isSaving = signal(false);
   isLoadingForm = signal(false);
@@ -125,15 +123,16 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
     this.countryService.getAllCountries()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(data => this.countries.set(data));
+
+    this.loadAll();
   }
 
-  search(): void {
-    const v = this.filterForm.value;
+  loadAll(): void {
     const request: GetAppearerByParametersRequest = {
-      AraName: v.araName ?? '',
-      AraBirthdate: v.araBirthdate ? this.toDateString(v.araBirthdate) : null,
-      AraRecComplete: v.araRecComplete ?? false,
-      ShowExpiredRecords: v.showExpiredRecords ?? true,
+      AraName: '',
+      AraBirthdate: null,
+      AraRecComplete: false,
+      ShowExpiredRecords: true,
       RecordValidityDays: 365,
     };
     this.destroy();
@@ -150,16 +149,15 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
       });
   }
 
-  resetFilters(): void {
-    this.filterForm.reset({ araName: '', araBirthdate: null, araRecComplete: false, showExpiredRecords: true });
-    this.appearers.set([]);
-    this.error.set(null);
+  clearGridFilters(): void {
+    this.dataGrid?.clearFilters();
   }
 
   // ── Form popup ──
 
   openAddPopup(): void {
     this.isEditMode.set(false);
+    this.isViewMode.set(false);
     this.selectedAraId.set(null);
     this.saveError.set(null);
     this.editForm.reset({
@@ -170,28 +168,42 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
     this.isFormPopupVisible = true;
   }
 
-  openEditPopup(row: AppearerAllResponse): void {
-    this.isEditMode.set(true);
+  openViewPopup(row: AppearerAllResponse): void {
+    this.isEditMode.set(false);
+    this.isViewMode.set(true);
     this.selectedAraId.set(row.araId);
     this.saveError.set(null);
     this.isLoadingForm.set(true);
     this.isFormPopupVisible = true;
+    this.loadFormData(row.araId);
+  }
 
-    this.service.getByAraId(row.araId)
+  openEditPopup(row: AppearerAllResponse): void {
+    this.isEditMode.set(true);
+    this.isViewMode.set(false);
+    this.selectedAraId.set(row.araId);
+    this.saveError.set(null);
+    this.isLoadingForm.set(true);
+    this.isFormPopupVisible = true;
+    this.loadFormData(row.araId);
+  }
+
+  private loadFormData(araId: number): void {
+    this.service.getByAraId(araId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data: any) => {
           this.editForm.reset({
-            araName:       data.araName       ?? '',
-            araRepresents: data.araRepresents ?? '',
-            araBirthdate:  data.araBirthdate  ? new Date(data.araBirthdate) : null,
-            araBirthplace: data.araBirthplace ?? '',
-            araNationality:data.araNationality?? '',
-            araAddress:    data.araAddress    ?? '',
-            araIddocnum:   data.araIddocnum   ?? '',
-            araDocexpdate: data.araDocexpdate ? new Date(data.araDocexpdate) : null,
-            araRecComplete:data.araRecComplete ?? false,
-            araIsupdated:  data.araIsupdated  ?? false,
+            araName:        data.araName        ?? '',
+            araRepresents:  data.araRepresents  ?? '',
+            araBirthdate:   data.araBirthdate   ? new Date(data.araBirthdate)  : null,
+            araBirthplace:  data.araBirthplace  ?? '',
+            araNationality: data.araNationality ?? '',
+            araAddress:     data.araAddress     ?? '',
+            araIddocnum:    data.araIddocnum    ?? '',
+            araDocexpdate:  data.araDocexpdate  ? new Date(data.araDocexpdate) : null,
+            araRecComplete: data.araRecComplete ?? false,
+            araIsupdated:   data.araIsupdated   ?? false,
           });
           this.isLoadingForm.set(false);
         },
@@ -204,6 +216,7 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
 
   closeFormPopup(): void {
     this.isFormPopupVisible = false;
+    this.isViewMode.set(false);
   }
 
   save(): void {
@@ -232,7 +245,7 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
         AraIsupdated:   v.araIsupdated  ?? false,
       };
       this.service.updateAra(req).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-        next: () => { notify('Comparente aggiornato con successo', 'success', 3000); this.isSaving.set(false); this.isFormPopupVisible = false; this.search(); },
+        next: () => { notify('Comparente aggiornato con successo', 'success', 3000); this.isSaving.set(false); this.isFormPopupVisible = false; this.loadAll(); },
         error: (err: any) => { this.isSaving.set(false); this.saveError.set(err.message || 'Errore durante il salvataggio'); }
       });
     } else {
@@ -251,7 +264,7 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
         AraRecComplete: v.araRecComplete ?? false,
       };
       this.service.insertAra(req).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-        next: () => { notify('Comparente inserito con successo', 'success', 3000); this.isSaving.set(false); this.isFormPopupVisible = false; this.search(); },
+        next: () => { notify('Comparente inserito con successo', 'success', 3000); this.isSaving.set(false); this.isFormPopupVisible = false; this.loadAll(); },
         error: (err: any) => { this.isSaving.set(false); this.saveError.set(err.message || 'Errore durante il salvataggio'); }
       });
     }
@@ -293,7 +306,7 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
       .subscribe({
         next: () => {
           notify('Comparente eliminato con successo', 'success', 3000);
-          this.search();
+          this.loadAll();
         },
         error: () => {
           notify('Errore durante l\'eliminazione', 'error', 3000);

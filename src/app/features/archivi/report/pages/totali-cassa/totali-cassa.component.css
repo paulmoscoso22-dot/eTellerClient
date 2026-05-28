@@ -5,3 +5,13 @@
   min-height: 0;
   overflow: hidden;
 }
+
+.content-layout {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  gap: 10px;
+  padding: 10px 16px;
+}

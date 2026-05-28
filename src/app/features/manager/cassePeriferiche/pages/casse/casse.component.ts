@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  DxTextBoxModule, DxButtonModule, DxValidatorModule,
+  DxTextBoxModule, DxValidatorModule,
   DxSelectBoxModule, DxTextAreaModule, DxCheckBoxModule
 } from 'devextreme-angular';
-import { ControlAssignComponent } from '../../../../../components/control-assign/control-assign.component';
+import { ControlAssignComponent } from '../../../../../components/General/control-assign/control-assign.component';
 import notify from 'devextreme/ui/notify';
 import { Service as CoreService } from '../../../../../core/services/service';
 import { CasseService } from '../../Services/casse.service';
@@ -18,7 +18,7 @@ import {
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
   SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
-  SempioneCrudToolbarActionsComponent,
+  SempioneCrudToolbarActionsComponent, SempioneButtonComponent,
 } from '../../../../../components/General';
 
 @Component({
@@ -26,7 +26,7 @@ import {
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxTextBoxModule, DxButtonModule, DxValidatorModule,
+    DxTextBoxModule, DxValidatorModule,
     DxSelectBoxModule, DxTextAreaModule, DxCheckBoxModule,
     ControlAssignComponent,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
@@ -34,7 +34,7 @@ import {
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
     SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
-    SempioneCrudToolbarActionsComponent,
+    SempioneCrudToolbarActionsComponent, SempioneButtonComponent,
   ],
   templateUrl: './casse.component.html',
   styleUrls: ['./casse.component.css'],

@@ -8,26 +8,8 @@
       </svg>
     </app-sempione-card-header>
 
-    <div [formGroup]="filterForm">
-      <app-sempione-toolbar>
-
-        <app-sempione-id-des-filter
-          idPlaceholder="ID..."
-          desPlaceholder="Cerca per descrizione..."
-          (enterKey)="search()">
-        </app-sempione-id-des-filter>
-
-        <app-sempione-crud-toolbar-actions
-          [showAll]="true"
-          [isLoading]="isLoading()"
-          (search)="search()"
-          (reset)="resetFilters()"
-          (listAll)="showAll()"
-          (add)="openAddPopup()">
-        </app-sempione-crud-toolbar-actions>
-
-      </app-sempione-toolbar>
-    </div>
+    <app-sempione-search-mode mode="header" newText="Aggiungi" (reset)="clearGridFilters()" (add)="openAddPopup()">
+    </app-sempione-search-mode>
 
     <app-sempione-data-grid
       [dataSource]="items()"
@@ -35,13 +17,15 @@
       keyExpr="id"
       [isLoading]="isLoading()"
       [error]="error()"
+      [showHeaderFilter]="true"
       [showViewAction]="true"
       [showEditAction]="true"
       [showTraceAction]="true"
       noDataText="Nessun risultato trovato."
       (rowView)="openViewPopup($event)"
       (rowEdit)="openEditPopup($event)"
-      (rowTrace)="onTrace($event.id)">
+      (rowTrace)="onTrace($event.id)"
+      (rowDblClick)="openViewPopup($event)">
     </app-sempione-data-grid>
 
   </app-sempione-card>

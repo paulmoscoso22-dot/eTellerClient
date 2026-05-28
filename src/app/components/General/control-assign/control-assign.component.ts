@@ -1,11 +1,12 @@
 import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DxDataGridModule, DxButtonModule } from 'devextreme-angular';
+import { DxDataGridModule } from 'devextreme-angular';
+import { SempioneButtonComponent } from '../sempione-button/sempione-button.component';
 
 @Component({
   selector: 'app-control-assign',
   standalone: true,
-  imports: [CommonModule, DxDataGridModule, DxButtonModule],
+  imports: [CommonModule, DxDataGridModule, SempioneButtonComponent],
   templateUrl: './control-assign.component.html',
   styleUrls: ['./control-assign.component.css']
 })

@@ -139,7 +139,8 @@
       [showViewAction]="true"
       [showEditAction]="false"
       noDataText="Nessuna traccia trovata."
-      (rowView)="openDetail($event)">
+      (rowView)="openDetail($event)"
+      (rowDblClick)="openDetail($event)">
     </app-sempione-data-grid>
 
   </app-sempione-card>

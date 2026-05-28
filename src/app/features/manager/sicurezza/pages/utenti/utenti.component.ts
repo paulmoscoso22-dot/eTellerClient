@@ -1,12 +1,12 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule, DxSelectBoxModule, DxValidatorModule } from 'devextreme-angular';
+import { DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxSelectBoxModule, DxValidatorModule } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import { ManagerService } from '../../services/sicurezza.service';
 import { ISysUsersActiveAndBlockedResponse, GetUsersByUserIdRequest, IInsertUserRequest, IUpdateUserRequest } from '../../models/utenti.models';
 import { ISysRoleResonse, GetRoleByUsrIdRequest, IGetRoleNotForUsrIdRquest } from '../../models/ruoli.models';
-import { ControlAssignComponent } from '../../../../../components/control-assign/control-assign.component';
+import { ControlAssignComponent } from '../../../../../components/General/control-assign/control-assign.component';
 import { Service } from '../../../../../core/services/service';
 import { ISTLanguageResponse } from '../../../../../core/domain/laguage.domain';
 import { Branch } from '../../../../../core/domain/branch.domain';
@@ -25,7 +25,7 @@ import {
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxDataGridModule, DxTextBoxModule, DxCheckBoxModule, DxButtonModule,
+    DxDataGridModule, DxTextBoxModule, DxCheckBoxModule,
     DxSelectBoxModule, DxValidatorModule,
     ControlAssignComponent,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
@@ -74,7 +74,8 @@ export class UtentiComponent implements OnInit {
       usrStatusDes:
         u.usrStatus === 'enabled'  ? 'Attivo'       :
         u.usrStatus === 'disabled' ? 'Disabilitato' :
-        u.usrStatus === 'blocked'  ? 'Bloccato'     : u.usrStatus,
+        u.usrStatus === 'blocked'  ? 'Bloccato'     :
+        (u.usrStatus === 'extinct' || u.usrStatus === 'estinto') ? 'Estinto' : u.usrStatus,
     }));
   });
 

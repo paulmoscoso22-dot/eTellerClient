@@ -13,36 +13,17 @@
       </svg>
     </app-sempione-card-header>
 
-    <app-sempione-toolbar>
-
-      <div class="toolbar-field toolbar-field--lg">
-        <dx-text-box
-          placeholder="Divisa o descrizione..."
-          [showClearButton]="true"
-          labelMode="hidden"
-          valueChangeEvent="input"
-          [value]="searchValue()"
-          (onValueChanged)="onSearchChanged($event)">
-        </dx-text-box>
-      </div>
-
-      <app-sempione-crud-toolbar-actions
-        [showSearch]="true"
-        newText="Nuova Coppia"
-        (search)="onCerca()"
-        (reset)="searchValue.set('')"
-        (add)="openNewPopup()">
-      </app-sempione-crud-toolbar-actions>
-
-    </app-sempione-toolbar>
+    <app-sempione-search-mode mode="header" newText="Nuova Coppia" (reset)="clearGridFilters()" (add)="openNewPopup()">
+    </app-sempione-search-mode>
 
     <app-sempione-data-grid
-      [dataSource]="filteredCoppie()"
+      [dataSource]="coppie()"
       [columns]="gridColumns"
       [keyExpr]="['cucCur1', 'cucCur2']"
       [pageSize]="20"
       [allowedPageSizes]="[20, 50, 100]"
       [isLoading]="isLoading()"
+      [showHeaderFilter]="true"
       [showViewAction]="true"
       [showEditAction]="true"
       [showTraceAction]="true"
@@ -51,7 +32,8 @@
       (rowView)="onTableAction('view', $event)"
       (rowEdit)="onTableAction('edit', $event)"
       (rowTrace)="onTableAction('trace', $event)"
-      (rowDelete)="onTableAction('delete', $event)">
+      (rowDelete)="onTableAction('delete', $event)"
+      (rowDblClick)="onTableAction('view', $event)">
     </app-sempione-data-grid>
 
   </app-sempione-card>

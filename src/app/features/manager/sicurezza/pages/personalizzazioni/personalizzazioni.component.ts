@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
 import { DxTextAreaModule } from 'devextreme-angular/ui/text-area';
-import { DxButtonModule } from 'devextreme-angular/ui/button';
 import notify from 'devextreme/ui/notify';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ManagerService } from '../../services/sicurezza.service';
@@ -12,8 +11,9 @@ import { PersonalisationResponse, UpdatePersonalisationRequest } from '../../mod
 import {
   SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
   SempioneToolbarComponent, SempioneDataGridComponent, SempioneGridColumn,
-  SempionePopupComponent, SempionePopupActionBarComponent, SempionePopupCardComponent,
-  SempioneFieldGroupComponent, SempioneButtonComponent, SempioneConfirmDeleteComponent,
+  SempionePopupCardComponent, SempioneFieldGroupComponent,
+  SempioneButtonComponent, SempioneConfirmDeleteComponent,
+  SempioneCrudPopupShellComponent,
 } from '../../../../../components/General';
 
 @Component({
@@ -21,12 +21,12 @@ import {
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    DxTextBoxModule, DxTextAreaModule, DxButtonModule,
+    DxTextBoxModule, DxTextAreaModule,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneToolbarComponent, SempioneDataGridComponent,
-    SempionePopupComponent, SempionePopupActionBarComponent,
     SempionePopupCardComponent, SempioneFieldGroupComponent,
     SempioneButtonComponent, SempioneConfirmDeleteComponent,
+    SempioneCrudPopupShellComponent,
   ],
   templateUrl: './personalizzazioni.component.html',
   styleUrls: ['./personalizzazioni.component.css'],

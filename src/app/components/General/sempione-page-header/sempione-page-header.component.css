@@ -4,16 +4,16 @@
 }
 
 .page-header-row {
-  padding: 7px 20px;
-  background: #f1f5f9;
-  border-bottom: 1px solid rgba(0, 51, 102, 0.25);
+  padding: 8px 20px;
+  background: var(--color-surface-white);
+  border-left: 3px solid var(--color-brand-gold);
+  border-bottom: 1px solid rgba(0, 51, 102, 0.18);
 }
 
 .page-title {
   margin: 0;
-  font-size: 13px;
+  font-size: 20px;
   font-weight: 700;
-  color: rgba(0, 51, 102, 0.75) !important;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  color: var(--color-brand-navy);
+  letter-spacing: 0.01em;
 }

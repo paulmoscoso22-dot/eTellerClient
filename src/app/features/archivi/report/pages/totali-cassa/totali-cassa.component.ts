@@ -5,10 +5,7 @@ import { Subscription } from 'rxjs';
 import { ReportFacade } from '../../services/report.facade';
 import { GetTotaleCassaResponse } from '../../domain/totale-cassa.models';
 import { TotaleCassaFilterComponent } from '../../components/totale-cassa-filter/totale-cassa-filter.component';
-import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
-import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
-import { SempionePageShellComponent } from '../../../../../components/General/sempione-page-shell/sempione-page-shell.component';
-import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General';
+import { SempioneCardComponent, SempioneCardHeaderComponent, SempionePageHeaderComponent, SempioneDataGridComponent, SempioneGridColumn } from '../../../../../components/General';
 
 @Component({
   selector: 'app-totali-cassa',
@@ -16,9 +13,9 @@ import { SempioneDataGridComponent, SempioneGridColumn } from '../../../../../co
   imports: [
     CommonModule,
     TotaleCassaFilterComponent,
+    SempionePageHeaderComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
-    SempionePageShellComponent,
     SempioneDataGridComponent,
   ],
   templateUrl: './totali-cassa.component.html',
@@ -38,7 +35,7 @@ export class TotaliCassaComponent implements OnDestroy {
     { dataField: 'tocTotdare',    caption: 'Dare',            width: 120, alignment: 'right', dataType: 'number', format: '#,##0.00' },
     { dataField: 'tocTotdareCtv', caption: 'Dare CTV',        width: 120, alignment: 'right', dataType: 'number', format: '#,##0.00' },
     { dataField: 'tocTotavere',   caption: 'Avere',           width: 120, alignment: 'right', dataType: 'number', format: '#,##0.00' },
-    { dataField: 'tocSaldoFin',   caption: 'Saldo Finale',    width: 130, alignment: 'right', dataType: 'number', format: '#,##0.00' },
+    { dataField: 'tocSaldoFin',   caption: 'Saldo Finale',    minWidth: 130, alignment: 'right', dataType: 'number', format: '#,##0.00' },
   ];
 
   constructor(private reportFacade: ReportFacade) {}

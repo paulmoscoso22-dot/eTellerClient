@@ -1,6 +1,6 @@
 /* ══════════════════════════════════════════
    Conti Generali Form — Banca del Sempione
-   Brand navy : #003366  |  Gold : #C5A059
+   Brand navy : var(--color-brand-navy)  |  Gold : var(--color-brand-gold)
    ══════════════════════════════════════════ */
 
 :host {
@@ -49,8 +49,8 @@
 
 /* ── Card ── */
 .card-section {
-  background: #fff;
-  border: 1px solid #dce3ee;
+  background: var(--color-surface-white);
+  border: 1px solid var(--color-border-light);
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0, 51, 102, 0.08);
   flex-shrink: 0;
@@ -85,7 +85,7 @@
   flex-shrink: 0;
   font-size: 10px;
   font-weight: 600;
-  color: #003366;
+  color: var(--color-brand-navy);
   text-transform: uppercase;
   letter-spacing: 0.03em;
   text-align: right;
@@ -106,7 +106,7 @@
 /* ── Field separator ── */
 .field-sep {
   height: 1px;
-  background: #e5e7eb;
+  background: var(--color-border-lighter);
   margin: 8px 0;
 }
 
@@ -141,13 +141,13 @@
   border-radius: 4px;
   font-size: 13px;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-text-secondary);
   border: 1px solid #e9ecef;
 }
 
 .display-value--accent {
   background: #f0f4f8;
-  color: #003366;
+  color: var(--color-brand-navy);
   font-weight: 700;
   border-color: #d0daea;
 }
@@ -181,38 +181,38 @@
   box-shadow: 0 -2px 8px rgba(0, 51, 102, 0.05);
 }
 
-:host ::ng-deep .btn-secondary.dx-button {
+:host ::ng-deep .btn-fin-secondary.dx-button {
   height: 28px;
   border-color: #c8d3e0;
-  color: #374151;
+  color: var(--color-text-secondary);
 }
 
-:host ::ng-deep .btn-secondary.dx-button:hover {
-  border-color: #003366;
-  color: #003366;
+:host ::ng-deep .btn-fin-secondary.dx-button:hover {
+  border-color: var(--color-brand-navy);
+  color: var(--color-brand-navy);
   background: rgba(0, 51, 102, 0.04);
 }
 
 /* Conferma button — primary navy */
-:host ::ng-deep .btn-confirm.dx-button {
-  background-color: #003366;
-  border-color: #003366;
-  color: #fff;
+:host ::ng-deep .btn-fin-primary.dx-button {
+  background-color: var(--color-brand-navy);
+  border-color: var(--color-brand-navy);
+  color: var(--color-surface-white);
   height: 32px;
   margin-left: auto;
 }
 
-:host ::ng-deep .btn-confirm.dx-button:hover {
-  background-color: #004080;
-  border-color: #004080;
+:host ::ng-deep .btn-fin-primary.dx-button:hover {
+  background-color: var(--color-brand-navy-hover);
+  border-color: var(--color-brand-navy-hover);
 }
 
-:host ::ng-deep .btn-confirm .dx-button-content {
+:host ::ng-deep .btn-fin-primary .dx-button-content {
   padding: 0 28px;
 }
 
-:host ::ng-deep .btn-confirm .dx-icon {
-  color: #fff;
+:host ::ng-deep .btn-fin-primary .dx-icon {
+  color: var(--color-surface-white);
 }
 
 /* ── Responsive ── */

@@ -1,3 +1,9 @@
+// =============================================================================
+// Sempione — Header Filter Menus (devono stare prima di qualsiasi altra regola)
+// =============================================================================
+@use './app/components/General/sempione-header-filter/sempione-header-filter-list';
+@use './app/components/General/sempione-header-filter/sempione-header-filter-calendar';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Sempione Design System — Global tokens
 // Brand navy: #003366  |  Gold: #C5A059  |  Text primary: #1e293b
@@ -27,7 +33,7 @@
   .dx-button-text, .dx-icon { color: var(--color-text-primary) !important; }
 
   &:hover, &.dx-state-hover {
-    border-color: #94a3b8 !important;
+    border-color: var(--color-text-placeholder) !important;
     background-color: rgba(15, 23, 42, 0.04) !important;
   }
 }
@@ -48,29 +54,29 @@
 
 // DANGER: rosso — azioni distruttive (es. Elimina)
 .btn-fin-danger.dx-button {
-  background-color: #dc2626 !important;
-  border-color:     #dc2626 !important;
+  background-color: var(--color-danger) !important;
+  border-color:     var(--color-danger) !important;
   border-radius: 6px;
 
   .dx-button-text, .dx-icon { color: var(--color-surface-white) !important; }
 
   &:hover, &.dx-state-hover {
-    background-color: #b91c1c !important;
-    border-color:     #b91c1c !important;
+    background-color: var(--color-danger-hover) !important;
+    border-color:     var(--color-danger-hover) !important;
   }
 }
 
 // DANGER FILLED: rosso pieno — azioni distruttive primarie (es. Forza Uscita)
 .btn-fin-danger-filled.dx-button {
-  background-color: #e11d48 !important;
-  border-color:     #e11d48 !important;
+  background-color: var(--color-danger-filled) !important;
+  border-color:     var(--color-danger-filled) !important;
   border-radius: 6px;
 
   .dx-button-text, .dx-icon { color: var(--color-surface-white) !important; }
 
   &:hover, &.dx-state-hover {
-    background-color: #be123c !important;
-    border-color:     #be123c !important;
+    background-color: var(--color-danger-filled-hover) !important;
+    border-color:     var(--color-danger-filled-hover) !important;
   }
 
   &.dx-state-disabled { opacity: 0.4; }
@@ -141,6 +147,41 @@
   .popup-col-span-2, .popup-col-span-half, .popup-col-span-3 { grid-column: 1 / -1; }
 }
 
+// ── Divise: currency badge (codice divisa nelle griglie — canonico)
+.currency-cell  { display: flex; align-items: center; justify-content: center; }
+.currency-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: var(--color-surface-header);
+  color: var(--color-brand-navy);
+  border: 1px solid rgba(0, 51, 102, 0.14);
+}
+
+// ── Divise: tipo pill (BB / MM / TR — canonico)
+// BB = blu (Biglietti Banca), MM = ambra (Monete/Metalli), TR = verde (Travelers Cheques)
+.tipo-cell { display: flex; align-items: center; justify-content: center; }
+.tipo-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  background: #f1f5f9;
+  color: var(--color-text-muted);
+  border: 1px solid #e2e8f0;
+}
+.tipo-pill--bb { background: var(--color-status-info-bg);    color: var(--color-status-info-text);    border-color: #bfdbfe; }
+.tipo-pill--mm { background: var(--color-status-warning-bg); color: var(--color-status-warning-text); border-color: #fde68a; }
+.tipo-pill--tr { background: var(--color-status-ok-bg);      color: var(--color-status-ok-text);      border-color: #bbf7d0; }
+.tipo-pill--dv { background: var(--color-status-ok-bg);      color: var(--color-status-ok-text);      border-color: #bbf7d0; }
+
 // ── Page shell: flex column container for all routed tabelle pages
 .page-shell {
   display: flex;
@@ -156,6 +197,26 @@
 .toolbar-field         { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
 .toolbar-field--sm     { flex: 0 0 140px; }
 .toolbar-field--lg     { flex: 2; }
+
+// ── Popup detail fields (usati in popup di dettaglio in tutta l'app)
+.detail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.detail-label {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--color-brand-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.detail-value {
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+.detail-value.mono { font-family: monospace; }
 
 /* DevExtreme default theme - will be replaced dynamically by ThemeService */
 @import 'devextreme/dist/css/dx.fluent.blue.light.compact.css';
@@ -221,6 +282,28 @@
     /* Status — Neutral (grey) */
     --color-status-neutral-bg:   #f3f4f6;
     --color-status-neutral-text: #374151;
+
+    /* Danger (rosso distruttivo — separato da status-error per chiarezza semantica) */
+    --color-danger:              #dc2626;
+    --color-danger-hover:        #b91c1c;
+    --color-danger-bg:           #fef2f2;
+    --color-danger-border:       #fecaca;
+    --color-danger-filled:       #e11d48;
+    --color-danger-filled-hover: #be123c;
+
+    /* Status OK — palette estesa */
+    --color-status-ok-bg-alt:     #d1fae5;
+    --color-status-ok-text-dark:  #065f46;
+    --color-status-ok-border-alt: #a7f3d0;
+
+    /* Surfaces estese */
+    --color-surface-subtle: #f1f5f9;
+    --color-surface-row-alt: #f9fafb;
+    --color-surface-input:  #f5f7fa;
+
+    /* Text esteso */
+    --color-text-placeholder: #94a3b8;
+    --color-text-disabled:    #b0b7c3;
 
     /* Typography scale */
     --font-size-xs:   10px;
@@ -356,16 +439,22 @@ h1 {
     background-color: var(--color-surface-white) !important;
 }
 
+.dx-datagrid-headers .dx-header-row td .dx-datagrid-text-content {
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+}
+
 // Righe dati
 .dx-datagrid-rowsview .dx-data-row > td {
     padding: 7px 10px !important;
     font-size: var(--font-size-base) !important;
-    color: #334155 !important;
+    color: var(--color-text-secondary) !important;
     vertical-align: middle !important;
 }
 
 .dx-datagrid-rowsview .dx-data-row.dx-row-alt > td {
-    background-color: #f9fafb !important;
+    background-color: var(--color-surface-row-alt) !important;
 }
 
 .dx-datagrid-rowsview .dx-data-row.dx-state-hover > td {
@@ -500,15 +589,15 @@ h1 {
 .dx-popup-content .dx-texteditor.dx-state-readonly,
 .dx-popup-content .dx-numberbox.dx-state-readonly,
 .dx-popup-content .dx-textarea.dx-state-readonly {
-    background-color: #f8fafc !important;
-    border-color: #c9d5e0 !important;
+    background-color: var(--color-surface-base) !important;
+    border-color: var(--color-border-light) !important;
     border-style: dashed !important;
 }
 
 .dx-popup-content .dx-texteditor.dx-state-readonly .dx-texteditor-input,
 .dx-popup-content .dx-numberbox.dx-state-readonly .dx-texteditor-input,
 .dx-popup-content .dx-textarea.dx-state-readonly .dx-texteditor-input {
-    color: #6b7280 !important;
+    color: var(--color-text-subtle) !important;
     cursor: default !important;
 }
 
@@ -565,15 +654,15 @@ h1 {
 
 // ── PRIMARY (verde): Aggiungi / Salva
 .btn-action-primary.dx-button {
-    background-color: #2d6a4f !important;
-    border-color: #2d6a4f !important;
+    background-color: var(--color-status-ok-text-dark) !important;
+    border-color: var(--color-status-ok-text-dark) !important;
     height: 36px !important;
 
     .dx-button-text, .dx-icon { color: var(--color-surface-white) !important; }
 
     &.dx-state-hover, &:hover {
-        background-color: #1b4332 !important;
-        border-color: #1b4332 !important;
+        background-color: var(--color-status-ok-text-dark) !important;
+        border-color: var(--color-status-ok-text-dark) !important;
     }
 }
 
@@ -593,10 +682,10 @@ h1 {
 // ── DANGER (rosso): azioni pericolose (Reset Password, ecc.)
 .btn-action-danger.dx-button {
     background-color: transparent !important;
-    border: 1.5px solid #dc2626 !important;
+    border: 1.5px solid var(--color-danger) !important;
     height: 36px !important;
 
-    .dx-button-text, .dx-icon { color: #dc2626 !important; }
+    .dx-button-text, .dx-icon { color: var(--color-danger) !important; }
 
     &.dx-state-hover, &:hover {
         background-color: var(--color-status-error-bg) !important;
@@ -680,3 +769,4 @@ h1 {
         }
     }
 }
+

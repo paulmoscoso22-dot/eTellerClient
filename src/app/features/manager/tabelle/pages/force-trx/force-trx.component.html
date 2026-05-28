@@ -21,15 +21,6 @@
           (onValueChanged)="onLanguageChanged($event.value)">
         </dx-select-box>
       </div>
-      <div toolbar-actions>
-        <app-sempione-button
-          icon="search"
-          hint="Cerca"
-          variant="secondary"
-          [disabled]="isLoading()"
-          (clicked)="search()">
-        </app-sempione-button>
-      </div>
     </app-sempione-toolbar>
 
     <app-sempione-data-grid
@@ -40,7 +31,8 @@
       [error]="error()"
       [showViewAction]="true"
       noDataText="Nessuna transazione trovata. Premere Cerca per caricare i dati."
-      (rowView)="openDetail($event)">
+      (rowView)="openDetail($event)"
+      (rowDblClick)="openDetail($event)">
     </app-sempione-data-grid>
 
   </app-sempione-card>

@@ -6,9 +6,7 @@ import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
 import { DxCheckBoxModule } from 'devextreme-angular/ui/check-box';
 import { HelpService } from '../services/help.service';
 import { IHelpInfoResponse } from '../models/help.models';
-import { SempionePageHeaderComponent } from '../../../components/General/sempione-page-header/sempione-page-header.component';
-import { SempioneFieldGroupComponent } from '../../../components/General/sempione-field-group/sempione-field-group.component';
-import { OpCardSectionComponent } from '../../../components/Operazioni/op-card-section/op-card-section.component';
+import { SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent, SempioneFieldGroupComponent } from '../../../components/General';
 
 @Component({
   selector: 'app-help',
@@ -16,7 +14,7 @@ import { OpCardSectionComponent } from '../../../components/Operazioni/op-card-s
   imports: [
     CommonModule,
     DxLoadIndicatorModule, DxTextBoxModule, DxCheckBoxModule,
-    SempionePageHeaderComponent, OpCardSectionComponent,
+    SempionePageHeaderComponent, SempioneCardComponent, SempioneCardHeaderComponent,
     SempioneFieldGroupComponent,
   ],
   templateUrl: './help.component.html',

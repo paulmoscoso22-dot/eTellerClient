@@ -1,14 +1,14 @@
 <app-sempione-page-shell title="Attesa Benefondo">
 
   <!-- ── Main Card ── -->
-  <section class="card-section">
+  <app-sempione-card>
 
-    <app-header-card title="Attesa Benefondo">
+    <app-sempione-card-header title="Attesa Benefondo">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"></circle>
         <polyline points="12 6 12 12 16 14"></polyline>
       </svg>
-    </app-header-card>
+    </app-sempione-card-header>
 
     <!-- ── Filtri ── -->
     <div class="card-toolbar" [formGroup]="searchForm">
@@ -35,27 +35,9 @@
         </div>
 
         <div class="toolbar-actions">
-          <dx-button
-            hint="Reset filtri"
-            stylingMode="outlined"
-            icon="revert"
-            (onClick)="resetFilters()">
-          </dx-button>
-          <dx-button
-            hint="Stampa"
-            stylingMode="outlined"
-            icon="print"
-            [disabled]="isLoading() || transactions().length === 0"
-            (onClick)="print()">
-          </dx-button>
-          <dx-button
-            class="btn-fin-primary btn-fin-shadow"
-            text="Visualizza"
-            stylingMode="contained"
-            icon="search"
-            [disabled]="isLoading()"
-            (onClick)="search()">
-          </dx-button>
+          <app-sempione-button hint="Reset filtri" icon="revert" (clicked)="resetFilters()"></app-sempione-button>
+          <app-sempione-button hint="Stampa" icon="print" [disabled]="isLoading() || transactions().length === 0" (clicked)="print()"></app-sempione-button>
+          <app-sempione-button hint="Cerca" icon="search" variant="primary" [shadow]="true" [disabled]="isLoading()" (clicked)="search()"></app-sempione-button>
         </div>
 
       </div>
@@ -147,7 +129,7 @@
 
     </div>
 
-  </section>
+  </app-sempione-card>
 
 </app-sempione-page-shell>
 

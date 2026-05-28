@@ -93,7 +93,8 @@
       [allowedPageSizes]="[15, 30, 50, 100]"
       [showViewAction]="true"
       noDataText="Nessun messaggio trovato."
-      (rowView)="openDetail($event)">
+      (rowView)="openDetail($event)"
+      (rowDblClick)="openDetail($event)">
     </app-sempione-data-grid>
 
   </app-sempione-card>

@@ -9,8 +9,8 @@ export interface TabellaVarcharItem {
 
 export interface TabellaVarcharSearchParams {
   nomeTabella: string;
-  id: string;
-  desLike: string;
+  id: string | null;
+  desLike: string | null;
 }
 
 export interface TabellaVarcharUpsert {
@@ -24,7 +24,7 @@ export class TabellaVarcharService {
   private readonly apiService = inject(ApiService);
 
 
-  search(nomeTabella: string, id: string, des: string): Observable<TabellaVarcharItem[]> {
+  search(nomeTabella: string, id: string | null, des: string | null): Observable<TabellaVarcharItem[]> {
     const params: TabellaVarcharSearchParams = { nomeTabella, id, desLike: des };
     return this.apiService.post<TabellaVarcharItem[]>('Manager/Tabelle/GetTabellaServVarchar', params);
   }

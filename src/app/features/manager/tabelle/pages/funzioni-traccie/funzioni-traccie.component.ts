@@ -1,4 +1,4 @@
-import { Component, signal, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, signal, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -11,14 +11,13 @@ import {
   SempionePageShellComponent,
   SempioneCardComponent,
   SempioneCardHeaderComponent,
-  SempioneToolbarComponent,
   SempioneDataGridComponent,
   SempioneGridColumn,
   SempionePopupComponent,
   SempionePopupCardComponent,
   SempionePopupActionBarComponent,
   SempioneFieldGroupComponent,
-  SempioneButtonComponent,
+  SempioneSearchModeComponent,
   SempioneAlertComponent,
 } from '../../../../../components/General';
 
@@ -34,13 +33,12 @@ const NOME_TABELLA = 'ST_TRACE_FUNCTION';
     SempionePageShellComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
-    SempioneToolbarComponent,
     SempioneDataGridComponent,
     SempionePopupComponent,
     SempionePopupCardComponent,
     SempionePopupActionBarComponent,
     SempioneFieldGroupComponent,
-    SempioneButtonComponent,
+    SempioneSearchModeComponent,
     SempioneAlertComponent,
   ],
   templateUrl: './funzioni-traccie.component.html',
@@ -51,14 +49,15 @@ export class FunzioniTraccieComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly funzioniTraccieService = inject(FunzioniTraccieService);
   private readonly router = inject(Router);
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
 
   items = signal<IFunzioniTraccieItemResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
 
   readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'id',  caption: 'Codice',       alignment: 'left', width: 140 },
-    { dataField: 'des', caption: 'Descrizione',   alignment: 'left' },
+    { dataField: 'id',  caption: 'Codice',       alignment: 'left', width: 140, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'des', caption: 'Descrizione',   alignment: 'left', allowFiltering: false, allowHeaderFiltering: true },
   ];
 
   filterForm: FormGroup = this.fb.group({
@@ -115,6 +114,8 @@ export class FunzioniTraccieComponent implements OnInit {
     this.items.set([]);
     this.error.set(null);
   }
+
+  clearGridFilters(): void { this.dataGrid?.clearFilters(); }
 
   openAddPopup(): void {
     this.isEditMode.set(false);

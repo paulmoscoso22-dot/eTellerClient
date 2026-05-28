@@ -6,21 +6,15 @@
     }
   </div>
   <div class="popup-actions-primary">
-    <dx-button
-      [text]="cancelText"
-      stylingMode="outlined"
-      class="btn-fin-secondary"
-      (onClick)="cancel.emit()">
-    </dx-button>
+    <app-sempione-button [text]="cancelText" (clicked)="cancel.emit()"></app-sempione-button>
     @if (showSave) {
-      <dx-button
+      <app-sempione-button
         [text]="isSaving ? 'Salvataggio...' : saveText"
         [icon]="saveIcon"
-        stylingMode="contained"
-        class="btn-fin-primary"
+        variant="primary"
         [disabled]="isSaving"
-        (onClick)="save.emit()">
-      </dx-button>
+        (clicked)="save.emit()">
+      </app-sempione-button>
     }
   </div>
 </div>
