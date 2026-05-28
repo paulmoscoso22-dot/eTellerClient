@@ -467,11 +467,8 @@ h1 {
     font-weight: 600 !important;
 }
 
-// Pager — sticky + Sempione brand
+// Pager — Sempione brand
 .dx-datagrid-pager {
-    position: sticky;
-    bottom: 0;
-    z-index: 10;
     background: var(--color-surface-white);
     border-top: 1px solid var(--color-border-lighter) !important;
     padding: 2px 10px !important;

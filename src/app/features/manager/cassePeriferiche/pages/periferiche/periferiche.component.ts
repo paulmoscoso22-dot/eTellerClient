@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,11 +8,11 @@ import {
 import notify from 'devextreme/ui/notify';
 import {
   SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-  SempioneToolbarComponent,
+  SempioneSearchModeComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
   SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
-  SempioneCrudToolbarActionsComponent, SempioneButtonComponent,
+  SempioneButtonComponent,
 } from '../../../../../components/General';
 
 export interface IPeriferica {
@@ -32,11 +32,11 @@ export interface IPeriferica {
     CommonModule, ReactiveFormsModule,
     DxTextBoxModule, DxValidatorModule, DxSelectBoxModule,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-    SempioneToolbarComponent,
+    SempioneSearchModeComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
     SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
-    SempioneCrudToolbarActionsComponent, SempioneButtonComponent,
+    SempioneButtonComponent,
   ],
   templateUrl: './periferiche.component.html',
   styleUrls: ['./periferiche.component.css'],
@@ -45,10 +45,11 @@ export class PerifericheComponent implements OnInit {
   private fb     = inject(FormBuilder);
   private router = inject(Router);
 
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
+
   private devices = signal<IPeriferica[]>([]);
   private nextId  = 6;
 
-  filterSearch = signal<string>('');
   isLoading    = signal(false);
   error        = signal<string | null>(null);
 
@@ -86,28 +87,17 @@ export class PerifericheComponent implements OnInit {
     (this.popupMode() === 'edit' && (this.selectedDevice()?.inUso ?? false))
   );
 
-  filteredPeriferiche = computed(() => {
-    const q = this.filterSearch().toLowerCase().trim();
-    if (!q) return this.devices();
-    return this.devices().filter(d =>
-      d.devName.toLowerCase().includes(q) ||
-      d.devType.toLowerCase().includes(q) ||
-      d.devBraId.toLowerCase().includes(q) ||
-      d.devIoAddress.toLowerCase().includes(q)
-    );
-  });
-
   readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'devName',     caption: 'Nome Device', alignment: 'left'               },
-    { dataField: 'tipoDes',     caption: 'Tipo',        alignment: 'center', width: 160 },
-    { dataField: 'devIoAddress',caption: 'IO Address',  alignment: 'left',   width: 130 },
-    { dataField: 'braDes',      caption: 'Località',    alignment: 'left',   width: 150 },
-    { dataField: 'inUso',       caption: 'In Uso',      alignment: 'center', width: 80,  type: 'bool' },
-    { dataField: 'cassaCount',  caption: 'N° Casse',    alignment: 'center', width: 90  },
+    { dataField: 'devName',      caption: 'Nome Device', alignment: 'left',               allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'tipoDes',      caption: 'Tipo',        alignment: 'center', width: 160, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'devIoAddress', caption: 'IO Address',  alignment: 'left',   width: 130, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'braDes',       caption: 'Località',    alignment: 'left',   width: 150, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'inUso',        caption: 'In Uso',      alignment: 'center', width: 80,  allowFiltering: false, allowHeaderFiltering: true, type: 'bool', headerFilterDataSource: [{ text: 'Sì', value: true }, { text: 'No', value: false }] },
+    { dataField: 'cassaCount',   caption: 'N° Casse',    alignment: 'center', width: 90,  allowFiltering: false, allowHeaderFiltering: true },
   ];
 
   gridData = computed(() =>
-    this.filteredPeriferiche().map(d => ({
+    this.devices().map(d => ({
       ...d,
       tipoDes:    this.getTipoDes(d.devType),
       braDes:     this.getBraDes(d.devBraId),
@@ -142,8 +132,7 @@ export class PerifericheComponent implements OnInit {
   getTipoDes(dtyId: string): string { return this.tipoList.find(t => t.dtyId === dtyId)?.dtyDes ?? dtyId; }
   getBraDes(braId: string): string  { return this.branchesList.find(b => b.braId === braId)?.braDes ?? braId; }
 
-  resetSearch(): void { this.filterSearch.set(''); }
-  onSearchChanged(e: { value?: string }): void { this.filterSearch.set(e.value ?? ''); }
+  clearGridFilters(): void { this.dataGrid?.clearFilters(); }
 
   openViewPopup(data: IPeriferica): void {
     this.selectedDevice.set(data);

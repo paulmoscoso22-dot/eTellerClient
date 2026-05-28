@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { GetTransactionGiornaleCassaResponse, GetTransactionOperazioniAnnulateResponse, GetTransactionWaitingForBefRequest, GetTransactionWaitingForBefResponse, GetTransactionWithFiltersForGiornaleRequest, GetTransactionWithFiltersForGiornaleResponse, GetTransactionWithFiltersRequest, GetTransactionWithFiltersResponse } from '../domain/transaction.models';
+import { GetTransactionGiornaleCassaResponse, GetTransactionOperazioniAnnulateResponse, GetTransactionWaitingForBefRequest, GetTransactionWaitingForBefResponse, GetTransactionWithFiltersForGiornaleRequest, GetTransactionWithFiltersForGiornaleResponse, GetTransactionWithFiltersRequest, GetTransactionWithFiltersResponse, ReportUserContext } from '../domain/transaction.models';
 import { GetTotaleCassaRequest, GetTotaleCassaResponse } from '../domain/totale-cassa.models';
 
 /**
@@ -27,6 +27,10 @@ export class ReportFacade {
 
   private normalizeNumber(value: number | null | undefined): number | null {
     return value ?? null;
+  }
+
+  getUserContext(): Observable<ReportUserContext> {
+    return this.http.get<ReportUserContext>(`${this.apiUrl}/UserContext`);
   }
 
   /**
@@ -199,12 +203,11 @@ export class ReportFacade {
     tocCutId: string | null | undefined,
     tocBraId: string | null | undefined
   ): Observable<GetTotaleCassaResponse[]> {
-    // Format date as YYYY-MM-DD using local date values (avoiding timezone conversion)
     let formattedDate: string | null = null;
     if (tocData instanceof Date) {
-      const year = tocData.getFullYear();
+      const year  = tocData.getFullYear();
       const month = String(tocData.getMonth() + 1).padStart(2, '0');
-      const day = String(tocData.getDate()).padStart(2, '0');
+      const day   = String(tocData.getDate()).padStart(2, '0');
       formattedDate = `${year}-${month}-${day}`;
     } else if (tocData) {
       formattedDate = tocData as string;
@@ -212,7 +215,7 @@ export class ReportFacade {
 
     const payload: GetTotaleCassaRequest = {
       tocCliId: this.normalizeString(tocCliId),
-      tocData: formattedDate as any, // Send as formatted string, not Date
+      tocData:  formattedDate as any,
       tocCutId: this.normalizeString(tocCutId),
       tocBraId: this.normalizeString(tocBraId)
     };
@@ -220,6 +223,16 @@ export class ReportFacade {
     return this.http.post<GetTotaleCassaResponse[]>(
       `${environment.apiUrl}/Report/GetTotaliCassa`,
       payload
+    );
+  }
+
+  isHostOnline(): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/IsHostOnline`);
+  }
+
+  syncBalanceFromHost(): Observable<{ success: boolean; message: string }> {
+    return this.http.post<{ success: boolean; message: string }>(
+      `${this.apiUrl}/SyncBalanceFromHost`, {}
     );
   }
 }

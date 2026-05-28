@@ -27,3 +27,5 @@ export { SempionePillComponent } from './sempione-pill/sempione-pill.component';
 export type { SempionePillColor, SempionePillSize } from './sempione-pill/sempione-pill.component';
 export { SempioneSearchModeComponent } from './sempione-search-mode/sempione-search-mode.component';
 export { SempioneToolbarDateRangeComponent } from './sempione-toolbar-date-range/sempione-toolbar-date-range.component';
+export { SempioneTabPanelComponent } from './sempione-tab-panel/sempione-tab-panel.component';
+export { SempioneTabDirective } from './sempione-tab-panel/sempione-tab.directive';

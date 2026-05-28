@@ -102,12 +102,4 @@ export class InfoAutorizzazioniComponent implements OnInit, OnDestroy {
     return 'access--default';
   }
 
-  getRoleBadgeClass(role: string): string {
-    if (!role) return 'role--default';
-    const r = role.toLowerCase();
-    if (r.includes('admin')) return 'role--admin';
-    if (r.includes('manager') || r.includes('respons') || r.includes('dirett')) return 'role--manager';
-    if (r.includes('oper') || r.includes('teller') || r.includes('cassier')) return 'role--operator';
-    return 'role--default';
-  }
 }

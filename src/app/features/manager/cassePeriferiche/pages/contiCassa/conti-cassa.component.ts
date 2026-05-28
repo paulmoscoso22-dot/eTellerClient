@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import {
 import notify from 'devextreme/ui/notify';
 import {
   SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-  SempioneToolbarComponent, SempioneButtonComponent,
+  SempioneSearchModeComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
   SempioneFieldGroupComponent,
@@ -33,7 +33,7 @@ export interface IContoCassa {
     CommonModule, ReactiveFormsModule,
     DxTextBoxModule, DxValidatorModule, DxSelectBoxModule,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-    SempioneToolbarComponent, SempioneButtonComponent,
+    SempioneSearchModeComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
     SempioneFieldGroupComponent,
@@ -45,16 +45,10 @@ export class ContiCassaComponent implements OnInit {
   private fb     = inject(FormBuilder);
   private router = inject(Router);
 
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
+
   private conti = signal<IContoCassa[]>([]);
   private nextId = 5;
-
-  filterCassa = signal<string>('');
-  filterActId = signal<string>('');
-  filterBraId = signal<string>('');
-  filterCurId = signal<string>('');
-  filterAccId = signal<string>('');
-  filterCutId = signal<string>('');
-  filterDes   = signal<string>('');
 
   isLoading = signal(false);
   error     = signal<string | null>(null);
@@ -110,32 +104,19 @@ export class ContiCassaComponent implements OnInit {
     A01: '001', A02: '001', B01: '002', C01: '003',
   };
 
-  filteredConti = computed(() =>
-    this.conti().filter(c => {
-      if (this.filterCassa() && c.iacCliCassa !== this.filterCassa()) return false;
-      if (this.filterActId() && c.iacActId    !== this.filterActId()) return false;
-      if (this.filterBraId() && c.iacBraId    !== this.filterBraId()) return false;
-      if (this.filterCurId() && c.iacCurId    !== this.filterCurId()) return false;
-      if (this.filterCutId() && c.iacCutId    !== this.filterCutId()) return false;
-      if (this.filterAccId() && !c.iacAccId.toLowerCase().includes(this.filterAccId().toLowerCase())) return false;
-      if (this.filterDes()   && !c.iacDes.toLowerCase().includes(this.filterDes().toLowerCase()))     return false;
-      return true;
-    })
-  );
-
   readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'iacHostPrefix', caption: 'Cod. Conto',   alignment: 'left',   width: 100 },
-    { dataField: 'actDes',        caption: 'Tipo',          alignment: 'center', width: 130 },
-    { dataField: 'iacCutId',      caption: 'Gruppo',        alignment: 'center', width: 80  },
-    { dataField: 'iacCurId',      caption: 'Divisa',        alignment: 'center', width: 80  },
-    { dataField: 'iacAccId',      caption: 'Numero Conto',  alignment: 'left',   width: 130 },
-    { dataField: 'iacDes',        caption: 'Descrizione',   alignment: 'left'               },
-    { dataField: 'cassaDes',      caption: 'Cassa',         alignment: 'center', width: 120 },
-    { dataField: 'braDes',        caption: 'Località',      alignment: 'left',   width: 150 },
+    { dataField: 'iacHostPrefix', caption: 'Cod. Conto',  alignment: 'left',   width: 100, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'actDes',        caption: 'Tipo',         alignment: 'center', width: 130, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'iacCutId',      caption: 'Gruppo',       alignment: 'center', width: 80,  allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'iacCurId',      caption: 'Divisa',       alignment: 'center', width: 80,  allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'iacAccId',      caption: 'Numero Conto', alignment: 'left',   width: 130, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'iacDes',        caption: 'Descrizione',  alignment: 'left',               allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'cassaDes',      caption: 'Cassa',        alignment: 'center', width: 120, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'braDes',        caption: 'Località',     alignment: 'left',   width: 150, allowFiltering: false, allowHeaderFiltering: true },
   ];
 
   gridData = computed(() =>
-    this.filteredConti().map(c => ({
+    this.conti().map(c => ({
       ...c,
       actDes:   this.getActDes(c.iacActId),
       cassaDes: this.getCassaDes(c.iacCliCassa),
@@ -179,19 +160,7 @@ export class ContiCassaComponent implements OnInit {
     this.contoForm.patchValue({ iacBraId: braId });
   }
 
-  onFilterCassaChanged(e: { value?: string | null }): void { this.filterCassa.set(e.value ?? ''); }
-  onFilterActChanged(e: { value?: string | null }):   void { this.filterActId.set(e.value ?? ''); }
-  onFilterBraChanged(e: { value?: string | null }):   void { this.filterBraId.set(e.value ?? ''); }
-  onFilterCurChanged(e: { value?: string | null }):   void { this.filterCurId.set(e.value ?? ''); }
-  onFilterCutChanged(e: { value?: string | null }):   void { this.filterCutId.set(e.value ?? ''); }
-  onFilterAccIdChanged(e: { value?: string }):        void { this.filterAccId.set(e.value ?? ''); }
-  onFilterDesChanged(e: { value?: string }):          void { this.filterDes.set(e.value ?? ''); }
-
-  resetFilters(): void {
-    this.filterCassa.set(''); this.filterActId.set(''); this.filterBraId.set('');
-    this.filterCurId.set(''); this.filterAccId.set(''); this.filterCutId.set('');
-    this.filterDes.set('');
-  }
+  clearGridFilters(): void { this.dataGrid?.clearFilters(); }
 
   openViewPopup(data: IContoCassa): void {
     this.selectedLabel.set(data.iacAccId);

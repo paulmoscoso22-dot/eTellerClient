@@ -1,0 +1,27 @@
+<div class="s-tab-panel">
+
+  <div class="s-tab-bar" role="tablist">
+    @for (tab of tabs; track tab.label; let i = $index) {
+      <button
+        role="tab"
+        class="s-tab"
+        [class.s-tab--active]="activeIndex() === i"
+        [attr.aria-selected]="activeIndex() === i"
+        (click)="activate(i)">
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  <div class="s-tab-content">
+    @for (tab of tabs; track tab.label; let i = $index) {
+      <div
+        class="s-tab-pane"
+        role="tabpanel"
+        [class.s-tab-pane--active]="activeIndex() === i">
+        <ng-container [ngTemplateOutlet]="tab.tpl"></ng-container>
+      </div>
+    }
+  </div>
+
+</div>

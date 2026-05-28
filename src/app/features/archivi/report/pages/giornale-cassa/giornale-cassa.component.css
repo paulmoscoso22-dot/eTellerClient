@@ -5,3 +5,165 @@
   min-height: 0;
   overflow: hidden;
 }
+
+/* ── Toolbar fields (projected into app-sempione-search-mode) ── */
+.toolbar-fields { display: contents; }
+.toolbar-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.toolbar-field--sm { flex: 0 0 130px; }
+.toolbar-lbl {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-subtle, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* ── Error strip ── */
+.balance-warning {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 16px 5px 13px;
+  font-size: 11.5px;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+  border-bottom: 1px solid transparent;
+}
+.balance-warning svg { width: 13px; height: 13px; flex-shrink: 0; }
+.balance-warning--error {
+  background: #fff8f8;
+  color: #991b1b;
+  border-left-color: #dc2626;
+  border-bottom-color: #fee2e2;
+}
+
+/* ── Grid body ── */
+.card-body--grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.card-body--grid dx-data-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
+/* ── Messages ── */
+.grid-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  font-size: 13px;
+}
+.grid-message svg { width: 18px; height: 18px; flex-shrink: 0; }
+.grid-message--loading { color: var(--color-text-secondary, #6b7280); }
+.spin-icon { animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Empty state ── */
+.grid-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 24px;
+  color: #9ca3af;
+  font-size: 13px;
+  text-align: center;
+  flex: 1;
+}
+.grid-empty svg { width: 32px; height: 32px; stroke: #d1d5db; }
+.grid-empty p { margin: 0; max-width: 340px; }
+
+/* ── Divisa badge ── */
+.div-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.div-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  font-family: monospace;
+  letter-spacing: 0.05em;
+  background: var(--color-status-info-bg);
+  color: var(--color-status-info-text);
+}
+
+/* ── Action button ── */
+.azioni-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.14s;
+}
+.action-btn svg { width: 13px; height: 13px; transition: stroke 0.14s; }
+.action-btn--view svg { stroke: #94a3b8; }
+.action-btn--view:hover { background: rgba(0, 51, 102, 0.08); }
+.action-btn--view:hover svg { stroke: var(--color-brand-navy, #003366); }
+
+/* ── Popup layout ── */
+.popup-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.popup-section-title {
+  margin: 0 0 8px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-subtle, #6b7280);
+  border-bottom: 1px solid var(--color-border-light, #dce3ee);
+  padding-bottom: 4px;
+}
+.popup-fields-grid       { display: grid; gap: 8px 14px; }
+.popup-fields-grid--3col { grid-template-columns: 1fr 1fr 1fr; }
+
+.detail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.detail-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-subtle, #6b7280);
+}
+.detail-value {
+  font-size: 13px;
+  color: var(--color-text-primary, #1e293b);
+  word-break: break-all;
+}
+.detail-value.mono { font-family: monospace; font-size: 12px; }

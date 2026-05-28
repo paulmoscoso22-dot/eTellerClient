@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild, inject, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, inject, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DxDataGridModule } from 'devextreme-angular';
 import { DxDataGridComponent } from 'devextreme-angular/ui/data-grid';

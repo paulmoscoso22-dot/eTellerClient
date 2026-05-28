@@ -1,14 +1,226 @@
 <app-sempione-page-shell title="Attesa Benefondo">
-  <app-report-filter
-    [isLoading]="isLoading"
-    [statusDefaultValue]="statusDefaultValue"
-    [statusReadOnly]="true"
-    (searchClick)="onSearch($event)"
-  ></app-report-filter>
 
-  <app-attesa-benefondo-grid
-    [transactions]="transactions"
-    [isLoading]="isLoading"
-    [error]="error"
-  ></app-attesa-benefondo-grid>
+  <app-sempione-card>
+
+    <app-sempione-card-header title="Attesa Benefondo">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+    </app-sempione-card-header>
+
+    <!-- ── Toolbar ── -->
+    <app-sempione-search-mode
+      mode="toolbar"
+      [showAdd]="false"
+      [isLoading]="isLoading()"
+      (search)="search()"
+      (reset)="resetFilters()">
+      <div [formGroup]="searchForm" class="toolbar-fields">
+        <div class="toolbar-field toolbar-field--sm">
+          <label class="toolbar-lbl">Data</label>
+          <dx-date-box formControlName="trxData" type="date" displayFormat="dd.MM.yyyy" [showClearButton]="false"></dx-date-box>
+        </div>
+        <div class="toolbar-field toolbar-field--sm">
+          <label class="toolbar-lbl">Cassa</label>
+          <dx-text-box formControlName="trxCassa" [showClearButton]="true" placeholder="ID cassa..."></dx-text-box>
+        </div>
+      </div>
+    </app-sempione-search-mode>
+
+    <!-- ── Error ── -->
+    @if (error()) {
+      <div class="balance-warning balance-warning--error">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        {{ error() }}
+      </div>
+    }
+
+    <!-- ── Grid ── -->
+    <div class="card-body--grid">
+
+      @if (isLoading()) {
+        <div class="grid-message grid-message--loading">
+          <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          </svg>
+          Caricamento in corso...
+        </div>
+      }
+
+      @if (!isLoading() && !error()) {
+        <dx-data-grid
+          [dataSource]="transactions()"
+          [showBorders]="false"
+          [showRowLines]="true"
+          [showColumnLines]="false"
+          [rowAlternationEnabled]="true"
+          [columnAutoWidth]="false"
+          [wordWrapEnabled]="false"
+          [loadPanel]="{ enabled: false }"
+          [height]="'100%'"
+          keyExpr="trxId">
+
+          <dxo-scrolling mode="virtual" rowRenderingMode="virtual"></dxo-scrolling>
+          <dxo-paging [enabled]="false"></dxo-paging>
+          <dxo-sorting mode="single"></dxo-sorting>
+
+          <dxi-column dataField="trxId"      caption="Nop"        [width]="70"  alignment="center"></dxi-column>
+          <dxi-column dataField="trxDatope"  caption="Data"       [width]="120" alignment="center" dataType="datetime" format="dd.MM.yy HH:mm"></dxi-column>
+          <dxi-column dataField="trxCassa"   caption="Cassa"      [width]="90"  alignment="center"></dxi-column>
+          <dxi-column dataField="trxUsrId"   caption="Utente"     [width]="90"></dxi-column>
+          <dxi-column dataField="genere"     caption="Genere"     [minWidth]="120"></dxi-column>
+          <dxi-column dataField="report"     caption="Report"     [minWidth]="100"></dxi-column>
+          <dxi-column dataField="trxOptId"   caption="Tipo Op."   [width]="100"></dxi-column>
+          <dxi-column dataField="trxDivope"  caption="Divisa"     [width]="65"  alignment="center" cellTemplate="divTemplate"></dxi-column>
+          <dxi-column dataField="trxImpope"  caption="Importo"    [width]="110" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+          <dxi-column dataField="trxBefhost" caption="Host Trace" [width]="110"></dxi-column>
+          <dxi-column dataField="trxText1"   caption="Commento"   [minWidth]="100"></dxi-column>
+
+          <dxi-column caption="" [width]="48" [allowSorting]="false" [allowHeaderFiltering]="false" alignment="center" cellTemplate="actionTpl"></dxi-column>
+
+          <div *dxTemplate="let cell of 'divTemplate'" class="div-cell">
+            <span class="div-badge">{{ cell.value }}</span>
+          </div>
+
+          <div *dxTemplate="let cell of 'actionTpl'" class="azioni-cell">
+            <button class="action-btn action-btn--view" title="Visualizza dettaglio" (click)="openDetail(cell.data)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+
+        </dx-data-grid>
+      }
+
+      @if (!isLoading() && !error() && transactions().length === 0) {
+        <div class="grid-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <p>Nessuna operazione in attesa di benefondo. Selezionare una data e premere <strong>Cerca</strong>.</p>
+        </div>
+      }
+
+    </div>
+
+  </app-sempione-card>
+
 </app-sempione-page-shell>
+
+<!-- ── Popup Dettaglio ── -->
+<app-sempione-popup
+  [visible]="showDetailPopup()"
+  [title]="'Dettaglio — Nop ' + (selectedOp()?.trxId ?? '')"
+  [maxWidth]="760"
+  [dragEnabled]="true"
+  [showCloseButton]="true"
+  (hidden)="closePopup()">
+
+  @if (selectedOp(); as op) {
+    <div class="popup-layout">
+
+      <div>
+        <h4 class="popup-section-title">Transazione</h4>
+        <div class="popup-fields-grid popup-fields-grid--3col">
+          <div class="detail-field">
+            <span class="detail-label">Nop</span>
+            <span class="detail-value">{{ op.trxId }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Data</span>
+            <span class="detail-value">{{ op.trxDatope }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Stato BEF</span>
+            <span class="detail-value">
+              <span class="bef-pill">{{ getBefStatusLabel(op.trxBefstatus) }}</span>
+            </span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Cassa</span>
+            <span class="detail-value mono">{{ op.trxCassa }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Utente</span>
+            <span class="detail-value">{{ op.trxUsrId }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Tipo Operazione</span>
+            <span class="detail-value">{{ op.trxOptId }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="popup-section-title">Importi</h4>
+        <div class="popup-fields-grid popup-fields-grid--3col">
+          <div class="detail-field">
+            <span class="detail-label">Divisa Op.</span>
+            <span class="detail-value"><span class="div-badge">{{ op.trxDivope }}</span></span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Importo Op.</span>
+            <span class="detail-value">{{ op.trxImpope | number:'1.2-2' }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Cambio</span>
+            <span class="detail-value mono">{{ op.trxExcrat | number:'1.4-4' }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Divisa CTP</span>
+            <span class="detail-value"><span class="div-badge">{{ op.trxDivctp }}</span></span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Importo CTP</span>
+            <span class="detail-value">{{ op.trxImpctp | number:'1.2-2' }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Host Trace</span>
+            <span class="detail-value mono">{{ op.trxBefhost || '—' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="popup-section-title">Note</h4>
+        <div class="popup-fields-grid popup-fields-grid--1col">
+          <div class="detail-field">
+            <span class="detail-label">Commento</span>
+            <span class="detail-value">{{ op.trxText1 || '—' }}</span>
+          </div>
+          @if (op.trxText2) {
+            <div class="detail-field">
+              <span class="detail-label">Testo 2</span>
+              <span class="detail-value">{{ op.trxText2 }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+
+    <app-sempione-popup-action-bar
+      [showSave]="false"
+      cancelText="Chiudi"
+      (cancel)="closePopup()">
+    </app-sempione-popup-action-bar>
+  }
+
+</app-sempione-popup>
+
+<!-- ── Toast ── -->
+<dx-toast
+  [visible]="toastVisible()"
+  [type]="toastType()"
+  [message]="toastMessage()"
+  [displayTime]="3000"
+  (onHidden)="toastVisible.set(false)">
+</dx-toast>

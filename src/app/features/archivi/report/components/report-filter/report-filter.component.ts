@@ -7,6 +7,7 @@ import {
   DxNumberBoxModule,
 } from 'devextreme-angular';
 import { SempioneFilterShellComponent } from '../../../../../components/General';
+import { ReportSearchParams } from '../../domain/report-search.models';
 
 @Component({
   selector: 'app-report-filter',

@@ -5,3 +5,98 @@
   min-height: 0;
   overflow: hidden;
 }
+
+/* ── Toolbar fields (projected into app-sempione-search-mode) ── */
+.toolbar-fields { display: contents; }
+.toolbar-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.toolbar-field--sm { flex: 0 0 130px; }
+.toolbar-lbl {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-subtle, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* ── Error strip ── */
+.balance-warning {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 16px 5px 13px;
+  font-size: 11.5px;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+  border-bottom: 1px solid transparent;
+}
+.balance-warning svg { width: 13px; height: 13px; flex-shrink: 0; }
+.balance-warning--error {
+  background: #fff8f8;
+  color: #991b1b;
+  border-left-color: #dc2626;
+  border-bottom-color: #fee2e2;
+}
+
+/* ── Grid ── */
+.card-body--grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.card-body--grid dx-data-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
+/* ── Detail button inside grid cell ── */
+.btn-detail {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  color: var(--color-brand-navy, #003366);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.btn-detail:hover { background: var(--color-surface-hover, #e3eaf3); }
+.btn-detail svg { width: 14px; height: 14px; }
+
+/* ── Detail popup body ── */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 0;
+  font-size: 13px;
+}
+.detail-row {
+  display: contents;
+}
+.detail-row .detail-lbl,
+.detail-row .detail-val {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--color-border-light, #dce3ee);
+}
+.detail-lbl {
+  font-weight: 600;
+  color: var(--color-text-subtle, #6b7280);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background: rgba(237, 242, 247, 0.5);
+}
+.detail-val {
+  color: var(--color-text-primary, #1e293b);
+  word-break: break-all;
+}

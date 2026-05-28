@@ -69,6 +69,8 @@ export interface GetTransactionWithFiltersRequest {
  * Response interface for GetTransactionWaitingForBef
  */
 export interface GetTransactionWaitingForBefResponse {
+  genere: string | null;
+  report: string | null;
   trxAptId: string;
   trxAssegno: string;
   trxBefhost: string;
@@ -240,6 +242,17 @@ export interface GetTransactionWithFiltersForGiornaleAntiriciclaggioResponse {
   arcAppName?: string;
   arcForced?: boolean;
   
+}
+
+/**
+ * Response for GET /api/report/UserContext
+ * Describes the current user's cash desk and permissions for the Attesa BEF page.
+ */
+export interface ReportUserContext {
+  cashDeskId:       string | null;
+  canUseTeller:     boolean;
+  canOverrideCassa: boolean;
+  canSeeAllBranches: boolean;
 }
 
 /**

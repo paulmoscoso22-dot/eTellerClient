@@ -9,114 +9,12 @@
       </svg>
     </app-sempione-card-header>
 
-    <app-sempione-toolbar>
-
-      <div class="toolbar-field">
-        <dx-select-box
-          [dataSource]="cassaFilterList"
-          displayExpr="cliDes"
-          valueExpr="cliId"
-          labelMode="hidden"
-          placeholder="Cassa..."
-          [value]="filterCassa()"
-          (onValueChanged)="onFilterCassaChanged($event)">
-        </dx-select-box>
-      </div>
-
-      <div class="toolbar-field">
-        <dx-select-box
-          [dataSource]="actFilterList"
-          displayExpr="actDes"
-          valueExpr="actId"
-          labelMode="hidden"
-          placeholder="Tipo conto..."
-          [value]="filterActId()"
-          (onValueChanged)="onFilterActChanged($event)">
-        </dx-select-box>
-      </div>
-
-      <div class="toolbar-field">
-        <dx-select-box
-          [dataSource]="brancheFilterList"
-          displayExpr="braDes"
-          valueExpr="braId"
-          labelMode="hidden"
-          placeholder="Località..."
-          [value]="filterBraId()"
-          (onValueChanged)="onFilterBraChanged($event)">
-        </dx-select-box>
-      </div>
-
-      <div class="toolbar-field">
-        <dx-select-box
-          [dataSource]="divisaFilterList"
-          displayExpr="curLondes"
-          valueExpr="curId"
-          labelMode="hidden"
-          placeholder="Divisa..."
-          [value]="filterCurId()"
-          (onValueChanged)="onFilterCurChanged($event)">
-        </dx-select-box>
-      </div>
-
-      <div class="toolbar-field">
-        <dx-text-box
-          labelMode="hidden"
-          placeholder="N° Conto..."
-          [showClearButton]="true"
-          [value]="filterAccId()"
-          valueChangeEvent="input"
-          (onValueChanged)="onFilterAccIdChanged($event)">
-        </dx-text-box>
-      </div>
-
-      <div class="toolbar-field">
-        <dx-select-box
-          [dataSource]="gruppoFilterList"
-          displayExpr="cutDes"
-          valueExpr="cutId"
-          labelMode="hidden"
-          placeholder="Gruppo..."
-          [value]="filterCutId()"
-          (onValueChanged)="onFilterCutChanged($event)">
-        </dx-select-box>
-      </div>
-
-      <div class="toolbar-field">
-        <dx-text-box
-          labelMode="hidden"
-          placeholder="Descrizione..."
-          [showClearButton]="true"
-          [value]="filterDes()"
-          valueChangeEvent="input"
-          (onValueChanged)="onFilterDesChanged($event)">
-        </dx-text-box>
-      </div>
-
-      <div toolbar-actions>
-        <app-sempione-button
-          icon="search"
-          hint="Cerca"
-          variant="secondary"
-          (clicked)="filterCassa.set(filterCassa())">
-        </app-sempione-button>
-        <app-sempione-button
-          icon="revert"
-          hint="Reset filtri"
-          variant="secondary"
-          (clicked)="resetFilters()">
-        </app-sempione-button>
-        <span class="toolbar-sep" toolbar-actions></span>
-        <app-sempione-button
-          text="Nuovo Conto"
-          icon="add"
-          variant="primary"
-          [shadow]="true"
-          (clicked)="openNewPopup()">
-        </app-sempione-button>
-      </div>
-
-    </app-sempione-toolbar>
+    <app-sempione-search-mode
+      mode="header"
+      newText="Nuovo Conto"
+      (reset)="clearGridFilters()"
+      (add)="openNewPopup()">
+    </app-sempione-search-mode>
 
     <app-sempione-data-grid
       [dataSource]="gridData()"
@@ -124,6 +22,7 @@
       keyExpr="iacId"
       [isLoading]="isLoading()"
       [error]="error()"
+      [showHeaderFilter]="true"
       [pageSize]="20"
       [allowedPageSizes]="[20, 50, 100]"
       [showViewAction]="true"

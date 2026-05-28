@@ -12,36 +12,20 @@
     </svg>
   </app-sempione-card-header>
 
-  <app-sempione-toolbar>
-    <dx-text-box
-      [value]="filterParDes()"
-      (onValueChanged)="filterParDes.set($event.value)"
-      placeholder="Cerca per descrizione..."
-      labelMode="hidden"
-      [showClearButton]="true">
-    </dx-text-box>
-    <dx-text-box
-      [value]="filterParId()"
-      (onValueChanged)="filterParId.set($event.value)"
-      placeholder="Cerca per ID..."
-      labelMode="hidden"
-      [showClearButton]="true">
-    </dx-text-box>
-
-    <div toolbar-actions>
-      <app-sempione-button icon="search" hint="Cerca" variant="secondary" (clicked)="filterParDes.set(filterParDes())"></app-sempione-button>
-      <app-sempione-button icon="revert" hint="Ripristina filtri" variant="secondary" (clicked)="resetFilters()"></app-sempione-button>
-      <app-sempione-button icon="print" text="Stampa" variant="secondary"></app-sempione-button>
-      <app-sempione-button text="Nuovo" icon="plus" variant="primary" [shadow]="true" (clicked)="onAdd()"></app-sempione-button>
-    </div>
-  </app-sempione-toolbar>
+  <app-sempione-search-mode
+    mode="header"
+    newText="Nuovo"
+    (reset)="clearGridFilters()"
+    (add)="onAdd()">
+  </app-sempione-search-mode>
 
   <app-sempione-data-grid
-    [dataSource]="filteredPersonalisations()"
+    [dataSource]="personalisations()"
     [keyExpr]="'parId'"
     [columns]="columns"
     [pageSize]="15"
     [allowedPageSizes]="[15, 30, 50]"
+    [showHeaderFilter]="true"
     [showEditAction]="true"
     [showTraceAction]="true"
     [showDeleteAction]="true"
