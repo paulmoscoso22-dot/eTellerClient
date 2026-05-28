@@ -45,6 +45,7 @@
 
       <dxo-paging [pageSize]="15" [enabled]="true"></dxo-paging>
       <dxo-pager
+        [visible]="true"
         [showInfo]="true"
         infoText="{2} autorizzazioni"
         [showPageSizeSelector]="true"
@@ -75,8 +76,7 @@
       <dxi-column
         dataField="roleName"
         caption="Ruolo"
-        [width]="185"
-        cellTemplate="roleBadgeTemplate">
+        [width]="185">
       </dxi-column>
 
       <dxi-column
@@ -86,12 +86,6 @@
         alignment="center"
         cellTemplate="accessBadgeTemplate">
       </dxi-column>
-
-      <div *dxTemplate="let cell of 'roleBadgeTemplate'">
-        <span class="role-badge" [ngClass]="getRoleBadgeClass(cell.value)">
-          {{ cell.value }}
-        </span>
-      </div>
 
       <div *dxTemplate="let cell of 'accessBadgeTemplate'">
         <span class="access-badge" [ngClass]="getAccessBadgeClass(cell.value)">

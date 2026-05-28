@@ -9,27 +9,12 @@
       </svg>
     </app-sempione-card-header>
 
-    <app-sempione-toolbar>
-
-      <div class="toolbar-field">
-        <dx-text-box
-          labelMode="hidden"
-          placeholder="Cerca per nome, tipo, indirizzo o località..."
-          [showClearButton]="true"
-          [value]="filterSearch()"
-          valueChangeEvent="input"
-          (onValueChanged)="onSearchChanged($event)">
-        </dx-text-box>
-      </div>
-
-      <app-sempione-crud-toolbar-actions
-        [showSearch]="false"
-        newText="Nuova Periferica"
-        (reset)="resetSearch()"
-        (add)="openNewPopup()">
-      </app-sempione-crud-toolbar-actions>
-
-    </app-sempione-toolbar>
+    <app-sempione-search-mode
+      mode="header"
+      newText="Nuova Periferica"
+      (reset)="clearGridFilters()"
+      (add)="openNewPopup()">
+    </app-sempione-search-mode>
 
     <app-sempione-data-grid
       [dataSource]="gridData()"
@@ -37,6 +22,7 @@
       keyExpr="devId"
       [isLoading]="isLoading()"
       [error]="error()"
+      [showHeaderFilter]="true"
       [pageSize]="20"
       [allowedPageSizes]="[20, 50, 100]"
       [showViewAction]="true"

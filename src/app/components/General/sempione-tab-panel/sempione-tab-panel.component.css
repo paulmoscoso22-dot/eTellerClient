@@ -1,0 +1,82 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Panel container ── */
+.s-tab-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Strip che ospita il segmented control ── */
+.s-tab-bar {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(237, 242, 247, 0.5);
+  border-bottom: 1px solid var(--color-border-light, #dce3ee);
+  flex-shrink: 0;
+}
+
+/* ── Singolo segmento ── */
+.s-tab {
+  position: relative;
+  padding: 5px 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  color: var(--color-text-muted, #64748b);
+  background: var(--color-surface-white, #fff);
+  border: 1px solid var(--color-border, #cbd5e1);
+  margin-right: -1px;
+  cursor: pointer;
+  white-space: nowrap;
+  outline: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.s-tab:first-child { border-radius: 5px 0 0 5px; }
+.s-tab:last-child  { border-radius: 0 5px 5px 0; margin-right: 0; }
+.s-tab:only-child  { border-radius: 5px; }
+
+.s-tab:hover:not(.s-tab--active) {
+  background: var(--color-surface-hover, #e3eaf3);
+  color: var(--color-brand-navy, #003366);
+  z-index: 1;
+}
+
+/* Segmento attivo: navy pieno, bordo navy, testo bianco */
+.s-tab--active {
+  background: var(--color-brand-navy, #003366);
+  color: var(--color-surface-white, #fff);
+  border-color: var(--color-brand-navy, #003366);
+  z-index: 2;
+}
+
+/* ── Contenuto tab ── */
+.s-tab-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.s-tab-pane {
+  display: none;
+  height: 100%;
+  overflow: auto;
+}
+
+.s-tab-pane--active {
+  display: flex;
+  flex-direction: column;
+}

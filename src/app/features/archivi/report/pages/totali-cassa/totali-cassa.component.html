@@ -1,35 +1,235 @@
-<app-sempione-page-header title="Totali Cassa"></app-sempione-page-header>
-
-<div class="content-layout">
-
-  <app-totale-cassa-filter
-    [isLoading]="isLoading"
-    (searchClick)="onSearch($event)">
-  </app-totale-cassa-filter>
+<app-sempione-page-shell title="Totali Cassa">
 
   <app-sempione-card>
 
-    <app-sempione-card-header title="Totali Cassa" [count]="totaliCassa().length > 0 ? totaliCassa().length : undefined">
+    <app-sempione-card-header title="Totali Cassa">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="2" y="7" width="20" height="14" rx="2"></rect>
         <path d="M16 3H8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z"></path>
-        <line x1="12" y1="12" x2="12" y2="16"></line>
-        <line x1="10" y1="14" x2="14" y2="14"></line>
       </svg>
     </app-sempione-card-header>
 
-    <app-sempione-data-grid
-      [dataSource]="totaliCassa()"
-      keyExpr="tocCurId"
-      [columns]="columns"
-      [isLoading]="isLoading()"
-      [error]="error()"
-      [pageSize]="20"
-      [allowedPageSizes]="[20, 50, 100]"
-      [showEditAction]="false"
-      noDataText="Nessun risultato. Refina i filtri e avvia una nuova ricerca.">
-    </app-sempione-data-grid>
+    <!-- ── Toolbar ── -->
+    <div class="card-toolbar" [formGroup]="searchForm">
+      <div class="toolbar-inner">
+
+        <div class="toolbar-filters">
+          <div class="toolbar-field toolbar-field--sm">
+            <label class="toolbar-lbl">Data</label>
+            <dx-date-box
+              formControlName="tocData"
+              type="date"
+              displayFormat="dd.MM.yyyy"
+              [showClearButton]="false">
+            </dx-date-box>
+          </div>
+          <div class="toolbar-field toolbar-field--sm">
+            <label class="toolbar-lbl">Cassa</label>
+            <dx-text-box
+              formControlName="tocCliId"
+              [showClearButton]="false"
+              placeholder="ID cassa...">
+            </dx-text-box>
+          </div>
+        </div>
+
+        <div class="toolbar-actions">
+          <app-sempione-button hint="Reset filtri" icon="revert" (clicked)="resetFilters()"></app-sempione-button>
+          @if (canUseTeller()) {
+            <app-sempione-button
+              hint="Aggiorna dal Boss"
+              icon="refresh"
+              [disabled]="isSyncing() || !isHostOnline()"
+              (clicked)="syncFromBoss()">
+            </app-sempione-button>
+          }
+          <app-sempione-button
+            hint="Cerca"
+            icon="search"
+            variant="primary"
+            [shadow]="true"
+            [disabled]="isLoading() || isSyncing()"
+            (clicked)="search()">
+          </app-sempione-button>
+        </div>
+
+      </div>
+
+      <!-- Status: info contestuale separata dalla riga filtri+azioni -->
+      <div class="toolbar-status">
+        <span class="host-status" [class.host-status--online]="isHostOnline()" [class.host-status--offline]="!isHostOnline()">
+          <svg viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
+          {{ isHostOnline() ? 'Boss online' : 'Boss offline' }}
+        </span>
+        @if (lastUpdate()) {
+          <span class="last-update">Aggiornato: {{ lastUpdate() | date:'dd.MM.yyyy HH:mm' }}</span>
+        }
+      </div>
+
+    </div>
+
+    <!-- ── Warnings ── -->
+    @if (hasSaldoErrato()) {
+      <div class="balance-warning balance-warning--error">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        Attenzione: saldo iniziale diverso dal saldo finale del giorno precedente per alcune valute.
+      </div>
+    }
+    @if (hasOfflineOps()) {
+      <div class="balance-warning balance-warning--info">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Presenti operazioni non ancora trasmesse all'host.
+      </div>
+    }
+
+    <!-- ── Body ── -->
+    <div class="card-body card-body--tabs">
+
+      @if (error()) {
+        <div class="grid-message grid-message--error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          {{ error() }}
+        </div>
+      }
+
+      @if (isLoading() || isSyncing()) {
+        <div class="grid-message grid-message--loading">
+          <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+          </svg>
+          {{ isSyncing() ? 'Sincronizzazione dal Boss in corso...' : 'Caricamento in corso...' }}
+        </div>
+      }
+
+      @if (!isLoading() && !isSyncing() && !error()) {
+        <app-sempione-tab-panel>
+
+          <!-- ── Biglietti Banca (BB) ── -->
+          <ng-template sempione-tab="Biglietti (BB)">
+            <dx-data-grid
+              [dataSource]="tabBB()"
+              [showBorders]="false"
+              [columnAutoWidth]="false"
+              [rowAlternationEnabled]="true"
+              [hoverStateEnabled]="true"
+              [height]="'100%'"
+              keyExpr="tocCurId">
+
+              <dxo-paging [pageSize]="30"></dxo-paging>
+              <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[20, 30, 50]" [showInfo]="true"></dxo-pager>
+
+              <dxi-column dataField="tocCurId"       caption="Valuta"          [width]="90"  alignment="center" cellTemplate="curBBTemplate"></dxi-column>
+              <dxi-column dataField="tocSaldoIni"    caption="Saldo Iniziale"  [width]="130" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocTotdare"     caption="Dare"            [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocTotdareCtv"  caption="Dare CTV"        [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocTotavere"    caption="Avere"           [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocTotavereCtv" caption="Avere CTV"       [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocSaldoFin"    caption="Saldo Finale"    [width]="130" alignment="right" dataType="number" format="#,##0.00" cssClass="col-saldo-fin"></dxi-column>
+              <dxi-column dataField="tocSaldoFinCtv" caption="Saldo Fin. CTV"  alignment="right"  dataType="number" format="#,##0.00" cssClass="col-saldo-fin"></dxi-column>
+
+              <div *dxTemplate="let cell of 'curBBTemplate'" class="cur-cell">
+                <span class="cur-badge">{{ cell.value }}</span>
+                @if (cell.data.saldoErrato) {
+                  <span class="errato-badge" title="Saldo errato">!</span>
+                }
+              </div>
+
+              <dxo-load-panel [enabled]="false"></dxo-load-panel>
+            </dx-data-grid>
+          </ng-template>
+
+          <!-- ── Lingotti (LL) ── -->
+          <ng-template sempione-tab="Lingotti (LL)">
+            <dx-data-grid
+              [dataSource]="tabLL()"
+              [showBorders]="false"
+              [columnAutoWidth]="false"
+              [rowAlternationEnabled]="true"
+              [hoverStateEnabled]="true"
+              [height]="'100%'"
+              keyExpr="tocCurId">
+
+              <dxo-paging [pageSize]="30"></dxo-paging>
+              <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[20, 30, 50]" [showInfo]="true"></dxo-pager>
+
+              <dxi-column dataField="tocCurId"       caption="Valuta"          [width]="90"  alignment="center" cellTemplate="curLLTemplate"></dxi-column>
+              <dxi-column dataField="tocSaldoIni"    caption="Saldo Iniziale"  [width]="130" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocTotdare"     caption="Dare"            [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocTotdareCtv"  caption="Dare CTV"        [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocTotavere"    caption="Avere"           [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocTotavereCtv" caption="Avere CTV"       [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocSaldoFin"    caption="Saldo Finale"    [width]="130" alignment="right" dataType="number" format="#,##0.00" cssClass="col-saldo-fin"></dxi-column>
+              <dxi-column dataField="tocSaldoFinCtv" caption="Saldo Fin. CTV"  alignment="right"  dataType="number" format="#,##0.00" cssClass="col-saldo-fin"></dxi-column>
+
+              <div *dxTemplate="let cell of 'curLLTemplate'" class="cur-cell">
+                <span class="cur-badge">{{ cell.value }}</span>
+                @if (cell.data.saldoErrato) {
+                  <span class="errato-badge" title="Saldo errato">!</span>
+                }
+              </div>
+
+              <dxo-load-panel [enabled]="false"></dxo-load-panel>
+            </dx-data-grid>
+          </ng-template>
+
+          <!-- ── Metalli (MM) ── -->
+          <ng-template sempione-tab="Metalli (MM)">
+            <dx-data-grid
+              [dataSource]="tabMM()"
+              [showBorders]="false"
+              [columnAutoWidth]="false"
+              [rowAlternationEnabled]="true"
+              [hoverStateEnabled]="true"
+              [height]="'100%'"
+              keyExpr="tocCurId">
+
+              <dxo-paging [pageSize]="30"></dxo-paging>
+              <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[20, 30, 50]" [showInfo]="true"></dxo-pager>
+
+              <dxi-column dataField="tocCurId"       caption="Valuta"          [width]="90"  alignment="center" cellTemplate="curMMTemplate"></dxi-column>
+              <dxi-column dataField="tocSaldoIni"    caption="Saldo Iniziale"  [width]="130" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocTotdare"     caption="Dare"            [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocTotdareCtv"  caption="Dare CTV"        [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocTotavere"    caption="Avere"           [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocTotavereCtv" caption="Avere CTV"       [width]="120" alignment="right" dataType="number" format="#,##0.00"></dxi-column>
+              <dxi-column dataField="tocSaldoFin"    caption="Saldo Finale"    [width]="130" alignment="right" dataType="number" format="#,##0.00" cssClass="col-saldo-fin"></dxi-column>
+              <dxi-column dataField="tocSaldoFinCtv" caption="Saldo Fin. CTV"  alignment="right"  dataType="number" format="#,##0.00" cssClass="col-saldo-fin"></dxi-column>
+
+              <div *dxTemplate="let cell of 'curMMTemplate'" class="cur-cell">
+                <span class="cur-badge">{{ cell.value }}</span>
+                @if (cell.data.saldoErrato) {
+                  <span class="errato-badge" title="Saldo errato">!</span>
+                }
+              </div>
+
+              <dxo-load-panel [enabled]="false"></dxo-load-panel>
+            </dx-data-grid>
+          </ng-template>
+
+        </app-sempione-tab-panel>
+      }
+
+    </div>
 
   </app-sempione-card>
 
-</div>
+</app-sempione-page-shell>
+
+<!-- ── Toast ── -->
+<dx-toast
+  [visible]="toastVisible()"
+  [type]="toastType()"
+  [message]="toastMessage()"
+  [displayTime]="4000"
+  (onHidden)="toastVisible.set(false)">
+</dx-toast>

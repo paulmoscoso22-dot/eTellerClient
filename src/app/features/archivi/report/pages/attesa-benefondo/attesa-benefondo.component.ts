@@ -1,62 +1,144 @@
-import { Component, signal, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, computed, DestroyRef, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  DxDataGridModule,
+  DxTextBoxModule,
+  DxDateBoxModule,
+  DxToastModule,
+  DxTemplateModule,
+} from 'devextreme-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { tap, catchError } from 'rxjs';
-import { ReportFacade } from '../../services/report.facade';
-import { GetTransactionWaitingForBefResponse } from '../../domain/transaction.models';
-import { ReportSearchParams } from '../../domain/report-search.models';
-import { TransactionStatus } from '../../domain/transaction-status.enum';
-import { ReportFilterComponent } from '../../components/report-filter/report-filter.component';
-import { AttesaBenefondoGridComponent } from '../../components/attesa-benefondo-grid/attesa-benefondo-grid.component';
+import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
+import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
 import { SempionePageShellComponent } from '../../../../../components/General/sempione-page-shell/sempione-page-shell.component';
+import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
+import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
+import { SempioneSearchModeComponent } from '../../../../../components/General/sempione-search-mode/sempione-search-mode.component';
+import { ReportFacade } from '../../services/report.facade';
+import { GetTransactionWaitingForBefResponse, ReportUserContext } from '../../domain/transaction.models';
+import { TransactionStatus } from '../../domain/transaction-status.enum';
 
 @Component({
   selector: 'app-attesa-benefondo',
   standalone: true,
   imports: [
     CommonModule,
-    ReportFilterComponent,
-    AttesaBenefondoGridComponent,
+    ReactiveFormsModule,
+    DxDataGridModule,
+    DxTextBoxModule,
+    DxDateBoxModule,
+    DxToastModule,
+    DxTemplateModule,
+    SempioneCardComponent,
+    SempioneCardHeaderComponent,
     SempionePageShellComponent,
+    SempionePopupComponent,
+    SempionePopupActionBarComponent,
+    SempioneSearchModeComponent,
   ],
   templateUrl: './attesa-benefondo.component.html',
   styleUrls: ['./attesa-benefondo.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttesaBenefondoComponent {
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly reportFacade = inject(ReportFacade);
+export class AttesaBenefondoComponent implements OnInit {
+  private readonly destroyRef    = inject(DestroyRef);
+  private readonly reportFacade  = inject(ReportFacade);
+  private readonly fb            = inject(FormBuilder);
 
-  transactions = signal<GetTransactionWaitingForBefResponse[]>([]);
-  isLoading = signal(false);
-  error = signal<string | null>(null);
-  statusDefaultValue = TransactionStatus.AttesaBEF;
+  transactions     = signal<GetTransactionWaitingForBefResponse[]>([]);
+  isLoading        = signal(false);
+  error            = signal<string | null>(null);
+  userCtx          = signal<ReportUserContext | null>(null);
+  selectedOp       = signal<GetTransactionWaitingForBefResponse | null>(null);
+  showDetailPopup  = signal(false);
+  toastVisible     = signal(false);
+  toastType        = signal<'success' | 'error' | 'warning' | 'info'>('info');
+  toastMessage     = signal('');
 
-  onSearch(params: ReportSearchParams): void {
-    const { trxCassa, trxDataDal, trxDataAl, trxStatus, trxBraId } = params;
+  canShowActions = computed(() => {
+    const ctx = this.userCtx();
+    if (!ctx) return true;
+    return ctx.canUseTeller || ctx.canOverrideCassa;
+  });
+
+  searchForm: FormGroup = this.fb.group({
+    trxData:  [new Date(), [Validators.required]],
+    trxCassa: [''],
+  });
+
+  ngOnInit(): void {
+    this.reportFacade.getUserContext()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (ctx) => {
+          this.userCtx.set(ctx);
+          this.searchForm.patchValue({ trxCassa: ctx.cashDeskId ?? '' });
+          if (!ctx.canOverrideCassa) {
+            this.searchForm.get('trxCassa')?.disable();
+          }
+          this.search();
+        },
+        error: () => {
+          this.searchForm.get('trxCassa')?.disable();
+        }
+      });
+  }
+
+  search(): void {
+    if (this.searchForm.invalid) {
+      this.searchForm.markAllAsTouched();
+      return;
+    }
+
+    const raw  = this.searchForm.getRawValue();
+    const dal  = raw.trxData instanceof Date ? raw.trxData : null;
+    const al   = dal ? new Date(new Date(dal).setHours(23, 59, 59, 999)) : null;
+    const cassa = typeof raw.trxCassa === 'string' && raw.trxCassa.trim() ? raw.trxCassa.trim() : null;
 
     this.isLoading.set(true);
     this.error.set(null);
 
-    // Use tap to update signals when data arrives
-    // takeUntilDestroyed handles cleanup on component destroy
     this.reportFacade.getTransactionWaitingForBef(
-      trxCassa,
-      trxDataDal,
-      trxDataAl,
-      trxStatus,
-      trxBraId
-    ).pipe(
-      tap(data => {
-        this.transactions.set(data);
+      cassa, dal, al, TransactionStatus.AttesaBEF, null
+    ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next:  (data) => { this.transactions.set(data); this.isLoading.set(false); },
+      error: (err)  => {
+        this.error.set(err?.message || 'Errore nel recupero delle operazioni in attesa di benefondo.');
         this.isLoading.set(false);
-      }),
-      catchError(error => {
-        this.error.set(error.message || 'Errore nel recupero transazioni');
-        this.isLoading.set(false);
-        throw error; // Re-throw to allow proper error handling
-      }),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe();
+      }
+    });
+  }
+
+  resetFilters(): void {
+    this.searchForm.reset({
+      trxData:  new Date(),
+      trxCassa: this.userCtx()?.cashDeskId ?? '',
+    });
+    this.transactions.set([]);
+    this.error.set(null);
+  }
+
+  print(): void {
+    window.print();
+  }
+
+  openDetail(row: GetTransactionWaitingForBefResponse): void {
+    this.selectedOp.set(row);
+    this.showDetailPopup.set(true);
+  }
+
+  closePopup(): void {
+    this.showDetailPopup.set(false);
+    this.selectedOp.set(null);
+  }
+
+  getBefStatusLabel(status: number): string {
+    switch (status) {
+      case TransactionStatus.AttesaBEF: return 'Attesa BEF';
+      case TransactionStatus.Eseguito:  return 'Eseguito';
+      case TransactionStatus.Annullato: return 'Annullato';
+      default: return String(status);
+    }
   }
 }

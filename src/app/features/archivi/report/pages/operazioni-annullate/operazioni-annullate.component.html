@@ -1,14 +1,119 @@
 <app-sempione-page-shell title="Operazioni Annullate">
-  <app-report-filter
-    [isLoading]="isLoading"
-    [statusDefaultValue]="statusDefaultValue"
-    [statusReadOnly]="true"
-    (searchClick)="onSearch($event)"
-  ></app-report-filter>
 
-  <app-operazioni-annullate-grid
-    [transactions]="transactions"
-    [isLoading]="isLoading"
-    [error]="error"
-  ></app-operazioni-annullate-grid>
+  <app-sempione-card>
+
+    <app-sempione-card-header title="Operazioni Annullate">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="15" y1="9" x2="9" y2="15"/>
+        <line x1="9" y1="9" x2="15" y2="15"/>
+      </svg>
+    </app-sempione-card-header>
+
+    <!-- ── Toolbar ── -->
+    <app-sempione-search-mode
+      mode="toolbar"
+      [showAdd]="false"
+      [isLoading]="isLoading()"
+      (search)="search()"
+      (reset)="resetFilters()">
+      <div [formGroup]="searchForm" class="toolbar-fields">
+        <div class="toolbar-field toolbar-field--sm">
+          <label class="toolbar-lbl">Data</label>
+          <dx-date-box formControlName="trxData" type="date" displayFormat="dd.MM.yyyy" [showClearButton]="false"></dx-date-box>
+        </div>
+        <div class="toolbar-field toolbar-field--sm">
+          <label class="toolbar-lbl">Cassa</label>
+          <dx-text-box formControlName="trxCassa" [showClearButton]="false" placeholder="ID cassa..."></dx-text-box>
+        </div>
+      </div>
+    </app-sempione-search-mode>
+
+    <!-- ── Error ── -->
+    @if (error()) {
+      <div class="balance-warning balance-warning--error">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        {{ error() }}
+      </div>
+    }
+
+    <!-- ── Grid ── -->
+    <div class="card-body--grid">
+      <dx-data-grid
+        [dataSource]="transactions()"
+        [showBorders]="false"
+        [showRowLines]="true"
+        [showColumnLines]="false"
+        [rowAlternationEnabled]="true"
+        [columnAutoWidth]="false"
+        [wordWrapEnabled]="false"
+        [loadPanel]="{ enabled: isLoading() }"
+        keyExpr="trxId">
+
+        <dxo-scrolling mode="virtual" rowRenderingMode="virtual"></dxo-scrolling>
+        <dxo-paging [enabled]="false"></dxo-paging>
+        <dxo-sorting mode="single"></dxo-sorting>
+
+        <dxi-column dataField="trxId"     caption="ID"      [width]="70"  alignment="center"></dxi-column>
+        <dxi-column dataField="genere"    caption="Genere"  [minWidth]="90"></dxi-column>
+        <dxi-column dataField="tipo"      caption="Tipo"    [minWidth]="90"></dxi-column>
+        <dxi-column dataField="trxCassa"  caption="Cassa"   [width]="80"  alignment="center"></dxi-column>
+        <dxi-column dataField="trxUsrId"  caption="Utente"  [width]="90"></dxi-column>
+        <dxi-column dataField="hostTrace" caption="Trace"   [width]="110"></dxi-column>
+        <dxi-column dataField="trxText1"  caption="Testo"   [minWidth]="120"></dxi-column>
+        <dxi-column dataField="stato"     caption="Stato"   [width]="90"></dxi-column>
+
+        <dxi-column caption="" [width]="48" [allowSorting]="false" [allowHeaderFiltering]="false" cellTemplate="actionTpl"></dxi-column>
+        <div *dxTemplate="let cell of 'actionTpl'">
+          <button class="btn-detail" title="Dettaglio" (click)="openDetail(cell.data)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </button>
+        </div>
+
+      </dx-data-grid>
+    </div>
+
+  </app-sempione-card>
+
 </app-sempione-page-shell>
+
+<!-- ── Detail Popup ── -->
+<app-sempione-popup
+  title="Dettaglio Operazione Annullata"
+  [visible]="showDetailPopup()"
+  [maxWidth]="520"
+  (visibleChange)="closePopup()">
+
+  @if (selectedOp(); as op) {
+    <div class="detail-grid">
+      <div class="detail-row"><span class="detail-lbl">ID</span><span class="detail-val">{{ op.trxId }}</span></div>
+      <div class="detail-row"><span class="detail-lbl">Genere</span><span class="detail-val">{{ op.genere ?? '—' }}</span></div>
+      <div class="detail-row"><span class="detail-lbl">Tipo</span><span class="detail-val">{{ op.tipo ?? '—' }}</span></div>
+      <div class="detail-row"><span class="detail-lbl">Report</span><span class="detail-val">{{ op.report ?? '—' }}</span></div>
+      <div class="detail-row"><span class="detail-lbl">Cassa</span><span class="detail-val">{{ op.trxCassa ?? '—' }}</span></div>
+      <div class="detail-row"><span class="detail-lbl">Utente</span><span class="detail-val">{{ op.trxUsrId ?? '—' }}</span></div>
+      <div class="detail-row"><span class="detail-lbl">Host Trace</span><span class="detail-val">{{ op.hostTrace ?? '—' }}</span></div>
+      <div class="detail-row"><span class="detail-lbl">Testo</span><span class="detail-val">{{ op.trxText1 ?? '—' }}</span></div>
+      <div class="detail-row"><span class="detail-lbl">Stato</span><span class="detail-val">{{ op.stato ?? '—' }}</span></div>
+    </div>
+  }
+
+  <app-sempione-popup-action-bar>
+    <app-sempione-button hint="Chiudi" icon="close" (clicked)="closePopup()"></app-sempione-button>
+  </app-sempione-popup-action-bar>
+
+</app-sempione-popup>
+
+<!-- ── Toast ── -->
+<dx-toast
+  [visible]="toastVisible()"
+  [type]="toastType()"
+  [message]="toastMessage()"
+  [displayTime]="3000"
+  (onHidden)="toastVisible.set(false)">
+</dx-toast>

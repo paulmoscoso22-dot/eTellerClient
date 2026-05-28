@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,11 +14,11 @@ import { DeviceResponse, IDevice } from '../../models/device.models';
 import { ICassa } from '../../models/casa.models';
 import {
   SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-  SempioneToolbarComponent,
+  SempioneSearchModeComponent,
   SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
   SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
-  SempioneCrudToolbarActionsComponent, SempioneButtonComponent,
+  SempioneButtonComponent,
 } from '../../../../../components/General';
 
 @Component({
@@ -30,11 +30,11 @@ import {
     DxSelectBoxModule, DxTextAreaModule, DxCheckBoxModule,
     ControlAssignComponent,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-    SempioneToolbarComponent,
+    SempioneSearchModeComponent,
     SempioneDataGridComponent,
     SempionePopupComponent, SempionePopupCardComponent, SempionePopupActionBarComponent,
     SempioneFieldGroupComponent, SempioneConfirmDeleteComponent,
-    SempioneCrudToolbarActionsComponent, SempioneButtonComponent,
+    SempioneButtonComponent,
   ],
   templateUrl: './casse.component.html',
   styleUrls: ['./casse.component.css'],
@@ -45,9 +45,10 @@ export class CasseComponent implements OnInit {
   private core     = inject(CoreService);
   private router   = inject(Router);
 
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
+
   private casse = signal<ICassa[]>([]);
 
-  filterSearch  = signal<string>('');
   isLoading     = signal(false);
   error         = signal<string | null>(null);
 
@@ -68,29 +69,18 @@ export class CasseComponent implements OnInit {
   allDevices    = signal<IDevice[]>([]);
 
   readonly gridColumns: SempioneGridColumn[] = [
-    { dataField: 'cliId',    caption: 'ID',           alignment: 'left',   width: 80  },
-    { dataField: 'cliIp',    caption: 'Indirizzo IP',  alignment: 'left',   width: 140 },
-    { dataField: 'braDes',   caption: 'Filiale',       alignment: 'left'               },
-    { dataField: 'cliLingua',caption: 'Lingua',        alignment: 'center', width: 80  },
-    { dataField: 'statusLabel', caption: 'Stato',       alignment: 'center', width: 120, type: 'entity-status' },
-    { dataField: 'inUso',    caption: 'In Uso',        alignment: 'center', width: 80,  type: 'bool'      },
-    { dataField: 'cliCnt',   caption: 'N° Oper.',      alignment: 'right',  width: 90  },
-    { dataField: 'cliDes',   caption: 'Descrizione',   alignment: 'left'               },
+    { dataField: 'cliId',      caption: 'ID',           alignment: 'left',   width: 80,  allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'cliIp',      caption: 'Indirizzo IP',  alignment: 'left',   width: 140, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'braDes',     caption: 'Filiale',       alignment: 'left',               allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'cliLingua',  caption: 'Lingua',        alignment: 'center', width: 80,  allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'statusLabel',caption: 'Stato',         alignment: 'center', width: 120, allowFiltering: false, allowHeaderFiltering: true, type: 'entity-status' },
+    { dataField: 'inUso',      caption: 'In Uso',        alignment: 'center', width: 80,  allowFiltering: false, allowHeaderFiltering: true, type: 'bool', headerFilterDataSource: [{ text: 'Sì', value: true }, { text: 'No', value: false }] },
+    { dataField: 'cliCnt',     caption: 'N° Oper.',      alignment: 'right',  width: 90,  allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'cliDes',     caption: 'Descrizione',   alignment: 'left',               allowFiltering: false, allowHeaderFiltering: true },
   ];
 
-  filteredCasse = computed(() => {
-    const q = this.filterSearch().toLowerCase().trim();
-    if (!q) return this.casse();
-    return this.casse().filter(c =>
-      c.cliId.toLowerCase().includes(q) ||
-      c.cliIp.toLowerCase().includes(q) ||
-      c.cliMac.toLowerCase().includes(q) ||
-      c.cliDes.toLowerCase().includes(q)
-    );
-  });
-
   gridData = computed(() =>
-    this.filteredCasse().map(c => ({
+    this.casse().map(c => ({
       ...c,
       braDes: this.getBraDes(c.cliBraId),
       statusLabel: this.getStatusDes(c.cliStatus),
@@ -167,8 +157,7 @@ export class CasseComponent implements OnInit {
     });
   }
 
-  onSearchChanged(e: { value?: string }): void { this.filterSearch.set(e.value ?? ''); }
-  resetSearch(): void { this.filterSearch.set(''); }
+  clearGridFilters(): void { this.dataGrid?.clearFilters(); }
 
   getBraDes(braId: string): string {
     return this.branchesList().find(b => b.braId === braId)?.braDes ?? braId;

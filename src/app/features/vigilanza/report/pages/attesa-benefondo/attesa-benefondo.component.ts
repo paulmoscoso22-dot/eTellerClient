@@ -1,6 +1,6 @@
-import { Component, signal, DestroyRef, inject } from '@angular/core';
+import { Component, signal, computed, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   DxDataGridModule,
   DxTextBoxModule,
@@ -10,13 +10,13 @@ import {
 } from 'devextreme-angular';
 import { SempioneCardComponent } from '../../../../../components/General/sempione-card/sempione-card.component';
 import { SempioneCardHeaderComponent } from '../../../../../components/General/sempione-card-header/sempione-card-header.component';
-import { SempioneButtonComponent } from '../../../../../components/General/sempione-button/sempione-button.component';
 import { SempionePageShellComponent } from '../../../../../components/General/sempione-page-shell/sempione-page-shell.component';
 import { SempionePopupComponent } from '../../../../../components/General/sempione-popup/sempione-popup.component';
 import { SempionePopupActionBarComponent } from '../../../../../components/General/sempione-popup-action-bar/sempione-popup-action-bar.component';
+import { SempioneSearchModeComponent } from '../../../../../components/General/sempione-search-mode/sempione-search-mode.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReportFacade } from '../../../../archivi/report/services/report.facade';
-import { GetTransactionWaitingForBefResponse } from '../../../../archivi/report/domain/transaction.models';
+import { GetTransactionWaitingForBefResponse, ReportUserContext } from '../../../../archivi/report/domain/transaction.models';
 import { TransactionStatus } from '../../../../archivi/report/domain/transaction-status.enum';
 
 @Component({
@@ -35,12 +35,12 @@ import { TransactionStatus } from '../../../../archivi/report/domain/transaction
     SempionePageShellComponent,
     SempionePopupComponent,
     SempionePopupActionBarComponent,
-    SempioneButtonComponent,
+    SempioneSearchModeComponent,
   ],
   templateUrl: './attesa-benefondo.component.html',
   styleUrls: ['./attesa-benefondo.component.css'],
 })
-export class VigilanzaAttesaBenefondoComponent {
+export class VigilanzaAttesaBenefondoComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
 
@@ -53,12 +53,37 @@ export class VigilanzaAttesaBenefondoComponent {
   toastMessage = signal('');
   toastType = signal<'success' | 'error' | 'warning' | 'info'>('success');
 
+  userContext = signal<ReportUserContext | null>(null);
+  canShowActions = computed(() => {
+    const ctx = this.userContext();
+    if (!ctx) return true;
+    return ctx.canUseTeller || ctx.canOverrideCassa;
+  });
+
   searchForm: FormGroup = this.fb.group({
-    trxData: [new Date()],
+    trxData:  [new Date(), [Validators.required]],
     trxCassa: [''],
   });
 
   constructor(private facade: ReportFacade) {}
+
+  ngOnInit(): void {
+    this.facade.getUserContext()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (ctx) => {
+          this.userContext.set(ctx);
+          this.searchForm.patchValue({ trxCassa: ctx.cashDeskId ?? '' });
+          if (!ctx.canOverrideCassa) {
+            this.searchForm.get('trxCassa')?.disable();
+          }
+          this.search();
+        },
+        error: () => {
+          this.searchForm.get('trxCassa')?.disable();
+        }
+      });
+  }
 
   private normalizeSearchValue(value: unknown): string | null {
     if (typeof value !== 'string') {
@@ -74,8 +99,14 @@ export class VigilanzaAttesaBenefondoComponent {
   }
 
   search(): void {
-    const { trxData, trxCassa } = this.searchForm.value;
+    if (this.searchForm.invalid) {
+      this.searchForm.markAllAsTouched();
+      return;
+    }
+
+    const { trxData, trxCassa } = this.searchForm.getRawValue();
     const dal = this.normalizeSearchDate(trxData);
+    const al  = dal ? new Date(new Date(dal).setHours(23, 59, 59, 999)) : null;
 
     this.isLoading.set(true);
     this.error.set(null);
@@ -83,7 +114,7 @@ export class VigilanzaAttesaBenefondoComponent {
     this.facade.getTransactionWaitingForBef(
       this.normalizeSearchValue(trxCassa),
       dal,
-      dal,
+      al,
       TransactionStatus.AttesaBEF,
       null
     ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
@@ -103,7 +134,8 @@ export class VigilanzaAttesaBenefondoComponent {
   }
 
   resetFilters(): void {
-    this.searchForm.reset({ trxData: null, trxCassa: '' });
+    const cassa = this.userContext()?.cashDeskId ?? '';
+    this.searchForm.reset({ trxData: new Date(), trxCassa: cassa });
     this.transactions.set([]);
     this.error.set(null);
   }

@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject, OnInit, DestroyRef } from '@angular/core';
+import { Component, signal, inject, OnInit, DestroyRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
@@ -10,7 +10,7 @@ import { ManagerService } from '../../services/sicurezza.service';
 import { PersonalisationResponse, UpdatePersonalisationRequest } from '../../models/personalisation.models';
 import {
   SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-  SempioneToolbarComponent, SempioneDataGridComponent, SempioneGridColumn,
+  SempioneSearchModeComponent, SempioneDataGridComponent, SempioneGridColumn,
   SempionePopupCardComponent, SempioneFieldGroupComponent,
   SempioneButtonComponent, SempioneConfirmDeleteComponent,
   SempioneCrudPopupShellComponent,
@@ -23,7 +23,7 @@ import {
     CommonModule, ReactiveFormsModule,
     DxTextBoxModule, DxTextAreaModule,
     SempionePageShellComponent, SempioneCardComponent, SempioneCardHeaderComponent,
-    SempioneToolbarComponent, SempioneDataGridComponent,
+    SempioneSearchModeComponent, SempioneDataGridComponent,
     SempionePopupCardComponent, SempioneFieldGroupComponent,
     SempioneButtonComponent, SempioneConfirmDeleteComponent,
     SempioneCrudPopupShellComponent,
@@ -36,19 +36,9 @@ export class PersonalizzazioniComponent implements OnInit {
   private readonly destroyRef    = inject(DestroyRef);
   private readonly router        = inject(Router);
 
+  @ViewChild(SempioneDataGridComponent) private dataGrid?: SempioneDataGridComponent;
+
   personalisations = signal<PersonalisationResponse[]>([]);
-
-  filterParId  = signal<string>('');
-  filterParDes = signal<string>('');
-
-  filteredPersonalisations = computed(() => {
-    let data = this.personalisations();
-    const id  = this.filterParId().trim().toLowerCase();
-    const des = this.filterParDes().trim().toLowerCase();
-    if (id)  data = data.filter(p => p.parId?.toLowerCase().includes(id));
-    if (des) data = data.filter(p => p.parDes?.toLowerCase().includes(des));
-    return data;
-  });
 
   selectedParId    = signal<string>('');
   selectedParDes   = signal<string>('');
@@ -63,9 +53,9 @@ export class PersonalizzazioniComponent implements OnInit {
   pendingDeleteParId     = signal<string>('');
 
   readonly columns: SempioneGridColumn[] = [
-    { dataField: 'parId',    caption: 'ID',          width: 220 },
-    { dataField: 'parDes',   caption: 'Descrizione' },
-    { dataField: 'parValue', caption: 'Valore',      width: 180 },
+    { dataField: 'parId',    caption: 'ID',          width: 220, allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'parDes',   caption: 'Descrizione',             allowFiltering: false, allowHeaderFiltering: true },
+    { dataField: 'parValue', caption: 'Valore',      width: 180, allowFiltering: false, allowHeaderFiltering: true },
   ];
 
   addForm = new FormGroup({
@@ -182,10 +172,7 @@ export class PersonalizzazioniComponent implements OnInit {
     });
   }
 
-  resetFilters(): void {
-    this.filterParId.set('');
-    this.filterParDes.set('');
-  }
+  clearGridFilters(): void { this.dataGrid?.clearFilters(); }
 
   private setSelected(data: PersonalisationResponse): void {
     this.selectedParId.set(data.parId ?? '');
