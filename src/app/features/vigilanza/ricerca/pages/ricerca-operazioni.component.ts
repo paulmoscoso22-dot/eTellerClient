@@ -8,6 +8,7 @@ import {
   DxNumberBoxModule,
   DxCheckBoxModule,
   DxSelectBoxModule,
+  DxDataGridModule,
 } from 'devextreme-angular';
 import { SempioneCardComponent } from '../../../../components/General/sempione-card/sempione-card.component';
 import { SempioneCardHeaderComponent } from '../../../../components/General/sempione-card-header/sempione-card-header.component';
@@ -24,6 +25,7 @@ import type { ValueChangedEvent as DateBoxValueChangedEvent } from 'devextreme/u
 import { RicercaOperazioniFacade } from '../services/ricerca-operazioni.facade';
 import { GestioneComparentiAdeService } from '../../gestione/services/gestione-comparenti-ade.service';
 import { Service } from '../../../../core/services/service';
+import { ReportFacade } from '../../../archivi/report/services/report.facade';
 import { Currency } from '../../../../core/domain/currency.domain';
 import { Branch } from '../../../../core/domain/branch.domain';
 import { ICurrencyType } from '../../../../core/domain/currencyType.domain';
@@ -49,6 +51,7 @@ const DEFAULT_PAGE_SIZE = 30;
     DxNumberBoxModule,
     DxCheckBoxModule,
     DxSelectBoxModule,
+    DxDataGridModule,
     SempionePageHeaderComponent,
     SempioneCardComponent,
     SempioneCardHeaderComponent,
@@ -67,10 +70,11 @@ export class RicercaOperazioniComponent implements OnInit {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly ricercaOperazioniFacade = inject(RicercaOperazioniFacade);
+  private readonly reportFacade = inject(ReportFacade);
   private readonly formBuilder = inject(FormBuilder);
   private readonly service = inject(Service);
   private readonly appearerService = inject(GestioneComparentiAdeService);
-  
+
   readonly operations = signal<RicercaOperazioniResponse[]>([]);
   readonly isLoading = signal(false);
   readonly currencies = signal<Currency[]>([]);
@@ -84,6 +88,9 @@ export class RicercaOperazioniComponent implements OnInit {
   readonly isAppearerPopupVisible = signal(false);
   readonly isAppearerLoading = signal(false);
   readonly error = signal<string | null>(null);
+  readonly canOverrideCassa = signal(false);
+  readonly canSeeAllBranches = signal(false);
+  readonly isFiltersCollapsed = signal(false);
 
   readonly columns: SempioneGridColumn[] = [
     { dataField: 'trxId',           caption: 'Nop / TrxId',  width: 90,  alignment: 'center' },
@@ -92,7 +99,7 @@ export class RicercaOperazioniComponent implements OnInit {
     { dataField: 'optDes',          caption: 'Operazione',    minWidth: 160, alignment: 'left' },
     { dataField: 'trxReport',       caption: 'N. Rapporto',   width: 110, alignment: 'center' },
     { dataField: 'trxCurId',        caption: 'Divisa',        width: 70,  type: 'currency' },
-    { dataField: 'trxAmount',       caption: 'Importo',       width: 110, alignment: 'right', dataType: 'number', format: '#,##0.00' },
+    { dataField: 'trxAmount',       caption: 'Imp. CTP',      width: 110, alignment: 'right', dataType: 'number', format: '#,##0.00' },
     { dataField: 'trxRate',         caption: 'Cambio',        width: 100, alignment: 'right', dataType: 'number', format: '#,##0.0000' },
     { dataField: 'appearerName',    caption: 'Comparente',    width: 160, alignment: 'left' },
     { dataField: 'beneficiaryName', caption: 'Beneficiario',  minWidth: 160, alignment: 'left' },
@@ -117,6 +124,30 @@ export class RicercaOperazioniComponent implements OnInit {
   ngOnInit(): void {
     this.loadLookups();
     this.restoreFilters();
+    this.loadUserContext();
+  }
+
+  private loadUserContext(): void {
+    this.reportFacade.getUserContext()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (ctx) => {
+          this.canOverrideCassa.set(ctx.canOverrideCassa);
+          this.canSeeAllBranches.set(ctx.canSeeAllBranches);
+
+          if (!ctx.canOverrideCassa) {
+            this.searchForm.patchValue({ trxCassa: ctx.cashDeskId ?? '' }, { emitEvent: false });
+            this.searchForm.get('trxCassa')?.disable();
+          }
+          if (!ctx.canSeeAllBranches) {
+            this.searchForm.get('trxLocalita')?.disable();
+          }
+        }
+      });
+  }
+
+  toggleFilters(): void {
+    this.isFiltersCollapsed.update(v => !v);
   }
 
   openViewPopup(data: RicercaOperazioniResponse): void {
@@ -160,7 +191,7 @@ export class RicercaOperazioniComponent implements OnInit {
 
   resetFilters(): void {
     this.searchForm.reset({
-      trxCassa: '',
+      trxCassa: this.canOverrideCassa() ? '' : (this.searchForm.get('trxCassa')?.value ?? ''),
       trxLocalita: '',
       trxDataDal: null,
       trxDataAl: null,
@@ -291,14 +322,14 @@ export class RicercaOperazioniComponent implements OnInit {
       trxLocalita: this.normalizeText(value.trxLocalita),
       trxDataDal: value.trxDataDal ? this.normalizeStartOfDay(value.trxDataDal) : null,
       trxDataAl: value.trxDataAl ? this.normalizeEndOfDay(value.trxDataAl) : null,
-      trxReverse: value.trxReverse ?? false,
+      trxReverse: value.trxReverse === true ? true : null,
       trxCutId: this.normalizeText(value.trxCutId),
       trxOptId: this.normalizeText(value.trxOptId),
       trxDivope: this.normalizeText(value.trxDivope),
       trxImpopeDA: value.trxImpopeDA ?? null,
       trxImpopeA: value.trxImpopeA ?? null,
       arcAppName: this.normalizeText(value.arcAppName),
-      arcForced: value.arcForced ?? true
+      arcForced: value.arcForced === true ? true : null
     };
   }
 

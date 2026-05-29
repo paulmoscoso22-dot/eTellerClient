@@ -7,6 +7,6 @@ export interface IHelpInfoResponse {
   isCassaOperationsEnabled: boolean;
   webApplicationVersion: string;
   hostUser: string | null;
-  hostVersion: number | null;
+  hostVersion: string | null;
   hostCompileDate: string | null;
 }

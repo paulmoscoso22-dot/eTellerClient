@@ -28,7 +28,6 @@ export interface RicercaOperazioniResponse {
   optDes: string;
   trxOptId: string;
   trxReport: string;
-  trxNum: string;
   trxCurId: string;
   trxAmount: number;
   trxRate: number;

@@ -71,7 +71,9 @@
       </dxo-pager>
       <dxo-load-panel [enabled]="false"></dxo-load-panel>
       <dxo-filter-row [visible]="showFilterRow"></dxo-filter-row>
-      <dxo-header-filter [visible]="showHeaderFilter" [allowSearch]="true"></dxo-header-filter>
+      <dxo-header-filter [visible]="showHeaderFilter">
+        <dxo-search [enabled]="true"></dxo-search>
+      </dxo-header-filter>
 
       @for (col of effectiveColumns; track col.dataField) {
         @if (col.type === 'currency') {

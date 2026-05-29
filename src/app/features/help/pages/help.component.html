@@ -31,7 +31,7 @@
           </app-sempione-field-group>
 
           <app-sempione-field-group label="Data Ultimo Logout">
-            <dx-text-box [value]="helpInfo()?.lastLogoutDate ?? '—'" [readOnly]="true"></dx-text-box>
+            <dx-text-box [value]="(helpInfo()?.lastLogoutDate | date:'dd.MM.yyyy HH:mm') ?? '—'" [readOnly]="true"></dx-text-box>
           </app-sempione-field-group>
 
           <app-sempione-field-group label="Lingua Sistema">
@@ -80,7 +80,7 @@
 
             <div class="popup-col-span-2">
               <app-sempione-field-group label="Data Compilazione Host">
-                <dx-text-box [value]="helpInfo()?.hostCompileDate ?? '—'" [readOnly]="true"></dx-text-box>
+                <dx-text-box [value]="(helpInfo()?.hostCompileDate | date:'dd.MM.yyyy') ?? '—'" [readOnly]="true"></dx-text-box>
               </app-sempione-field-group>
             </div>
 
