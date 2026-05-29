@@ -44,7 +44,9 @@
         <dxo-paging [pageSize]="15"></dxo-paging>
         <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[15, 25, 50]" [showInfo]="true"></dxo-pager>
         <dxo-load-panel [enabled]="false"></dxo-load-panel>
-        <dxo-header-filter [visible]="true" [allowSearch]="true"></dxo-header-filter>
+        <dxo-header-filter [visible]="true">
+          <dxo-search [enabled]="true"></dxo-search>
+        </dxo-header-filter>
 
         <dxi-column dataField="futId"         caption="ID"       [width]="110" alignment="left"></dxi-column>
         <dxi-column dataField="futFunname"    caption="Nome"                   alignment="left"></dxi-column>

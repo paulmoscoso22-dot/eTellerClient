@@ -188,14 +188,6 @@ export class MenuService  {
           ]
         },
         {
-          label: 'menu.report',
-          icon: 'chart',
-          isVisible: true,
-          children: [
-            { label: 'menu.attesaBenefondo', url: 'vigilanza-attesa-benefondo', icon: 'hourglass', isVisible: true }
-          ]
-        },
-        {
           label: 'menu.gestione',
           icon: 'toolbox',
           isVisible: true,

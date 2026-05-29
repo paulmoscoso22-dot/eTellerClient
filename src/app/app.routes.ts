@@ -52,10 +52,6 @@ export const routes: Routes = [
         loadComponent: () => import('./features/vigilanza/ricerca/pages/ricerca-operazioni.component').then(m => m.RicercaOperazioniComponent)
       },
       {
-        path: 'vigilanza-attesa-benefondo',
-        loadComponent: () => import('./features/vigilanza/report/pages/attesa-benefondo/attesa-benefondo.component').then(m => m.VigilanzaAttesaBenefondoComponent)
-      },
-      {
         path: 'gestione-regole',
         loadComponent: () => import('./features/vigilanza/gestione/pages/gestione-regole/gestione-regole.component').then(m => m.GestioneRegoleComponent)
       },

@@ -5,152 +5,196 @@
   <!-- ═══ CARD 1: FILTRI DI RICERCA ═══ -->
   <app-sempione-card class="card-filtri">
 
-    <app-sempione-card-header title="Filtri Di Ricerca">
+    <!-- Header con collapse toggle (custom — non usa app-sempione-card-header) -->
+    <div class="filter-card-header">
       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
-    </app-sempione-card-header>
+      <span class="filter-card-title">Filtri di Ricerca</span>
+      <button class="collapse-toggle"
+              (click)="toggleFilters()"
+              [title]="isFiltersCollapsed() ? 'Espandi filtri' : 'Comprimi filtri'">
+        <svg class="chevron-icon" [class.collapsed]="isFiltersCollapsed()"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+      </button>
+    </div>
+    <div class="filter-card-gold-line"></div>
 
-    <div class="card-body" [formGroup]="searchForm">
+    <div [formGroup]="searchForm">
 
-      <!-- Section 1: Filtri Temporali -->
-      <div class="section-heading">Filtri Temporali</div>
-      <div class="filter-grid filter-grid--5">
+      @if (!isFiltersCollapsed()) {
+        <div class="card-body">
 
-        <div class="field-group">
-          <label class="field-label">Data Dal</label>
-          <dx-date-box
-            formControlName="trxDataDal"
-            type="date"
-            displayFormat="dd.MM.yyyy"
-            [showClearButton]="true"
-            (onValueChanged)="onDateDalChanged($event)">
-          </dx-date-box>
+          <!-- ── Riga 1: Comparente + flag booleani ── -->
+          <div class="filter-row filter-row--comparente">
+
+            <div class="field-group filter-comparente">
+              <label class="field-label">Nome Comparente</label>
+              <div class="field-with-btn">
+                <dx-text-box
+                  formControlName="arcAppName"
+                  placeholder="Nome comparente..."
+                  [showClearButton]="true">
+                </dx-text-box>
+                <app-sempione-button hint="Sfoglia registro comparenti" icon="group" (clicked)="openAppearerPopup()"></app-sempione-button>
+              </div>
+            </div>
+
+            <div class="filter-flags">
+              <dx-check-box formControlName="trxReverse" text="Solo Inverse"></dx-check-box>
+              <dx-check-box formControlName="arcForced"  text="Solo Forzate"></dx-check-box>
+            </div>
+
+          </div>
+
+          <div class="filter-divider"></div>
+
+          <!-- ── Riga 2: Periodo | Importo | Valuta ── -->
+          <div class="filter-row filter-row--3col">
+
+            <div class="filter-col">
+              <span class="filter-col-label">Periodo</span>
+              <div class="filter-col-fields">
+                <div class="field-group">
+                  <label class="field-label">Dal</label>
+                  <dx-date-box
+                    formControlName="trxDataDal"
+                    type="date"
+                    displayFormat="dd.MM.yyyy"
+                    [showClearButton]="true"
+                    (onValueChanged)="onDateDalChanged($event)">
+                  </dx-date-box>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Al</label>
+                  <dx-date-box
+                    formControlName="trxDataAl"
+                    type="date"
+                    displayFormat="dd.MM.yyyy"
+                    [showClearButton]="true"
+                    (onValueChanged)="onDateAlChanged($event)">
+                  </dx-date-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-col filter-col--sep">
+              <span class="filter-col-label">Importo</span>
+              <div class="filter-col-fields">
+                <div class="field-group">
+                  <label class="field-label">Da</label>
+                  <dx-number-box
+                    formControlName="trxImpopeDA"
+                    format="#,##0.00"
+                    [showClearButton]="true">
+                  </dx-number-box>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">A</label>
+                  <dx-number-box
+                    formControlName="trxImpopeA"
+                    format="#,##0.00"
+                    [showClearButton]="true">
+                  </dx-number-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-col filter-col--sep">
+              <span class="filter-col-label">Valuta</span>
+              <div class="filter-col-fields">
+                <div class="field-group filter-col-full">
+                  <label class="field-label">Divisa</label>
+                  <dx-select-box
+                    formControlName="trxDivope"
+                    [dataSource]="currencies()"
+                    displayExpr="curLondes"
+                    valueExpr="curId"
+                    [showClearButton]="true"
+                    placeholder="Tutte">
+                  </dx-select-box>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="filter-divider"></div>
+
+          <!-- ── Riga 3: Genere · Tipo Operazione · Cassa · Località ── -->
+          <div class="filter-row filter-row--ops">
+
+            <div class="field-group field-group--genere">
+              <label class="field-label">Genere</label>
+              <dx-select-box
+                formControlName="trxCutId"
+                [dataSource]="currencyTypes()"
+                displayExpr="cutDes"
+                valueExpr="cutId"
+                [showClearButton]="true"
+                placeholder="Tutti">
+              </dx-select-box>
+            </div>
+
+            <div class="field-group field-group--tipo">
+              <label class="field-label">Tipo Operazione</label>
+              <dx-select-box
+                formControlName="trxOptId"
+                [dataSource]="stOperationsTypes()"
+                displayExpr="optDes"
+                valueExpr="optId"
+                [showClearButton]="true"
+                placeholder="Tutti">
+              </dx-select-box>
+            </div>
+
+            <div class="field-group field-group--cassa">
+              <label class="field-label">Cassa</label>
+              <dx-text-box
+                formControlName="trxCassa"
+                placeholder="Codice..."
+                [showClearButton]="canOverrideCassa()">
+              </dx-text-box>
+            </div>
+
+            <div class="field-group field-group--localita">
+              <label class="field-label">Località</label>
+              <dx-select-box
+                formControlName="trxLocalita"
+                [dataSource]="branches()"
+                displayExpr="braDes"
+                valueExpr="braId"
+                [showClearButton]="canSeeAllBranches()"
+                placeholder="Tutte">
+              </dx-select-box>
+            </div>
+
+          </div>
+
         </div>
+      }
 
-        <div class="field-group">
-          <label class="field-label">Data Al</label>
-          <dx-date-box
-            formControlName="trxDataAl"
-            type="date"
-            displayFormat="dd.MM.yyyy"
-            [showClearButton]="true"
-            (onValueChanged)="onDateAlChanged($event)">
-          </dx-date-box>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Divisa</label>
+      <app-sempione-toolbar>
+        <div class="toolbar-pagesize">
+          <span class="toolbar-pagesize-label">Righe</span>
           <dx-select-box
-            formControlName="trxDivope"
-            [dataSource]="currencies()"
-            displayExpr="curLondes"
-            valueExpr="curId"
-            [showClearButton]="true"
-            placeholder="Tutte">
+            [value]="pageSize()"
+            [dataSource]="[10, 20, 30, 50, 100, 200]"
+            [width]="80"
+            (onValueChanged)="onGridPageSizeChanged($event.value)">
           </dx-select-box>
         </div>
-
-        <div class="field-group">
-          <label class="field-label">Importo Da</label>
-          <dx-number-box
-            formControlName="trxImpopeDA"
-            format="#,##0.00"
-            [showClearButton]="true">
-          </dx-number-box>
+        <div toolbar-actions>
+          <app-sempione-button hint="Reset filtri" icon="revert" (clicked)="resetFilters()"></app-sempione-button>
+          <app-sempione-button hint="Stampa" icon="print" (clicked)="printResults()"></app-sempione-button>
+          <app-sempione-button hint="Cerca" icon="search" variant="primary" [shadow]="true" [disabled]="isLoading()" (clicked)="search()"></app-sempione-button>
         </div>
-
-        <div class="field-group">
-          <label class="field-label">Importo A</label>
-          <dx-number-box
-            formControlName="trxImpopeA"
-            format="#,##0.00"
-            [showClearButton]="true">
-          </dx-number-box>
-        </div>
-
-      </div>
-
-      <div class="section-divider"></div>
-
-      <!-- Section 2: Dettagli Operazione -->
-      <div class="section-heading">Dettagli Operazione</div>
-      <div class="filter-grid filter-grid--5">
-
-        <div class="field-group">
-          <label class="field-label">Cassa</label>
-          <dx-text-box
-            formControlName="trxCassa"
-            placeholder="Codice cassa..."
-            [showClearButton]="true">
-          </dx-text-box>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Località</label>
-          <dx-select-box
-            formControlName="trxLocalita"
-            [dataSource]="branches()"
-            displayExpr="braDes"
-            valueExpr="braId"
-            [showClearButton]="true"
-            placeholder="Tutte">
-          </dx-select-box>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Genere</label>
-          <dx-select-box
-            formControlName="trxCutId"
-            [dataSource]="currencyTypes()"
-            displayExpr="cutDes"
-            valueExpr="cutId"
-            [showClearButton]="true"
-            placeholder="Tutti">
-          </dx-select-box>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Tipo Operazione</label>
-          <dx-select-box
-            formControlName="trxOptId"
-            [dataSource]="stOperationsTypes()"
-            displayExpr="optDes"
-            valueExpr="optId"
-            [showClearButton]="true"
-            placeholder="Tutti">
-          </dx-select-box>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Nome Applicazione</label>
-          <dx-text-box
-            formControlName="arcAppName"
-            placeholder="App name..."
-            [showClearButton]="true">
-          </dx-text-box>
-        </div>
-
-      </div>
-
-      <div class="section-divider"></div>
-
-      <!-- Section 3: Opzioni -->
-      <div class="section-heading">Opzioni</div>
-      <div class="options-group">
-        <dx-check-box formControlName="trxReverse" text="Transazioni Inverse"></dx-check-box>
-        <dx-check-box formControlName="arcForced"  text="Forzato"></dx-check-box>
-      </div>
+      </app-sempione-toolbar>
 
     </div>
-
-    <app-sempione-toolbar>
-      <div toolbar-actions>
-        <app-sempione-button hint="Reset filtri" icon="revert" (clicked)="resetFilters()"></app-sempione-button>
-        <app-sempione-button hint="Cerca" icon="search" variant="primary" [shadow]="true" [disabled]="isLoading()" (clicked)="search()"></app-sempione-button>
-      </div>
-    </app-sempione-toolbar>
 
   </app-sempione-card>
 
@@ -242,7 +286,7 @@
             </span>
           </div>
           <div class="detail-field">
-            <span class="detail-label">Importo CTP</span>
+            <span class="detail-label">Imp. CTP</span>
             <span class="detail-value">{{ op.trxAmount | number:'1.2-2' }}</span>
           </div>
           <div class="detail-field">
@@ -274,5 +318,64 @@
       (cancel)="closePopup()">
     </app-sempione-popup-action-bar>
   }
+
+</app-sempione-popup>
+
+<!-- ── Popup Ricerca Comparente ── -->
+<app-sempione-popup
+  [visible]="isAppearerPopupVisible()"
+  title="Ricerca Comparente"
+  [maxWidth]="600"
+  [dragEnabled]="true"
+  [showCloseButton]="true"
+  (hidden)="onAppearerPopupHidden()">
+
+  <div class="appearer-popup-body">
+    <div class="appearer-search-bar">
+      <dx-text-box
+        [value]="searchForm.get('arcAppName')?.value"
+        placeholder="Nome comparente..."
+        [showClearButton]="true"
+        (onValueChanged)="searchForm.patchValue({ arcAppName: $event.value }); searchAppearers()">
+      </dx-text-box>
+    </div>
+
+    @if (isAppearerLoading()) {
+      <div class="appearer-loading">
+        <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+        </svg>
+        Ricerca in corso...
+      </div>
+    } @else if (appearers().length === 0) {
+      <div class="appearer-empty">Nessun comparente trovato.</div>
+    } @else {
+      <dx-data-grid
+        [dataSource]="appearers()"
+        [showBorders]="false"
+        [showRowLines]="true"
+        [showColumnLines]="false"
+        [rowAlternationEnabled]="true"
+        [columnAutoWidth]="false"
+        [hoverStateEnabled]="true"
+        [height]="320"
+        (onRowClick)="selectAppearer($event.data)">
+
+        <dxo-paging [enabled]="false"></dxo-paging>
+        <dxo-scrolling mode="virtual" rowRenderingMode="virtual"></dxo-scrolling>
+
+        <dxi-column dataField="araName"      caption="Nome"        [minWidth]="180"></dxi-column>
+        <dxi-column dataField="araBirthdate" caption="Data Nasc."  [width]="110" alignment="center" dataType="date" format="dd.MM.yyyy"></dxi-column>
+        <dxi-column dataField="araDocNum"    caption="Doc."        [width]="130"></dxi-column>
+
+      </dx-data-grid>
+    }
+  </div>
+
+  <app-sempione-popup-action-bar
+    [showSave]="false"
+    cancelText="Chiudi"
+    (cancel)="closeAppearerPopup()">
+  </app-sempione-popup-action-bar>
 
 </app-sempione-popup>

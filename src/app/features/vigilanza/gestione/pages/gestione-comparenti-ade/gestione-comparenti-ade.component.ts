@@ -1,4 +1,4 @@
-import { Component, OnDestroy, signal, DestroyRef, inject, ViewChild } from '@angular/core';
+import { Component, OnDestroy, signal, DestroyRef, effect, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DxTextBoxModule } from 'devextreme-angular/ui/text-box';
@@ -120,6 +120,16 @@ export class GestioneComparentiAdeComponent implements OnDestroy {
   historyAraId = signal<number | null>(null);
 
   constructor() {
+    effect(() => {
+      const viewMode = this.isViewMode();
+      const toggle = (name: string) => {
+        const ctrl = this.editForm.get(name)!;
+        viewMode ? ctrl.disable() : ctrl.enable();
+      };
+      toggle('araRecComplete');
+      toggle('araIsupdated');
+    });
+
     this.countryService.getAllCountries()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(data => this.countries.set(data));

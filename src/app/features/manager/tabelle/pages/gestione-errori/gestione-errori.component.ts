@@ -94,7 +94,7 @@ export class GestioneErroriComponent implements OnInit {
     errCanFlag: [false],
     errConFlag: [false],
     errForFlag: [false],
-    errFocId:   [null],
+    errFocId:   [{ value: null, disabled: true }],
     errDesSol:  [null],
   });
 
@@ -120,6 +120,12 @@ export class GestioneErroriComponent implements OnInit {
   ngOnInit(): void {
     this.loadForceCodes();
     this.loadAll();
+    this.editForm.get('errForFlag')!.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((checked: boolean) => {
+        const ctrl = this.editForm.get('errFocId')!;
+        checked ? ctrl.enable() : ctrl.disable();
+      });
   }
 
   private loadForceCodes(): void {
@@ -171,10 +177,6 @@ export class GestioneErroriComponent implements OnInit {
   }
 
   clearGridFilters(): void { this.dataGrid?.clearFilters(); }
-
-  get isFocIdEnabled(): boolean {
-    return !!this.editForm.get('errForFlag')?.value;
-  }
 
   openAddPopup(): void {
     this.popupMode.set('new');
